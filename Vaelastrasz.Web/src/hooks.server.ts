@@ -15,7 +15,7 @@ export const authOptions = SvelteKitAuth({
           password: { label: "Password", type: "password" }
         },
         async authorize(credentials, req) {
-          const res = await fetch("http://localhost:5041/api/login", {
+          const res = await fetch("https://taerar.infinite-trajectory.de/api/Login", {
             method: "POST",
             body: JSON.stringify(credentials),
             headers: { "Content-Type": "application/json" }
