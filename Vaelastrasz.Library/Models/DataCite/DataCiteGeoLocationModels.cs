@@ -1,9 +1,7 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace Nozdormu.Library.Models.DataCite
+namespace Vaelastrasz.Library.Models.DataCite
 {
     public class DataCiteGeoLocation
     {

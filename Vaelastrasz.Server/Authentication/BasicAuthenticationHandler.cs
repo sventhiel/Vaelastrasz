@@ -1,13 +1,12 @@
 ﻿using LiteDB;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
-using System.Security.Claims;
-using System.Text.Encodings.Web;
-using System.Text;
-using Vaelastrasz.Server.Services;
-using Vaelastrasz.Server.Configuration;
-using Microsoft.Extensions.Configuration;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using System.Text.Encodings.Web;
+using Vaelastrasz.Server.Configuration;
+using Vaelastrasz.Server.Services;
 
 namespace Vaelastrasz.Server.Authentication
 {

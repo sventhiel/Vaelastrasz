@@ -1,13 +1,8 @@
-﻿using NameParser;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
-using System;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Text;
 
-namespace Nozdormu.Library.Models.DataCite
+namespace Vaelastrasz.Library.Models.DataCite
 {
     public class DataCiteCreator
     {
@@ -75,6 +70,7 @@ namespace Nozdormu.Library.Models.DataCite
     {
         [EnumMember(Value = "Personal")]
         Personal = 1,
+
         [EnumMember(Value = "Organizational")]
         Organizational = 2
     }

@@ -1,9 +1,6 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Nozdormu.Library.Models.DataCite
+namespace Vaelastrasz.Library.Models.DataCite
 {
     public class DataCiteRelatedIdentifier
     {
@@ -31,7 +28,7 @@ namespace Nozdormu.Library.Models.DataCite
         EISSN = 6,
         Handle = 7,
         IGSN = 8,
-        ISBN =9,
+        ISBN = 9,
         ISSN = 10,
         ISTC = 11,
         LISSN = 12,

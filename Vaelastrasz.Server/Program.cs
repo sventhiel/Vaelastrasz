@@ -1,14 +1,13 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.OpenApi.Models;
 using Exceptionless;
-using Vaelastrasz.Server.Authentication;
 using LiteDB;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
+using Microsoft.OpenApi.Models;
 using System.Text;
 using System.Text.Json.Serialization;
+using Vaelastrasz.Server.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 

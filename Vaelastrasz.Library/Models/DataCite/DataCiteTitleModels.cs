@@ -1,13 +1,7 @@
-﻿using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
+﻿using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
-using System.Runtime.Serialization;
-using System.Text;
 
-namespace Nozdormu.Library.Models.DataCite
+namespace Vaelastrasz.Library.Models.DataCite
 {
     public class DataCiteTitle
     {

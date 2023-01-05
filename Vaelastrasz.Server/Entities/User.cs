@@ -1,5 +1,4 @@
 ﻿using LiteDB;
-using System.Security.Principal;
 
 namespace Vaelastrasz.Server.Entities
 {

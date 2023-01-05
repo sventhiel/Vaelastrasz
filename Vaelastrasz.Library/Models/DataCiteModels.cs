@@ -1,14 +1,12 @@
-﻿using Newtonsoft.Json.Converters;
-using Newtonsoft.Json;
-using Nozdormu.Library.Converters;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using Newtonsoft.Json.Linq;
 using System.Runtime.Serialization;
-using Nozdormu.Library.Models.DataCite;
-using Nozdormu.Library.Attributes;
+using Vaelastrasz.Library.Attributes;
+using Vaelastrasz.Library.Converters;
+using Vaelastrasz.Library.Models.DataCite;
 
-namespace Nozdormu.Library.Models
+namespace Vaelastrasz.Library.Models
 {
     [JsonConverter(typeof(JsonPathConverter))]
     public class CreateDataCiteModel
@@ -214,7 +212,6 @@ namespace Nozdormu.Library.Models
         // Related Identifiers
         [JsonProperty("data.attributes.relatedIdentifiers")]
         public List<DataCiteRelatedIdentifier> RelatedIdentifiers { get; set; }
-
 
         [JsonProperty("data.attributes.sizes")]
         public List<string> Sizes { get; set; }

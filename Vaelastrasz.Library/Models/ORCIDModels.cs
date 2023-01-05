@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
-using Nozdormu.Library.Converters;
+using Vaelastrasz.Library.Converters;
 
-namespace Nozdormu.Library.Models
+namespace Vaelastrasz.Library.Models
 {
     [JsonConverter(typeof(JsonPathConverter))]
     public class ReadORCIDModel

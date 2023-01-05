@@ -4,4 +4,16 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\DataCite\" />
+    <Folder Include="Models\ORCID\" />
+    <Folder Include="Services\" />
+    <Folder Include="Schemas\" />
+  </ItemGroup>
+
 </Project>

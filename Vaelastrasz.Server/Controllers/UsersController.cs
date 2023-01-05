@@ -1,18 +1,11 @@
 ﻿using LiteDB;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Data;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text;
 using Vaelastrasz.Server.Configuration;
 using Vaelastrasz.Server.Models;
-using Vaelastrasz.Server.Services;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Principal;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 
 namespace Vaelastrasz.Server.Controllers
 {
@@ -77,6 +70,5 @@ namespace Vaelastrasz.Server.Controllers
 
             return BadRequest();
         }
-
     }
 }

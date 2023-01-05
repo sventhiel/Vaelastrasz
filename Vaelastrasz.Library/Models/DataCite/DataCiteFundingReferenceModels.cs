@@ -1,10 +1,7 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Text;
 
-namespace Nozdormu.Library.Models.DataCite
+namespace Vaelastrasz.Library.Models.DataCite
 {
     public class DataCiteFundingReference
     {
@@ -32,6 +29,7 @@ namespace Nozdormu.Library.Models.DataCite
     {
         [EnumMember(Value = "Crossref Funder ID")]
         CrossrefFunderID = 1,
+
         GRID = 2,
         ISNI = 3,
         ROR = 4,

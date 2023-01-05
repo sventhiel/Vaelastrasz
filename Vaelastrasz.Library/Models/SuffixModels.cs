@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Nozdormu.Library.Models
+namespace Vaelastrasz.Library.Models
 {
     public class CreateSuffixModel
     {
