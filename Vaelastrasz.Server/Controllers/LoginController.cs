@@ -42,7 +42,7 @@ namespace Vaelastrasz.Server.Controllers
                     signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha512)
                     );
 
-                var user = new { id = 1, name = "Hans", email = "sven.thiel@uni-jena.de", jwt = new JwtSecurityTokenHandler().WriteToken(token) };
+                var user = new { id = 1, name = "Hans", email = "sven.thiel@uni-jena.de", /*jwt = new JwtSecurityTokenHandler().WriteToken(token)*/ };
 
                 return Ok(user);
             }
