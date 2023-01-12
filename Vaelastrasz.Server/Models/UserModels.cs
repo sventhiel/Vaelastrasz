@@ -31,23 +31,31 @@ namespace Vaelastrasz.Server.Models
     public class CreateUserModel
     {
         [Required]
-        [Display(Name = "Name")]
         public string Name { get; set; }
 
         [Required]
-        [Display(Name = "Password")]
         public string Password { get; set; }
 
-        [Required, Compare("Password")]
-        [Display(Name = "ConfirmPassword")]
-        public string ConfirmPassword { get; set; }
-
         [Required]
-        [Display(Name = "Pattern")]
         public string Pattern { get; set; }
 
+        public long AccountId { get; set; }
+    }
+
+    public class UpdateUserModel
+    {
         [Required]
-        [Display(Name = "AccountId")]
-        public long? AccountId { get; set; }
+        public long Id { get; set; }
+
+        [Required]
+        public string Name { get; set; }
+
+        [Required]
+        public string Password { get; set; }
+
+        [Required]
+        public string Pattern { get; set; }
+
+        public long AccountId { get; set; }
     }
 }

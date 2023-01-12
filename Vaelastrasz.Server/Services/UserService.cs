@@ -28,9 +28,11 @@ namespace Vaelastrasz.Server.Services
                     Name = name,
                     Salt = salt,
                     Password = CryptographyUtils.GetSHA512HashAsBase64(salt, password),
-                    Pattern = pattern,
-                    Account = accounts.FindById(accountId)
+                    Pattern = pattern
                 };
+
+                if (accountId != null)
+                    user.Account = accounts.FindById(accountId);
 
                 return users.Insert(user);
             }
