@@ -28,7 +28,9 @@ namespace Vaelastrasz.Server.Services
                     Name = name,
                     Salt = salt,
                     Password = CryptographyUtils.GetSHA512HashAsBase64(salt, password),
-                    Pattern = pattern
+                    Pattern = pattern,
+                    CreationDate= DateTime.UtcNow,
+                    LastUpdateDate= DateTime.UtcNow
                 };
 
                 if (accountId != null)
@@ -111,7 +113,17 @@ namespace Vaelastrasz.Server.Services
             {
                 var col = db.GetCollection<User>("users");
 
-                return col.Update(user);
+                var u = col.FindById(user.Id);
+
+                if (u == null)
+                    return false;
+
+                u.Name = user.Name;
+                u.Pattern = user.Pattern;
+                u.Account = user.Account;
+                u.LastUpdateDate = DateTimeOffset.UtcNow;
+
+                return col.Update(u);
             }
         }
     }

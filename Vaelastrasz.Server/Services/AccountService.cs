@@ -24,7 +24,9 @@ namespace Vaelastrasz.Server.Services
                     Name = name,
                     Password = password,
                     Host = host,
-                    Prefix = prefix
+                    Prefix = prefix,
+                    CreationDate = DateTimeOffset.UtcNow,
+                    LastUpdateDate = DateTimeOffset.UtcNow
                 };
 
                 return accounts.Insert(account);
