@@ -16,4 +16,14 @@ namespace Vaelastrasz.Server.Models
         [Required]
         public string Prefix { get; set; }
     }
+
+    public class UpdateAccountModel
+    {
+
+    }
+
+    public class ReadAccountModel
+    {
+
+    }
 }

@@ -9,22 +9,26 @@ namespace Vaelastrasz.Server.Models
         public string Password { get; set; }
     }
 
+
+
     public class ReadUserModel
     {
         public long Id { get; set; }
         public string Name { get; set; }
         public string Pattern { get; set; }
-        public long? AccountId { get; set; }
+        public long AccountId { get; set; }
 
         public static ReadUserModel Convert(User user)
         {
-            return new ReadUserModel()
+            var u = new ReadUserModel()
             {
                 Id = user.Id,
                 Name = user.Name,
                 Pattern = user.Pattern,
-                AccountId = user.Account?.Id
+                AccountId = null
             };
+
+            if(user.Account != null)
         }
     }
 
@@ -44,16 +48,8 @@ namespace Vaelastrasz.Server.Models
 
     public class UpdateUserModel
     {
-        [Required]
-        public long Id { get; set; }
-
-        [Required]
         public string Name { get; set; }
 
-        [Required]
-        public string Password { get; set; }
-
-        [Required]
         public string Pattern { get; set; }
 
         public long AccountId { get; set; }
