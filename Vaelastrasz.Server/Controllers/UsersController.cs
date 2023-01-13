@@ -48,7 +48,7 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         [HttpGet("user/{id}"), Authorize(Roles = "admin")]
-        public IActionResult Get(long id)
+        public IActionResult GetById(long id)
         {
             var userService = new UserService(_connectionString);
 
@@ -58,6 +58,19 @@ namespace Vaelastrasz.Server.Controllers
                 return BadRequest("something went wrong...");
 
             return Ok(ReadUserModel.Convert(result));
+        }
+
+        [HttpGet("user"), Authorize(Roles = "admin")]
+        public IActionResult Get()
+        {
+            var userService = new UserService(_connectionString);
+
+            var result = userService.Find();
+
+            if (result == null)
+                return BadRequest("something went wrong...");
+
+            return Ok(new List<ReadUserModel>(result.Select(u => ReadUserModel.Convert(u))));
         }
 
         [HttpDelete("user/{id}"), Authorize(Roles = "admin")]
@@ -74,16 +87,18 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         [HttpPut("user/{id}"), Authorize(Roles = "admin")]
-        public IActionResult Put(UpdateUserModel model)
+        public IActionResult Put(long id, UpdateUserModel model)
         {
             var userService = new UserService(_connectionString);
             var accountService = new AccountService(_connectionString);
 
-            var user = userService.FindById(model.Id);
+            var user = userService.FindById(id);
 
             if (user == null)
                 return BadRequest($"something went wrong...");
 
+            user.Name = model.Name;
+            user.Pattern= model.Pattern;
             user.Account = accountService.FindById(model.AccountId);
 
             var result = userService.Update(user);

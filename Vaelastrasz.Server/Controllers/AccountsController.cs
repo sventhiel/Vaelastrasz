@@ -36,7 +36,8 @@ namespace Vaelastrasz.Server.Controllers
 
                 //
                 // Call the user service with necessary properties to create a new user.
-                accountService.Create(model.Name, model.Password, model.Host, model.Prefix);
+                accountService.Create(model.Name, model.Password, model.Host, model.Prefix
+                    );
 
                 //
                 // After creation of the new user, redirect to the table of all users.
