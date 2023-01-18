@@ -9,23 +9,23 @@ using Vaelastrasz.Server.Models;
 
 namespace Vaelastrasz.Server.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api")]
     [ApiController]
-    public class LoginController : ControllerBase
+    public class AuthController : ControllerBase
     {
         private ConnectionString _connectionString;
         private JwtConfiguration _jwtConfiguration;
         private List<Admin> _admins;
 
-        public LoginController(IConfiguration configuration, ConnectionString connectionString)
+        public AuthController(IConfiguration configuration, ConnectionString connectionString)
         {
             _connectionString = connectionString;
             _jwtConfiguration = configuration.GetSection("JWT").Get<JwtConfiguration>();
             _admins = configuration.GetSection("Admins").Get<List<Admin>>();
         }
 
-        [HttpPost]
-        public IActionResult Login([FromBody] LoginUserModel model)
+        [HttpPost("login")]
+        public IActionResult Login(LoginUserModel model)
         {
             //
             // Check Admin Configuration first
@@ -34,6 +34,7 @@ namespace Vaelastrasz.Server.Controllers
             if (admin != null && admin.Password.Equals(model.Password))
             {
                 var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtConfiguration.IssuerSigningKey));
+
                 var token = new JwtSecurityToken(
                     issuer: _jwtConfiguration.ValidIssuer,
                     audience: _jwtConfiguration.ValidAudience,
@@ -42,9 +43,7 @@ namespace Vaelastrasz.Server.Controllers
                     signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha512)
                     );
 
-                var user = new { id = 1, name = "Hans", email = "sven.thiel@uni-jena.de", /*jwt = new JwtSecurityTokenHandler().WriteToken(token)*/ };
-
-                return Ok(user);
+                return Ok(new JwtSecurityTokenHandler().WriteToken(token));
             }
 
             return BadRequest();
