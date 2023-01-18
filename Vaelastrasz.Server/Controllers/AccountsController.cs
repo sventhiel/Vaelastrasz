@@ -1,8 +1,6 @@
 ﻿using LiteDB;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Data;
 using Vaelastrasz.Server.Configuration;
 using Vaelastrasz.Server.Models;
 using Vaelastrasz.Server.Services;
@@ -23,7 +21,6 @@ namespace Vaelastrasz.Server.Controllers
             _jwtConfiguration = configuration.GetSection("JWT").Get<JwtConfiguration>();
             _admins = configuration.GetSection("Admins").Get<List<Admin>>();
         }
-
 
         [HttpPost("account"), Authorize(Roles = "admin")]
         public IActionResult Create(CreateAccountModel model)
@@ -46,6 +43,5 @@ namespace Vaelastrasz.Server.Controllers
 
             return BadRequest();
         }
-
     }
 }

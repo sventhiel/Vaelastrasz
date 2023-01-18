@@ -1,10 +1,6 @@
 ﻿using LiteDB;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 using Vaelastrasz.Server.Configuration;
 using Vaelastrasz.Server.Models;
 using Vaelastrasz.Server.Services;
@@ -97,41 +93,12 @@ namespace Vaelastrasz.Server.Controllers
             if (user == null)
                 return BadRequest($"something went wrong...");
 
-            user.Name = model.Name;
-            user.Pattern= model.Pattern;
-            user.Account = accountService.FindById(model.AccountId);
+            var result = userService.Update(id, model.Name, model.Password, model.Pattern, model.AccountId);
 
-            var result = userService.Update(user);
-
-            if(result)
+            if (result)
                 return Ok($"update of user (id:{user.Id}) was successful.");
 
             return BadRequest($"something went wrong...");
-        }
-
-        [HttpPost("login")]
-        public IActionResult Login(LoginUserModel model)
-        {
-            //
-            // Check Admin Configuration first
-            var admin = _admins.Find(a => a.Name.Equals(model.Username));
-
-            if (admin != null && admin.Password.Equals(model.Password))
-            {
-                var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtConfiguration.IssuerSigningKey));
-
-                var token = new JwtSecurityToken(
-                    issuer: _jwtConfiguration.ValidIssuer,
-                    audience: _jwtConfiguration.ValidAudience,
-                    expires: DateTime.Now.AddHours(_jwtConfiguration.ValidLifetime),
-                    claims: new[] { new Claim(ClaimTypes.Name, admin.Name) },
-                    signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha512)
-                    );
-
-                return Ok(new JwtSecurityTokenHandler().WriteToken(token));
-            }
-
-            return BadRequest();
         }
     }
 }
