@@ -15,116 +15,114 @@ namespace Vaelastrasz.Server.Services
 
         public long Create(string name, string password, string pattern, long? accountId)
         {
-            using (var db = new LiteDatabase(_connectionString))
+            using var db = new LiteDatabase(_connectionString);
+            var users = db.GetCollection<User>("users");
+            var accounts = db.GetCollection<Account>("accounts");
+
+            // salt
+            var salt = CryptographyUtils.GetRandomBase64String(16);
+
+            var user = new User()
             {
-                var users = db.GetCollection<User>("users");
-                var accounts = db.GetCollection<Account>("accounts");
+                Name = name,
+                Salt = salt,
+                Password = CryptographyUtils.GetSHA512HashAsBase64(salt, password),
+                Pattern = pattern,
+                CreationDate = DateTime.UtcNow,
+                LastUpdateDate = DateTime.UtcNow
+            };
 
-                // salt
-                var salt = CryptographyUtils.GetRandomBase64String(16);
+            if (accountId != null)
+                user.Account = accounts.FindById(accountId);
 
-                var user = new User()
-                {
-                    Name = name,
-                    Salt = salt,
-                    Password = CryptographyUtils.GetSHA512HashAsBase64(salt, password),
-                    Pattern = pattern,
-                    CreationDate= DateTime.UtcNow,
-                    LastUpdateDate= DateTime.UtcNow
-                };
-
-                if (accountId != null)
-                    user.Account = accounts.FindById(accountId);
-
-                return users.Insert(user);
-            }
+            return users.Insert(user);
         }
 
         public bool Verify(string name, string password)
         {
-            using (var db = new LiteDatabase(_connectionString))
-            {
-                var users = db.GetCollection<User>("users");
+            using var db = new LiteDatabase(_connectionString);
+            var users = db.GetCollection<User>("users");
 
-                var user = users.FindOne(u => u.Name == name);
+            var user = users.FindOne(u => u.Name == name);
 
-                if (user == null)
-                    return false;
+            if (user == null)
+                return false;
 
-                return (user.Password == CryptographyUtils.GetSHA512HashAsBase64(user.Salt, password));
-            }
+            return (user.Password == CryptographyUtils.GetSHA512HashAsBase64(user.Salt, password));
         }
 
         public bool Delete(long id)
         {
-            using (var db = new LiteDatabase(_connectionString))
-            {
-                var col = db.GetCollection<User>("users");
+            using var db = new LiteDatabase(_connectionString);
+            var col = db.GetCollection<User>("users");
 
-                return col.Delete(id);
-            }
+            return col.Delete(id);
         }
 
-        public User FindById(long id)
+        public User? FindById(long id)
         {
-            using (var db = new LiteDatabase(_connectionString))
-            {
-                var col = db.GetCollection<User>("users");
+            using var db = new LiteDatabase(_connectionString);
+            var col = db.GetCollection<User>("users");
 
-                return col.FindById(id);
-            }
+            return col.FindById(id);
         }
 
-        public User? FindByName(string? name)
+        public User? FindByName(string name)
         {
             if (name == null)
                 return null;
 
-            using (var db = new LiteDatabase(_connectionString))
-            {
-                var col = db.GetCollection<User>("users");
+            using var db = new LiteDatabase(_connectionString);
+            var col = db.GetCollection<User>("users");
 
-                var users = col.Find(u => u.Name.Equals(name));
+            var users = col.Find(u => u.Name.Equals(name));
 
-                if (users.Count() != 1)
-                    return null;
+            if (users.Count() != 1)
+                return null;
 
-                return users.First();
-            }
+            return users.First();
         }
 
         public List<User> Find()
         {
             List<User> users = new List<User>();
 
-            using (var db = new LiteDatabase(_connectionString))
-            {
-                var col = db.GetCollection<User>("users");
-
-                users = col.Query().ToList();
-            }
+            using var db = new LiteDatabase(_connectionString);
+            var col = db.GetCollection<User>("users");
+            users = col.Query().ToList();
 
             return users;
         }
 
-        public bool Update(User user)
+        public bool Update(long id, string name, string password, string pattern, long? accountId)
         {
-            using (var db = new LiteDatabase(_connectionString))
+            using var db = new LiteDatabase(_connectionString);
+            var users = db.GetCollection<User>("users");
+            var accounts = db.GetCollection<Account>("accounts");
+
+            var user = users.FindById(id);
+
+            if (user == null)
+                return false;
+
+            if (!string.IsNullOrEmpty(name))
+                user.Name = name;
+
+            if (!string.IsNullOrEmpty(pattern))
+                user.Pattern = pattern;
+
+            user.Account = accounts.FindById(accountId);
+
+            if (!string.IsNullOrEmpty(password))
             {
-                var col = db.GetCollection<User>("users");
-
-                var u = col.FindById(user.Id);
-
-                if (u == null)
-                    return false;
-
-                u.Name = user.Name;
-                u.Pattern = user.Pattern;
-                u.Account = user.Account;
-                u.LastUpdateDate = DateTimeOffset.UtcNow;
-
-                return col.Update(u);
+                var salt = CryptographyUtils.GetRandomBase64String(16);
+                user.Salt = salt;
+                user.Password = CryptographyUtils.GetSHA512HashAsBase64(salt, password);
             }
+
+            user.LastUpdateDate = DateTimeOffset.UtcNow;
+
+            return users.Update(user);
         }
     }
 }
