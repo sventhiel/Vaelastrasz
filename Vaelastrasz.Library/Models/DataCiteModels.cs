@@ -13,102 +13,9 @@ namespace Vaelastrasz.Library.Models
     {
         #region data
 
-        [JsonProperty("data.id")]
-        public string Id { get; set; }
+        public DataCiteDataModel Data { get; set; }
 
-        [JsonProperty("data.type")]
-        public DataCiteType Type { get; set; }
-
-        #region data.attributes
-
-        [JsonProperty("data.attributes.doi")]
-        public string Doi { get; set; }
-
-        [JsonProperty("data.attributes.prefix")]
-        public string Prefix { get; set; }
-
-        [JsonProperty("data.attributes.suffix")]
-        public string Suffix { get; set; }
-
-        [JsonProperty("data.attributes.event")]
-        public DataCiteEventType Event { get; set; }
-
-        [JsonProperty("data.attributes.identifiers")]
-        public List<DataCiteIdentifier> Identifiers { get; set; }
-
-        [JsonProperty("data.attributes.creators")]
-        public List<DataCiteCreator> Creators { get; set; }
-
-
-        [JsonProperty("data.attributes.titles")]
-        public List<DataCiteTitle> Titles { get; set; }
-
-        [JsonProperty("data.attributes.publisher")]
-        public string Publisher { get; set; }
-
-        [JsonProperty("data.attributes.publicationYear")]
-        public int PublicationYear { get; set; }
-
-        [JsonProperty("data.attributes.subjects")]
-        public List<DataCiteSubject> Subjects { get; set; }
-
-        [JsonProperty("data.attributes.contributors")]
-        public List<DataCiteCreator> Contributors { get; set; }
-
-        [JsonProperty("data.attributes.dates")]
-        public List<DataCiteDate> Dates { get; set; }
-
-        [JsonProperty("data.attributes.language")]
-        public string Language { get; set; }
-
-        #region data.attributes.types
-
-        [JsonProperty("data.attributes.types.resourceTypeGeneral")]
-        public DataCiteResourceType ResourceTypeGeneral { get; set; }
-
-        [JsonProperty("data.attributes.types.resourceType")]
-        public string ResourceType { get; set; }
-
-        [JsonProperty("data.attributes.types.schemaOrg")]
-        public string SchemaOrg { get; set; }
-
-        [JsonProperty("data.attributes.types.bibtex")]
-        public string Bibtex { get; set; }
-
-        [JsonProperty("data.attributes.types.citeproc")]
-        public string Citeproc { get; set; }
-
-        [JsonProperty("data.attributes.types.ris")]
-        public string Ris { get; set; }
-
-        #endregion data.attributes.types
-
-        // Related Identifiers
-
-        [JsonProperty("data.attributes.version")]
-        public string Version { get; set; }
-
-        [JsonProperty("data.attributes.url")]
-        public string URL { get; set; }
-
-        [JsonProperty("data.attributes.descriptions")]
-        public List<DataCiteDescription> Descriptions { get; set; }
-
-        #endregion data.attributes
-
-        #endregion data
-
-        [JsonConstructor]
-        public CreateDataCiteModel()
-        {
-            Creators = new List<DataCiteCreator>();
-            Contributors = new List<DataCiteCreator>();
-            Dates = new List<DataCiteDate>();
-            Descriptions = new List<DataCiteDescription>();
-            Identifiers = new List<DataCiteIdentifier>();
-            Subjects = new List<DataCiteSubject>();
-            Titles = new List<DataCiteTitle>();
-        }
+        #endregion
 
         public static CreateDataCiteModel Deserialize(string json)
         {
@@ -385,19 +292,6 @@ namespace Vaelastrasz.Library.Models
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
-    public enum DataCiteEventType
-    {
-        [EnumMember(Value = "publish")]
-        Publish = 1,
-
-        [EnumMember(Value = "register")]
-        Register = 2,
-
-        [EnumMember(Value = "hide")]
-        Hide = 3
-    }
-
-    [JsonConverter(typeof(StringEnumConverter))]
     public enum DataCiteStateType
     {
         [EnumMember(Value = "findable")]
@@ -408,45 +302,5 @@ namespace Vaelastrasz.Library.Models
 
         [EnumMember(Value = "draft")]
         Draft = 3
-    }
-
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum DataCiteResourceType
-    {
-        [EnumMember(Value = "Audiovisual")]
-        Audiovisual = 1,
-        Book = 2,
-        BookChapter = 3,
-        Collection = 4,
-        ComputationalNotebook = 5,
-        ConferencePaper = 6,
-        ConferenceProceeding = 7,
-        DataPaper = 8,
-        Dataset = 9,
-        Dissertation = 10,
-        Event = 11,
-        Image = 12,
-        InteractiveResource = 13,
-        JournalArticle = 14,
-        Model = 15,
-        OutputManagementPlan = 16,
-        PeerReview = 17,
-        PhysicalObject = 18,
-        Preprint = 19,
-        Report = 20,
-        Service = 21,
-        Software = 22,
-        Sound = 23,
-        Standard = 24,
-        Text = 25,
-        Workflow = 26,
-        Other = 27
-    }
-
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum DataCiteType
-    {
-        [EnumMember(Value = "dois")]
-        DOIs = 1
     }
 }
