@@ -1,4 +1,7 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
+using System.Runtime.Serialization;
 
 namespace Vaelastrasz.Library.Models.DataCite
 {
@@ -21,9 +24,10 @@ namespace Vaelastrasz.Library.Models.DataCite
         }
     }
 
-    [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum DataCiteIdentifierType
     {
+        [EnumMember(Value = "DOI")]
         DOI = 1
     }
 }

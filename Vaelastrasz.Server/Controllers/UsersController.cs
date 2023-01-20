@@ -23,21 +23,20 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         [HttpPost("user"), Authorize(Roles = "admin")]
-        public IActionResult Create(CreateUserModel model)
+        public IActionResult Post(CreateUserModel model)
         {
             if (ModelState.IsValid)
             {
-                //
-                // Create an instance of the user service to create a new user to the database.
                 var userService = new UserService(_connectionString);
 
-                //
-                // Call the user service with necessary properties to create a new user.
-                userService.Create(model.Name, model.Password, model.Pattern, model.AccountId);
+                var id = userService.Create(model.Name, model.Password, model.Pattern, model.AccountId);
 
-                //
-                // After creation of the new user, redirect to the table of all users.
-                return Ok();
+                var user = userService.FindById(id);
+
+                if (user == null)
+                    return BadRequest();
+
+                return Ok(ReadUserModel.Convert(user));
             }
 
             return BadRequest();
@@ -86,7 +85,6 @@ namespace Vaelastrasz.Server.Controllers
         public IActionResult Put(long id, UpdateUserModel model)
         {
             var userService = new UserService(_connectionString);
-            var accountService = new AccountService(_connectionString);
 
             var user = userService.FindById(id);
 
@@ -96,7 +94,11 @@ namespace Vaelastrasz.Server.Controllers
             var result = userService.Update(id, model.Name, model.Password, model.Pattern, model.AccountId);
 
             if (result)
-                return Ok($"update of user (id:{user.Id}) was successful.");
+            {
+                user = userService.FindById(id);
+                return Ok(user);
+
+            }
 
             return BadRequest($"something went wrong...");
         }

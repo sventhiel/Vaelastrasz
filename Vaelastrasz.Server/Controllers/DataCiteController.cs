@@ -4,9 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using RestSharp;
 using RestSharp.Authenticators;
+using System.Text.Json;
+using Vaelastrasz.Library.Extensions;
 using Vaelastrasz.Library.Models;
 using Vaelastrasz.Library.Models.ORCID;
 using Vaelastrasz.Server.Configuration;
+using Vaelastrasz.Server.Models;
 using Vaelastrasz.Server.Services;
 
 namespace Vaelastrasz.Server.Controllers
@@ -36,14 +39,20 @@ namespace Vaelastrasz.Server.Controllers
             var username = User.Identity.Name;
 
             var userService = new UserService(_connectionString);
+            var accountService = new AccountService(_connectionString);
 
             var user = userService.FindByName(username);
 
             if (user == null)
                 return BadRequest();
 
-            var client = new RestClient($"{user.Account.Host}");
-            client.Authenticator = new HttpBasicAuthenticator(user.Account.Name, user.Account.Password);
+            var account = accountService.FindById(user.Account.Id);
+
+            if (account == null)
+                return BadRequest();
+
+            var client = new RestClient($"{account.Host}");
+            client.Authenticator = new HttpBasicAuthenticator(account.Name, account.Password);
 
             var request = new RestRequest($"dois/{doi}", Method.Get);
             request.AddHeader("Accept", "application/json");
@@ -53,17 +62,70 @@ namespace Vaelastrasz.Server.Controllers
             return Ok(JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content));
         }
 
-        [HttpGet("datacite")]
-        public ORCIDPerson Get()
+        [HttpPost("datacite")]
+        public IActionResult Create(CreateDataCiteModel model)
         {
-            var client = new RestClient($"");
-            var request = new RestRequest($"", RestSharp.Method.Get);
+            if (User?.Identity?.Name == null)
+                return BadRequest();
 
+            var username = User.Identity.Name;
+
+            var userService = new UserService(_connectionString);
+            var accountService = new AccountService(_connectionString);
+
+            var user = userService.FindByName(username);
+
+            if (user == null)
+                return BadRequest();
+
+            var account = accountService.FindById(user.Account.Id);
+
+            if (account == null)
+                return BadRequest();
+
+            var client = new RestClient($"{account.Host}");
+            client.Authenticator = new HttpBasicAuthenticator(account.Name, account.Password);
+
+            var json = model.Serialize();
+
+            var request = new RestRequest($"dois", Method.Post).AddJsonBody(json);
             request.AddHeader("Accept", "application/json");
 
             var response = client.Execute(request);
 
-            return JsonConvert.DeserializeObject<ORCIDPerson>(response.Content);
+            return Ok(JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content));
+        }
+
+        [HttpPut("datacite/{doi}")]
+        public IActionResult Put(string doi, UpdateDataCiteModel model)
+        {
+            if (User?.Identity?.Name == null)
+                return BadRequest();
+
+            var username = User.Identity.Name;
+
+            var userService = new UserService(_connectionString);
+            var accountService = new AccountService(_connectionString);
+
+            var user = userService.FindByName(username);
+
+            if (user == null)
+                return BadRequest();
+
+            var account = accountService.FindById(user.Account.Id);
+
+            if (account == null)
+                return BadRequest();
+
+            var client = new RestClient($"{account.Host}");
+            client.Authenticator = new HttpBasicAuthenticator(account.Name, account.Password);
+
+            var request = new RestRequest($"dois/{doi}", Method.Put).AddJsonBody(model.Serialize());
+            request.AddHeader("Accept", "application/json");
+
+            var response = client.Execute(request);
+
+            return Ok(JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content));
         }
     }
 }

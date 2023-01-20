@@ -13,7 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\DataCite\" />
     <Folder Include="Models\ORCID\" />
     <Folder Include="Services\" />
     <Folder Include="Schemas\" />

@@ -1,10 +1,10 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Linq;
 using System.Reflection;
-using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
 namespace Vaelastrasz.Library.Converters

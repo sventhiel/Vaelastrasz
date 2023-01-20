@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Converters;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Vaelastrasz.Library.Converters;
 using Vaelastrasz.Library.Models;
 
 namespace Vaelastrasz.Library.Extensions
@@ -23,13 +24,25 @@ namespace Vaelastrasz.Library.Extensions
             {
                 NullValueHandling = NullValueHandling.Ignore,
                 DefaultValueHandling = DefaultValueHandling.Ignore,
+                Converters  = new List<JsonConverter> { new StringEnumConverter() }
+            };
+
+            return JsonConvert.SerializeObject(model, Formatting.Indented, jsonSettings);
+        }
+
+        public static string Serialize(this ReadDataCiteModel model)
+        {
+            var jsonSettings = new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+                DefaultValueHandling = DefaultValueHandling.Ignore,
                 Converters = new[] { new StringEnumConverter() }
             };
 
             return JsonConvert.SerializeObject(model, Formatting.None, jsonSettings);
         }
 
-        public static string Serialize(this ReadDataCiteModel model)
+        public static string Serialize(this UpdateDataCiteModel model)
         {
             var jsonSettings = new JsonSerializerSettings
             {

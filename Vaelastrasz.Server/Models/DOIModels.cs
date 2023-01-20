@@ -6,11 +6,9 @@
 
     public class ReadDOIModel
     {
-
     }
 
     public class UpdateDOIModel
     {
-
     }
 }

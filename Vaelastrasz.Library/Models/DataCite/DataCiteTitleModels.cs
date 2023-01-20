@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System.ComponentModel.DataAnnotations;
 
 namespace Vaelastrasz.Library.Models.DataCite
@@ -6,13 +7,12 @@ namespace Vaelastrasz.Library.Models.DataCite
     public class DataCiteTitle
     {
         [JsonProperty("title")]
-        [Required]
         public string Title { get; set; }
 
-        [JsonProperty("lang", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty("lang")]
         public string Language { get; set; }
 
-        [JsonProperty("titleType", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty("titleType")]
         public DataCiteTitleType? TitleType { get; set; }
 
         [JsonConstructor]
@@ -31,7 +31,7 @@ namespace Vaelastrasz.Library.Models.DataCite
         }
     }
 
-    [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum DataCiteTitleType
     {
         AlternativeTitle = 1,

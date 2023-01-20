@@ -2,8 +2,11 @@
 
 namespace Vaelastrasz.Server.Entities
 {
-    public class DOI : BaseEntity
+    public class DOI
     {
+        public long Id { get; set; }
+        public DateTimeOffset CreationDate { get; set; }
+        public DateTimeOffset LastUpdateDate { get; set; }
         public DOIType Type { get; set; }
         public string Prefix { get; set; }
         public string Suffix { get; set; }

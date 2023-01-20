@@ -9,14 +9,14 @@ namespace Vaelastrasz.Server.Models
         public string Password { get; set; }
     }
 
-
-
     public class ReadUserModel
     {
         public long Id { get; set; }
         public string Name { get; set; }
         public string Pattern { get; set; }
         public long AccountId { get; set; }
+        public DateTimeOffset CreationDate { get; set; }
+        public DateTimeOffset LastUpdateDate { get; set; }
 
         public static ReadUserModel Convert(User user)
         {
@@ -25,10 +25,14 @@ namespace Vaelastrasz.Server.Models
                 Id = user.Id,
                 Name = user.Name,
                 Pattern = user.Pattern,
-                AccountId = null
+                CreationDate = user.CreationDate,
+                LastUpdateDate = user.LastUpdateDate
             };
 
-            if(user.Account != null)
+            if (user.Account != null)
+                u.AccountId = user.Account.Id;
+
+            return u;
         }
     }
 
@@ -51,6 +55,8 @@ namespace Vaelastrasz.Server.Models
         public string Name { get; set; }
 
         public string Pattern { get; set; }
+
+        public string Password { get; set; }
 
         public long AccountId { get; set; }
     }

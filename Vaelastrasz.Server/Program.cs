@@ -7,6 +7,7 @@ using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using System.Text.Json.Serialization;
+using Vaelastrasz.Library.Converters;
 using Vaelastrasz.Server.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -94,16 +95,7 @@ builder.Services.AddAuthentication(options =>
         };
     });
 
-builder.Services.AddControllers().AddJsonOptions(options =>
-{
-    //options.JsonSerializerOptions.Converters
-    //    .Add(new JsonStringEnumMemberConverter());
-
-    options.JsonSerializerOptions.DefaultIgnoreCondition =
-             JsonIgnoreCondition.WhenWritingNull;
-
-    options.JsonSerializerOptions.WriteIndented = true;
-});
+builder.Services.AddControllers();
 
 var app = builder.Build();
 

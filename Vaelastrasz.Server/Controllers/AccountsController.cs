@@ -9,6 +9,7 @@ namespace Vaelastrasz.Server.Controllers
 {
     [Route("api")]
     [ApiController]
+    [Authorize(Roles = "admin")]
     public class AccountsController : ControllerBase
     {
         private ConnectionString _connectionString;
@@ -22,8 +23,8 @@ namespace Vaelastrasz.Server.Controllers
             _admins = configuration.GetSection("Admins").Get<List<Admin>>();
         }
 
-        [HttpPost("account"), Authorize(Roles = "admin")]
-        public IActionResult Create(CreateAccountModel model)
+        [HttpPost("account")]
+        public IActionResult Post(CreateAccountModel model)
         {
             if (ModelState.IsValid)
             {
@@ -33,15 +34,63 @@ namespace Vaelastrasz.Server.Controllers
 
                 //
                 // Call the user service with necessary properties to create a new user.
-                accountService.Create(model.Name, model.Password, model.Host, model.Prefix
-                    );
+                var id = accountService.Create(model.Name, model.Password, model.Host, model.Prefix);
+
+                var account = accountService.FindById(id);
 
                 //
                 // After creation of the new user, redirect to the table of all users.
-                return Ok();
+                return Ok(account);
             }
 
             return BadRequest();
+        }
+
+        [HttpGet("account/{id}"), Authorize(Roles = "admin")]
+        public IActionResult GetById(long id)
+        {
+            var accountService = new AccountService(_connectionString);
+
+            var result = accountService.FindById(id);
+
+            if (result == null)
+                return BadRequest("something went wrong...");
+
+            return Ok(ReadAccountModel.Convert(result));
+        }
+
+        [HttpGet("account")]
+        public IActionResult Get()
+        {
+            var accountService = new AccountService(_connectionString);
+
+            var result = accountService.Find();
+
+            if (result == null)
+                return BadRequest("something went wrong...");
+
+            return Ok(new List<ReadAccountModel>(result.Select(a => ReadAccountModel.Convert(a))));
+        }
+
+        [HttpPut("account/{id}"), Authorize(Roles = "admin")]
+        public IActionResult Put(long id, UpdateAccountModel model)
+        {
+            var accountService = new AccountService(_connectionString);
+
+            var account = accountService.FindById(id);
+
+            if (account == null)
+                return BadRequest($"something went wrong...");
+
+            var result = accountService.Update(id, model.Name, model.Password, model.Host, model.Prefix);
+
+            if (result)
+            {
+                account = accountService.FindById(id);
+                return Ok(account);
+            }
+
+            return BadRequest($"something went wrong...");
         }
     }
 }

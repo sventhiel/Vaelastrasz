@@ -1,7 +1,9 @@
 ﻿using NameParser;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using Vaelastrasz.Library.Converters;
 
 namespace Vaelastrasz.Library.Models.DataCite
 {
@@ -16,7 +18,7 @@ namespace Vaelastrasz.Library.Models.DataCite
         [JsonProperty("familyName")]
         public string FamilyName { get; set; }
 
-        [JsonProperty("nameType", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty("nameType")]
         public DataCiteCreatorType NameType { get; set; }
 
         [JsonProperty("affiliation")]
@@ -66,7 +68,7 @@ namespace Vaelastrasz.Library.Models.DataCite
         }
     }
 
-    [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumMemberConverter))]
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum DataCiteCreatorType
     {
         [EnumMember(Value = "Personal")]
