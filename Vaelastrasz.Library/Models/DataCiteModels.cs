@@ -2,17 +2,18 @@
 using Newtonsoft.Json.Converters;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using Vaelastrasz.Library.Attributes;
 using Vaelastrasz.Library.Converters;
 using Vaelastrasz.Library.Models.DataCite;
 
 namespace Vaelastrasz.Library.Models
 {
-    [JsonConverter(typeof(JsonPathConverter))]
     public class CreateDataCiteModel
     {
         #region data
 
+        [JsonPropertyName("data")]
         public DataCiteDataModel Data { get; set; }
 
         #endregion
@@ -29,7 +30,6 @@ namespace Vaelastrasz.Library.Models
         }
     }
 
-    [JsonConverter(typeof(JsonPathConverter))]
     public class ReadDataCiteModel
     {
         #region data
@@ -178,7 +178,6 @@ namespace Vaelastrasz.Library.Models
         }
     }
 
-    [JsonConverter(typeof(JsonPathConverter))]
     public class UpdateDataCiteModel
     {
         #region data
@@ -187,7 +186,6 @@ namespace Vaelastrasz.Library.Models
         public string Id { get; set; }
 
         [JsonProperty("data.type")]
-        [JsonConverter(typeof(StringEnumConverter))]
         public DataCiteType Type { get; set; }
 
         #region data.attributes
@@ -291,7 +289,6 @@ namespace Vaelastrasz.Library.Models
         }
     }
 
-    [JsonConverter(typeof(StringEnumConverter))]
     public enum DataCiteStateType
     {
         [EnumMember(Value = "findable")]

@@ -1,15 +1,10 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-using System.Text;
+﻿using System.Text.Json.Serialization;
 
 namespace Vaelastrasz.Library.Models.DataCite
 {
     public class DataCiteDataModel
     {
+        [JsonPropertyName("id")]
         public string Id { get; set; }
 
         public DataCiteType Type { get; set; }
@@ -17,9 +12,10 @@ namespace Vaelastrasz.Library.Models.DataCite
         public DataCiteAttributesModel Attributes { get; set; }
     }
 
+    [JsonConverter(typeof(JsonStringEnumMemberConverter))]
     public enum DataCiteType
     {
-        [EnumMember(Value = "dois")]
+        [JsonPropertyName("dois")]
         DOIs = 1
     }
 }

@@ -86,7 +86,7 @@ namespace Vaelastrasz.Server.Controllers
             var client = new RestClient($"{account.Host}");
             client.Authenticator = new HttpBasicAuthenticator(account.Name, account.Password);
 
-            var json = model.Serialize();
+            var json = System.Text.Json.JsonSerializer.Serialize(model);
 
             var request = new RestRequest($"dois", Method.Post).AddJsonBody(json);
             request.AddHeader("Accept", "application/json");
