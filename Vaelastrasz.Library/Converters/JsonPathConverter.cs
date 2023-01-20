@@ -4,10 +4,17 @@ using Newtonsoft.Json.Serialization;
 using System;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
 namespace Vaelastrasz.Library.Converters
 {
+    /*
+     * Links
+     * - https://stackoverflow.com/questions/52619432/json-net-deserialize-object-nested-data
+     * - https://stackoverflow.com/questions/33088462/can-i-specify-a-path-in-an-attribute-to-map-a-property-in-my-class-to-a-child-pr
+     * 
+     */
     public class JsonPathConverter : JsonConverter
     {
         public override object ReadJson(
@@ -16,6 +23,9 @@ namespace Vaelastrasz.Library.Converters
         object existingValue,
             JsonSerializer serializer)
         {
+            serializer.NullValueHandling = NullValueHandling.Ignore;
+            serializer.DefaultValueHandling = DefaultValueHandling.Ignore;
+
             JObject jo = JObject.Load(reader);
             object targetObj = Activator.CreateInstance(objectType);
 
@@ -95,7 +105,8 @@ namespace Vaelastrasz.Library.Converters
                             }
                             else
                             {
-                                lastLevel[nesting[i]] = new JValue(jValue);
+                                if (jValue != null)
+                                    lastLevel[nesting[i]] = new JValue(jValue);
                             }
                         }
                     }
@@ -110,9 +121,6 @@ namespace Vaelastrasz.Library.Converters
                     }
                 }
             }
-
-            serializer.NullValueHandling = NullValueHandling.Ignore;
-            serializer.DefaultValueHandling = DefaultValueHandling.Ignore;
 
             serializer.Serialize(writer, main);
         }
