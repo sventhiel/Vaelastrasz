@@ -1,45 +1,58 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-using System.Text;
+﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Vaelastrasz.Library.Models.DataCite
 {
     public class DataCiteAttributesModel
     {
+        [JsonPropertyName("doi")]
         public string Doi { get; set; }
 
+        [JsonPropertyName("prefix")]
         public string Prefix { get; set; }
 
+        [JsonPropertyName("suffix")]
         public string Suffix { get; set; }
+
+        [JsonPropertyName("event")]
 
         public DataCiteEventType Event { get; set; }
 
+        [JsonPropertyName("identifiers")]
+
         public List<DataCiteIdentifier> Identifiers { get; set; }
 
+        [JsonPropertyName("creators")]
         public List<DataCiteCreator> Creators { get; set; }
 
+        [JsonPropertyName("titles")]
         public List<DataCiteTitle> Titles { get; set; }
 
+        [JsonPropertyName("publisher")]
         public string Publisher { get; set; }
 
+        [JsonPropertyName("publicationYear")]
         public int PublicationYear { get; set; }
 
+        [JsonPropertyName("subjects")]
         public List<DataCiteSubject> Subjects { get; set; }
 
+        [JsonPropertyName("contributors")]
         public List<DataCiteCreator> Contributors { get; set; }
 
+        [JsonPropertyName("dates")]
         public List<DataCiteDate> Dates { get; set; }
 
+        [JsonPropertyName("language")]
         public string Language { get; set; }
 
+        [JsonPropertyName("version")]
         public string Version { get; set; }
 
+        [JsonPropertyName("url")]
         public string URL { get; set; }
 
+        [JsonPropertyName("descriptions")]
         public List<DataCiteDescription> Descriptions { get; set; }
 
         public DataCiteAttributesModel()
@@ -54,15 +67,16 @@ namespace Vaelastrasz.Library.Models.DataCite
         }
     }
 
+    [JsonConverter(typeof(JsonStringEnumMemberConverter))]
     public enum DataCiteEventType
     {
-        [EnumMember(Value = "publish")]
+        [JsonPropertyName("publish")]
         Publish = 1,
 
-        [EnumMember(Value = "register")]
+        [JsonPropertyName("register")]
         Register = 2,
 
-        [EnumMember(Value = "hide")]
+        [JsonPropertyName("hide")]
         Hide = 3
     }
 }
