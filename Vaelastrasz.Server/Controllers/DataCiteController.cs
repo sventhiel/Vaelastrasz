@@ -1,15 +1,10 @@
 ﻿using LiteDB;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using RestSharp;
 using RestSharp.Authenticators;
-using System.Text.Json;
-using Vaelastrasz.Library.Extensions;
 using Vaelastrasz.Library.Models;
-using Vaelastrasz.Library.Models.ORCID;
 using Vaelastrasz.Server.Configuration;
-using Vaelastrasz.Server.Models;
 using Vaelastrasz.Server.Services;
 
 namespace Vaelastrasz.Server.Controllers
@@ -34,7 +29,7 @@ namespace Vaelastrasz.Server.Controllers
         public IActionResult GetById(string doi)
         {
             if (User?.Identity?.Name == null)
-                return BadRequest();
+                return StatusCode(400);
 
             var username = User.Identity.Name;
 
@@ -44,12 +39,12 @@ namespace Vaelastrasz.Server.Controllers
             var user = userService.FindByName(username);
 
             if (user == null)
-                return BadRequest();
+                return StatusCode(400);
 
             var account = accountService.FindById(user.Account.Id);
 
             if (account == null)
-                return BadRequest();
+                return StatusCode(400);
 
             var client = new RestClient($"{account.Host}");
             client.Authenticator = new HttpBasicAuthenticator(account.Name, account.Password);
@@ -59,14 +54,14 @@ namespace Vaelastrasz.Server.Controllers
 
             var response = client.Execute(request);
 
-            return Ok(JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content));
+            return StatusCode(((int)response.StatusCode), response.Content);
         }
 
         [HttpPost("datacite")]
         public IActionResult Create(CreateDataCiteModel model)
         {
             if (User?.Identity?.Name == null)
-                return BadRequest();
+                return StatusCode(400);
 
             var username = User.Identity.Name;
 
@@ -76,24 +71,22 @@ namespace Vaelastrasz.Server.Controllers
             var user = userService.FindByName(username);
 
             if (user == null)
-                return BadRequest();
+                return StatusCode(400);
 
             var account = accountService.FindById(user.Account.Id);
 
             if (account == null)
-                return BadRequest();
+                return StatusCode(400);
 
             var client = new RestClient($"{account.Host}");
             client.Authenticator = new HttpBasicAuthenticator(account.Name, account.Password);
 
-            var json = System.Text.Json.JsonSerializer.Serialize(model);
-
-            var request = new RestRequest($"dois", Method.Post).AddJsonBody(json);
+            var request = new RestRequest($"dois", Method.Post).AddJsonBody(System.Text.Json.JsonSerializer.Serialize(model));
             request.AddHeader("Accept", "application/json");
 
             var response = client.Execute(request);
 
-            return Ok(JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content));
+            return StatusCode((int)response.StatusCode, response.Content);
         }
 
         [HttpPut("datacite/{doi}")]
@@ -120,12 +113,12 @@ namespace Vaelastrasz.Server.Controllers
             var client = new RestClient($"{account.Host}");
             client.Authenticator = new HttpBasicAuthenticator(account.Name, account.Password);
 
-            var request = new RestRequest($"dois/{doi}", Method.Put).AddJsonBody(model.Serialize());
+            var request = new RestRequest($"dois/{doi}", Method.Put).AddJsonBody(System.Text.Json.JsonSerializer.Serialize(model));
             request.AddHeader("Accept", "application/json");
 
             var response = client.Execute(request);
 
-            return Ok(JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content));
+            return StatusCode((int)response.StatusCode, response.Content);
         }
     }
 }

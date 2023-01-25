@@ -1,33 +1,26 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
-using System.Runtime.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace Vaelastrasz.Library.Models.DataCite
 {
-    public class DataCiteIdentifier
+    public class DataCiteIdentifierModel
     {
-        [JsonProperty("identifier")]
+        [JsonPropertyName("identifier")]
         public string Identifier { get; set; }
 
-        [JsonProperty("identifierType")]
+        [JsonPropertyName("identifierType")]
         public DataCiteIdentifierType IdentifierType { get; set; }
 
-        [JsonConstructor]
-        public DataCiteIdentifier()
-        { }
-
-        public DataCiteIdentifier(string identifier, DataCiteIdentifierType identifierType)
+        public DataCiteIdentifierModel(string identifier, DataCiteIdentifierType identifierType)
         {
             Identifier = identifier;
             IdentifierType = identifierType;
         }
     }
 
-    [JsonConverter(typeof(StringEnumConverter))]
+    [JsonConverter(typeof(JsonStringEnumMemberConverter))]
     public enum DataCiteIdentifierType
     {
-        [EnumMember(Value = "DOI")]
+        [JsonPropertyName("DOI")]
         DOI = 1
     }
 }

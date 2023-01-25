@@ -1,40 +1,36 @@
 ﻿using NameParser;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
-using Vaelastrasz.Library.Converters;
+using System.Text.Json.Serialization;
 
 namespace Vaelastrasz.Library.Models.DataCite
 {
-    public class DataCiteCreator
+    public class DataCiteCreatorModel
     {
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; set; }
 
-        [JsonProperty("givenName")]
+        [JsonPropertyName("givenName")]
         public string GivenName { get; set; }
 
-        [JsonProperty("familyName")]
+        [JsonPropertyName("familyName")]
         public string FamilyName { get; set; }
 
-        [JsonProperty("nameType")]
+        [JsonPropertyName("nameType")]
         public DataCiteCreatorType NameType { get; set; }
 
-        [JsonProperty("affiliation")]
-        public List<DataCiteAffiliation> Affiliation { get; set; }
+        [JsonPropertyName("affiliation")]
+        public List<DataCiteAffiliationModel> Affiliation { get; set; }
 
-        [JsonProperty("nameIdentifiers")]
-        public List<DataCiteNameIdentifier> NameIdentifiers { get; set; }
+        [JsonPropertyName("nameIdentifiers")]
+        public List<DataCiteNameIdentifierModel> NameIdentifiers { get; set; }
 
-        [JsonConstructor]
-        public DataCiteCreator()
+        public DataCiteCreatorModel()
         {
-            Affiliation = new List<DataCiteAffiliation>();
-            NameIdentifiers = new List<DataCiteNameIdentifier>();
+            Affiliation = new List<DataCiteAffiliationModel>();
+            NameIdentifiers = new List<DataCiteNameIdentifierModel>();
         }
 
-        public DataCiteCreator(string name, DataCiteCreatorType type)
+        public DataCiteCreatorModel(string name, DataCiteCreatorType type)
         {
             switch (type)
             {
@@ -60,7 +56,7 @@ namespace Vaelastrasz.Library.Models.DataCite
             }
         }
 
-        public DataCiteCreator(string firstname, string lastname)
+        public DataCiteCreatorModel(string firstname, string lastname)
         {
             GivenName = firstname;
             FamilyName = lastname;
@@ -68,13 +64,13 @@ namespace Vaelastrasz.Library.Models.DataCite
         }
     }
 
-    [JsonConverter(typeof(StringEnumConverter))]
+    [JsonConverter(typeof(JsonStringEnumMemberConverter))]
     public enum DataCiteCreatorType
     {
-        [EnumMember(Value = "Personal")]
+        [JsonPropertyName("Personal")]
         Personal = 1,
 
-        [EnumMember(Value = "Organizational")]
+        [JsonPropertyName("Organizational")]
         Organizational = 2
     }
 }

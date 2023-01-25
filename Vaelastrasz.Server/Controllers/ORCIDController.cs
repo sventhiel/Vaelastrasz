@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using RestSharp;
-using Vaelastrasz.Library.Models.ORCID;
+using Vaelastrasz.Library.Models;
 
 namespace Vaelastrasz.Server.Controllers
 {
@@ -11,7 +10,7 @@ namespace Vaelastrasz.Server.Controllers
     public class ORCIDController : ControllerBase
     {
         [HttpGet("orcid/{orcid}/person"), Authorize]
-        public ORCIDPerson GetPerson(string orcid)
+        public IActionResult GetPerson(string orcid)
         {
             var client = new RestClient("https://pub.orcid.org/v3.0/");
             var request = new RestRequest($"{orcid}/person", RestSharp.Method.Get);
@@ -20,7 +19,7 @@ namespace Vaelastrasz.Server.Controllers
 
             var response = client.Execute(request);
 
-            return JsonConvert.DeserializeObject<ORCIDPerson>(response.Content);
+            return StatusCode(200, System.Text.Json.JsonSerializer.Deserialize<ORCIDPerson>(response.Content).name);
         }
 
         [Obsolete]
@@ -34,7 +33,7 @@ namespace Vaelastrasz.Server.Controllers
 
             var response = client.Execute(request);
 
-            return JsonConvert.DeserializeObject<ORCIDPerson>(response.Content);
+            return System.Text.Json.JsonSerializer.Deserialize<ORCIDPerson>(response.Content);
         }
     }
 }

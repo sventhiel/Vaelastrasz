@@ -1,17 +1,17 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Vaelastrasz.Library.Models.DataCite
 {
-    public class DataCiteGeoLocation
+    public class DataCiteGeoLocationModel
     {
-        [JsonProperty("geoLocationPoint")]
+        [JsonPropertyName("geoLocationPoint")]
         public Dictionary<string, string> GeoLocationPoint { get; set; }
 
-        [JsonProperty("geoLocationBox")]
+        [JsonPropertyName("geoLocationBox")]
         public Dictionary<string, string> GeoLocationBox { get; set; }
 
-        [JsonProperty("geoLocationPlace")]
-        public string geoLocationPlace { get; set; }
+        [JsonPropertyName("geoLocationPlace")]
+        public string GeoLocationPlace { get; set; }
     }
 }

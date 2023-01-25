@@ -1,16 +1,16 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Vaelastrasz.Library.Models.DataCite
 {
-    public class DataCiteRight
+    public class DataCiteRightModel
     {
-        [JsonProperty("rights")]
+        [JsonPropertyName("rights")]
         public string Rights { get; set; }
 
-        [JsonProperty("rightsUri")]
+        [JsonPropertyName("rightsUri")]
         public string RightsUri { get; set; }
 
-        [JsonProperty("lang")]
+        [JsonPropertyName("lang")]
         public string Language { get; set; }
     }
 }

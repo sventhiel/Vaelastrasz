@@ -97,7 +97,6 @@ namespace Vaelastrasz.Server.Controllers
             {
                 user = userService.FindById(id);
                 return Ok(user);
-
             }
 
             return BadRequest($"something went wrong...");

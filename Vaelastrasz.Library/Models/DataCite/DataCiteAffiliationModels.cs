@@ -1,19 +1,19 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Vaelastrasz.Library.Models.DataCite
 {
-    public class DataCiteAffiliation
+    public class DataCiteAffiliationModel
     {
-        [JsonProperty("affiliationIdentifier")]
+        [JsonPropertyName("affiliationIdentifier")]
         public string AffiliationIdentifier { get; set; }
 
-        [JsonProperty("affiliationIdentifierScheme")]
+        [JsonPropertyName("affiliationIdentifierScheme")]
         public string AffiliationIdentifierScheme { get; set; }
 
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; set; }
 
-        [JsonProperty("schemeUri")]
+        [JsonPropertyName("schemeUri")]
         public string SchemeUri { get; set; }
     }
 }

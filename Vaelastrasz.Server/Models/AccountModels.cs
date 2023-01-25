@@ -24,7 +24,6 @@ namespace Vaelastrasz.Server.Models
         public string Password { get; set; }
         public string Host { get; set; }
         public string Prefix { get; set; }
-
     }
 
     public class ReadAccountModel

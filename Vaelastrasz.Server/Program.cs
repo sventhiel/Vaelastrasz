@@ -6,8 +6,6 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using System.Text;
-using System.Text.Json.Serialization;
-using Vaelastrasz.Library.Converters;
 using Vaelastrasz.Server.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);

@@ -1,24 +1,19 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+﻿using System.Text.Json.Serialization;
 
 namespace Vaelastrasz.Library.Models.DataCite
 {
-    public class DataCiteDescription
+    public class DataCiteDescriptionModel
     {
-        [JsonProperty("lang")]
+        [JsonPropertyName("lang")]
         public string Language { get; set; }
 
-        [JsonProperty("description")]
+        [JsonPropertyName("description")]
         public string Description { get; set; }
 
-        [JsonProperty("descriptionType")]
+        [JsonPropertyName("descriptionType")]
         public DataCiteDescriptionType? DescriptionType { get; set; }
 
-        [JsonConstructor]
-        public DataCiteDescription()
-        { }
-
-        public DataCiteDescription(string description, string lang = null, DataCiteDescriptionType? descriptionType = null)
+        public DataCiteDescriptionModel(string description, string lang = null, DataCiteDescriptionType? descriptionType = null)
         {
             Description = description;
 
@@ -30,14 +25,25 @@ namespace Vaelastrasz.Library.Models.DataCite
         }
     }
 
-    [JsonConverter(typeof(StringEnumConverter))]
+    [JsonConverter(typeof(JsonStringEnumMemberConverter))]
     public enum DataCiteDescriptionType
     {
+        [JsonPropertyName("abstract")]
         Abstract = 1,
+
+        [JsonPropertyName("methods")]
         Methods = 2,
+
+        [JsonPropertyName("seriesInformation")]
         SeriesInformation = 3,
+
+        [JsonPropertyName("tableOfContents")]
         TableOfContents = 4,
+
+        [JsonPropertyName("technicalInfo")]
         TechnicalInfo = 5,
+
+        [JsonPropertyName("other")]
         Other = 6
     }
 }

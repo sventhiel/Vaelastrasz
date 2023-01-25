@@ -1,29 +1,25 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Vaelastrasz.Library.Models.DataCite
 {
-    public class DataCiteSubject
+    public class DataCiteSubjectModel
     {
-        [JsonProperty("subject")]
+        [JsonPropertyName("subject")]
         public string Subject { get; set; }
 
-        [JsonProperty("subjectScheme")]
+        [JsonPropertyName("subjectScheme")]
         public string SubjectScheme { get; set; }
 
-        [JsonProperty("schemeUri")]
+        [JsonPropertyName("schemeUri")]
         public string SchemeUri { get; set; }
 
-        [JsonProperty("valueUri")]
+        [JsonPropertyName("valueUri")]
         public string ValueUri { get; set; }
 
-        [JsonProperty("lang")]
+        [JsonPropertyName("lang")]
         public string Language { get; set; }
 
-        [JsonConstructor]
-        public DataCiteSubject()
-        { }
-
-        public DataCiteSubject(string subject)
+        public DataCiteSubjectModel(string subject)
         {
             Subject = subject;
         }
