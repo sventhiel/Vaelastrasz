@@ -10,6 +10,9 @@ namespace Vaelastrasz.Library.Models.DataCite
         [JsonPropertyName("identifierType")]
         public DataCiteIdentifierType IdentifierType { get; set; }
 
+        [JsonConstructor]
+        public DataCiteIdentifierModel() { }
+
         public DataCiteIdentifierModel(string identifier, DataCiteIdentifierType identifierType)
         {
             Identifier = identifier;

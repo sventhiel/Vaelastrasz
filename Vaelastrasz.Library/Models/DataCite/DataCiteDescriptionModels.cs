@@ -13,6 +13,9 @@ namespace Vaelastrasz.Library.Models.DataCite
         [JsonPropertyName("descriptionType")]
         public DataCiteDescriptionType? DescriptionType { get; set; }
 
+        [JsonConstructor]
+        public DataCiteDescriptionModel() { }
+
         public DataCiteDescriptionModel(string description, string lang = null, DataCiteDescriptionType? descriptionType = null)
         {
             Description = description;

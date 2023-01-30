@@ -13,6 +13,9 @@ namespace Vaelastrasz.Library.Models.DataCite
         [JsonPropertyName("titleType")]
         public DataCiteTitleType? TitleType { get; set; }
 
+        [JsonConstructor]
+        public DataCiteTitleModel() { }
+        
         public DataCiteTitleModel(string title, string lang = null, DataCiteTitleType? titleType = null)
         {
             Title = title;

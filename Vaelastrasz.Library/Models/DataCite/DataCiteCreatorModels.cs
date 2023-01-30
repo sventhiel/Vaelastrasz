@@ -24,6 +24,7 @@ namespace Vaelastrasz.Library.Models.DataCite
         [JsonPropertyName("nameIdentifiers")]
         public List<DataCiteNameIdentifierModel> NameIdentifiers { get; set; }
 
+        [JsonConstructor]
         public DataCiteCreatorModel()
         {
             Affiliation = new List<DataCiteAffiliationModel>();

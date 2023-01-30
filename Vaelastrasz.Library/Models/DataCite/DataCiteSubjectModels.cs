@@ -19,6 +19,9 @@ namespace Vaelastrasz.Library.Models.DataCite
         [JsonPropertyName("lang")]
         public string Language { get; set; }
 
+        [JsonConstructor]
+        public DataCiteSubjectModel() { }
+
         public DataCiteSubjectModel(string subject)
         {
             Subject = subject;

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using Vaelastrasz.Library.Models.DataCite;
 
@@ -8,20 +9,31 @@ namespace Vaelastrasz.Library.Models
 
     public class CreateDataCiteModel
     {
+        [Required]
         [JsonPropertyName("data")]
         public CreateDataCiteDataModel Data { get; set; }
+
+        public CreateDataCiteModel()
+        {
+            Data = new CreateDataCiteDataModel();
+        }
     }
 
     public class CreateDataCiteDataModel
     {
-        [JsonPropertyName("id")]
-        public string Id { get; set; }
-
+        [Required]
         [JsonPropertyName("type")]
         public DataCiteType Type { get; set; }
 
+        [Required]
         [JsonPropertyName("attributes")]
         public CreateDataCiteAttributesModel Attributes { get; set; }
+
+        public CreateDataCiteDataModel()
+        {
+            Type = DataCiteType.DOIs;
+            Attributes = new CreateDataCiteAttributesModel();
+        }
     }
 
     public class CreateDataCiteAttributesModel
@@ -32,9 +44,7 @@ namespace Vaelastrasz.Library.Models
         [JsonPropertyName("prefix")]
         public string Prefix { get; set; }
 
-        [JsonPropertyName("suffix")]
-        public string Suffix { get; set; }
-
+        [Required]
         [JsonPropertyName("event")]
         public DataCiteEventType Event { get; set; }
 

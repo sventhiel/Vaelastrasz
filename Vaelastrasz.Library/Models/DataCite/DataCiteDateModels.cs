@@ -10,6 +10,9 @@ namespace Vaelastrasz.Library.Models.DataCite
         [JsonPropertyName("dateType")]
         public DataCiteDateType DateType { get; set; }
 
+        [JsonConstructor]
+        public DataCiteDateModel() { }
+
         public DataCiteDateModel(string date, DataCiteDateType type)
         {
             Date = date;
