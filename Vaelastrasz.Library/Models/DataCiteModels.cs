@@ -1,278 +1,417 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+using Vaelastrasz.Library.Attributes;
+using Vaelastrasz.Library.Converters;
 using Vaelastrasz.Library.Models.DataCite;
 
 namespace Vaelastrasz.Library.Models
 {
-    #region create
-
+    [JsonConverter(typeof(JsonPathConverter))]
     public class CreateDataCiteModel
     {
-        [Required]
-        [JsonPropertyName("data")]
-        public CreateDataCiteDataModel Data { get; set; }
+        #region data
 
+        [JsonProperty("data.type")]
+        public DataCiteType Type { get; set; }
+
+        #region data.attributes
+
+        [JsonProperty("data.attributes.doi")]
+        public string Doi { get; set; }
+
+        //[JsonProperty("data.attributes.prefix")]
+        //public string Prefix { get; set; }
+
+        //[JsonProperty("data.attributes.suffix")]
+        //public string Suffix { get; set; }
+
+        [JsonProperty("data.attributes.event")]
+        public DataCiteEventType Event { get; set; }
+
+        [JsonProperty("data.attributes.identifiers")]
+        public List<DataCiteIdentifier> Identifiers { get; set; }
+
+        [JsonProperty("data.attributes.creators")]
+        public List<DataCiteCreator> Creators { get; set; }
+
+        [JsonProperty("data.attributes.titles")]
+        public List<DataCiteTitle> Titles { get; set; }
+
+        [JsonProperty("data.attributes.publisher")]
+        public string Publisher { get; set; }
+
+        [JsonProperty("data.attributes.publicationYear")]
+        public int PublicationYear { get; set; }
+
+        [JsonProperty("data.attributes.subjects")]
+        public List<DataCiteSubject> Subjects { get; set; }
+
+        [JsonProperty("data.attributes.contributors")]
+        public List<DataCiteCreator> Contributors { get; set; }
+
+        [JsonProperty("data.attributes.dates")]
+        public List<DataCiteDate> Dates { get; set; }
+
+        [JsonProperty("data.attributes.language")]
+        public string Language { get; set; }
+
+        #region data.attributes.types
+
+        [JsonProperty("data.attributes.types.resourceTypeGeneral")]
+        public DataCiteResourceType ResourceTypeGeneral { get; set; }
+
+        [JsonProperty("data.attributes.types.resourceType")]
+        public string ResourceType { get; set; }
+
+        [JsonProperty("data.attributes.types.schemaOrg")]
+        public string SchemaOrg { get; set; }
+
+        [JsonProperty("data.attributes.types.bibtex")]
+        public string Bibtex { get; set; }
+
+        [JsonProperty("data.attributes.types.citeproc")]
+        public string Citeproc { get; set; }
+
+        [JsonProperty("data.attributes.types.ris")]
+        public string Ris { get; set; }
+
+        #endregion data.attributes.types
+
+        // Related Identifiers
+
+        [JsonProperty("data.attributes.version")]
+        public string Version { get; set; }
+
+        [JsonProperty("data.attributes.url")]
+        public string URL { get; set; }
+
+        [JsonProperty("data.attributes.descriptions")]
+        public List<DataCiteDescription> Descriptions { get; set; }
+
+        #endregion data.attributes
+
+        #endregion data
+
+        [Newtonsoft.Json.JsonConstructor]
         public CreateDataCiteModel()
         {
-            Data = new CreateDataCiteDataModel();
+            Creators = new List<DataCiteCreator>();
+            Contributors = new List<DataCiteCreator>();
+            Dates = new List<DataCiteDate>();
+            Descriptions = new List<DataCiteDescription>();
+            Identifiers = new List<DataCiteIdentifier>();
+            Subjects = new List<DataCiteSubject>();
+            Titles = new List<DataCiteTitle>();
         }
+
+
     }
 
-    public class CreateDataCiteDataModel
-    {
-        [Required]
-        [JsonPropertyName("type")]
-        public DataCiteType Type { get; set; }
-
-        [Required]
-        [JsonPropertyName("attributes")]
-        public CreateDataCiteAttributesModel Attributes { get; set; }
-
-        public CreateDataCiteDataModel()
-        {
-            Type = DataCiteType.DOIs;
-            Attributes = new CreateDataCiteAttributesModel();
-        }
-    }
-
-    public class CreateDataCiteAttributesModel
-    {
-        [JsonPropertyName("doi")]
-        public string Doi { get; set; }
-
-        [JsonPropertyName("prefix")]
-        public string Prefix { get; set; }
-
-        [Required]
-        [JsonPropertyName("event")]
-        public DataCiteEventType Event { get; set; }
-
-        [JsonPropertyName("identifiers")]
-        public List<DataCiteIdentifierModel> Identifiers { get; set; }
-
-        [JsonPropertyName("creators")]
-        public List<DataCiteCreatorModel> Creators { get; set; }
-
-        [JsonPropertyName("titles")]
-        public List<DataCiteTitleModel> Titles { get; set; }
-
-        [JsonPropertyName("publisher")]
-        public string Publisher { get; set; }
-
-        [JsonPropertyName("publicationYear")]
-        public int PublicationYear { get; set; }
-
-        [JsonPropertyName("subjects")]
-        public List<DataCiteSubjectModel> Subjects { get; set; }
-
-        [JsonPropertyName("contributors")]
-        public List<DataCiteCreatorModel> Contributors { get; set; }
-
-        [JsonPropertyName("dates")]
-        public List<DataCiteDateModel> Dates { get; set; }
-
-        [JsonPropertyName("language")]
-        public string Language { get; set; }
-
-        [JsonPropertyName("version")]
-        public string Version { get; set; }
-
-        [JsonPropertyName("url")]
-        public string URL { get; set; }
-
-        [JsonPropertyName("descriptions")]
-        public List<DataCiteDescriptionModel> Descriptions { get; set; }
-
-        public CreateDataCiteAttributesModel()
-        {
-            Creators = new List<DataCiteCreatorModel>();
-            Contributors = new List<DataCiteCreatorModel>();
-            Dates = new List<DataCiteDateModel>();
-            Descriptions = new List<DataCiteDescriptionModel>();
-            Identifiers = new List<DataCiteIdentifierModel>();
-            Subjects = new List<DataCiteSubjectModel>();
-            Titles = new List<DataCiteTitleModel>();
-        }
-    }
-
-    #endregion
-
-    #region update
-
-    public class UpdateDataCiteModel
-    {
-        [JsonPropertyName("data")]
-        public UpdateDataCiteDataModel Data { get; set; }
-    }
-
-    public class UpdateDataCiteDataModel
-    {
-        [JsonPropertyName("id")]
-        public string Id { get; set; }
-
-        [JsonPropertyName("type")]
-        public DataCiteType Type { get; set; }
-
-        [JsonPropertyName("attributes")]
-        public UpdateDataCiteAttributesModel Attributes { get; set; }
-    }
-
-    public class UpdateDataCiteAttributesModel
-    {
-        [JsonPropertyName("doi")]
-        public string Doi { get; set; }
-
-        [JsonPropertyName("prefix")]
-        public string Prefix { get; set; }
-
-        [JsonPropertyName("suffix")]
-        public string Suffix { get; set; }
-
-        [JsonPropertyName("event")]
-        public DataCiteEventType Event { get; set; }
-
-        [JsonPropertyName("identifiers")]
-        public List<DataCiteIdentifierModel> Identifiers { get; set; }
-
-        [JsonPropertyName("creators")]
-        public List<DataCiteCreatorModel> Creators { get; set; }
-
-        [JsonPropertyName("titles")]
-        public List<DataCiteTitleModel> Titles { get; set; }
-
-        [JsonPropertyName("publisher")]
-        public string Publisher { get; set; }
-
-        [JsonPropertyName("publicationYear")]
-        public int PublicationYear { get; set; }
-
-        [JsonPropertyName("subjects")]
-        public List<DataCiteSubjectModel> Subjects { get; set; }
-
-        [JsonPropertyName("contributors")]
-        public List<DataCiteCreatorModel> Contributors { get; set; }
-
-        [JsonPropertyName("dates")]
-        public List<DataCiteDateModel> Dates { get; set; }
-
-        [JsonPropertyName("language")]
-        public string Language { get; set; }
-
-        [JsonPropertyName("version")]
-        public string Version { get; set; }
-
-        [JsonPropertyName("url")]
-        public string URL { get; set; }
-    }
-
-    #endregion
-
-    #region read
-
+    [Newtonsoft.Json.JsonConverter(typeof(JsonPathConverter))]
     public class ReadDataCiteModel
     {
-        [JsonPropertyName("data")]
-        public ReadDataCiteDataModel Data { get; set; }
-    }
+        #region data
 
-    public class ReadDataCiteDataModel
-    {
-        [JsonPropertyName("id")]
+        [JsonProperty("data.id")]
         public string Id { get; set; }
 
-        [JsonPropertyName("type")]
+        [JsonProperty("data.type")]
         public DataCiteType Type { get; set; }
 
-        [JsonPropertyName("attributes")]
-        public ReadDataCiteAttributesModel Attributes { get; set; }
-    }
+        #region data.attributes
 
-    public class ReadDataCiteAttributesModel
-    {
-        [JsonPropertyName("doi")]
+        [JsonProperty("data.attributes.doi")]
         public string Doi { get; set; }
 
-        [JsonPropertyName("prefix")]
+        [JsonProperty("data.attributes.prefix")]
         public string Prefix { get; set; }
 
-        [JsonPropertyName("suffix")]
+        [JsonProperty("data.attributes.suffix")]
         public string Suffix { get; set; }
 
-        [JsonPropertyName("status")]
-        public DataCiteStatusType Status { get; set; }
+        [JsonProperty("data.attributes.state")]
+        public DataCiteStateType State { get; set; }
 
-        [JsonPropertyName("identifiers")]
-        public List<DataCiteIdentifierModel> Identifiers { get; set; }
+        [JsonProperty("data.attributes.identifiers")]
+        public List<DataCiteIdentifier> Identifiers { get; set; }
 
-        [JsonPropertyName("creators")]
-        public List<DataCiteCreatorModel> Creators { get; set; }
+        [JsonProperty("data.attributes.creators")]
+        public List<DataCiteCreator> Creators { get; set; }
 
-        [JsonPropertyName("titles")]
-        public List<DataCiteTitleModel> Titles { get; set; }
+        [JsonProperty("data.attributes.titles")]
+        public List<DataCiteTitle> Titles { get; set; }
 
-        [JsonPropertyName("publisher")]
+        [JsonProperty("data.attributes.publisher")]
         public string Publisher { get; set; }
 
-        [JsonPropertyName("publicationYear")]
+        [JsonProperty("data.attributes.publicationYear")]
         public int PublicationYear { get; set; }
 
-        [JsonPropertyName("subjects")]
-        public List<DataCiteSubjectModel> Subjects { get; set; }
+        [JsonProperty("data.attributes.subjects")]
+        public List<DataCiteSubject> Subjects { get; set; }
 
-        [JsonPropertyName("contributors")]
-        public List<DataCiteCreatorModel> Contributors { get; set; }
+        [JsonProperty("data.attributes.contributors")]
+        public List<DataCiteCreator> Contributors { get; set; }
 
-        [JsonPropertyName("dates")]
-        public List<DataCiteDateModel> Dates { get; set; }
+        [JsonProperty("data.attributes.dates")]
+        public List<DataCiteDate> Dates { get; set; }
 
-        [JsonPropertyName("language")]
+        [JsonProperty("data.attributes.language")]
         public string Language { get; set; }
 
-        [JsonPropertyName("version")]
+        #region data.attributes.types
+
+        [JsonProperty("data.attributes.types.resourceTypeGeneral")]
+        public DataCiteResourceType ResourceTypeGeneral { get; set; }
+
+        [JsonProperty("data.attributes.types.resourceType")]
+        public string ResourceType { get; set; }
+
+        [JsonProperty("data.attributes.types.schemaOrg")]
+        public string SchemaOrg { get; set; }
+
+        [JsonProperty("data.attributes.types.bibtex")]
+        public string Bibtex { get; set; }
+
+        [JsonProperty("data.attributes.types.citeproc")]
+        public string Citeproc { get; set; }
+
+        [JsonProperty("data.attributes.types.ris")]
+        public string Ris { get; set; }
+
+        #endregion data.attributes.types
+
+        // Related Identifiers
+        [JsonProperty("data.attributes.relatedIdentifiers")]
+        public List<DataCiteRelatedIdentifier> RelatedIdentifiers { get; set; }
+
+        [JsonProperty("data.attributes.sizes")]
+        public List<string> Sizes { get; set; }
+
+        [JsonProperty("data.attributes.formats")]
+        public List<string> Formats { get; set; }
+
+        [JsonProperty("data.attributes.version")]
         public string Version { get; set; }
 
-        [JsonPropertyName("url")]
+        [JsonProperty("data.attributes.rightsList")]
+        public List<DataCiteRight> Rights { get; set; }
+
+        [JsonProperty("data.attributes.descriptions")]
+        public List<DataCiteDescription> Descriptions { get; set; }
+
+        [JsonProperty("data.attributes.geoLocations")]
+        public List<DataCiteGeoLocation> GeoLocations { get; set; }
+
+        [JsonProperty("data.attributes.fundingReferences")]
+        public List<DataCiteFundingReference> FundingReferences { get; set; }
+
+        [JsonProperty("data.attributes.url")]
         public string URL { get; set; }
+
+        [JsonProperty("data.attributes.contentUrl")]
+        public List<string> ContentUrl { get; set; }
+
+        [JsonProperty("data.attributes.metadataVersion")]
+        public int MetadataVersion { get; set; }
+
+        [JsonProperty("data.attributes.schemaVersion")]
+        public string SchemaVersion { get; set; }
+
+        [JsonProperty("data.attributes.source")]
+        public string Source { get; set; }
+
+        [JsonProperty("data.attributes.isActive")]
+        public bool IsActive { get; set; }
+
+        [JsonProperty("data.attributes.reason")]
+        public string Reason { get; set; }
+
+        #endregion data.attributes
+
+        #endregion data
+
+        public ReadDataCiteModel()
+        {
+            Creators = new List<DataCiteCreator>();
+            Contributors = new List<DataCiteCreator>();
+            Dates = new List<DataCiteDate>();
+            Descriptions = new List<DataCiteDescription>();
+            Identifiers = new List<DataCiteIdentifier>();
+            Subjects = new List<DataCiteSubject>();
+            Titles = new List<DataCiteTitle>();
+            FundingReferences = new List<DataCiteFundingReference>();
+            ContentUrl = new List<string>();
+        }
     }
 
-    #endregion
-
-    [JsonConverter(typeof(JsonStringEnumMemberConverter))]
-    public enum DataCiteType
+    [Newtonsoft.Json.JsonConverter(typeof(JsonPathConverter))]
+    public class UpdateDataCiteModel
     {
-        [JsonPropertyName("dois")]
-        DOIs = 1
+        #region data
+
+        [JsonProperty("data.id")]
+        public string Id { get; set; }
+
+        [JsonProperty("data.type")]
+        public DataCiteType Type { get; set; }
+
+        #region data.attributes
+
+        [JsonProperty("data.attributes.doi")]
+        public string Doi { get; set; }
+
+        [JsonProperty("data.attributes.prefix")]
+        public string Prefix { get; set; }
+
+        [JsonProperty("data.attributes.suffix")]
+        public string Suffix { get; set; }
+
+        [JsonProperty("data.attributes.event")]
+        public DataCiteEventType Event { get; set; }
+
+        [JsonProperty("data.attributes.identifiers")]
+        public List<DataCiteIdentifier> Identifiers { get; set; }
+
+        [JsonProperty("data.attributes.creators")]
+        public List<DataCiteCreator> Creators { get; set; }
+
+        [JsonProperty("data.attributes.titles")]
+        public List<DataCiteTitle> Titles { get; set; }
+
+        [JsonProperty("data.attributes.publisher")]
+        public string Publisher { get; set; }
+
+        [JsonProperty("data.attributes.publicationYear")]
+        public int PublicationYear { get; set; }
+
+        [JsonProperty("data.attributes.subjects")]
+        public List<DataCiteSubject> Subjects { get; set; }
+
+        [JsonProperty("data.attributes.contributors")]
+        public List<DataCiteCreator> Contributors { get; set; }
+
+        [JsonProperty("data.attributes.dates")]
+        public List<DataCiteDate> Dates { get; set; }
+
+        [JsonProperty("data.attributes.language")]
+        public string Language { get; set; }
+
+        #region data.attributes.types
+
+        [JsonProperty("data.attributes.types.resourceTypeGeneral")]
+        public DataCiteResourceType ResourceTypeGeneral { get; set; }
+
+        [JsonProperty("data.attributes.types.resourceType")]
+        public string ResourceType { get; set; }
+
+        [JsonProperty("data.attributes.types.schemaOrg")]
+        public string SchemaOrg { get; set; }
+
+        [JsonProperty("data.attributes.types.bibtex")]
+        public string Bibtex { get; set; }
+
+        [JsonProperty("data.attributes.types.citeproc")]
+        public string Citeproc { get; set; }
+
+        [JsonProperty("data.attributes.types.ris")]
+        public string Ris { get; set; }
+
+        #endregion data.attributes.types
+
+        // Related Identifiers
+
+        [JsonProperty("data.attributes.version")]
+        public string Version { get; set; }
+
+        [JsonProperty("data.attributes.url")]
+        public string URL { get; set; }
+
+        [JsonProperty("data.attributes.descriptions")]
+        public List<DataCiteDescription> Descriptions { get; set; }
+
+        #endregion data.attributes
+
+        #endregion data
+
+        public UpdateDataCiteModel()
+        {
+            Creators = new List<DataCiteCreator>();
+            Contributors = new List<DataCiteCreator>();
+            Dates = new List<DataCiteDate>();
+            Descriptions = new List<DataCiteDescription>();
+            Identifiers = new List<DataCiteIdentifier>();
+            Subjects = new List<DataCiteSubject>();
+            Titles = new List<DataCiteTitle>();
+        }
     }
 
-    [JsonConverter(typeof(JsonStringEnumMemberConverter))]
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum DataCiteEventType
     {
-        [JsonPropertyName("publish")]
+        [EnumMember(Value = "publish")]
         Publish = 1,
 
-        [JsonPropertyName("register")]
+        [EnumMember(Value = "register")]
         Register = 2,
 
-        [JsonPropertyName("hide")]
+        [EnumMember(Value = "hide")]
         Hide = 3
     }
 
-    [JsonConverter(typeof(JsonStringEnumMemberConverter))]
-    public enum DataCiteStatusType
+    [JsonConverter(typeof(StringEnumConverter))]
+    public enum DataCiteStateType
     {
-        [JsonPropertyName("findable")]
+        [EnumMember(Value = "findable")]
         Findable = 1,
 
-        [JsonPropertyName("registered")]
+        [EnumMember(Value = "registered")]
         Registered = 2,
 
-        [JsonPropertyName("draft")]
+        [EnumMember(Value = "draft")]
         Draft = 3
-    } 
+    }
 
-    //
-    // Delete
+    [JsonConverter(typeof(StringEnumConverter))]
+    public enum DataCiteResourceType
+    {
+        [EnumMember(Value = "Audiovisual")]
+        Audiovisual = 1,
+        [EnumMember(Value = "Book")]
+        Book = 2,
+        BookChapter = 3,
+        Collection = 4,
+        ComputationalNotebook = 5,
+        ConferencePaper = 6,
+        ConferenceProceeding = 7,
+        DataPaper = 8,
+        Dataset = 9,
+        Dissertation = 10,
+        Event = 11,
+        Image = 12,
+        InteractiveResource = 13,
+        JournalArticle = 14,
+        Model = 15,
+        OutputManagementPlan = 16,
+        PeerReview = 17,
+        PhysicalObject = 18,
+        Preprint = 19,
+        Report = 20,
+        Service = 21,
+        Software = 22,
+        Sound = 23,
+        Standard = 24,
+        Text = 25,
+        Workflow = 26,
+        Other = 27
+    }
 
-    // not required, because delete will be executed by id - only.
+    [JsonConverter(typeof(StringEnumConverter))]
+    public enum DataCiteType
+    {
+        [EnumMember(Value = "dois")]
+        DOIs = 1
+    }
 }

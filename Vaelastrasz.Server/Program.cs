@@ -2,13 +2,28 @@ using Exceptionless;
 using LiteDB;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
+using Serilog;
 using System.Text;
+using System.Text.Json.Serialization;
 using Vaelastrasz.Server.Authentication;
 
+var configuration = new ConfigurationBuilder()
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json")
+    .Build();
+
+var logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(configuration)
+    .CreateLogger();
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog(logger);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -93,7 +108,15 @@ builder.Services.AddAuthentication(options =>
         };
     });
 
-builder.Services.AddControllers();
+//builder.Services.AddControllers().AddJsonOptions(options =>
+//{
+//    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+//    options.JsonSerializerOptions.WriteIndented= true;
+//});
+
+//builder.Services.AddControllers().AddXmlSerializerFormatters();
+
+builder.Services.AddControllers().AddNewtonsoftJson();
 
 var app = builder.Build();
 

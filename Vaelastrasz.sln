@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vaelastrasz.Server", "Vaela
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vaelastrasz.Library", "Vaelastrasz.Library\Vaelastrasz.Library.csproj", "{177156BE-91D3-48D8-8803-E420064CDF20}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vaelastrasz.Library.Tests", "Vaelastrasz.Library.Tests\Vaelastrasz.Library.Tests.csproj", "{9DE79297-FEEE-4BBD-A329-35103B9BAF78}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vaelastrasz.Server.Tests", "Vaelastrasz.Server.Tests\Vaelastrasz.Server.Tests.csproj", "{B310FD33-F8C3-4023-89F5-540EC42C168D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{177156BE-91D3-48D8-8803-E420064CDF20}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{177156BE-91D3-48D8-8803-E420064CDF20}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{177156BE-91D3-48D8-8803-E420064CDF20}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9DE79297-FEEE-4BBD-A329-35103B9BAF78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9DE79297-FEEE-4BBD-A329-35103B9BAF78}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9DE79297-FEEE-4BBD-A329-35103B9BAF78}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9DE79297-FEEE-4BBD-A329-35103B9BAF78}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B310FD33-F8C3-4023-89F5-540EC42C168D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B310FD33-F8C3-4023-89F5-540EC42C168D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B310FD33-F8C3-4023-89F5-540EC42C168D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B310FD33-F8C3-4023-89F5-540EC42C168D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

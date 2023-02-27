@@ -64,13 +64,13 @@ namespace Vaelastrasz.Server.Authentication
                 }
 
                 Response.StatusCode = 401;
-                Response.Headers.Add("www-authenticate", "Basic realm=\"dotnetthoughts.net\"");
+                Response.Headers.Add("www-authenticate", "Basic Authorization");
                 return AuthenticateResult.Fail("Invalid Authorization Header");
             }
             else
             {
                 Response.StatusCode = 401;
-                Response.Headers.Add("www-authenticate", "Basic realm=\"dotnetthoughts.net\"");
+                Response.Headers.Add("www-authenticate", "Basic Authorization");
                 return AuthenticateResult.Fail("Invalid Authorization Header");
             }
         }

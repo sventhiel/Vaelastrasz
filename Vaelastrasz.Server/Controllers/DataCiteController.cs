@@ -1,8 +1,11 @@
 ﻿using LiteDB;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using RestSharp;
 using RestSharp.Authenticators;
+using System.Xml;
+using System.Xml.Linq;
 using Vaelastrasz.Library.Models;
 using Vaelastrasz.Server.Configuration;
 using Vaelastrasz.Server.Services;
@@ -54,6 +57,8 @@ namespace Vaelastrasz.Server.Controllers
 
             var response = client.Execute(request);
 
+            var x = JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content);
+
             return StatusCode(((int)response.StatusCode), response.Content);
         }
 
@@ -82,7 +87,7 @@ namespace Vaelastrasz.Server.Controllers
             client.Authenticator = new HttpBasicAuthenticator(account.Name, account.Password);
 
             var request = new RestRequest($"dois", Method.Post).AddJsonBody(System.Text.Json.JsonSerializer.Serialize(model));
-            request.AddHeader("Accept", "application/json");
+            //request.AddHeader("Accept", "application/xml");
 
             var response = client.Execute(request);
 

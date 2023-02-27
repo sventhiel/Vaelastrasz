@@ -7,8 +7,7 @@ using Vaelastrasz.Server.Services;
 
 namespace Vaelastrasz.Server.Controllers
 {
-    [Route("api")]
-    [ApiController]
+    [ApiController, Route("api"), Authorize(Roles = "admin")]
     public class UsersController : ControllerBase
     {
         private ConnectionString _connectionString;
@@ -22,7 +21,7 @@ namespace Vaelastrasz.Server.Controllers
             _admins = configuration.GetSection("Admins").Get<List<Admin>>();
         }
 
-        [HttpPost("user"), Authorize(Roles = "admin")]
+        [HttpPost("user")]
         public IActionResult Post(CreateUserModel model)
         {
             if (ModelState.IsValid)
@@ -42,7 +41,7 @@ namespace Vaelastrasz.Server.Controllers
             return BadRequest();
         }
 
-        [HttpGet("user/{id}"), Authorize(Roles = "admin")]
+        [HttpGet("user/{id}")]
         public IActionResult GetById(long id)
         {
             var userService = new UserService(_connectionString);
@@ -55,7 +54,7 @@ namespace Vaelastrasz.Server.Controllers
             return Ok(ReadUserModel.Convert(result));
         }
 
-        [HttpGet("user"), Authorize(Roles = "admin")]
+        [HttpGet("user")]
         public IActionResult Get()
         {
             var userService = new UserService(_connectionString);
@@ -68,7 +67,7 @@ namespace Vaelastrasz.Server.Controllers
             return Ok(new List<ReadUserModel>(result.Select(u => ReadUserModel.Convert(u))));
         }
 
-        [HttpDelete("user/{id}"), Authorize(Roles = "admin")]
+        [HttpDelete("user/{id}")]
         public IActionResult Delete(long id)
         {
             var userService = new UserService(_connectionString);
@@ -81,7 +80,7 @@ namespace Vaelastrasz.Server.Controllers
             return BadRequest($"something went wrong...");
         }
 
-        [HttpPut("user/{id}"), Authorize(Roles = "admin")]
+        [HttpPut("user/{id}")]
         public IActionResult Put(long id, UpdateUserModel model)
         {
             var userService = new UserService(_connectionString);
