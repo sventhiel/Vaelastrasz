@@ -1,31 +1,30 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace Vaelastrasz.Library.Models.DataCite
 {
     public class DataCiteFundingReference
     {
-        [JsonProperty("funderName")]
+        [JsonPropertyName("funderName")]
         public string FunderName { get; set; }
 
-        [JsonProperty("funderIdentifier")]
+        [JsonPropertyName("funderIdentifier")]
         public string FunderIdentifier { get; set; }
 
-        [JsonProperty("funderIdentifierType")]
+        [JsonPropertyName("funderIdentifierType")]
         public FunderIdentifierType FunderIdentifierType { get; set; }
 
-        [JsonProperty("awardNumber")]
+        [JsonPropertyName("awardNumber")]
         public string AwardNumber { get; set; }
 
-        [JsonProperty("awardUri")]
+        [JsonPropertyName("awardUri")]
         public string AwardUri { get; set; }
 
-        [JsonProperty("awardTitle")]
+        [JsonPropertyName("awardTitle")]
         public string AwardTitle { get; set; }
     }
 
-    [JsonConverter(typeof(StringEnumConverter))]
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum FunderIdentifierType
     {
         [EnumMember(Value = "Crossref Funder ID")]

@@ -32,10 +32,10 @@ namespace Vaelastrasz.Library.Tests.Models
             var options = new JsonSerializerOptions()
             {
                 DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
-        };
+            };
 
             var model = JsonSerializer.Deserialize<CreateDataCiteModel>(json, options);
-        
+
             var json2 = JsonSerializer.Serialize(model, options);
         }
     }

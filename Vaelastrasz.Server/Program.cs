@@ -7,10 +7,15 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 using Serilog;
 using System.Text;
+using System.Text.Json;
 using System.Text.Json.Serialization;
+using Vaelastrasz.Library.Models;
 using Vaelastrasz.Server.Authentication;
+using Vaelastrasz.Server.Filters;
 
 var configuration = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
@@ -61,8 +66,7 @@ builder.Services.AddSwaggerGen(options =>
 
     options.AddSecurityDefinition(basicSecurityScheme.Reference.Id, basicSecurityScheme);
     options.AddSecurityDefinition(jwtSecurityScheme.Reference.Id, jwtSecurityScheme);
-
-    //options.OperationFilter<SecurityRequirementsOperationFilter>();
+    options.SchemaFilter<EnumSchemaFilter>();
     options.OperationFilter<AuthorizeHeaderOperationFilter>();
 });
 
@@ -108,15 +112,12 @@ builder.Services.AddAuthentication(options =>
         };
     });
 
-//builder.Services.AddControllers().AddJsonOptions(options =>
-//{
-//    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-//    options.JsonSerializerOptions.WriteIndented= true;
-//});
+//builder.Services.AddControllers();
 
-//builder.Services.AddControllers().AddXmlSerializerFormatters();
-
-builder.Services.AddControllers().AddNewtonsoftJson();
+builder.Services.AddControllers().AddJsonOptions(o =>
+{
+    o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
 
 var app = builder.Build();
 

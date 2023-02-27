@@ -1,24 +1,23 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+﻿using System.Text.Json.Serialization;
 
 namespace Vaelastrasz.Library.Models.DataCite
 {
     public class DataCiteRelatedIdentifier
     {
-        [JsonProperty("relatedIdentifier")]
+        [JsonPropertyName("relatedIdentifier")]
         public string RelatedIdentifier { get; set; }
 
-        [JsonProperty("relatedIdentifierType")]
+        [JsonPropertyName("relatedIdentifierType")]
         public RelatedIdentifierType RelatedIdentifierType { get; set; }
 
-        [JsonProperty("relationType")]
+        [JsonPropertyName("relationType")]
         public RelationType RelationType { get; set; }
 
-        [JsonProperty("resourceTypeGeneral")]
+        [JsonPropertyName("resourceTypeGeneral")]
         public string ResourceTypeGeneral { get; set; }
     }
 
-    [JsonConverter(typeof(StringEnumConverter))]
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum RelatedIdentifierType
     {
         ARK = 1,
@@ -42,7 +41,7 @@ namespace Vaelastrasz.Library.Models.DataCite
         w3id = 19
     }
 
-    [JsonConverter(typeof(StringEnumConverter))]
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum RelationType
     {
         IsCitedBy = 1,

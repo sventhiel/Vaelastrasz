@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using RestSharp;
 using RestSharp.Authenticators;
-using System.Xml;
-using System.Xml.Linq;
 using Vaelastrasz.Library.Models;
 using Vaelastrasz.Server.Configuration;
 using Vaelastrasz.Server.Services;
@@ -57,9 +55,7 @@ namespace Vaelastrasz.Server.Controllers
 
             var response = client.Execute(request);
 
-            var x = JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content);
-
-            return StatusCode(((int)response.StatusCode), response.Content);
+            return Ok(JsonConvert.DeserializeObject(response.Content));
         }
 
         [HttpPost("datacite")]
@@ -95,7 +91,7 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         [HttpPut("datacite/{doi}")]
-        public IActionResult Put(string doi, UpdateDataCiteModel model)
+        public IActionResult Put(string doi)
         {
             if (User?.Identity?.Name == null)
                 return BadRequest();
@@ -118,7 +114,7 @@ namespace Vaelastrasz.Server.Controllers
             var client = new RestClient($"{account.Host}");
             client.Authenticator = new HttpBasicAuthenticator(account.Name, account.Password);
 
-            var request = new RestRequest($"dois/{doi}", Method.Put).AddJsonBody(System.Text.Json.JsonSerializer.Serialize(model));
+            var request = new RestRequest($"dois/{doi}", Method.Put);
             request.AddHeader("Accept", "application/json");
 
             var response = client.Execute(request);

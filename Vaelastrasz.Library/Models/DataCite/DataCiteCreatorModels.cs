@@ -1,33 +1,30 @@
 ﻿using NameParser;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using Vaelastrasz.Library.Converters;
+using System.Text.Json.Serialization;
 
 namespace Vaelastrasz.Library.Models.DataCite
 {
     public class DataCiteCreator
     {
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; set; }
 
-        [JsonProperty("givenName")]
+        [JsonPropertyName("givenName")]
         public string GivenName { get; set; }
 
-        [JsonProperty("familyName")]
+        [JsonPropertyName("familyName")]
         public string FamilyName { get; set; }
 
-        [JsonProperty("nameType")]
+        [JsonPropertyName("nameType")]
         public DataCiteCreatorType NameType { get; set; }
 
-        [JsonProperty("affiliation")]
+        [JsonPropertyName("affiliation")]
         public List<DataCiteAffiliation> Affiliation { get; set; }
 
-        [JsonProperty("nameIdentifiers")]
+        [JsonPropertyName("nameIdentifiers")]
         public List<DataCiteNameIdentifier> NameIdentifiers { get; set; }
 
-        [Newtonsoft.Json.JsonConstructor]
         public DataCiteCreator()
         {
             Affiliation = new List<DataCiteAffiliation>();
@@ -68,7 +65,7 @@ namespace Vaelastrasz.Library.Models.DataCite
         }
     }
 
-    [JsonConverter(typeof(StringEnumConverter))]
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum DataCiteCreatorType
     {
         [EnumMember(Value = "Personal")]

@@ -1,17 +1,15 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+﻿using System.Text.Json.Serialization;
 
 namespace Vaelastrasz.Library.Models.DataCite
 {
     public class DataCiteDate
     {
-        [JsonProperty("date")]
+        [JsonPropertyName("date")]
         public string Date { get; set; }
 
-        [JsonProperty("dateType")]
+        [JsonPropertyName("dateType")]
         public DataCiteDateType DateType { get; set; }
 
-        [Newtonsoft.Json.JsonConstructor]
         public DataCiteDate()
         { }
 
@@ -22,7 +20,7 @@ namespace Vaelastrasz.Library.Models.DataCite
         }
     }
 
-    [JsonConverter(typeof(StringEnumConverter))]
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum DataCiteDateType
     {
         Accepted = 1,

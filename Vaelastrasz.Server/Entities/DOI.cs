@@ -1,4 +1,6 @@
 ﻿using LiteDB;
+using Newtonsoft.Json.Converters;
+using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 
 namespace Vaelastrasz.Server.Entities
@@ -17,23 +19,23 @@ namespace Vaelastrasz.Server.Entities
         public User User { get; set; }
     }
 
-    [JsonConverter(typeof(JsonStringEnumMemberConverter))]
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum DOIType
     {
-        [JsonPropertyName("DataCite")]
+        [EnumMember(Value = "DataCite")]
         DataCite = 0
     }
 
-    [JsonConverter(typeof(JsonStringEnumMemberConverter))]
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum Status
     {
-        [JsonPropertyName("draft")]
+        [EnumMember(Value = "draft")]
         Draft = 0,
 
-        [JsonPropertyName("registered")]
+        [EnumMember(Value = "registered")]
         Registered = 1,
 
-        [JsonPropertyName("findable")]
+        [EnumMember(Value = "findable")]
         Findable = 2
     }
 }

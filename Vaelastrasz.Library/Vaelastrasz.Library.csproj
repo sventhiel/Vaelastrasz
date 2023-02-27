@@ -6,10 +6,9 @@
 
   <ItemGroup>
     <PackageReference Include="DataAnnotationsValidatorNetStandard" Version="1.0.3" />
-    <PackageReference Include="Macross.Json.Extensions" Version="3.0.0" />
     <PackageReference Include="NameParserSharp" Version="1.5.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+    <PackageReference Include="System.Text.Json" Version="4.6.0" />
   </ItemGroup>
 
   <ItemGroup>

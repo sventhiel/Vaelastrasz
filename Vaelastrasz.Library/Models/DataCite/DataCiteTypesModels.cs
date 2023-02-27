@@ -1,30 +1,29 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+﻿using System.Text.Json.Serialization;
 
 namespace Vaelastrasz.Library.Models.DataCite
 {
     public class DataCiteTypesModel
     {
-        [JsonProperty("resourceTypeGeneral")]
+        [JsonPropertyName("resourceTypeGeneral")]
         public DataCiteResourceType ResourceTypeGeneral { get; set; }
 
-        [JsonProperty("resourceType")]
+        [JsonPropertyName("resourceType")]
         public string ResourceType { get; set; }
 
-        [JsonProperty("schemaOrg")]
+        [JsonPropertyName("schemaOrg")]
         public string SchemaOrg { get; set; }
 
-        [JsonProperty("bibtex")]
+        [JsonPropertyName("bibtex")]
         public string Bibtex { get; set; }
 
-        [JsonProperty("citeproc")]
+        [JsonPropertyName("citeproc")]
         public string Citeproc { get; set; }
 
-        [JsonProperty("ris")]
+        [JsonPropertyName("ris")]
         public string Ris { get; set; }
     }
 
-    [JsonConverter(typeof(StringEnumConverter))]
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum DataCiteResourceType
     {
         Audiovisual = 1,
