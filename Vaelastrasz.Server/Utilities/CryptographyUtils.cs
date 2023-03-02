@@ -7,19 +7,19 @@ namespace Vaelastrasz.Server.Utilities
     {
         public static string GetSHA512HashAsBase64(string t1)
         {
-            using (var sha512 = new SHA512Managed())
+            using (var hmacsha512 = new HMACSHA512())
             {
-                byte[] saltedPassword = Encoding.UTF8.GetBytes(t1);
-                return Convert.ToBase64String(sha512.ComputeHash(saltedPassword));
+                byte[] saltedPassword = Encoding.ASCII.GetBytes(t1);
+                return Convert.ToBase64String(hmacsha512.ComputeHash(saltedPassword));
             }
         }
 
         public static string GetSHA512HashAsBase64(string t1, string t2)
         {
-            using (var sha512 = new SHA512Managed())
+            using (var hmacsha512 = new HMACSHA512())
             {
-                byte[] saltedPassword = (Encoding.UTF8.GetBytes(t1).Concat(Encoding.UTF8.GetBytes(t2))).ToArray();
-                return Convert.ToBase64String(sha512.ComputeHash(saltedPassword));
+                byte[] saltedPassword = (Encoding.ASCII.GetBytes(t1).Concat(Encoding.ASCII.GetBytes(t2))).ToArray();
+                return Convert.ToBase64String(hmacsha512.ComputeHash(saltedPassword));
             }
         }
 
