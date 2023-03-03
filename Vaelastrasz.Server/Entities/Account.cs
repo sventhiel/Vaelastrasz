@@ -9,5 +9,11 @@
         public string Prefix { get; set; }
         public string Name { get; set; }
         public string Password { get; set; }
+
+        public Account()
+        {
+            CreationDate = DateTimeOffset.UtcNow;
+            LastUpdateDate = DateTimeOffset.UtcNow;
+        }
     }
 }

@@ -14,5 +14,11 @@ namespace Vaelastrasz.Server.Entities
 
         [BsonRef("accounts")]
         public Account? Account { get; set; }
+
+        public User()
+        {
+            CreationDate = DateTimeOffset.UtcNow;
+            LastUpdateDate = DateTimeOffset.UtcNow;
+        }
     }
 }
