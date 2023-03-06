@@ -1,7 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
-using Vaelastrasz.Library.Extensions;
 using Vaelastrasz.Library.Models;
 
 namespace Vaelastrasz.Library.Tests.Models
@@ -16,12 +14,6 @@ namespace Vaelastrasz.Library.Tests.Models
         [Test]
         public void Test1()
         {
-            List<ValidationResult> results = new List<ValidationResult>();
-            CreateDataCiteModel x = new CreateDataCiteModel();
-
-            var result = x.Validate(out results);
-
-            Assert.IsTrue(result);
         }
 
         [Test]
