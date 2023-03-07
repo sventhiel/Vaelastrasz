@@ -2,18 +2,12 @@ using Exceptionless;
 using LiteDB;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Serialization;
 using Serilog;
 using System.Text;
-using System.Text.Json;
 using System.Text.Json.Serialization;
-using Vaelastrasz.Library.Models;
 using Vaelastrasz.Server.Authentication;
 using Vaelastrasz.Server.Filters;
 
