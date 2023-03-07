@@ -13,11 +13,12 @@ namespace Vaelastrasz.Server.Entities
         public string Pattern { get; set; }
 
         [BsonRef("accounts")]
-        public Account Account { get; set; }
+        public Account? Account { get; set; }
 
         public User()
         {
-            Account = null;
+            CreationDate = DateTimeOffset.UtcNow;
+            LastUpdateDate = DateTimeOffset.UtcNow;
         }
     }
 }

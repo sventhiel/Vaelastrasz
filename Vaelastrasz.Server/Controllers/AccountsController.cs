@@ -49,10 +49,12 @@ namespace Vaelastrasz.Server.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, ex.Message);
                 return BadRequest(ex.Message);
             }
             finally
             {
+                // add code
             }
         }
 
@@ -75,20 +77,38 @@ namespace Vaelastrasz.Server.Controllers
                 _logger.LogError(ex, ex.Message);
                 return BadRequest(ex.Message);
             }
-            finally { }
+            finally
+            {
+                // add code
+            }
         }
 
         [HttpGet("account")]
         public IActionResult Get()
         {
-            var accountService = new AccountService(_connectionString);
+            try
+            {
+                var accountService = new AccountService(_connectionString);
 
-            var result = accountService.Find();
+                var result = accountService.Find();
 
-            if (result == null)
-                return BadRequest("something went wrong...");
+                if (result == null)
+                {
+                    _logger.LogInformation("accountService.Find() returned null.");
+                    return BadRequest("something went wrong...");
+                }
 
-            return Ok(new List<ReadAccountModel>(result.Select(a => ReadAccountModel.Convert(a))));
+                return Ok(new List<ReadAccountModel>(result.Select(a => ReadAccountModel.Convert(a))));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return BadRequest(ex.Message);
+            }
+            finally
+            {
+                // add code
+            }
         }
 
         [HttpPut("account/{id}")]

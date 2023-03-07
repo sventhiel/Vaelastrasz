@@ -12,5 +12,11 @@ namespace Vaelastrasz.Server.Entities
 
         [BsonRef("users")]
         public User User { get; set; }
+
+        public Placeholder()
+        {
+            CreationDate = DateTimeOffset.UtcNow;
+            LastUpdateDate = DateTimeOffset.UtcNow;
+        }
     }
 }

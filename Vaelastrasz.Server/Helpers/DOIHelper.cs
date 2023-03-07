@@ -1,10 +1,20 @@
 ﻿using Fare;
+using LiteDB;
 using System.Text.RegularExpressions;
+using Vaelastrasz.Server.Configuration;
+using Vaelastrasz.Server.Controllers;
 
 namespace Vaelastrasz.Server.Helpers
 {
     public class DOIHelper
     {
+        private readonly ILogger<AccountsController> _logger;
+
+        public DOIHelper(ILogger<AccountsController> logger)
+        {
+            _logger = logger;
+        }
+
         public static string Create(string prefix, string pattern, Dictionary<string, string> placeholders)
         {
             try
@@ -24,9 +34,9 @@ namespace Vaelastrasz.Server.Helpers
 
                 return $"{prefix}/{suffix}";
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return null;
+                throw;
             }
         }
 

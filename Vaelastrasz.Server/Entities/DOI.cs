@@ -17,16 +17,22 @@ namespace Vaelastrasz.Server.Entities
 
         [BsonRef("users")]
         public User User { get; set; }
+
+        public DOI()
+        {
+            CreationDate = DateTimeOffset.UtcNow;
+            LastUpdateDate = DateTimeOffset.UtcNow;
+        }
     }
 
-    [JsonConverter(typeof(StringEnumConverter))]
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum DOIType
     {
         [EnumMember(Value = "DataCite")]
         DataCite = 0
     }
 
-    [JsonConverter(typeof(StringEnumConverter))]
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum Status
     {
         [EnumMember(Value = "draft")]
