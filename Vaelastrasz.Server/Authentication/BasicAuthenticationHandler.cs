@@ -32,7 +32,7 @@ namespace Vaelastrasz.Server.Authentication
             if (authHeader != null && authHeader.StartsWith("basic", StringComparison.OrdinalIgnoreCase))
             {
                 var token = authHeader.Substring("Basic ".Length).Trim();
-                var credentials = Encoding.UTF8.GetString(Convert.FromBase64String(token)).Split(':');
+                var credentials = Encoding.Latin1.GetString(Convert.FromBase64String(token)).Split(':');
 
                 var userService = new UserService(_connectionString);
 
