@@ -3,9 +3,10 @@ using Vaelastrasz.Server.Entities;
 
 namespace Vaelastrasz.Server.Services
 {
-    public class AccountService
+    public class AccountService : IDisposable
     {
         private readonly ConnectionString _connectionString;
+        private bool disposed = false;
 
         public AccountService(ConnectionString connectionString)
         {
@@ -83,6 +84,31 @@ namespace Vaelastrasz.Server.Services
             account.LastUpdateDate = DateTimeOffset.UtcNow;
 
             return accounts.Update(account);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposed)
+            {
+                if (disposing)
+                {
+                    // dispose-only, i.e. non-finalizable logic
+                }
+
+                // shared cleanup logic
+                disposed = true;
+            }
+        }
+
+        ~AccountService()
+        {
+            Dispose(false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

@@ -13,92 +13,139 @@ namespace Vaelastrasz.Server.Controllers
         private ConnectionString _connectionString;
         private JwtConfiguration _jwtConfiguration;
         private List<Admin> _admins;
+        private readonly ILogger<UsersController> _logger;
 
-        public UsersController(IConfiguration configuration, ConnectionString connectionString)
+        public UsersController(ILogger<UsersController> logger, IConfiguration configuration, ConnectionString connectionString)
         {
             _connectionString = connectionString;
             _jwtConfiguration = configuration.GetSection("JWT").Get<JwtConfiguration>();
             _admins = configuration.GetSection("Admins").Get<List<Admin>>();
+            _logger = logger;
         }
 
         [HttpPost("user")]
         public IActionResult Post(CreateUserModel model)
         {
-            if (ModelState.IsValid)
+            try
             {
-                var userService = new UserService(_connectionString);
+                using (var userService = new UserService(_connectionString))
+                {
+                    if (ModelState.IsValid)
+                    {
+                        var id = userService.Create(model.Name, model.Password, model.Pattern, model.AccountId);
 
-                var id = userService.Create(model.Name, model.Password, model.Pattern, model.AccountId);
+                        var user = userService.FindById(id);
 
-                var user = userService.FindById(id);
+                        if (user == null)
+                            return BadRequest();
 
-                if (user == null)
+                        return Ok(ReadUserModel.Convert(user));
+                    }
+
                     return BadRequest();
-
-                return Ok(ReadUserModel.Convert(user));
+                }
             }
-
-            return BadRequest();
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet("user/{id}")]
         public IActionResult GetById(long id)
         {
-            var userService = new UserService(_connectionString);
+            try
+            {
+                using (var userService = new UserService(_connectionString))
+                {
+                    var result = userService.FindById(id);
 
-            var result = userService.FindById(id);
+                    if (result == null)
+                        return BadRequest("something went wrong...");
 
-            if (result == null)
-                return BadRequest("something went wrong...");
-
-            return Ok(ReadUserModel.Convert(result));
+                    return Ok(ReadUserModel.Convert(result));
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet("user")]
         public IActionResult Get()
         {
-            var userService = new UserService(_connectionString);
+            try
+            {
+                using (var userService = new UserService(_connectionString))
+                {
+                    var result = userService.Find();
 
-            var result = userService.Find();
+                    if (result == null)
+                        return BadRequest("something went wrong...");
 
-            if (result == null)
-                return BadRequest("something went wrong...");
-
-            return Ok(new List<ReadUserModel>(result.Select(u => ReadUserModel.Convert(u))));
+                    return Ok(new List<ReadUserModel>(result.Select(u => ReadUserModel.Convert(u))));
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete("user/{id}")]
         public IActionResult Delete(long id)
         {
-            var userService = new UserService(_connectionString);
+            try
+            {
+                using (var userService = new UserService(_connectionString))
+                {
+                    var result = userService.Delete(id);
 
-            var result = userService.Delete(id);
+                    if (result)
+                        return Ok($"deletion of user (id:{id}) was successful.");
 
-            if (result)
-                return Ok($"deletion of user (id:{id}) was successful.");
-
-            return BadRequest($"something went wrong...");
+                    return BadRequest($"something went wrong...");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("user/{id}")]
         public IActionResult Put(long id, UpdateUserModel model)
         {
-            var userService = new UserService(_connectionString);
-
-            var user = userService.FindById(id);
-
-            if (user == null)
-                return BadRequest($"something went wrong...");
-
-            var result = userService.Update(id, model.Name, model.Password, model.Pattern, model.AccountId);
-
-            if (result)
+            try
             {
-                user = userService.FindById(id);
-                return Ok(user);
-            }
+                using (var userService = new UserService(_connectionString))
+                {
+                    var user = userService.FindById(id);
 
-            return BadRequest($"something went wrong...");
+                    if (user == null)
+                        return BadRequest($"something went wrong...");
+
+                    var result = userService.Update(id, model.Name, model.Password, model.Pattern, model.AccountId);
+
+                    if (result)
+                    {
+                        user = userService.FindById(id);
+                        return Ok(user);
+                    }
+
+                    return BadRequest($"something went wrong...");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

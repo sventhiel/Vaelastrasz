@@ -11,16 +11,12 @@ namespace Vaelastrasz.Server.Controllers
     public class AccountsController : ControllerBase
     {
         private ConnectionString _connectionString;
-        private JwtConfiguration _jwtConfiguration;
-        private List<Admin> _admins;
         private readonly ILogger<AccountsController> _logger;
 
-        public AccountsController(ILogger<AccountsController> logger, IConfiguration configuration, ConnectionString connectionString)
+        public AccountsController(ILogger<AccountsController> logger, ConnectionString connectionString)
         {
             _logger = logger;
             _connectionString = connectionString;
-            _jwtConfiguration = configuration.GetSection("JWT").Get<JwtConfiguration>();
-            _admins = configuration.GetSection("Admins").Get<List<Admin>>();
         }
 
         [HttpPost("account")]
@@ -28,33 +24,22 @@ namespace Vaelastrasz.Server.Controllers
         {
             try
             {
-                if (ModelState.IsValid)
+                using (var accountService = new AccountService(_connectionString))
                 {
-                    //
-                    // Create an instance of the user service to create a new user to the database.
-                    var accountService = new AccountService(_connectionString);
+                    if (ModelState.IsValid)
+                    {
+                        var id = accountService.Create(model.Name, model.Password, model.Host, model.Prefix);
+                        var account = accountService.FindById(id);
+                        return Ok(account);
+                    }
 
-                    //
-                    // Call the user service with necessary properties to create a new user.
-                    var id = accountService.Create(model.Name, model.Password, model.Host, model.Prefix);
-
-                    var account = accountService.FindById(id);
-
-                    //
-                    // After creation of the new user, redirect to the table of all users.
-                    return Ok(account);
+                    return BadRequest();
                 }
-
-                return BadRequest();
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
                 return BadRequest(ex.Message);
-            }
-            finally
-            {
-                // add code
             }
         }
 
@@ -63,23 +48,21 @@ namespace Vaelastrasz.Server.Controllers
         {
             try
             {
-                var accountService = new AccountService(_connectionString);
+                using (var accountService = new AccountService(_connectionString))
+                {
+                    var result = accountService.FindById(id);
 
-                var result = accountService.FindById(id);
+                    if (result == null)
+                        return BadRequest();
 
-                if (result == null)
-                    return BadRequest();
+                    return Ok(ReadAccountModel.Convert(result));
+                }
 
-                return Ok(ReadAccountModel.Convert(result));
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
                 return BadRequest(ex.Message);
-            }
-            finally
-            {
-                // add code
             }
         }
 
@@ -88,48 +71,59 @@ namespace Vaelastrasz.Server.Controllers
         {
             try
             {
-                var accountService = new AccountService(_connectionString);
-
-                var result = accountService.Find();
-
-                if (result == null)
+                using (var accountService = new AccountService(_connectionString))
                 {
-                    _logger.LogInformation("accountService.Find() returned null.");
-                    return BadRequest("something went wrong...");
+                    var result = accountService.Find();
+
+                    if (result == null)
+                    {
+                        _logger.LogInformation("accountService.Find() returned null.");
+                        return BadRequest("something went wrong...");
+                    }
+
+                    return Ok(new List<ReadAccountModel>(result.Select(a => ReadAccountModel.Convert(a))));
                 }
 
-                return Ok(new List<ReadAccountModel>(result.Select(a => ReadAccountModel.Convert(a))));
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
                 return BadRequest(ex.Message);
             }
-            finally
-            {
-                // add code
-            }
         }
 
         [HttpPut("account/{id}")]
         public IActionResult Put(long id, UpdateAccountModel model)
         {
-            var accountService = new AccountService(_connectionString);
-
-            var account = accountService.FindById(id);
-
-            if (account == null)
-                return BadRequest($"something went wrong...");
-
-            var result = accountService.Update(id, model.Name, model.Password, model.Host, model.Prefix);
-
-            if (result)
+            try
             {
-                account = accountService.FindById(id);
-                return Ok(account);
-            }
+                using (var accountService = new AccountService(_connectionString))
+                {
+                    var account = accountService.FindById(id);
 
-            return BadRequest($"something went wrong...");
+                    if (account == null)
+                        return BadRequest();
+
+                    if (ModelState.IsValid)
+                    {
+                        var result = accountService.Update(id, model.Name, model.Password, model.Host, model.Prefix);
+
+                        if (result)
+                        {
+                            account = accountService.FindById(id);
+                            return Ok(account);
+                        }
+                    }
+
+                    return BadRequest();
+                }
+                    
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

@@ -4,9 +4,10 @@ using Vaelastrasz.Server.Utilities;
 
 namespace Vaelastrasz.Server.Services
 {
-    public class UserService
+    public class UserService : IDisposable
     {
         private readonly ConnectionString _connectionString;
+        private bool disposed = false;
 
         public UserService(ConnectionString connectionString)
         {
@@ -123,6 +124,31 @@ namespace Vaelastrasz.Server.Services
             user.LastUpdateDate = DateTimeOffset.UtcNow;
 
             return users.Update(user);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposed)
+            {
+                if (disposing)
+                {
+                    // dispose-only, i.e. non-finalizable logic
+                }
+
+                // shared cleanup logic
+                disposed = true;
+            }
+        }
+
+        ~UserService()
+        {
+            Dispose(false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

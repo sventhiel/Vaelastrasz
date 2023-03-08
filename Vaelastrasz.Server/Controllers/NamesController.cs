@@ -23,10 +23,17 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         [HttpGet("name"), AllowAnonymous]
-        public HumanName GetName(string name)
+        public IActionResult GetName(string name)
         {
-            _logger.LogInformation("blublablubb");
-            return new HumanName(name);
+            try
+            {
+                return Ok(new HumanName(name));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

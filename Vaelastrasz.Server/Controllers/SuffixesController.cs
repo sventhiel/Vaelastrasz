@@ -14,6 +14,7 @@ namespace Vaelastrasz.Server.Controllers
         private ConnectionString _connectionString;
         private JwtConfiguration _jwtConfiguration;
         private List<Admin> _admins;
+        private readonly ILogger<SuffixesController> _logger;
 
         public SuffixesController(IConfiguration configuration, ConnectionString connectionString)
         {
