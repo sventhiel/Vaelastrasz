@@ -5,6 +5,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
+using Vaelastrasz.Server.Configuration;
 using Vaelastrasz.Server.Services;
 
 namespace Vaelastrasz.Server.Authentication
@@ -12,7 +13,7 @@ namespace Vaelastrasz.Server.Authentication
     public class BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
     {
         private ConnectionString _connectionString;
-        private List<string> _admins;
+        private List<Admin> _admins;
 
         public BasicAuthenticationHandler(
             IOptionsMonitor<AuthenticationSchemeOptions> options,
@@ -23,7 +24,7 @@ namespace Vaelastrasz.Server.Authentication
             ConnectionString connectionString) : base(options, logger, encoder, clock)
         {
             _connectionString = connectionString;
-            _admins = configuration.GetSection("Admins").Get<List<string>>();
+            _admins = configuration.GetSection("Admins").Get<List<Admin>>();
         }
 
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
@@ -34,7 +35,27 @@ namespace Vaelastrasz.Server.Authentication
                 var token = authHeader.Substring("Basic ".Length).Trim();
                 var credentials = Encoding.Latin1.GetString(Convert.FromBase64String(token)).Split(':');
 
+                //
+                // Admin
+                var admin = _admins.Find(a => a.Name.Equals(credentials[0]));
+
+                if (admin != null && admin.Password.Equals(credentials[1]))
+                {
+                    var claims = new List<Claim>()
+                    {
+                        new Claim(ClaimTypes.Name, credentials[0]),
+                        new Claim(ClaimTypes.Role, "admin"),
+                        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                    };
+
+                    var identity = new ClaimsIdentity(claims, "Basic");
+                    var claimsPrincipal = new ClaimsPrincipal(identity);
+                    return AuthenticateResult.Success(new AuthenticationTicket(claimsPrincipal, Scheme.Name));
+                }
+
                 var userService = new UserService(_connectionString);
+
+
 
                 if (userService.Verify(credentials[0], credentials[1]))
                 {
@@ -43,10 +64,6 @@ namespace Vaelastrasz.Server.Authentication
                         new Claim(ClaimTypes.Name, credentials[0]),
                         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                     };
-
-                    // add role, if it is an admin user!
-                    if (_admins.Exists(a => a == credentials[0]))
-                        claims.Add(new Claim(ClaimTypes.Role, "admin"));
 
                     var identity = new ClaimsIdentity(claims, "Basic");
                     var claimsPrincipal = new ClaimsPrincipal(identity);
