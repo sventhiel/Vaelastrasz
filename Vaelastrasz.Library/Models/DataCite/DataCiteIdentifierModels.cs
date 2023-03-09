@@ -9,8 +9,5 @@ namespace Vaelastrasz.Library.Models.DataCite
 
         [JsonPropertyName("identifierType")]
         public string IdentifierType { get; set; }
-
-        public DataCiteIdentifier()
-        { }
     }
 }

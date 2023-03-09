@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace Vaelastrasz.Library.Models.DataCite
 {
@@ -31,9 +32,13 @@ namespace Vaelastrasz.Library.Models.DataCite
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum DataCiteTitleType
     {
+        [EnumMember(Value = "AlternativeTitle")]
         AlternativeTitle = 1,
+        [EnumMember(Value = "Subtitle")]
         Subtitle = 2,
+        [EnumMember(Value = "TranslatedTitle")]
         TranslatedTitle = 3,
+        [EnumMember(Value = "Other")]
         Other = 4
     }
 }

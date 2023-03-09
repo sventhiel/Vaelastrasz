@@ -29,10 +29,13 @@ namespace Vaelastrasz.Library.Models.DataCite
     {
         [EnumMember(Value = "Crossref Funder ID")]
         CrossrefFunderID = 1,
-
+        [EnumMember(Value = "GRID")]
         GRID = 2,
+        [EnumMember(Value = "ISNI")]
         ISNI = 3,
+        [EnumMember(Value = "ROR")]
         ROR = 4,
+        [EnumMember(Value = "Other")]
         Other = 5
     }
 }
