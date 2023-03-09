@@ -52,6 +52,8 @@ namespace Vaelastrasz.Server.Models
 
     public class UpdateUserModel
     {
+        public long Id { get; set; }
+
         public string Name { get; set; }
 
         public string Pattern { get; set; }
@@ -59,5 +61,26 @@ namespace Vaelastrasz.Server.Models
         public string Password { get; set; }
 
         public long AccountId { get; set; }
+
+        public DateTimeOffset CreationDate { get; set; }
+        public DateTimeOffset LastUpdateDate { get; set; }
+
+        public static UpdateUserModel Convert(User user)
+        {
+            var u = new UpdateUserModel()
+            {
+                Id = user.Id,
+                Name = user.Name,
+                Pattern = user.Pattern,
+                CreationDate = user.CreationDate,
+                LastUpdateDate = user.LastUpdateDate
+            };
+
+            if (user.Account != null)
+                u.AccountId = user.Account.Id;
+
+            return u;
+        }
+
     }
 }
