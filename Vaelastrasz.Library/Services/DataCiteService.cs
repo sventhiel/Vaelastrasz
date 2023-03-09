@@ -1,10 +1,11 @@
 ﻿using Vaelastrasz.Library.Models;
+using Vaelastrasz.Library.Models.DataCite;
 
 namespace Vaelastrasz.Library.Services
 {
     public class DataCiteService
     {
-        public CreateDataCiteModel Create(long datasetId, long version = 0)
+        public CreateDataCiteModel Create()
         {
             return new CreateDataCiteModel();
         }
