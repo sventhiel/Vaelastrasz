@@ -11,15 +11,25 @@ namespace Vaelastrasz.Library.Models
     {
         [JsonPropertyName("data")]
         public CreateDataCiteDataModel Data { get; set; }
+
+        public CreateDataCiteModel()
+        {
+            Data = new CreateDataCiteDataModel();
+        }
     }
 
     public class CreateDataCiteDataModel
     {
         [JsonPropertyName("type")]
-        public DataCiteType Type { get; set; }
+        public DataCiteType? Type { get; set; }
 
         [JsonPropertyName("attributes")]
         public CreateDataCiteAttributesModel Attributes { get; set; }
+
+        public CreateDataCiteDataModel()
+        {
+            Attributes = new CreateDataCiteAttributesModel();
+        }
     }
 
     public class CreateDataCiteAttributesModel
