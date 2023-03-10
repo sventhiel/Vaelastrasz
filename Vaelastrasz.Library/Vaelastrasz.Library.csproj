@@ -2,6 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <RepositoryUrl>https://github.com/sventhiel/Vaelastrasz</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/sventhiel/Vaelastrasz</PackageProjectUrl>
+    <Authors>Sven Thiel</Authors>
+    <Title>Vaelastrasz.Library</Title>
+    <IncludeSymbols>True</IncludeSymbols>
   </PropertyGroup>
 
   <ItemGroup>
