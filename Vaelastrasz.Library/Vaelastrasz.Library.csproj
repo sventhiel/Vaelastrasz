@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard1.2</TargetFramework>
     <RepositoryUrl>https://github.com/sventhiel/Vaelastrasz</RepositoryUrl>
     <PackageProjectUrl>https://github.com/sventhiel/Vaelastrasz</PackageProjectUrl>
     <Authors>Sven Thiel</Authors>
@@ -10,14 +10,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DataAnnotationsValidatorNetStandard" Version="1.0.3" />
-    <PackageReference Include="NameParserSharp" Version="1.5.0" />
-    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
-    <PackageReference Include="System.Text.Json" Version="7.0.2" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Folder Include="Schemas\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
 </Project>

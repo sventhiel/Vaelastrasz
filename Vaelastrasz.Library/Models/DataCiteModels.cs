@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Vaelastrasz.Library.Models.DataCite;
 
 namespace Vaelastrasz.Library.Models
@@ -9,7 +11,7 @@ namespace Vaelastrasz.Library.Models
 
     public class CreateDataCiteModel
     {
-        [JsonPropertyName("data")]
+        [JsonProperty("data")]
         public CreateDataCiteDataModel Data { get; set; }
 
         public CreateDataCiteModel()
@@ -20,10 +22,10 @@ namespace Vaelastrasz.Library.Models
 
     public class CreateDataCiteDataModel
     {
-        [JsonPropertyName("type")]
+        [JsonProperty("type")]
         public DataCiteType? Type { get; set; }
 
-        [JsonPropertyName("attributes")]
+        [JsonProperty("attributes")]
         public CreateDataCiteAttributesModel Attributes { get; set; }
 
         public CreateDataCiteDataModel()
@@ -34,46 +36,46 @@ namespace Vaelastrasz.Library.Models
 
     public class CreateDataCiteAttributesModel
     {
-        [JsonPropertyName("doi")]
+        [JsonProperty("doi")]
         public string Doi { get; set; }
 
-        [JsonPropertyName("event")]
+        [JsonProperty("event")]
         public DataCiteEventType Event { get; set; }
 
-        [JsonPropertyName("identifiers")]
+        [JsonProperty("identifiers")]
         public List<DataCiteIdentifier> Identifiers { get; set; }
 
-        [JsonPropertyName("creators")]
+        [JsonProperty("creators")]
         public List<DataCiteCreator> Creators { get; set; }
 
-        [JsonPropertyName("titles")]
+        [JsonProperty("titles")]
         public List<DataCiteTitle> Titles { get; set; }
 
-        [JsonPropertyName("publisher")]
+        [JsonProperty("publisher")]
         public string Publisher { get; set; }
 
-        [JsonPropertyName("publicationYear")]
+        [JsonProperty("publicationYear")]
         public int PublicationYear { get; set; }
 
-        [JsonPropertyName("subjects")]
+        [JsonProperty("subjects")]
         public List<DataCiteSubject> Subjects { get; set; }
 
-        [JsonPropertyName("contributors")]
+        [JsonProperty("contributors")]
         public List<DataCiteCreator> Contributors { get; set; }
 
-        [JsonPropertyName("dates")]
+        [JsonProperty("dates")]
         public List<DataCiteDate> Dates { get; set; }
 
-        [JsonPropertyName("language")]
+        [JsonProperty("language")]
         public string Language { get; set; }
 
-        [JsonPropertyName("version")]
+        [JsonProperty("version")]
         public string Version { get; set; }
 
-        [JsonPropertyName("url")]
+        [JsonProperty("url")]
         public string URL { get; set; }
 
-        [JsonPropertyName("descriptions")]
+        [JsonProperty("descriptions")]
         public List<DataCiteDescription> Descriptions { get; set; }
 
         public CreateDataCiteAttributesModel()
@@ -90,7 +92,7 @@ namespace Vaelastrasz.Library.Models
 
     #endregion creation
 
-    [JsonConverter(typeof(JsonStringEnumConverter))]
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum DataCiteEventType
     {
         [EnumMember(Value = "publish")]
@@ -103,7 +105,7 @@ namespace Vaelastrasz.Library.Models
         Hide = 3
     }
 
-    [JsonConverter(typeof(JsonStringEnumConverter))]
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum DataCiteStateType
     {
         [EnumMember(Value = "findable")]
@@ -116,7 +118,7 @@ namespace Vaelastrasz.Library.Models
         Draft = 3
     }
 
-    [JsonConverter(typeof(JsonStringEnumConverter))]
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum DataCiteResourceType
     {
         [EnumMember(Value = "Audiovisual")]
@@ -175,7 +177,7 @@ namespace Vaelastrasz.Library.Models
         Other = 27
     }
 
-    [JsonConverter(typeof(JsonStringEnumConverter))]
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum DataCiteType
     {
         [EnumMember(Value = "dois")]

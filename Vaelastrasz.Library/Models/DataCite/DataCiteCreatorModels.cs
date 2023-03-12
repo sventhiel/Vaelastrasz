@@ -1,28 +1,28 @@
-﻿using NameParser;
+﻿
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace Vaelastrasz.Library.Models.DataCite
 {
     public class DataCiteCreator
     {
-        [JsonPropertyName("name")]
+        [JsonProperty("name")]
         public string Name { get; set; }
 
-        [JsonPropertyName("givenName")]
+        [JsonProperty("givenName")]
         public string GivenName { get; set; }
 
-        [JsonPropertyName("familyName")]
+        [JsonProperty("familyName")]
         public string FamilyName { get; set; }
 
-        [JsonPropertyName("nameType")]
+        [JsonProperty("nameType")]
         public DataCiteCreatorType NameType { get; set; }
 
-        [JsonPropertyName("affiliation")]
+        [JsonProperty("affiliation")]
         public List<DataCiteAffiliation> Affiliation { get; set; }
 
-        [JsonPropertyName("nameIdentifiers")]
+        [JsonProperty("nameIdentifiers")]
         public List<DataCiteNameIdentifier> NameIdentifiers { get; set; }
 
         public DataCiteCreator()
