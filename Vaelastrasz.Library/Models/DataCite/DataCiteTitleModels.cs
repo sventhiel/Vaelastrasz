@@ -1,17 +1,18 @@
 ﻿using System.Runtime.Serialization;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Vaelastrasz.Library.Models.DataCite
 {
     public class DataCiteTitle
     {
-        [JsonPropertyName("title")]
+        [JsonProperty("title")]
         public string Title { get; set; }
 
-        [JsonPropertyName("lang")]
+        [JsonProperty("lang")]
         public string Language { get; set; }
 
-        [JsonPropertyName("titleType")]
+        [JsonProperty("titleType")]
         public DataCiteTitleType? TitleType { get; set; }
 
         public DataCiteTitle()
@@ -29,7 +30,7 @@ namespace Vaelastrasz.Library.Models.DataCite
         }
     }
 
-    [JsonConverter(typeof(JsonStringEnumConverter))]
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum DataCiteTitleType
     {
         [EnumMember(Value = "AlternativeTitle")]

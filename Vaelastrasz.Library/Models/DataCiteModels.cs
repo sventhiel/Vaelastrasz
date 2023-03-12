@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Vaelastrasz.Library.Models.DataCite;

@@ -1,30 +1,31 @@
 ﻿using System.Runtime.Serialization;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Vaelastrasz.Library.Models.DataCite
 {
     public class DataCiteTypesModel
     {
-        [JsonPropertyName("resourceTypeGeneral")]
+        [JsonProperty("resourceTypeGeneral")]
         public DataCiteResourceType ResourceTypeGeneral { get; set; }
 
-        [JsonPropertyName("resourceType")]
+        [JsonProperty("resourceType")]
         public string ResourceType { get; set; }
 
-        [JsonPropertyName("schemaOrg")]
+        [JsonProperty("schemaOrg")]
         public string SchemaOrg { get; set; }
 
-        [JsonPropertyName("bibtex")]
+        [JsonProperty("bibtex")]
         public string Bibtex { get; set; }
 
-        [JsonPropertyName("citeproc")]
+        [JsonProperty("citeproc")]
         public string Citeproc { get; set; }
 
-        [JsonPropertyName("ris")]
+        [JsonProperty("ris")]
         public string Ris { get; set; }
     }
 
-    [JsonConverter(typeof(JsonStringEnumConverter))]
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum DataCiteResourceType
     {
         [EnumMember(Value = "Audiovisual")]
