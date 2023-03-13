@@ -68,6 +68,12 @@ namespace Vaelastrasz.Library.Models
         [JsonProperty("language")]
         public string Language { get; set; }
 
+        [JsonProperty("types")]
+        public DataCiteTypes Types { get; set; }
+
+        [JsonProperty("relatedIdentifiers")]
+        public List<DataCiteRelatedIdentifier> RelatedIdentifiers { get; set; }
+
         [JsonProperty("version")]
         public string Version { get; set; }
 
@@ -86,6 +92,7 @@ namespace Vaelastrasz.Library.Models
             Identifiers = new List<DataCiteIdentifier>();
             Subjects = new List<DataCiteSubject>();
             Titles = new List<DataCiteTitle>();
+            
         }
     }
 

@@ -4,7 +4,7 @@ using Newtonsoft.Json.Converters;
 
 namespace Vaelastrasz.Library.Models.DataCite
 {
-    public class DataCiteTypesModel
+    public class DataCiteTypes
     {
         [JsonProperty("resourceTypeGeneral")]
         public DataCiteResourceType ResourceTypeGeneral { get; set; }
