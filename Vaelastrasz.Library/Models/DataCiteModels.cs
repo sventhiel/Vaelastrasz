@@ -6,7 +6,7 @@ using Vaelastrasz.Library.Models.DataCite;
 
 namespace Vaelastrasz.Library.Models
 {
-    #region creation
+    #region create
 
     public class CreateDataCiteModel
     {
@@ -92,11 +92,197 @@ namespace Vaelastrasz.Library.Models
             Identifiers = new List<DataCiteIdentifier>();
             Subjects = new List<DataCiteSubject>();
             Titles = new List<DataCiteTitle>();
+            RelatedIdentifiers = new List<DataCiteRelatedIdentifier>();
             
         }
     }
 
-    #endregion creation
+    #endregion create
+
+    #region read
+    public class ReadDataCiteModel
+    {
+        [JsonProperty("data")]
+        public ReadDataCiteDataModel Data { get; set; }
+
+        public ReadDataCiteModel()
+        {
+            Data = new ReadDataCiteDataModel();
+        }
+    }
+
+    public class ReadDataCiteDataModel
+    {
+        [JsonProperty("type")]
+        public DataCiteType? Type { get; set; }
+
+        [JsonProperty("attributes")]
+        public ReadDataCiteAttributesModel Attributes { get; set; }
+
+        public ReadDataCiteDataModel()
+        {
+            Attributes = new ReadDataCiteAttributesModel();
+        }
+    }
+
+    public class ReadDataCiteAttributesModel
+    {
+        [JsonProperty("doi")]
+        public string Doi { get; set; }
+
+        [JsonProperty("state")]
+        public DataCiteEventType State { get; set; }
+
+        [JsonProperty("identifiers")]
+        public List<DataCiteIdentifier> Identifiers { get; set; }
+
+        [JsonProperty("creators")]
+        public List<DataCiteCreator> Creators { get; set; }
+
+        [JsonProperty("titles")]
+        public List<DataCiteTitle> Titles { get; set; }
+
+        [JsonProperty("publisher")]
+        public string Publisher { get; set; }
+
+        [JsonProperty("publicationYear")]
+        public int PublicationYear { get; set; }
+
+        [JsonProperty("subjects")]
+        public List<DataCiteSubject> Subjects { get; set; }
+
+        [JsonProperty("contributors")]
+        public List<DataCiteCreator> Contributors { get; set; }
+
+        [JsonProperty("dates")]
+        public List<DataCiteDate> Dates { get; set; }
+
+        [JsonProperty("language")]
+        public string Language { get; set; }
+
+        [JsonProperty("types")]
+        public DataCiteTypes Types { get; set; }
+
+        [JsonProperty("relatedIdentifiers")]
+        public List<DataCiteRelatedIdentifier> RelatedIdentifiers { get; set; }
+
+        [JsonProperty("version")]
+        public string Version { get; set; }
+
+        [JsonProperty("url")]
+        public string URL { get; set; }
+
+        [JsonProperty("descriptions")]
+        public List<DataCiteDescription> Descriptions { get; set; }
+
+        public ReadDataCiteAttributesModel()
+        {
+            Creators = new List<DataCiteCreator>();
+            Contributors = new List<DataCiteCreator>();
+            Dates = new List<DataCiteDate>();
+            Descriptions = new List<DataCiteDescription>();
+            Identifiers = new List<DataCiteIdentifier>();
+            Subjects = new List<DataCiteSubject>();
+            Titles = new List<DataCiteTitle>();
+            RelatedIdentifiers = new List<DataCiteRelatedIdentifier>();
+
+        }
+    }
+
+    #endregion
+
+    #region update
+
+    public class UpdateDataCiteModel
+    {
+        [JsonProperty("data")]
+        public UpdateDataCiteDataModel Data { get; set; }
+
+        public UpdateDataCiteModel()
+        {
+            Data = new UpdateDataCiteDataModel();
+        }
+    }
+
+    public class UpdateDataCiteDataModel
+    {
+        [JsonProperty("type")]
+        public DataCiteType? Type { get; set; }
+
+        [JsonProperty("attributes")]
+        public UpdateDataCiteAttributesModel Attributes { get; set; }
+
+        public UpdateDataCiteDataModel()
+        {
+            Attributes = new UpdateDataCiteAttributesModel();
+        }
+    }
+
+    public class UpdateDataCiteAttributesModel
+    {
+        [JsonProperty("doi")]
+        public string Doi { get; set; }
+
+        [JsonProperty("event")]
+        public DataCiteEventType Event { get; set; }
+
+        [JsonProperty("identifiers")]
+        public List<DataCiteIdentifier> Identifiers { get; set; }
+
+        [JsonProperty("creators")]
+        public List<DataCiteCreator> Creators { get; set; }
+
+        [JsonProperty("titles")]
+        public List<DataCiteTitle> Titles { get; set; }
+
+        [JsonProperty("publisher")]
+        public string Publisher { get; set; }
+
+        [JsonProperty("publicationYear")]
+        public int PublicationYear { get; set; }
+
+        [JsonProperty("subjects")]
+        public List<DataCiteSubject> Subjects { get; set; }
+
+        [JsonProperty("contributors")]
+        public List<DataCiteCreator> Contributors { get; set; }
+
+        [JsonProperty("dates")]
+        public List<DataCiteDate> Dates { get; set; }
+
+        [JsonProperty("language")]
+        public string Language { get; set; }
+
+        [JsonProperty("types")]
+        public DataCiteTypes Types { get; set; }
+
+        [JsonProperty("relatedIdentifiers")]
+        public List<DataCiteRelatedIdentifier> RelatedIdentifiers { get; set; }
+
+        [JsonProperty("version")]
+        public string Version { get; set; }
+
+        [JsonProperty("url")]
+        public string URL { get; set; }
+
+        [JsonProperty("descriptions")]
+        public List<DataCiteDescription> Descriptions { get; set; }
+
+        public UpdateDataCiteAttributesModel()
+        {
+            Creators = new List<DataCiteCreator>();
+            Contributors = new List<DataCiteCreator>();
+            Dates = new List<DataCiteDate>();
+            Descriptions = new List<DataCiteDescription>();
+            Identifiers = new List<DataCiteIdentifier>();
+            Subjects = new List<DataCiteSubject>();
+            Titles = new List<DataCiteTitle>();
+            RelatedIdentifiers = new List<DataCiteRelatedIdentifier>();
+
+        }
+    }
+
+    #endregion
 
     [JsonConverter(typeof(StringEnumConverter))]
     public enum DataCiteEventType
