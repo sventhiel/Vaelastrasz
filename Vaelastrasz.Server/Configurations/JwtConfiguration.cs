@@ -1,4 +1,4 @@
-﻿namespace Vaelastrasz.Server.Configuration
+﻿namespace Vaelastrasz.Server.Configurations
 {
     public class JwtConfiguration
     {

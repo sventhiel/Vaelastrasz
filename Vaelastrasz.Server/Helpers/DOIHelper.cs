@@ -1,7 +1,7 @@
 ﻿using Fare;
 using LiteDB;
 using System.Text.RegularExpressions;
-using Vaelastrasz.Server.Configuration;
+using Vaelastrasz.Server.Configurations;
 using Vaelastrasz.Server.Controllers;
 
 namespace Vaelastrasz.Server.Helpers

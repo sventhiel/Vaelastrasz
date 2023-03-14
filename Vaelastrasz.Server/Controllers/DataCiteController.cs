@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 using RestSharp;
 using RestSharp.Authenticators;
 using Vaelastrasz.Library.Models;
-using Vaelastrasz.Server.Configuration;
+using Vaelastrasz.Server.Configurations;
 using Vaelastrasz.Server.Services;
 
 namespace Vaelastrasz.Server.Controllers

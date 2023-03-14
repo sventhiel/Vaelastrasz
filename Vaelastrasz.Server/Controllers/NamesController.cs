@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NameParser;
-using Vaelastrasz.Server.Configuration;
+using Vaelastrasz.Server.Configurations;
 
 namespace Vaelastrasz.Server.Controllers
 {
