@@ -1,10 +1,17 @@
-﻿using Vaelastrasz.Library.Models;
-using Vaelastrasz.Library.Models.DataCite;
+﻿using Vaelastrasz.Library.Configurations;
+using Vaelastrasz.Library.Models;
 
 namespace Vaelastrasz.Library.Services
 {
     public class DataCiteService
     {
+        private readonly Configuration _config;
+
+        public DataCiteService(Configuration config) 
+        { 
+            _config= config;
+        }
+
         public CreateDataCiteModel Create()
         {
             return new CreateDataCiteModel();
