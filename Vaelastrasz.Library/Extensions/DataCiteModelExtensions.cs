@@ -95,8 +95,6 @@ namespace Vaelastrasz.Library.Extensions
             }
         }
 
-
-
         #endregion
     }
 }
