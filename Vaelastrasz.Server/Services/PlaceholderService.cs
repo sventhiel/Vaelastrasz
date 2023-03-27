@@ -3,7 +3,7 @@ using Vaelastrasz.Server.Entities;
 
 namespace Vaelastrasz.Server.Services
 {
-    public class PlaceholderService
+    public class PlaceholderService : IDisposable
     {
         private readonly ConnectionString _connectionString;
         private bool disposed = false;

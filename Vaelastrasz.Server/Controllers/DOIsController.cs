@@ -1,8 +1,11 @@
-﻿using LiteDB;
+﻿using Fare;
+using LiteDB;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Vaelastrasz.Server.Configurations;
+using Vaelastrasz.Server.Helpers;
 using Vaelastrasz.Server.Models;
+using Vaelastrasz.Server.Services;
 
 namespace Vaelastrasz.Server.Controllers
 {
@@ -25,18 +28,30 @@ namespace Vaelastrasz.Server.Controllers
         [HttpPost("doi")]
         public IActionResult Post(CreateDOIModel model)
         {
-            return BadRequest();
-        }
+            if (User?.Identity?.Name == null)
+                return BadRequest();
 
-        [HttpGet("doi")]
-        public IActionResult GetById(string doi)
-        {
-            return BadRequest();
-        }
+            var username = User.Identity.Name;
 
-        [HttpGet("doi/{prefix}/{suffix}")]
-        public IActionResult GetByPrefixAndSuffix(string prefix, string suffix)
-        {
+            var userService = new UserService(_connectionString);
+            var user = userService.FindByName(username);
+
+            if (user == null)
+                return BadRequest();
+
+            if (user.Account == null)
+                return BadRequest();
+
+            var placeholderService = new PlaceholderService(_connectionString);
+            var placeholders = placeholderService.FindByUserId(user.Id);
+
+            // DOI
+            var doi = DOIHelper.Create(user.Account.Prefix, user.Project, user.Pattern, model.Placeholders);
+
+            // Validation
+            if (DOIHelper.Validate(doi, user.Account.Prefix, user.Project, user.Pattern, new Dictionary<string, string>(placeholders.Select(p => new KeyValuePair<string, string>(p.Expression, p.RegularExpression)))))
+                return Ok(doi);
+
             return BadRequest();
         }
     }

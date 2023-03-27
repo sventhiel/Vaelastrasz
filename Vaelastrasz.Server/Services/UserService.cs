@@ -14,7 +14,7 @@ namespace Vaelastrasz.Server.Services
             _connectionString = connectionString;
         }
 
-        public long Create(string name, string password, string pattern, long? accountId)
+        public long Create(string name, string password, string project, string pattern, long? accountId)
         {
             using var db = new LiteDatabase(_connectionString);
             var users = db.GetCollection<User>("users");
@@ -28,6 +28,7 @@ namespace Vaelastrasz.Server.Services
                 Name = name,
                 Salt = salt,
                 Password = CryptographyUtils.GetSHA512HashAsBase64(salt, password),
+                Project = project,
                 Pattern = pattern,
                 CreationDate = DateTime.UtcNow,
                 LastUpdateDate = DateTime.UtcNow
@@ -65,7 +66,7 @@ namespace Vaelastrasz.Server.Services
             using var db = new LiteDatabase(_connectionString);
             var col = db.GetCollection<User>("users");
 
-            return col.FindById(id);
+            return col.Include(u => u.Account).FindById(id);
         }
 
         public User? FindByName(string name)
@@ -76,7 +77,7 @@ namespace Vaelastrasz.Server.Services
             using var db = new LiteDatabase(_connectionString);
             var col = db.GetCollection<User>("users");
 
-            var users = col.Find(u => u.Name.Equals(name));
+            var users = col.Include(u => u.Account).Find(u => u.Name.Equals(name));
 
             if (users.Count() != 1)
                 return null;
@@ -99,9 +100,8 @@ namespace Vaelastrasz.Server.Services
         {
             using var db = new LiteDatabase(_connectionString);
             var users = db.GetCollection<User>("users");
-            var accounts = db.GetCollection<Account>("accounts");
 
-            var user = users.FindById(id);
+            var user = users.Include(u => u.Account).FindById(id);
 
             if (user == null)
                 return false;
@@ -111,8 +111,6 @@ namespace Vaelastrasz.Server.Services
 
             if (!string.IsNullOrEmpty(pattern))
                 user.Pattern = pattern;
-
-            user.Account = accounts.FindById(accountId);
 
             if (!string.IsNullOrEmpty(password))
             {

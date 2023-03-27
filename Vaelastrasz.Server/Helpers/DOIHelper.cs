@@ -8,14 +8,7 @@ namespace Vaelastrasz.Server.Helpers
 {
     public class DOIHelper
     {
-        private readonly ILogger<AccountsController> _logger;
-
-        public DOIHelper(ILogger<AccountsController> logger)
-        {
-            _logger = logger;
-        }
-
-        public static string Create(string prefix, string pattern, Dictionary<string, string> placeholders)
+        public static string Create(string prefix, string project, string pattern, Dictionary<string, string> placeholders)
         {
             try
             {
@@ -32,7 +25,7 @@ namespace Vaelastrasz.Server.Helpers
                 Xeger xeger = new Xeger($"{pattern}", new Random());
                 var suffix = xeger.Generate();
 
-                return $"{prefix}/{suffix}";
+                return $"{prefix}/{project}.{suffix}";
             }
             catch (Exception)
             {
@@ -40,7 +33,7 @@ namespace Vaelastrasz.Server.Helpers
             }
         }
 
-        public static bool Validate(string doi, string prefix, string pattern, Dictionary<string, string> placeholders = null)
+        public static bool Validate(string doi, string prefix, string project, string pattern, Dictionary<string, string> placeholders = null)
         {
             try
             {
@@ -51,7 +44,7 @@ namespace Vaelastrasz.Server.Helpers
                         pattern = pattern.Replace(placeholder.Key, placeholder.Value);
                     }
                 }
-                Regex rg = new Regex($"{prefix}/{pattern}");
+                Regex rg = new Regex($"{prefix}/{project}.{pattern}");
                 return rg.IsMatch(doi);
             }
             catch

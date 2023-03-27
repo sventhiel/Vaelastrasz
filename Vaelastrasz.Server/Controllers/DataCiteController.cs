@@ -6,6 +6,7 @@ using RestSharp;
 using RestSharp.Authenticators;
 using Vaelastrasz.Library.Models;
 using Vaelastrasz.Server.Configurations;
+using Vaelastrasz.Server.Helpers;
 using Vaelastrasz.Server.Services;
 
 namespace Vaelastrasz.Server.Controllers
@@ -42,45 +43,51 @@ namespace Vaelastrasz.Server.Controllers
             if (user == null)
                 return StatusCode(400);
 
-            var account = accountService.FindById(user.Account.Id);
-
-            if (account == null)
+            if (user.Account == null)
                 return StatusCode(400);
 
-            var client = new RestClient($"{account.Host}");
-            client.Authenticator = new HttpBasicAuthenticator(account.Name, account.Password);
+            var client = new RestClient($"{user.Account.Host}");
+            client.Authenticator = new HttpBasicAuthenticator(user.Account.Name, user.Account.Password);
 
             var request = new RestRequest($"dois/{doi}", Method.Get);
             request.AddHeader("Accept", "application/json");
 
             var response = client.Execute(request);
 
-            return Ok(JsonConvert.DeserializeObject(response.Content));
+            if (response.StatusCode != System.Net.HttpStatusCode.OK || response.Content == null)
+                return BadRequest();
+
+            return Ok(JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content));
         }
 
         [HttpPost("datacite")]
         public IActionResult Create(CreateDataCiteModel model)
         {
+            //
             if (User?.Identity?.Name == null)
-                return StatusCode(400);
+                return BadRequest();
 
             var username = User.Identity.Name;
 
+            //
             var userService = new UserService(_connectionString);
-            var accountService = new AccountService(_connectionString);
-
             var user = userService.FindByName(username);
 
             if (user == null)
-                return StatusCode(400);
+                return BadRequest();
 
-            var account = accountService.FindById(user.Account.Id);
+            if (user.Account == null)
+                return BadRequest();
 
-            if (account == null)
-                return StatusCode(400);
+            // DOI Check
+            var placeholderService = new PlaceholderService(_connectionString);
+            var placeholders = placeholderService.FindByUserId(user.Id);
+            
+            if (!DOIHelper.Validate(model.Data.Attributes.Doi, user.Account.Prefix, user.Project, user.Pattern, new Dictionary<string, string>(placeholders.Select(p => new KeyValuePair<string, string>(p.Expression, p.RegularExpression)))))
+                return BadRequest("The DOI does not match the user pattern.");
 
-            var client = new RestClient($"{account.Host}");
-            client.Authenticator = new HttpBasicAuthenticator(account.Name, account.Password);
+            var client = new RestClient($"{user.Account.Host}");
+            client.Authenticator = new HttpBasicAuthenticator(user.Account.Name, user.Account.Password);
 
             var request = new RestRequest($"dois", Method.Post).AddJsonBody(System.Text.Json.JsonSerializer.Serialize(model));
 
@@ -105,13 +112,11 @@ namespace Vaelastrasz.Server.Controllers
             if (user == null)
                 return BadRequest();
 
-            var account = accountService.FindById(user.Account.Id);
-
-            if (account == null)
+            if (user.Account == null)
                 return BadRequest();
 
-            var client = new RestClient($"{account.Host}");
-            client.Authenticator = new HttpBasicAuthenticator(account.Name, account.Password);
+            var client = new RestClient($"{user.Account.Host}");
+            client.Authenticator = new HttpBasicAuthenticator(user.Account.Name, user.Account.Password);
 
             var request = new RestRequest($"dois/{doi}", Method.Put);
             request.AddHeader("Accept", "application/json");

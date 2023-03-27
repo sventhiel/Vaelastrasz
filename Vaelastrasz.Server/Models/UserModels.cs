@@ -13,6 +13,7 @@ namespace Vaelastrasz.Server.Models
     {
         public long Id { get; set; }
         public string Name { get; set; }
+        public string Project { get; set; }
         public string Pattern { get; set; }
         public long AccountId { get; set; }
         public DateTimeOffset CreationDate { get; set; }
@@ -24,6 +25,7 @@ namespace Vaelastrasz.Server.Models
             {
                 Id = user.Id,
                 Name = user.Name,
+                Project= user.Project,
                 Pattern = user.Pattern,
                 CreationDate = user.CreationDate,
                 LastUpdateDate = user.LastUpdateDate
@@ -44,6 +46,8 @@ namespace Vaelastrasz.Server.Models
         [Required]
         public string Password { get; set; }
 
+        public string Project { get; set; }
+
         [Required]
         public string Pattern { get; set; }
 
@@ -52,8 +56,6 @@ namespace Vaelastrasz.Server.Models
 
     public class UpdateUserModel
     {
-        public long Id { get; set; }
-
         public string Name { get; set; }
 
         public string Pattern { get; set; }
@@ -69,7 +71,6 @@ namespace Vaelastrasz.Server.Models
         {
             var u = new UpdateUserModel()
             {
-                Id = user.Id,
                 Name = user.Name,
                 Pattern = user.Pattern,
                 CreationDate = user.CreationDate,

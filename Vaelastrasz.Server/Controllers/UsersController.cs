@@ -32,7 +32,7 @@ namespace Vaelastrasz.Server.Controllers
                 {
                     if (ModelState.IsValid)
                     {
-                        var id = userService.Create(model.Name, model.Password, model.Pattern, model.AccountId);
+                        var id = userService.Create(model.Name, model.Password, model.Project, model.Pattern, model.AccountId);
 
                         var user = userService.FindById(id);
 
