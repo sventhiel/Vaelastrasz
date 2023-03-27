@@ -111,6 +111,17 @@ namespace Vaelastrasz.Library.Models
         }
     }
 
+    //public class ReadListDataCiteModel
+    //{
+    //    [JsonProperty("data")]
+    //    public List<ReadDataCiteDataModel> Data { get; set; }
+
+    //    public ReadListDataCiteModel()
+    //    {
+    //        Data = new List<ReadDataCiteDataModel>();
+    //    }
+    //}
+
     public class ReadDataCiteDataModel
     {
         [JsonProperty("type")]
@@ -131,7 +142,7 @@ namespace Vaelastrasz.Library.Models
         public string Doi { get; set; }
 
         [JsonProperty("state")]
-        public DataCiteEventType State { get; set; }
+        public DataCiteStateType State { get; set; }
 
         [JsonProperty("identifiers")]
         public List<DataCiteIdentifier> Identifiers { get; set; }
@@ -369,6 +380,9 @@ namespace Vaelastrasz.Library.Models
         Other = 27
     }
 
+    /// <summary>
+    /// The most generic type of an entry at DataCite.
+    /// </summary>
     [JsonConverter(typeof(StringEnumConverter))]
     public enum DataCiteType
     {
