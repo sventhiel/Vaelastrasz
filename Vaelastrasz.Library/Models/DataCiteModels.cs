@@ -14,7 +14,7 @@ namespace Vaelastrasz.Library.Models
     public class CreateDataCiteModel
     {
         [JsonProperty("data")]
-        [XmlElement(ElementName = "data")]
+        [XmlElement("data")]
         [Required]
         public CreateDataCiteDataModel Data { get; set; }
 
@@ -28,7 +28,7 @@ namespace Vaelastrasz.Library.Models
     {
        
         [JsonProperty("type")]
-        [XmlElement(ElementName = "type")]
+        [XmlElement("type")]
         [Required]
         public DataCiteType? Type { get; set; }
 
