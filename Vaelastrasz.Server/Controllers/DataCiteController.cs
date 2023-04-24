@@ -93,6 +93,17 @@ namespace Vaelastrasz.Server.Controllers
 
             var response = client.Execute(request);
 
+            if(response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
+            {
+                var result = System.Text.Json.JsonSerializer.Deserialize<ReadDataCiteModel>(response.Content);
+
+                var prefix = result.Data.Attributes.Doi.Split('/')[0];
+                var suffix = result.Data.Attributes.Doi.Split('/')[1];
+
+                var doiService = new DOIService(_connectionString);
+                doiService.Create(prefix, suffix, user.Id);
+            }
+
             return StatusCode((int)response.StatusCode, response.Content);
         }
 
