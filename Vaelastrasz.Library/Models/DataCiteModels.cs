@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Runtime.Serialization;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Runtime.Serialization;
+using Vaelastrasz.Library.Attributes;
 using Vaelastrasz.Library.Models.DataCite;
 
 namespace Vaelastrasz.Library.Models
@@ -11,6 +13,7 @@ namespace Vaelastrasz.Library.Models
     public class CreateDataCiteModel
     {
         [JsonProperty("data")]
+        [Required]
         public CreateDataCiteDataModel Data { get; set; }
 
         public CreateDataCiteModel()
@@ -21,10 +24,14 @@ namespace Vaelastrasz.Library.Models
 
     public class CreateDataCiteDataModel
     {
+       
         [JsonProperty("type")]
+        [Required]
         public DataCiteType? Type { get; set; }
 
+        
         [JsonProperty("attributes")]
+        [Required]
         public CreateDataCiteAttributesModel Attributes { get; set; }
 
         public CreateDataCiteDataModel()
@@ -36,17 +43,21 @@ namespace Vaelastrasz.Library.Models
     public class CreateDataCiteAttributesModel
     {
         [JsonProperty("doi")]
+        [Required]
         public string Doi { get; set; }
 
         [JsonProperty("event")]
+        [Required]
         public DataCiteEventType Event { get; set; }
 
         [JsonProperty("identifiers")]
         public List<DataCiteIdentifier> Identifiers { get; set; }
 
+        [Cardinality(Minimum = 1)]
         [JsonProperty("creators")]
         public List<DataCiteCreator> Creators { get; set; }
 
+        [Cardinality(Minimum = 1)]
         [JsonProperty("titles")]
         public List<DataCiteTitle> Titles { get; set; }
 
@@ -93,13 +104,13 @@ namespace Vaelastrasz.Library.Models
             Subjects = new List<DataCiteSubject>();
             Titles = new List<DataCiteTitle>();
             RelatedIdentifiers = new List<DataCiteRelatedIdentifier>();
-            
         }
     }
 
     #endregion create
 
     #region read
+
     public class ReadDataCiteModel
     {
         [JsonProperty("data")]
@@ -196,11 +207,10 @@ namespace Vaelastrasz.Library.Models
             Subjects = new List<DataCiteSubject>();
             Titles = new List<DataCiteTitle>();
             RelatedIdentifiers = new List<DataCiteRelatedIdentifier>();
-
         }
     }
 
-    #endregion
+    #endregion read
 
     #region update
 
@@ -289,11 +299,10 @@ namespace Vaelastrasz.Library.Models
             Subjects = new List<DataCiteSubject>();
             Titles = new List<DataCiteTitle>();
             RelatedIdentifiers = new List<DataCiteRelatedIdentifier>();
-
         }
     }
 
-    #endregion
+    #endregion update
 
     [JsonConverter(typeof(StringEnumConverter))]
     public enum DataCiteEventType
@@ -326,56 +335,82 @@ namespace Vaelastrasz.Library.Models
     {
         [EnumMember(Value = "Audiovisual")]
         Audiovisual = 1,
+
         [EnumMember(Value = "Book")]
         Book = 2,
+
         [EnumMember(Value = "BookChapter")]
         BookChapter = 3,
+
         [EnumMember(Value = "Collection")]
         Collection = 4,
+
         [EnumMember(Value = "ComputationalNotebook")]
         ComputationalNotebook = 5,
+
         [EnumMember(Value = "ConferencePaper")]
         ConferencePaper = 6,
+
         [EnumMember(Value = "ConferenceProceeding")]
         ConferenceProceeding = 7,
+
         [EnumMember(Value = "DataPaper")]
         DataPaper = 8,
+
         [EnumMember(Value = "Dataset")]
         Dataset = 9,
+
         [EnumMember(Value = "Dissertation")]
         Dissertation = 10,
+
         [EnumMember(Value = "Event")]
         Event = 11,
+
         [EnumMember(Value = "Image")]
         Image = 12,
+
         [EnumMember(Value = "InteractiveResource")]
         InteractiveResource = 13,
+
         [EnumMember(Value = "JournalArticle")]
         JournalArticle = 14,
+
         [EnumMember(Value = "Model")]
         Model = 15,
+
         [EnumMember(Value = "OutputManagementPlan")]
         OutputManagementPlan = 16,
+
         [EnumMember(Value = "PeerReview")]
         PeerReview = 17,
+
         [EnumMember(Value = "PhysicalObject")]
         PhysicalObject = 18,
+
         [EnumMember(Value = "Preprint")]
         Preprint = 19,
+
         [EnumMember(Value = "Report")]
         Report = 20,
+
         [EnumMember(Value = "Service")]
         Service = 21,
+
         [EnumMember(Value = "Software")]
         Software = 22,
+
         [EnumMember(Value = "Sound")]
         Sound = 23,
+
         [EnumMember(Value = "Standard")]
         Standard = 24,
+
         [EnumMember(Value = "Text")]
         Text = 25,
+
         [EnumMember(Value = "Workflow")]
         Workflow = 26,
+
         [EnumMember(Value = "Other")]
         Other = 27
     }
