@@ -21,14 +21,14 @@ namespace Vaelastrasz.Library.Models.DataCite
         public DataCiteCreatorType NameType { get; set; }
 
         [JsonProperty("affiliation")]
-        public List<DataCiteAffiliation> Affiliation { get; set; }
+        public List<DataCiteAffiliation> Affiliations { get; set; }
 
         [JsonProperty("nameIdentifiers")]
         public List<DataCiteNameIdentifier> NameIdentifiers { get; set; }
 
         public DataCiteCreator()
         {
-            Affiliation = new List<DataCiteAffiliation>();
+            Affiliations = new List<DataCiteAffiliation>();
             NameIdentifiers = new List<DataCiteNameIdentifier>();
         }
 
