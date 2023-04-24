@@ -11,10 +11,11 @@ namespace Vaelastrasz.Library.Models
 {
     #region create
 
+    [XmlRoot(ElementName = "data")]
     public class CreateDataCiteModel
     {
         [JsonProperty("data")]
-        [XmlElement("data")]
+        [XmlElement(ElementName = "data")]
         [Required]
         public CreateDataCiteDataModel Data { get; set; }
 
@@ -28,12 +29,13 @@ namespace Vaelastrasz.Library.Models
     {
        
         [JsonProperty("type")]
-        [XmlElement("type")]
+        [XmlElement(ElementName = "type")]
         [Required]
         public DataCiteType? Type { get; set; }
 
         
         [JsonProperty("attributes")]
+        [XmlElement(ElementName = "attributes")]
         [Required]
         public CreateDataCiteAttributesModel Attributes { get; set; }
 
@@ -46,10 +48,12 @@ namespace Vaelastrasz.Library.Models
     public class CreateDataCiteAttributesModel
     {
         [JsonProperty("doi")]
+        [XmlElement(ElementName = "doi")]
         [Required]
         public string Doi { get; set; }
 
         [JsonProperty("event")]
+        [XmlElement(ElementName = "event")]
         [Required]
         public DataCiteEventType Event { get; set; }
 
