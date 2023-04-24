@@ -52,7 +52,7 @@ namespace Vaelastrasz.Server.Controllers
             if (DOIHelper.Validate(doi, user.Account.Prefix, user.Project, user.Pattern, new Dictionary<string, string>(placeholders.Select(p => new KeyValuePair<string, string>(p.Expression, p.RegularExpression)))))
                 return Ok(doi);
 
-            return BadRequest();
+            return BadRequest("Something went wrong.");
         }
     }
 }
