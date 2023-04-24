@@ -1,4 +1,7 @@
-﻿using System.Text.Json;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.Reflection;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using Vaelastrasz.Library.Models;
 
@@ -11,9 +14,20 @@ namespace Vaelastrasz.Library.Tests.Models
         {
         }
 
+        private static bool Validate<T>(T obj, out ICollection<ValidationResult> results)
+        {
+            results = new List<ValidationResult>();
+
+            return Validator.TryValidateObject(obj, new ValidationContext(obj), results, true);
+        }
+
         [Test]
         public void Test1()
         {
+            var model = new CreateDataCiteModel();
+
+            var errors = new List<ValidationResult>();
+            Validator.TryValidateProperty(model.Data.Attributes.Creators, new ValidationContext(model.Data.Attributes.Creators), errors);
         }
 
         [Test]
@@ -29,6 +43,14 @@ namespace Vaelastrasz.Library.Tests.Models
             var model = JsonSerializer.Deserialize<CreateDataCiteModel>(json, options);
 
             var json2 = JsonSerializer.Serialize(model, options);
+        }
+
+        private IList<ValidationResult> ValidateModel(object model)
+        {
+            var validationResults = new List<ValidationResult>();
+            var ctx = new ValidationContext(model, null, null);
+            Validator.TryValidateObject(model, ctx, validationResults, true);
+            return validationResults;
         }
     }
 }
