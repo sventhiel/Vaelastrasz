@@ -1,4 +1,5 @@
 ﻿using System.Runtime.Serialization;
+using System.Xml.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -7,12 +8,15 @@ namespace Vaelastrasz.Library.Models.DataCite
     public class DataCiteTitle
     {
         [JsonProperty("title")]
+        [XmlElement("title")]
         public string Title { get; set; }
 
         [JsonProperty("lang")]
+        [XmlElement("lang")]
         public string Language { get; set; }
 
         [JsonProperty("titleType")]
+        [XmlElement("titleType")]
         public DataCiteTitleType? TitleType { get; set; }
 
         public DataCiteTitle()

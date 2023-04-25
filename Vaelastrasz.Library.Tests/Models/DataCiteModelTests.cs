@@ -3,6 +3,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Xml;
+using System.Xml.Serialization;
 using Vaelastrasz.Library.Models;
 
 namespace Vaelastrasz.Library.Tests.Models
@@ -51,6 +53,20 @@ namespace Vaelastrasz.Library.Tests.Models
             var ctx = new ValidationContext(model, null, null);
             Validator.TryValidateObject(model, ctx, validationResults, true);
             return validationResults;
+        }
+
+        [Test]
+        public void Test3()
+        {
+            var xml = "<data><type>DOIs</type><attributes></attributes></data>";
+
+            CreateDataCiteDataModel response = new CreateDataCiteDataModel();
+
+            XmlSerializer serializer = new XmlSerializer(typeof(CreateDataCiteDataModel));
+            using (StringReader xmlReader = new StringReader(xml))
+            {
+                response = (CreateDataCiteDataModel)serializer.Deserialize(xmlReader);
+            }
         }
     }
 }

@@ -11,11 +11,9 @@ namespace Vaelastrasz.Library.Models
 {
     #region create
 
-    [XmlRoot(ElementName = "data")]
     public class CreateDataCiteModel
     {
         [JsonProperty("data")]
-        [XmlElement(ElementName = "data")]
         [Required]
         public CreateDataCiteDataModel Data { get; set; }
 
@@ -25,18 +23,19 @@ namespace Vaelastrasz.Library.Models
         }
     }
 
+    [XmlRoot("data")]
     public class CreateDataCiteDataModel
     {
        
         [JsonProperty("type")]
-        [XmlElement(ElementName = "type")]
         [Required]
+        [XmlElement("type")]
         public DataCiteType? Type { get; set; }
 
         
         [JsonProperty("attributes")]
-        [XmlElement(ElementName = "attributes")]
         [Required]
+        [XmlElement("attributes")]
         public CreateDataCiteAttributesModel Attributes { get; set; }
 
         public CreateDataCiteDataModel()
@@ -48,57 +47,71 @@ namespace Vaelastrasz.Library.Models
     public class CreateDataCiteAttributesModel
     {
         [JsonProperty("doi")]
-        [XmlElement(ElementName = "doi")]
         [Required]
+        [XmlElement("doi")]
         public string Doi { get; set; }
 
         [JsonProperty("event")]
-        [XmlElement(ElementName = "event")]
         [Required]
+        [XmlElement("event")]
         public DataCiteEventType Event { get; set; }
 
         [JsonProperty("identifiers")]
+        [XmlElement("identifiers")]
         public List<DataCiteIdentifier> Identifiers { get; set; }
 
         [Cardinality(Minimum = 1)]
         [JsonProperty("creators")]
+        [XmlElement("creators")]
         public List<DataCiteCreator> Creators { get; set; }
 
         [Cardinality(Minimum = 1)]
         [JsonProperty("titles")]
+        [XmlElement("titles")]
         public List<DataCiteTitle> Titles { get; set; }
 
         [JsonProperty("publisher")]
+        [XmlElement("publisher")]
         public string Publisher { get; set; }
 
         [JsonProperty("publicationYear")]
+        [XmlElement("publicationYear")]
         public int PublicationYear { get; set; }
 
         [JsonProperty("subjects")]
+        [XmlElement("subjects")]
         public List<DataCiteSubject> Subjects { get; set; }
 
         [JsonProperty("contributors")]
+        [XmlElement("contributors")]
         public List<DataCiteCreator> Contributors { get; set; }
 
         [JsonProperty("dates")]
+        [XmlElement("dates")]
         public List<DataCiteDate> Dates { get; set; }
 
         [JsonProperty("language")]
+        [XmlElement("language")]
         public string Language { get; set; }
 
         [JsonProperty("types")]
+        [XmlElement("types")]
         public DataCiteTypes Types { get; set; }
 
         [JsonProperty("relatedIdentifiers")]
+        [XmlElement("relatedIdentifiers")]
         public List<DataCiteRelatedIdentifier> RelatedIdentifiers { get; set; }
 
         [JsonProperty("version")]
+        [XmlElement("version")]
         public string Version { get; set; }
 
         [JsonProperty("url")]
+        [XmlElement("url")]
         public string URL { get; set; }
 
         [JsonProperty("descriptions")]
+        [XmlElement("descriptions")]
         public List<DataCiteDescription> Descriptions { get; set; }
 
         public CreateDataCiteAttributesModel()
