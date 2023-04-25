@@ -58,7 +58,7 @@ namespace Vaelastrasz.Library.Tests.Models
         [Test]
         public void Test3()
         {
-            var xml = "<data><type>DOIs</type><attributes></attributes></data>";
+            var xml = "<data><type>DOIs</type><attributes><titles><title>test</title></titles></attributes></data>";
 
             CreateDataCiteDataModel response = new CreateDataCiteDataModel();
 

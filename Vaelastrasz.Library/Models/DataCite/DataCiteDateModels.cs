@@ -1,15 +1,18 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.Runtime.Serialization;
+using System.Xml.Serialization;
 
 namespace Vaelastrasz.Library.Models.DataCite
 {
     public class DataCiteDate
     {
         [JsonProperty("date")]
+        [XmlElement("date")]
         public string Date { get; set; }
 
         [JsonProperty("dateType")]
+        [XmlElement("dateType")]
         public DataCiteDateType DateType { get; set; }
 
         public DataCiteDate()

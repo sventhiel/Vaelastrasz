@@ -1,4 +1,5 @@
 ﻿using System.Runtime.Serialization;
+using System.Xml.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -7,15 +8,19 @@ namespace Vaelastrasz.Library.Models.DataCite
     public class DataCiteRelatedIdentifier
     {
         [JsonProperty("relatedIdentifier")]
+        [XmlElement("relatedIdentifier")]
         public string RelatedIdentifier { get; set; }
 
         [JsonProperty("relatedIdentifierType")]
+        [XmlElement("relatedIdentifierType")]
         public RelatedIdentifierType RelatedIdentifierType { get; set; }
 
         [JsonProperty("relationType")]
+        [XmlElement("relationType")]
         public RelationType RelationType { get; set; }
 
         [JsonProperty("resourceTypeGeneral")]
+        [XmlElement("resourceTypeGeneral")]
         public string ResourceTypeGeneral { get; set; }
     }
 

@@ -1,27 +1,34 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.Runtime.Serialization;
+using System.Xml.Serialization;
 
 namespace Vaelastrasz.Library.Models.DataCite
 {
     public class DataCiteFundingReference
     {
         [JsonProperty("funderName")]
+        [XmlElement("funderName")]
         public string FunderName { get; set; }
 
         [JsonProperty("funderIdentifier")]
+        [XmlElement("funderIdentifier")]
         public string FunderIdentifier { get; set; }
 
         [JsonProperty("funderIdentifierType")]
+        [XmlElement("funderIdentifierType")]
         public FunderIdentifierType FunderIdentifierType { get; set; }
 
         [JsonProperty("awardNumber")]
+        [XmlElement("awardNumber")]
         public string AwardNumber { get; set; }
 
         [JsonProperty("awardUri")]
+        [XmlElement("awardUri")]
         public string AwardUri { get; set; }
 
         [JsonProperty("awardTitle")]
+        [XmlElement("awardTitle")]
         public string AwardTitle { get; set; }
     }
 
