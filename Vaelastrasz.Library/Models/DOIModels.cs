@@ -6,6 +6,12 @@ namespace Vaelastrasz.Library.Models
 {
     public class CreateDOIModel
     {
+        public Dictionary<string, string> Placeholders { get; set; }
+
+        public CreateDOIModel()
+        {
+            Placeholders = new Dictionary<string, string>();
+        }
     }
 
     public class ReadDOIModel
