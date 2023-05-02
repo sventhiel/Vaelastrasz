@@ -9,12 +9,15 @@ using Serilog;
 using System.Text;
 using System.Text.Json.Serialization;
 using Vaelastrasz.Server.Authentication;
+using Vaelastrasz.Server.Configurations;
 using Vaelastrasz.Server.Filters;
 
 var configuration = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json")
-    .Build();
+.Build();
+
+var jwtConfiguration = configuration.GetSection("JWT").Get<JwtConfiguration>();
 
 var logger = new LoggerConfiguration()
     .ReadFrom.Configuration(configuration)
@@ -86,12 +89,12 @@ builder.Services.AddAuthentication(options =>
         options.RequireHttpsMetadata = false;
         options.TokenValidationParameters = new TokenValidationParameters()
         {
-            ValidateIssuer = false,
-            ValidateAudience = false,
-            ValidAudience = "lkjlk",
-            ValidIssuer = "lklH",
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("sadasd"))
-        };
+            ValidateIssuer = jwtConfiguration.ValidateIssuer,
+            ValidateAudience = jwtConfiguration.ValidateAudience,
+            ValidAudience = jwtConfiguration.ValidAudience,
+            ValidIssuer = jwtConfiguration.ValidIssuer,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfiguration.IssuerSigningKey ?? ""))
+    };
     })
     .AddPolicyScheme("BASIC_OR_JWT", "BASIC_OR_JWT", options =>
     {

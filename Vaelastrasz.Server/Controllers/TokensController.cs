@@ -41,7 +41,7 @@ namespace Vaelastrasz.Server.Controllers
                     if (!userService.Verify(model.Username, model.Password))
                         return BadRequest();
 
-                    var authSigningKey = new SymmetricSecurityKey(Encoding.Latin1.GetBytes(_jwtConfiguration.IssuerSigningKey));
+                    var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtConfiguration.IssuerSigningKey ?? ""));
                     var tokenHandler = new JwtSecurityTokenHandler();
                     var tokenDescriptor = new SecurityTokenDescriptor()
                     {
