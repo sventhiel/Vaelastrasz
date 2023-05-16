@@ -16,7 +16,7 @@ namespace Vaelastrasz.Server.Services
             _connectionString = connectionString;
         }
 
-        public long Create(string prefix, string suffix, long? userId, DOIType type = DOIType.DataCite)
+        public long Create(string prefix, string suffix, long? userId, State state = State.Draft, DOIType type = DOIType.DataCite)
         {
             using var db = new LiteDatabase(_connectionString);
             var dois = db.GetCollection<DOI>("dois");
@@ -26,6 +26,7 @@ namespace Vaelastrasz.Server.Services
             {
                 Prefix = prefix,
                 Suffix = suffix,
+                State = state,
                 Type = type,
             };
 
@@ -33,6 +34,38 @@ namespace Vaelastrasz.Server.Services
                 doi.User = users.FindById(userId);
 
             return dois.Insert(doi);
+        }
+
+        public bool Delete(long id)
+        {
+            using var db = new LiteDatabase(_connectionString);
+            var col = db.GetCollection<DOI>("dois");
+
+            return col.Delete(id);
+        }
+
+        public DOI? FindById(long id)
+        {
+            using var db = new LiteDatabase(_connectionString);
+            var col = db.GetCollection<DOI>("dois");
+
+            return col.FindById(id);
+        }
+
+        public DOI? FindByPrefixAndSuffix(string prefix, string suffix)
+        {
+            if (prefix == null || suffix == null)
+                return null;
+
+            using var db = new LiteDatabase(_connectionString);
+            var col = db.GetCollection<DOI>("dois");
+
+            var dois = col.Find(d => d.Prefix.Equals(prefix, StringComparison.OrdinalIgnoreCase) && d.Suffix.Equals(suffix, StringComparison.OrdinalIgnoreCase));
+
+            if (dois.Count() != 1)
+                return null;
+
+            return dois.First();
         }
 
         protected virtual void Dispose(bool disposing)
