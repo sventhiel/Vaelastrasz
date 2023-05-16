@@ -13,7 +13,7 @@ namespace Vaelastrasz.Server.Entities
         public DOIType Type { get; set; }
         public string Prefix { get; set; }
         public string Suffix { get; set; }
-        public Status Status { get; set; }
+        public State State { get; set; }
 
         [BsonRef("users")]
         public User User { get; set; }
@@ -33,15 +33,15 @@ namespace Vaelastrasz.Server.Entities
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum Status
+    public enum State
     {
-        [EnumMember(Value = "draft")]
-        Draft = 0,
+        [EnumMember(Value = "findable")]
+        Findable = 1,
 
         [EnumMember(Value = "registered")]
-        Registered = 1,
+        Registered = 2,
 
-        [EnumMember(Value = "findable")]
-        Findable = 2
+        [EnumMember(Value = "draft")]
+        Draft = 3
     }
 }
