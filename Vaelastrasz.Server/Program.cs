@@ -36,7 +36,7 @@ builder.Services.AddSwaggerGen(options =>
         In = ParameterLocation.Header,
         Type = SecuritySchemeType.Http,
         Scheme = "Basic",
-        Description = "Put **_ONLY_** your JWT Bearer token on textbox below!",
+        Description = "Provide your username and password.",
 
         Reference = new OpenApiReference
         {
