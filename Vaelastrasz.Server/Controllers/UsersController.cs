@@ -23,7 +23,7 @@ namespace Vaelastrasz.Server.Controllers
             _logger = logger;
         }
 
-        [HttpPost("user")]
+        [HttpPost("users")]
         public IActionResult Post(CreateUserModel model)
         {
             try
@@ -52,7 +52,7 @@ namespace Vaelastrasz.Server.Controllers
             }
         }
 
-        [HttpGet("user/{id}")]
+        [HttpGet("users/{id}")]
         public IActionResult GetById(long id)
         {
             try
@@ -74,7 +74,7 @@ namespace Vaelastrasz.Server.Controllers
             }
         }
 
-        [HttpGet("user")]
+        [HttpGet("users")]
         public IActionResult Get()
         {
             try
@@ -96,7 +96,7 @@ namespace Vaelastrasz.Server.Controllers
             }
         }
 
-        [HttpDelete("user/{id}")]
+        [HttpDelete("users/{id}")]
         public IActionResult Delete(long id)
         {
             try
@@ -118,7 +118,7 @@ namespace Vaelastrasz.Server.Controllers
             }
         }
 
-        [HttpPut("user/{id}")]
+        [HttpPut("users/{id}")]
         public IActionResult Put(long id, UpdateUserModel model)
         {
             try

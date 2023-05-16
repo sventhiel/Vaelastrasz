@@ -11,8 +11,7 @@ using Vaelastrasz.Server.Services;
 
 namespace Vaelastrasz.Server.Controllers
 {
-    [Route("api")]
-    [ApiController]
+    [ApiController, Route("api")]
     public class TokensController : ControllerBase
     {
         private ConnectionString _connectionString;
@@ -28,7 +27,7 @@ namespace Vaelastrasz.Server.Controllers
             _logger = logger;
         }
 
-        [HttpPost("token")]
+        [HttpPost("tokens")]
         public IActionResult Post(LoginUserModel model)
         {
             try
@@ -69,7 +68,7 @@ namespace Vaelastrasz.Server.Controllers
             }
         }
 
-        [HttpGet("token"), Authorize]
+        [HttpGet("tokens")]
         public IActionResult Get()
         {
             try

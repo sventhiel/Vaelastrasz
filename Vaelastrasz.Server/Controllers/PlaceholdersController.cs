@@ -9,9 +9,7 @@ using Vaelastrasz.Server.Services;
 
 namespace Vaelastrasz.Server.Controllers
 {
-    [Route("api")]
-    [ApiController]
-    [Authorize]
+    [ApiController, Route("api")]
     public class PlaceholdersController : ControllerBase
     {
         private ConnectionString _connectionString;
@@ -27,7 +25,7 @@ namespace Vaelastrasz.Server.Controllers
             _logger = logger;
         }
 
-        [HttpPost("placeholder")]
+        [HttpPost("placeholders")]
         public IActionResult Post(CreatePlaceholderModel model)
         {
             if (User?.Identity?.Name == null)
@@ -47,7 +45,7 @@ namespace Vaelastrasz.Server.Controllers
             return Ok();
         }
 
-        [HttpGet("placeholder")]
+        [HttpGet("placeholders")]
         public IActionResult Get()
         {
             if (User?.Identity?.Name == null)
@@ -67,7 +65,7 @@ namespace Vaelastrasz.Server.Controllers
             return Ok(placeholders);
         }
 
-        [HttpDelete("placeholder/{id}")]
+        [HttpDelete("placeholders/{id}")]
         public IActionResult Delete(long id)
         {
             try

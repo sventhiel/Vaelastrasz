@@ -19,7 +19,7 @@ namespace Vaelastrasz.Server.Controllers
             _connectionString = connectionString;
         }
 
-        [HttpPost("account")]
+        [HttpPost("accounts")]
         public IActionResult Post(CreateAccountModel model)
         {
             try
@@ -43,7 +43,7 @@ namespace Vaelastrasz.Server.Controllers
             }
         }
 
-        [HttpGet("account/{id}")]
+        [HttpGet("accounts/{id}")]
         public IActionResult GetById(long id)
         {
             try
@@ -66,7 +66,7 @@ namespace Vaelastrasz.Server.Controllers
             }
         }
 
-        [HttpGet("account")]
+        [HttpGet("accounts")]
         public IActionResult Get()
         {
             try
@@ -92,7 +92,7 @@ namespace Vaelastrasz.Server.Controllers
             }
         }
 
-        [HttpPut("account/{id}")]
+        [HttpPut("accounts/{id}")]
         public IActionResult Put(long id, UpdateAccountModel model)
         {
             try

@@ -10,9 +10,7 @@ using Vaelastrasz.Server.Services;
 
 namespace Vaelastrasz.Server.Controllers
 {
-    [Route("api")]
-    [ApiController]
-    [Authorize]
+    [ApiController, Route("api")]
     public class DOIsController : ControllerBase
     {
         private ConnectionString _connectionString;
@@ -26,34 +24,47 @@ namespace Vaelastrasz.Server.Controllers
             _admins = configuration.GetSection("Admins").Get<List<Admin>>();
         }
 
-        [HttpPost("doi")]
+        [HttpPost("dois")]
         public IActionResult Post(CreateDOIModel model)
         {
-            if (User?.Identity?.Name == null)
-                return BadRequest();
+            try
+            {
+                if (User?.Identity?.Name == null)
+                    throw new ArgumentNullException(nameof(User));
 
-            var username = User.Identity.Name;
+                var username = User.Identity.Name;
 
-            var userService = new UserService(_connectionString);
-            var user = userService.FindByName(username);
+                var userService = new UserService(_connectionString);
+                var user = userService.FindByName(username);
 
-            if (user == null)
-                return BadRequest();
+                if (user == null)
+                    throw new ArgumentNullException(nameof(user));
 
-            if (user.Account == null)
-                return BadRequest();
+                if (user.Account == null)
+                    throw new ArgumentNullException(nameof(user.Account));
 
-            var placeholderService = new PlaceholderService(_connectionString);
-            var placeholders = placeholderService.FindByUserId(user.Id);
+                var placeholderService = new PlaceholderService(_connectionString);
+                var placeholders = placeholderService.FindByUserId(user.Id);
 
-            // DOI
-            var doi = DOIHelper.Create(user.Account.Prefix, user.Project, user.Pattern, model.Placeholders);
+                // DOI
+                var doi = DOIHelper.Create(user.Account.Prefix, user.Project, user.Pattern, model.Placeholders);
 
-            // Validation
-            if (DOIHelper.Validate(doi, user.Account.Prefix, user.Project, user.Pattern, new Dictionary<string, string>(placeholders.Select(p => new KeyValuePair<string, string>(p.Expression, p.RegularExpression)))))
-                return Ok(doi);
+                // Validation
+                if (DOIHelper.Validate(doi, user.Account.Prefix, user.Project, user.Pattern, new Dictionary<string, string>(placeholders.Select(p => new KeyValuePair<string, string>(p.Expression, p.RegularExpression)))))
+                {
+                    var doiService = new DOIService(_connectionString);
+                    doiService.Create(doi.Prefix, doi.Suffix, user.Id);
 
-            return BadRequest("Something went wrong.");
+                    return Ok(doi);
+                }
+
+                return BadRequest("Something went wrong.");
+            }
+            catch(Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+            
         }
     }
 }
