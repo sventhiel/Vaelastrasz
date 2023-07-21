@@ -1,4 +1,5 @@
-﻿using LiteDB;
+﻿using Exceptionless;
+using LiteDB;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
 using System.IdentityModel.Tokens.Jwt;
@@ -55,13 +56,12 @@ namespace Vaelastrasz.Server.Authentication
 
                 var userService = new UserService(_connectionString);
 
-
-
                 if (userService.Verify(credentials[0], credentials[1]))
                 {
                     var claims = new List<Claim>()
                     {
                         new Claim(ClaimTypes.Name, credentials[0]),
+                        new Claim(ClaimTypes.Role, "user"),
                         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                     };
 
@@ -72,13 +72,14 @@ namespace Vaelastrasz.Server.Authentication
 
                 Response.StatusCode = 401;
                 Response.Headers.Add("www-authenticate", "Basic Authorization");
-                return AuthenticateResult.Fail("Invalid Authorization Header");
+                return AuthenticateResult.Fail(new UnauthorizedAccessException());
             }
             else
             {
                 Response.StatusCode = 401;
                 Response.Headers.Add("www-authenticate", "Basic Authorization");
-                return AuthenticateResult.Fail("Invalid Authorization Header");
+                return AuthenticateResult.Fail(new UnauthorizedAccessException());
+
             }
         }
     }
