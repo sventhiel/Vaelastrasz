@@ -6,6 +6,7 @@ using RestSharp;
 using RestSharp.Authenticators;
 using Vaelastrasz.Library.Models;
 using Vaelastrasz.Server.Configurations;
+using Vaelastrasz.Server.Extensions;
 using Vaelastrasz.Server.Helpers;
 using Vaelastrasz.Server.Services;
 
@@ -98,8 +99,11 @@ namespace Vaelastrasz.Server.Controllers
                 var prefix = result.Data.Attributes.Doi.Split('/')[0];
                 var suffix = result.Data.Attributes.Doi.Split('/')[1];
 
+                var state = result.Data.Attributes.State.ToState();
+
+
                 var doiService = new DOIService(_connectionString);
-                doiService.Create(prefix, suffix, user.Id);
+                doiService.Create(prefix, suffix, user.Id, state, Entities.DOIType.DataCite);
             }
 
             return StatusCode((int)response.StatusCode, response.Content);
