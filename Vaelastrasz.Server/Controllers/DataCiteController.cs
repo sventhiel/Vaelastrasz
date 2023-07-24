@@ -11,9 +11,7 @@ using Vaelastrasz.Server.Services;
 
 namespace Vaelastrasz.Server.Controllers
 {
-    [Route("api")]
-    [ApiController]
-    [Authorize]
+    [ApiController, Authorize(Roles = "user"), Route("api")]
     public class DataCiteController : ControllerBase
     {
         private ConnectionString _connectionString;
@@ -82,8 +80,8 @@ namespace Vaelastrasz.Server.Controllers
             // DOI Check
             var placeholderService = new PlaceholderService(_connectionString);
             var placeholders = placeholderService.FindByUserId(user.Id);
-            
-            if (!DOIHelper.Validate(model.Data.Attributes.Doi, user.Account.Prefix, user.Project, user.Pattern, new Dictionary<string, string>(placeholders.Select(p => new KeyValuePair<string, string>(p.Expression, p.RegularExpression)))))
+
+            if (!DOIHelper.Validate(model.Data.Attributes.Doi, user.Account.Prefix, user.Pattern, new Dictionary<string, string>(placeholders.Select(p => new KeyValuePair<string, string>(p.Expression, p.RegularExpression)))))
                 return BadRequest("The DOI does not match the user pattern.");
 
             var client = new RestClient($"{user.Account.Host}");
@@ -93,7 +91,7 @@ namespace Vaelastrasz.Server.Controllers
 
             var response = client.Execute(request);
 
-            if(response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
+            if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
             {
                 var result = System.Text.Json.JsonSerializer.Deserialize<ReadDataCiteModel>(response.Content);
 

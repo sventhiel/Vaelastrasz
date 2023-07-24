@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Vaelastrasz.Library.Configurations;
+﻿using Vaelastrasz.Library.Configurations;
 using Vaelastrasz.Library.Services;
 
 namespace Vaelastrasz.Library.Tests.Services
@@ -23,8 +18,6 @@ namespace Vaelastrasz.Library.Tests.Services
             var dataCiteService = new DataCiteService(config);
 
             var x = await dataCiteService.FindByDoiAsync("10.23720%2Fapitest005");
-
-
         }
     }
 }

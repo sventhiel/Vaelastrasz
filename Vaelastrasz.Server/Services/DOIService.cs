@@ -1,8 +1,5 @@
 ﻿using LiteDB;
-using Microsoft.Extensions.FileSystemGlobbing.Internal;
-using Vaelastrasz.Library.Models;
 using Vaelastrasz.Server.Entities;
-using Vaelastrasz.Server.Utilities;
 
 namespace Vaelastrasz.Server.Services
 {
@@ -16,7 +13,7 @@ namespace Vaelastrasz.Server.Services
             _connectionString = connectionString;
         }
 
-        public long Create(string prefix, string suffix, long? userId, State state = State.Draft, DOIType type = DOIType.DataCite)
+        public long? Create(string prefix, string suffix, long userId, State state = State.Draft, DOIType type = DOIType.DataCite)
         {
             using var db = new LiteDatabase(_connectionString);
             var dois = db.GetCollection<DOI>("dois");
@@ -30,8 +27,10 @@ namespace Vaelastrasz.Server.Services
                 Type = type,
             };
 
-            if (userId != null)
-                doi.User = users.FindById(userId);
+            if (users.FindById(userId) == null)
+                return null;
+
+            doi.User = users.FindById(userId);
 
             return dois.Insert(doi);
         }

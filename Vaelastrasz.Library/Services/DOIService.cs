@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Vaelastrasz.Library.Configurations;
+﻿using Vaelastrasz.Library.Configurations;
 
 namespace Vaelastrasz.Library.Services
 {
@@ -13,7 +10,5 @@ namespace Vaelastrasz.Library.Services
         {
             _config = config;
         }
-
-
     }
 }

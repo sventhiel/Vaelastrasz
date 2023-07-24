@@ -70,7 +70,10 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddExceptionless(options =>
 {
     options.ServerUrl = "https://idiv-exceptionless.fmi.uni-jena.de";
-    options.ApiKey = "RFRSCRxpd4lnyjtLagWd8U0MUc3o4ahOiQhsMgs2";
+    options.ApiKey = "iwkavWY6hTVwQpnv6imSfp6fZJps70YzfIdI3mOI";
+    options.IncludeUserName = true;
+    options.IncludeIpAddress = true;
+    options.SetVersion("v1.0");
 });
 
 // LiteDB
@@ -94,7 +97,7 @@ builder.Services.AddAuthentication(options =>
             ValidAudience = jwtConfiguration.ValidAudience,
             ValidIssuer = jwtConfiguration.ValidIssuer,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfiguration.IssuerSigningKey ?? ""))
-    };
+        };
     })
     .AddPolicyScheme("BASIC_OR_JWT", "BASIC_OR_JWT", options =>
     {

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Vaelastrasz.Library.Configurations;
-
-namespace Vaelastrasz.Library.Extensions
+﻿namespace Vaelastrasz.Library.Extensions
 {
     public static class ConfigurationExtensions
     {

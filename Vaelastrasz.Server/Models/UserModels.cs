@@ -25,7 +25,7 @@ namespace Vaelastrasz.Server.Models
             {
                 Id = user.Id,
                 Name = user.Name,
-                Project= user.Project,
+                Project = user.Project,
                 Pattern = user.Pattern,
                 CreationDate = user.CreationDate,
                 LastUpdateDate = user.LastUpdateDate
@@ -82,6 +82,5 @@ namespace Vaelastrasz.Server.Models
 
             return u;
         }
-
     }
 }

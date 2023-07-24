@@ -1,8 +1,5 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Vaelastrasz.Library.Configurations;
 using Vaelastrasz.Library.Models;
@@ -12,10 +9,10 @@ namespace Vaelastrasz.Library.Services
     public class DataCiteService
     {
         private readonly Configuration _config;
-        static readonly HttpClient client = new HttpClient();
+        private static readonly HttpClient client = new HttpClient();
 
-        public DataCiteService(Configuration config) 
-        { 
+        public DataCiteService(Configuration config)
+        {
             _config = config;
             client.DefaultRequestHeaders.Add("Authorization", _config.GetBasicAuthorizationHeader());
         }

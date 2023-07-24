@@ -1,7 +1,6 @@
 ﻿using LiteDB;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Vaelastrasz.Server.Configurations;
 using Vaelastrasz.Server.Models;
 using Vaelastrasz.Server.Services;
 
@@ -57,7 +56,6 @@ namespace Vaelastrasz.Server.Controllers
 
                     return Ok(ReadAccountModel.Convert(result));
                 }
-
             }
             catch (Exception ex)
             {
@@ -83,7 +81,6 @@ namespace Vaelastrasz.Server.Controllers
 
                     return Ok(new List<ReadAccountModel>(result.Select(a => ReadAccountModel.Convert(a))));
                 }
-
             }
             catch (Exception ex)
             {
@@ -117,7 +114,6 @@ namespace Vaelastrasz.Server.Controllers
 
                     return BadRequest();
                 }
-                    
             }
             catch (Exception ex)
             {

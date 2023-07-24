@@ -26,13 +26,11 @@ namespace Vaelastrasz.Library.Models
     [XmlRoot("data")]
     public class CreateDataCiteDataModel
     {
-       
         [JsonProperty("type")]
         [Required]
         [XmlElement("type")]
         public DataCiteType? Type { get; set; }
 
-        
         [JsonProperty("attributes")]
         [Required]
         [XmlElement("attributes")]

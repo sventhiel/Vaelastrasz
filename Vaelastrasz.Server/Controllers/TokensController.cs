@@ -68,7 +68,7 @@ namespace Vaelastrasz.Server.Controllers
             }
         }
 
-        [HttpGet("tokens")]
+        [Authorize(Roles = "user"), HttpGet("tokens")]
         public IActionResult Get()
         {
             try
@@ -89,7 +89,7 @@ namespace Vaelastrasz.Server.Controllers
                 {
                     Subject = new ClaimsIdentity(new Claim[]
                     {
-                    new Claim(ClaimTypes.Name, username),
+                    new Claim(ClaimTypes.Name, username)
                     }),
                     Expires = DateTime.Now.AddHours(_jwtConfiguration.ValidLifetime),
                     Issuer = _jwtConfiguration.ValidIssuer,

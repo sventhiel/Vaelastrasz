@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Vaelastrasz.Library.Models.DataCite;
 using Vaelastrasz.Library.Models;
+using Vaelastrasz.Library.Models.DataCite;
 
 namespace Vaelastrasz.Library.Extensions
 {
@@ -17,7 +15,7 @@ namespace Vaelastrasz.Library.Extensions
                 model.Data.Attributes.Creators.Add(new DataCiteCreator(firstname, lastname));
                 return model;
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return model;
             }
@@ -30,11 +28,10 @@ namespace Vaelastrasz.Library.Extensions
                 model.Data.Attributes.Creators.Add(new DataCiteCreator(name, type));
                 return model;
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return model;
             }
-            
         }
 
         public static CreateDataCiteModel RemoveCreator(this CreateDataCiteModel model, int index)
@@ -95,6 +92,6 @@ namespace Vaelastrasz.Library.Extensions
             }
         }
 
-        #endregion
+        #endregion CreateDataCiteModel
     }
 }

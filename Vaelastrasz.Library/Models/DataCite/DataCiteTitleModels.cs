@@ -1,7 +1,7 @@
-﻿using System.Runtime.Serialization;
-using System.Xml.Serialization;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using System.Runtime.Serialization;
+using System.Xml.Serialization;
 
 namespace Vaelastrasz.Library.Models.DataCite
 {
@@ -39,10 +39,13 @@ namespace Vaelastrasz.Library.Models.DataCite
     {
         [EnumMember(Value = "AlternativeTitle")]
         AlternativeTitle = 1,
+
         [EnumMember(Value = "Subtitle")]
         Subtitle = 2,
+
         [EnumMember(Value = "TranslatedTitle")]
         TranslatedTitle = 3,
+
         [EnumMember(Value = "Other")]
         Other = 4
     }

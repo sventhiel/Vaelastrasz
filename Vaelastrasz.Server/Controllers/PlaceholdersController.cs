@@ -1,15 +1,13 @@
 ﻿using LiteDB;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Vaelastrasz.Server.Configurations;
-using Vaelastrasz.Server.Helpers;
 using Vaelastrasz.Server.Models;
 using Vaelastrasz.Server.Services;
 
 namespace Vaelastrasz.Server.Controllers
 {
-    [ApiController, Route("api")]
+    [ApiController, Authorize(Roles = "user"), Route("api")]
     public class PlaceholdersController : ControllerBase
     {
         private ConnectionString _connectionString;

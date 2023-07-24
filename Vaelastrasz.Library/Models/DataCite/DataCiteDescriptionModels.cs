@@ -39,14 +39,19 @@ namespace Vaelastrasz.Library.Models.DataCite
     {
         [EnumMember(Value = "Abstract")]
         Abstract = 1,
+
         [EnumMember(Value = "Methods")]
         Methods = 2,
+
         [EnumMember(Value = "SeriesInformation")]
         SeriesInformation = 3,
+
         [EnumMember(Value = "TableOfContents")]
         TableOfContents = 4,
+
         [EnumMember(Value = "TechnicalInfo")]
         TechnicalInfo = 5,
+
         [EnumMember(Value = "Other")]
         Other = 6
     }

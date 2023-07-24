@@ -1,5 +1,4 @@
-﻿using Exceptionless;
-using LiteDB;
+﻿using LiteDB;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
 using System.IdentityModel.Tokens.Jwt;
@@ -79,7 +78,6 @@ namespace Vaelastrasz.Server.Authentication
                 Response.StatusCode = 401;
                 Response.Headers.Add("www-authenticate", "Basic Authorization");
                 return AuthenticateResult.Fail(new UnauthorizedAccessException());
-
             }
         }
     }

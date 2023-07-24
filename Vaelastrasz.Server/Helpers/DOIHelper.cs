@@ -1,15 +1,12 @@
 ﻿using Fare;
-using LiteDB;
 using System.Text.RegularExpressions;
 using Vaelastrasz.Library.Models;
-using Vaelastrasz.Server.Configurations;
-using Vaelastrasz.Server.Controllers;
 
 namespace Vaelastrasz.Server.Helpers
 {
     public class DOIHelper
     {
-        public static ReadDOIModel Create(string prefix, string project, string pattern, Dictionary<string, string> placeholders)
+        public static ReadDOIModel Create(string prefix, string pattern, Dictionary<string, string> placeholders)
         {
             try
             {
@@ -26,7 +23,7 @@ namespace Vaelastrasz.Server.Helpers
                 Xeger xeger = new Xeger($"{pattern}", new Random());
                 var suffix = xeger.Generate();
 
-                return new ReadDOIModel() { DOI = $"{prefix}/{project}.{suffix}" };
+                return new ReadDOIModel() { DOI = $"{prefix}/{suffix}" };
             }
             catch (Exception)
             {
@@ -34,12 +31,12 @@ namespace Vaelastrasz.Server.Helpers
             }
         }
 
-        public static bool Validate(ReadDOIModel model, string prefix, string project, string pattern, Dictionary<string, string> placeholders = null)
+        public static bool Validate(ReadDOIModel model, string prefix, string pattern, Dictionary<string, string> placeholders = null)
         {
-            return Validate(model.DOI, prefix, project, pattern, placeholders); 
+            return Validate(model.DOI, prefix, pattern, placeholders);
         }
 
-        public static bool Validate(string doi, string prefix, string project, string pattern, Dictionary<string, string> placeholders = null)
+        public static bool Validate(string doi, string prefix, string pattern, Dictionary<string, string> placeholders = null)
         {
             try
             {
@@ -50,7 +47,7 @@ namespace Vaelastrasz.Server.Helpers
                         pattern = pattern.Replace(placeholder.Key, placeholder.Value);
                     }
                 }
-                Regex rg = new Regex($"{prefix}/{project}.{pattern}");
+                Regex rg = new Regex($"{prefix}/{pattern}");
                 return rg.IsMatch(doi);
             }
             catch

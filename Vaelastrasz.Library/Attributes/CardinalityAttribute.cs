@@ -25,7 +25,7 @@ namespace Vaelastrasz.Library.Attributes
             if (collection.Count < Minimum)
                 return new ValidationResult($"The property contains less entries than the minimum of {Minimum}.");
 
-            if(collection.Count > Maximum)
+            if (collection.Count > Maximum)
                 return new ValidationResult($"The property contains more entries than the maximum of {Maximum}.");
 
             return ValidationResult.Success;
