@@ -58,7 +58,7 @@ namespace Vaelastrasz.Server.Controllers
             return Ok(JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content));
         }
 
-        [HttpGet("datacite/{doi}")]
+        [HttpGet("datacite")]
         public IActionResult Get()
         {
             if (User?.Identity?.Name == null)
