@@ -13,7 +13,7 @@ namespace Vaelastrasz.Server.Services
             _connectionString = connectionString;
         }
 
-        public long? Create(string prefix, string suffix, long userId, State state = State.Draft, DOIType type = DOIType.DataCite)
+        public long? Create(string prefix, string suffix, long userId)
         {
             using var db = new LiteDatabase(_connectionString);
             var dois = db.GetCollection<DOI>("dois");
@@ -22,9 +22,7 @@ namespace Vaelastrasz.Server.Services
             var doi = new DOI()
             {
                 Prefix = prefix,
-                Suffix = suffix,
-                State = state,
-                Type = type,
+                Suffix = suffix
             };
 
             if (users.FindById(userId) == null)

@@ -14,11 +14,14 @@ namespace Vaelastrasz.Server.Services
             _connectionString = connectionString;
         }
 
-        public long Create(string name, string password, string project, string pattern, long? accountId)
+        public long? Create(string name, string password, string project, string pattern, long? accountId)
         {
             using var db = new LiteDatabase(_connectionString);
             var users = db.GetCollection<User>("users");
             var accounts = db.GetCollection<Account>("accounts");
+
+            if (users.Exists(u => u.Name.Equals(name, StringComparison.OrdinalIgnoreCase)))
+                return null;
 
             // salt
             var salt = CryptographyUtils.GetRandomBase64String(16);

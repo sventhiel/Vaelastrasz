@@ -6,7 +6,6 @@ using RestSharp;
 using RestSharp.Authenticators;
 using Vaelastrasz.Library.Models;
 using Vaelastrasz.Server.Configurations;
-using Vaelastrasz.Server.Extensions;
 using Vaelastrasz.Server.Helpers;
 using Vaelastrasz.Server.Services;
 
@@ -27,7 +26,7 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         [HttpGet("datacite/{doi}")]
-        public IActionResult GetById(string doi)
+        public IActionResult GetByDOI(string doi)
         {
             if (User?.Identity?.Name == null)
                 return StatusCode(400);
@@ -49,6 +48,39 @@ namespace Vaelastrasz.Server.Controllers
             client.Authenticator = new HttpBasicAuthenticator(user.Account.Name, user.Account.Password);
 
             var request = new RestRequest($"dois/{doi}", Method.Get);
+            request.AddHeader("Accept", "application/json");
+
+            var response = client.Execute(request);
+
+            if (response.StatusCode != System.Net.HttpStatusCode.OK || response.Content == null)
+                return BadRequest();
+
+            return Ok(JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content));
+        }
+
+        [HttpGet("datacite/{doi}")]
+        public IActionResult Get()
+        {
+            if (User?.Identity?.Name == null)
+                return StatusCode(400);
+
+            var username = User.Identity.Name;
+
+            var userService = new UserService(_connectionString);
+            var accountService = new AccountService(_connectionString);
+
+            var user = userService.FindByName(username);
+
+            if (user == null)
+                return StatusCode(400);
+
+            if (user.Account == null)
+                return StatusCode(400);
+
+            var client = new RestClient($"{user.Account.Host}");
+            client.Authenticator = new HttpBasicAuthenticator(user.Account.Name, user.Account.Password);
+
+            var request = new RestRequest($"dois", Method.Get);
             request.AddHeader("Accept", "application/json");
 
             var response = client.Execute(request);
@@ -99,11 +131,8 @@ namespace Vaelastrasz.Server.Controllers
                 var prefix = result.Data.Attributes.Doi.Split('/')[0];
                 var suffix = result.Data.Attributes.Doi.Split('/')[1];
 
-                var state = result.Data.Attributes.State.ToState();
-
-
                 var doiService = new DOIService(_connectionString);
-                doiService.Create(prefix, suffix, user.Id, state, Entities.DOIType.DataCite);
+                doiService.Create(prefix, suffix, user.Id);
             }
 
             return StatusCode((int)response.StatusCode, response.Content);
@@ -137,6 +166,39 @@ namespace Vaelastrasz.Server.Controllers
             var response = client.Execute(request);
 
             return StatusCode((int)response.StatusCode, response.Content);
+        }
+
+        [HttpDelete("datacite/{doi}")]
+        public IActionResult DeleteByDOI(string doi)
+        {
+            if (User?.Identity?.Name == null)
+                return StatusCode(400);
+
+            var username = User.Identity.Name;
+
+            var userService = new UserService(_connectionString);
+            var accountService = new AccountService(_connectionString);
+
+            var user = userService.FindByName(username);
+
+            if (user == null)
+                return StatusCode(400);
+
+            if (user.Account == null)
+                return StatusCode(400);
+
+            var client = new RestClient($"{user.Account.Host}");
+            client.Authenticator = new HttpBasicAuthenticator(user.Account.Name, user.Account.Password);
+
+            var request = new RestRequest($"dois/{doi}", Method.Get);
+            request.AddHeader("Accept", "application/json");
+
+            var response = client.Execute(request);
+
+            if (response.StatusCode != System.Net.HttpStatusCode.OK || response.Content == null)
+                return BadRequest();
+
+            return Ok(JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content));
         }
     }
 }

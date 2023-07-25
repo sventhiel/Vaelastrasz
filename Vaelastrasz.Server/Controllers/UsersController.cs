@@ -34,7 +34,10 @@ namespace Vaelastrasz.Server.Controllers
                     {
                         var id = userService.Create(model.Name, model.Password, model.Project, model.Pattern, model.AccountId);
 
-                        var user = userService.FindById(id);
+                        if (!id.HasValue)
+                            return BadRequest();
+
+                        var user = userService.FindById(id.Value);
 
                         if (user == null)
                             return BadRequest();
