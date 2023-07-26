@@ -433,9 +433,6 @@ namespace Vaelastrasz.Library.Models
         Other = 27
     }
 
-    /// <summary>
-    /// The most generic type of an entry at DataCite.
-    /// </summary>
     [JsonConverter(typeof(StringEnumConverter))]
     public enum DataCiteType
     {
