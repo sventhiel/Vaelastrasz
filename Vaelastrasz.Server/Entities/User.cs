@@ -1,4 +1,5 @@
 ﻿using LiteDB;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Vaelastrasz.Server.Entities
 {
@@ -15,7 +16,7 @@ namespace Vaelastrasz.Server.Entities
         public string Pattern { get; set; }
 
         [BsonRef("accounts")]
-        public Account? Account { get; set; }
+        public Account Account { get; set; }
 
         public User()
         {
