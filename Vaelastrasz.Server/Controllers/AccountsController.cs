@@ -121,5 +121,27 @@ namespace Vaelastrasz.Server.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpDelete("accounts/{id}")]
+        public IActionResult Delete(long id)
+        {
+            try
+            {
+                using (var accountService = new AccountService(_connectionString))
+                {
+                    var result = accountService.Delete(id);
+
+                    if (result)
+                        return Ok($"deletion of account (id:{id}) was successful.");
+
+                    return BadRequest($"something went wrong...");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
