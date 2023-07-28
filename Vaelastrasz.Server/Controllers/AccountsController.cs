@@ -9,8 +9,8 @@ namespace Vaelastrasz.Server.Controllers
     [ApiController, Route("api"), Authorize(Roles = "admin")]
     public class AccountsController : ControllerBase
     {
-        private ConnectionString _connectionString;
         private readonly ILogger<AccountsController> _logger;
+        private ConnectionString _connectionString;
 
         public AccountsController(ILogger<AccountsController> logger, ConnectionString connectionString)
         {
@@ -18,43 +18,19 @@ namespace Vaelastrasz.Server.Controllers
             _connectionString = connectionString;
         }
 
-        [HttpPost("accounts")]
-        public IActionResult Post(CreateAccountModel model)
+        [HttpDelete("accounts/{id}")]
+        public IActionResult Delete(long id)
         {
             try
             {
                 using (var accountService = new AccountService(_connectionString))
                 {
-                    if (ModelState.IsValid)
-                    {
-                        var id = accountService.Create(model.Name, model.Password, model.Host, model.Prefix);
-                        var account = accountService.FindById(id);
-                        return Ok(account);
-                    }
+                    var result = accountService.Delete(id);
 
-                    return BadRequest();
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return BadRequest(ex.Message);
-            }
-        }
+                    if (result)
+                        return Ok($"deletion of account (id:{id}) was successful.");
 
-        [HttpGet("accounts/{id}")]
-        public IActionResult GetById(long id)
-        {
-            try
-            {
-                using (var accountService = new AccountService(_connectionString))
-                {
-                    var result = accountService.FindById(id);
-
-                    if (result == null)
-                        return BadRequest();
-
-                    return Ok(ReadAccountModel.Convert(result));
+                    return BadRequest($"something went wrong...");
                 }
             }
             catch (Exception ex)
@@ -89,6 +65,52 @@ namespace Vaelastrasz.Server.Controllers
             }
         }
 
+        [HttpGet("accounts/{id}")]
+        public IActionResult GetById(long id)
+        {
+            try
+            {
+                using (var accountService = new AccountService(_connectionString))
+                {
+                    var result = accountService.FindById(id);
+
+                    if (result == null)
+                        return BadRequest();
+
+                    return Ok(ReadAccountModel.Convert(result));
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("accounts")]
+        public IActionResult Post(CreateAccountModel model)
+        {
+            try
+            {
+                using (var accountService = new AccountService(_connectionString))
+                {
+                    if (ModelState.IsValid)
+                    {
+                        var id = accountService.Create(model.Name, model.Password, model.Host, model.Prefix);
+                        var account = accountService.FindById(id);
+                        return Ok(account);
+                    }
+
+                    return BadRequest();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpPut("accounts/{id}")]
         public IActionResult Put(long id, UpdateAccountModel model)
         {
@@ -113,28 +135,6 @@ namespace Vaelastrasz.Server.Controllers
                     }
 
                     return BadRequest();
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpDelete("accounts/{id}")]
-        public IActionResult Delete(long id)
-        {
-            try
-            {
-                using (var accountService = new AccountService(_connectionString))
-                {
-                    var result = accountService.Delete(id);
-
-                    if (result)
-                        return Ok($"deletion of account (id:{id}) was successful.");
-
-                    return BadRequest($"something went wrong...");
                 }
             }
             catch (Exception ex)

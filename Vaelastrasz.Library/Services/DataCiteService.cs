@@ -8,8 +8,8 @@ namespace Vaelastrasz.Library.Services
 {
     public class DataCiteService
     {
-        private readonly Configuration _config;
         private static readonly HttpClient client = new HttpClient();
+        private readonly Configuration _config;
 
         public DataCiteService(Configuration config)
         {
@@ -26,6 +26,9 @@ namespace Vaelastrasz.Library.Services
         {
             return new CreateDataCiteModel();
         }
+
+        public void Delete()
+        { }
 
         public async Task<ReadDataCiteModel> FindByDoiAsync(string doi)
         {
@@ -49,9 +52,6 @@ namespace Vaelastrasz.Library.Services
         //}
 
         public void Update()
-        { }
-
-        public void Delete()
         { }
     }
 }

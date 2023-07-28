@@ -5,10 +5,6 @@ namespace Vaelastrasz.Library.Configurations
 {
     public class Configuration
     {
-        public string Username { get; set; }
-        public string Password { get; set; }
-        public string Host { get; set; }
-
         /// <summary>
         /// The general configuration that is needed to connect to an appropriate proxy.
         /// </summary>
@@ -21,6 +17,10 @@ namespace Vaelastrasz.Library.Configurations
             Password = password;
             Host = host;
         }
+
+        public string Host { get; set; }
+        public string Password { get; set; }
+        public string Username { get; set; }
 
         public string GetBasicAuthorizationHeader()
         {

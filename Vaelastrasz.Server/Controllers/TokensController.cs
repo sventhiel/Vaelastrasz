@@ -14,10 +14,10 @@ namespace Vaelastrasz.Server.Controllers
     [ApiController, Route("api")]
     public class TokensController : ControllerBase
     {
+        private readonly ILogger<TokensController> _logger;
+        private List<Admin> _admins;
         private ConnectionString _connectionString;
         private JwtConfiguration _jwtConfiguration;
-        private List<Admin> _admins;
-        private readonly ILogger<TokensController> _logger;
 
         public TokensController(ILogger<TokensController> logger, IConfiguration configuration, ConnectionString connectionString)
         {
@@ -25,47 +25,6 @@ namespace Vaelastrasz.Server.Controllers
             _jwtConfiguration = configuration.GetSection("JWT").Get<JwtConfiguration>();
             _admins = configuration.GetSection("Admins").Get<List<Admin>>();
             _logger = logger;
-        }
-
-        [HttpPost("tokens")]
-        public IActionResult Post(LoginUserModel model)
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(_jwtConfiguration.IssuerSigningKey))
-                    return BadRequest();
-
-                using (var userService = new UserService(_connectionString))
-                {
-                    if (!userService.Verify(model.Username, model.Password))
-                        return BadRequest();
-
-                    var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtConfiguration.IssuerSigningKey ?? ""));
-                    var tokenHandler = new JwtSecurityTokenHandler();
-                    var tokenDescriptor = new SecurityTokenDescriptor()
-                    {
-                        Subject = new ClaimsIdentity(new Claim[]
-                        {
-                            new Claim(ClaimTypes.Name, model.Username),
-                        }),
-                        Expires = DateTime.Now.AddHours(_jwtConfiguration.ValidLifetime),
-                        Issuer = _jwtConfiguration.ValidIssuer,
-                        Audience = _jwtConfiguration.ValidAudience,
-                        SigningCredentials = new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha512Signature)
-                    };
-
-                    if (_admins.Any(a => a.Name.Equals(model.Username)))
-                        tokenDescriptor.Subject.AddClaim(new Claim(ClaimTypes.Role, "admin"));
-
-                    var token = tokenHandler.CreateToken(tokenDescriptor);
-                    return Ok(tokenHandler.WriteToken(token));
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return BadRequest(ex.Message);
-            }
         }
 
         [Authorize(Roles = "user"), HttpGet("tokens")]
@@ -102,6 +61,47 @@ namespace Vaelastrasz.Server.Controllers
 
                 var token = tokenHandler.CreateToken(tokenDescriptor);
                 return Ok(tokenHandler.WriteToken(token));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("tokens")]
+        public IActionResult Post(LoginUserModel model)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(_jwtConfiguration.IssuerSigningKey))
+                    return BadRequest();
+
+                using (var userService = new UserService(_connectionString))
+                {
+                    if (!userService.Verify(model.Username, model.Password))
+                        return BadRequest();
+
+                    var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtConfiguration.IssuerSigningKey ?? ""));
+                    var tokenHandler = new JwtSecurityTokenHandler();
+                    var tokenDescriptor = new SecurityTokenDescriptor()
+                    {
+                        Subject = new ClaimsIdentity(new Claim[]
+                        {
+                            new Claim(ClaimTypes.Name, model.Username),
+                        }),
+                        Expires = DateTime.Now.AddHours(_jwtConfiguration.ValidLifetime),
+                        Issuer = _jwtConfiguration.ValidIssuer,
+                        Audience = _jwtConfiguration.ValidAudience,
+                        SigningCredentials = new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha512Signature)
+                    };
+
+                    if (_admins.Any(a => a.Name.Equals(model.Username)))
+                        tokenDescriptor.Subject.AddClaim(new Claim(ClaimTypes.Role, "admin"));
+
+                    var token = tokenHandler.CreateToken(tokenDescriptor);
+                    return Ok(tokenHandler.WriteToken(token));
+                }
             }
             catch (Exception ex)
             {

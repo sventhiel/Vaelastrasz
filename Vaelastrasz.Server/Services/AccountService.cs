@@ -13,6 +13,11 @@ namespace Vaelastrasz.Server.Services
             _connectionString = connectionString;
         }
 
+        ~AccountService()
+        {
+            Dispose(false);
+        }
+
         public long Create(string name, string password, string host, string prefix)
         {
             using var db = new LiteDatabase(_connectionString);
@@ -31,12 +36,18 @@ namespace Vaelastrasz.Server.Services
             return accounts.Insert(account);
         }
 
-        public Account FindById(long id)
+        public bool Delete(long id)
         {
             using var db = new LiteDatabase(_connectionString);
             var col = db.GetCollection<Account>("accounts");
 
-            return col.FindById(id);
+            return col.Delete(id);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         public List<Account> Find()
@@ -51,12 +62,12 @@ namespace Vaelastrasz.Server.Services
             return accounts;
         }
 
-        public bool Delete(long id)
+        public Account FindById(long id)
         {
             using var db = new LiteDatabase(_connectionString);
             var col = db.GetCollection<Account>("accounts");
 
-            return col.Delete(id);
+            return col.FindById(id);
         }
 
         public bool Update(long id, string name, string password, string host, string prefix)
@@ -98,17 +109,6 @@ namespace Vaelastrasz.Server.Services
                 // shared cleanup logic
                 disposed = true;
             }
-        }
-
-        ~AccountService()
-        {
-            Dispose(false);
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
         }
     }
 }

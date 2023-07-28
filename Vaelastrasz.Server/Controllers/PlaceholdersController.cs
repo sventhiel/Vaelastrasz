@@ -10,10 +10,10 @@ namespace Vaelastrasz.Server.Controllers
     [ApiController, Authorize(Roles = "user"), Route("api")]
     public class PlaceholdersController : ControllerBase
     {
+        private readonly ILogger<PlaceholdersController> _logger;
+        private List<Admin> _admins;
         private ConnectionString _connectionString;
         private JwtConfiguration _jwtConfiguration;
-        private List<Admin> _admins;
-        private readonly ILogger<PlaceholdersController> _logger;
 
         public PlaceholdersController(ILogger<PlaceholdersController> logger, IConfiguration configuration, ConnectionString connectionString)
         {
@@ -21,46 +21,6 @@ namespace Vaelastrasz.Server.Controllers
             _jwtConfiguration = configuration.GetSection("JWT").Get<JwtConfiguration>();
             _admins = configuration.GetSection("Admins").Get<List<Admin>>();
             _logger = logger;
-        }
-
-        [HttpPost("placeholders")]
-        public IActionResult Post(CreatePlaceholderModel model)
-        {
-            if (User?.Identity?.Name == null)
-                return BadRequest();
-
-            var username = User.Identity.Name;
-
-            var userService = new UserService(_connectionString);
-            var user = userService.FindByName(username);
-
-            if (user == null)
-                return BadRequest();
-
-            var placeholderService = new PlaceholderService(_connectionString);
-            placeholderService.Create(model.Expression, model.RegularExpression, user.Id);
-
-            return Ok();
-        }
-
-        [HttpGet("placeholders")]
-        public IActionResult Get()
-        {
-            if (User?.Identity?.Name == null)
-                return BadRequest();
-
-            var username = User.Identity.Name;
-
-            var userService = new UserService(_connectionString);
-            var user = userService.FindByName(username);
-
-            if (user == null)
-                return BadRequest();
-
-            var placeholderService = new PlaceholderService(_connectionString);
-            var placeholders = placeholderService.FindByUserId(user.Id).Select(p => ReadPlaceholderModel.Convert(p));
-
-            return Ok(placeholders);
         }
 
         [HttpDelete("placeholders/{id}")]
@@ -83,6 +43,46 @@ namespace Vaelastrasz.Server.Controllers
                 _logger.LogError(ex, ex.Message);
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpGet("placeholders")]
+        public IActionResult Get()
+        {
+            if (User?.Identity?.Name == null)
+                return BadRequest();
+
+            var username = User.Identity.Name;
+
+            var userService = new UserService(_connectionString);
+            var user = userService.FindByName(username);
+
+            if (user == null)
+                return BadRequest();
+
+            var placeholderService = new PlaceholderService(_connectionString);
+            var placeholders = placeholderService.FindByUserId(user.Id).Select(p => ReadPlaceholderModel.Convert(p));
+
+            return Ok(placeholders);
+        }
+
+        [HttpPost("placeholders")]
+        public IActionResult Post(CreatePlaceholderModel model)
+        {
+            if (User?.Identity?.Name == null)
+                return BadRequest();
+
+            var username = User.Identity.Name;
+
+            var userService = new UserService(_connectionString);
+            var user = userService.FindByName(username);
+
+            if (user == null)
+                return BadRequest();
+
+            var placeholderService = new PlaceholderService(_connectionString);
+            placeholderService.Create(model.Expression, model.RegularExpression, user.Id);
+
+            return Ok();
         }
 
         [HttpPut("placeholders/{id}")]

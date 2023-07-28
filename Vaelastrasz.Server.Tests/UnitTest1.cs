@@ -1,5 +1,4 @@
 using LiteDB;
-using Vaelastrasz.Server.Entities;
 using Vaelastrasz.Server.Services;
 
 namespace Vaelastrasz.Server.Tests

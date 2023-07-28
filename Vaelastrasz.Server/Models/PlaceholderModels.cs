@@ -11,14 +11,13 @@ namespace Vaelastrasz.Server.Models
 
     public class ReadPlaceholderModel
     {
-        public long Id { get; set; }
+        public DateTimeOffset CreationDate { get; set; }
         public string Expression { get; set; }
+        public long Id { get; set; }
+        public DateTimeOffset LastUpdateDate { get; set; }
         public string RegularExpression { get; set; }
 
         public long UserId { get; set; }
-
-        public DateTimeOffset CreationDate { get; set; }
-        public DateTimeOffset LastUpdateDate { get; set; }
 
         public static ReadPlaceholderModel Convert(Placeholder placeholder)
         {

@@ -6,32 +6,18 @@ using System.Xml.Serialization;
 
 namespace Vaelastrasz.Library.Models.DataCite
 {
+    [JsonConverter(typeof(StringEnumConverter))]
+    public enum DataCiteCreatorType
+    {
+        [EnumMember(Value = "Personal")]
+        Personal = 1,
+
+        [EnumMember(Value = "Organizational")]
+        Organizational = 2
+    }
+
     public class DataCiteCreator
     {
-        [JsonProperty("name")]
-        [XmlElement("name")]
-        public string Name { get; set; }
-
-        [JsonProperty("givenName")]
-        [XmlElement("givenName")]
-        public string GivenName { get; set; }
-
-        [JsonProperty("familyName")]
-        [XmlElement("familyName")]
-        public string FamilyName { get; set; }
-
-        [JsonProperty("nameType")]
-        [XmlElement("nameType")]
-        public DataCiteCreatorType NameType { get; set; }
-
-        [JsonProperty("affiliations")]
-        [XmlElement("affiliations")]
-        public List<DataCiteAffiliation> Affiliations { get; set; }
-
-        [JsonProperty("nameIdentifiers")]
-        [XmlElement("nameIdentifiers")]
-        public List<DataCiteNameIdentifier> NameIdentifiers { get; set; }
-
         public DataCiteCreator()
         {
             Affiliations = new List<DataCiteAffiliation>();
@@ -70,15 +56,29 @@ namespace Vaelastrasz.Library.Models.DataCite
             FamilyName = lastname;
             NameType = DataCiteCreatorType.Personal;
         }
-    }
 
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum DataCiteCreatorType
-    {
-        [EnumMember(Value = "Personal")]
-        Personal = 1,
+        [JsonProperty("affiliations")]
+        [XmlElement("affiliations")]
+        public List<DataCiteAffiliation> Affiliations { get; set; }
 
-        [EnumMember(Value = "Organizational")]
-        Organizational = 2
+        [JsonProperty("familyName")]
+        [XmlElement("familyName")]
+        public string FamilyName { get; set; }
+
+        [JsonProperty("givenName")]
+        [XmlElement("givenName")]
+        public string GivenName { get; set; }
+
+        [JsonProperty("name")]
+        [XmlElement("name")]
+        public string Name { get; set; }
+
+        [JsonProperty("nameIdentifiers")]
+        [XmlElement("nameIdentifiers")]
+        public List<DataCiteNameIdentifier> NameIdentifiers { get; set; }
+
+        [JsonProperty("nameType")]
+        [XmlElement("nameType")]
+        public DataCiteCreatorType NameType { get; set; }
     }
 }

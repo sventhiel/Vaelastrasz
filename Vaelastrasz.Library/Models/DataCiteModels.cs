@@ -11,39 +11,37 @@ namespace Vaelastrasz.Library.Models
 {
     #region create
 
-    public class CreateDataCiteModel
-    {
-        [JsonProperty("data")]
-        [Required]
-        public CreateDataCiteDataModel Data { get; set; }
-
-        public CreateDataCiteModel()
-        {
-            Data = new CreateDataCiteDataModel();
-        }
-    }
-
-    [XmlRoot("data")]
-    public class CreateDataCiteDataModel
-    {
-        [JsonProperty("type")]
-        [Required]
-        [XmlElement("type")]
-        public DataCiteType? Type { get; set; }
-
-        [JsonProperty("attributes")]
-        [Required]
-        [XmlElement("attributes")]
-        public CreateDataCiteAttributesModel Attributes { get; set; }
-
-        public CreateDataCiteDataModel()
-        {
-            Attributes = new CreateDataCiteAttributesModel();
-        }
-    }
-
     public class CreateDataCiteAttributesModel
     {
+        public CreateDataCiteAttributesModel()
+        {
+            Creators = new List<DataCiteCreator>();
+            Contributors = new List<DataCiteCreator>();
+            Dates = new List<DataCiteDate>();
+            Descriptions = new List<DataCiteDescription>();
+            Identifiers = new List<DataCiteIdentifier>();
+            Subjects = new List<DataCiteSubject>();
+            Titles = new List<DataCiteTitle>();
+            RelatedIdentifiers = new List<DataCiteRelatedIdentifier>();
+        }
+
+        [JsonProperty("contributors")]
+        [XmlElement("contributors")]
+        public List<DataCiteCreator> Contributors { get; set; }
+
+        [Cardinality(Minimum = 1)]
+        [JsonProperty("creators")]
+        [XmlElement("creators")]
+        public List<DataCiteCreator> Creators { get; set; }
+
+        [JsonProperty("dates")]
+        [XmlElement("dates")]
+        public List<DataCiteDate> Dates { get; set; }
+
+        [JsonProperty("descriptions")]
+        [XmlElement("descriptions")]
+        public List<DataCiteDescription> Descriptions { get; set; }
+
         [JsonProperty("doi")]
         [Required]
         [XmlElement("doi")]
@@ -58,61 +56,82 @@ namespace Vaelastrasz.Library.Models
         [XmlElement("identifiers")]
         public List<DataCiteIdentifier> Identifiers { get; set; }
 
-        [Cardinality(Minimum = 1)]
-        [JsonProperty("creators")]
-        [XmlElement("creators")]
-        public List<DataCiteCreator> Creators { get; set; }
+        [JsonProperty("language")]
+        [XmlElement("language")]
+        public string Language { get; set; }
+
+        [JsonProperty("publicationYear")]
+        [XmlElement("publicationYear")]
+        public int PublicationYear { get; set; }
+
+        [JsonProperty("publisher")]
+        [XmlElement("publisher")]
+        public string Publisher { get; set; }
+
+        [JsonProperty("relatedIdentifiers")]
+        [XmlElement("relatedIdentifiers")]
+        public List<DataCiteRelatedIdentifier> RelatedIdentifiers { get; set; }
+
+        [JsonProperty("subjects")]
+        [XmlElement("subjects")]
+        public List<DataCiteSubject> Subjects { get; set; }
 
         [Cardinality(Minimum = 1)]
         [JsonProperty("titles")]
         [XmlElement("titles")]
         public List<DataCiteTitle> Titles { get; set; }
 
-        [JsonProperty("publisher")]
-        [XmlElement("publisher")]
-        public string Publisher { get; set; }
-
-        [JsonProperty("publicationYear")]
-        [XmlElement("publicationYear")]
-        public int PublicationYear { get; set; }
-
-        [JsonProperty("subjects")]
-        [XmlElement("subjects")]
-        public List<DataCiteSubject> Subjects { get; set; }
-
-        [JsonProperty("contributors")]
-        [XmlElement("contributors")]
-        public List<DataCiteCreator> Contributors { get; set; }
-
-        [JsonProperty("dates")]
-        [XmlElement("dates")]
-        public List<DataCiteDate> Dates { get; set; }
-
-        [JsonProperty("language")]
-        [XmlElement("language")]
-        public string Language { get; set; }
-
         [JsonProperty("types")]
         [XmlElement("types")]
         public DataCiteTypes Types { get; set; }
-
-        [JsonProperty("relatedIdentifiers")]
-        [XmlElement("relatedIdentifiers")]
-        public List<DataCiteRelatedIdentifier> RelatedIdentifiers { get; set; }
-
-        [JsonProperty("version")]
-        [XmlElement("version")]
-        public string Version { get; set; }
 
         [JsonProperty("url")]
         [XmlElement("url")]
         public string URL { get; set; }
 
-        [JsonProperty("descriptions")]
-        [XmlElement("descriptions")]
-        public List<DataCiteDescription> Descriptions { get; set; }
+        [JsonProperty("version")]
+        [XmlElement("version")]
+        public string Version { get; set; }
+    }
 
-        public CreateDataCiteAttributesModel()
+    [XmlRoot("data")]
+    public class CreateDataCiteDataModel
+    {
+        public CreateDataCiteDataModel()
+        {
+            Attributes = new CreateDataCiteAttributesModel();
+        }
+
+        [JsonProperty("attributes")]
+        [Required]
+        [XmlElement("attributes")]
+        public CreateDataCiteAttributesModel Attributes { get; set; }
+
+        [JsonProperty("type")]
+        [Required]
+        [XmlElement("type")]
+        public DataCiteType? Type { get; set; }
+    }
+
+    public class CreateDataCiteModel
+    {
+        public CreateDataCiteModel()
+        {
+            Data = new CreateDataCiteDataModel();
+        }
+
+        [JsonProperty("data")]
+        [Required]
+        public CreateDataCiteDataModel Data { get; set; }
+    }
+
+    #endregion create
+
+    #region read
+
+    public class ReadDataCiteAttributesModel
+    {
+        public ReadDataCiteAttributesModel()
         {
             Creators = new List<DataCiteCreator>();
             Contributors = new List<DataCiteCreator>();
@@ -123,21 +142,79 @@ namespace Vaelastrasz.Library.Models
             Titles = new List<DataCiteTitle>();
             RelatedIdentifiers = new List<DataCiteRelatedIdentifier>();
         }
+
+        [JsonProperty("contributors")]
+        public List<DataCiteCreator> Contributors { get; set; }
+
+        [JsonProperty("creators")]
+        public List<DataCiteCreator> Creators { get; set; }
+
+        [JsonProperty("dates")]
+        public List<DataCiteDate> Dates { get; set; }
+
+        [JsonProperty("descriptions")]
+        public List<DataCiteDescription> Descriptions { get; set; }
+
+        [JsonProperty("doi")]
+        public string Doi { get; set; }
+
+        [JsonProperty("identifiers")]
+        public List<DataCiteIdentifier> Identifiers { get; set; }
+
+        [JsonProperty("language")]
+        public string Language { get; set; }
+
+        [JsonProperty("publicationYear")]
+        public int PublicationYear { get; set; }
+
+        [JsonProperty("publisher")]
+        public string Publisher { get; set; }
+
+        [JsonProperty("relatedIdentifiers")]
+        public List<DataCiteRelatedIdentifier> RelatedIdentifiers { get; set; }
+
+        [JsonProperty("state")]
+        public DataCiteStateType State { get; set; }
+
+        [JsonProperty("subjects")]
+        public List<DataCiteSubject> Subjects { get; set; }
+
+        [JsonProperty("titles")]
+        public List<DataCiteTitle> Titles { get; set; }
+
+        [JsonProperty("types")]
+        public DataCiteTypes Types { get; set; }
+
+        [JsonProperty("url")]
+        public string URL { get; set; }
+
+        [JsonProperty("version")]
+        public string Version { get; set; }
     }
 
-    #endregion create
+    public class ReadDataCiteDataModel
+    {
+        public ReadDataCiteDataModel()
+        {
+            Attributes = new ReadDataCiteAttributesModel();
+        }
 
-    #region read
+        [JsonProperty("attributes")]
+        public ReadDataCiteAttributesModel Attributes { get; set; }
+
+        [JsonProperty("type")]
+        public DataCiteType? Type { get; set; }
+    }
 
     public class ReadDataCiteModel
     {
-        [JsonProperty("data")]
-        public ReadDataCiteDataModel Data { get; set; }
-
         public ReadDataCiteModel()
         {
             Data = new ReadDataCiteDataModel();
         }
+
+        [JsonProperty("data")]
+        public ReadDataCiteDataModel Data { get; set; }
     }
 
     //public class ReadListDataCiteModel
@@ -151,162 +228,12 @@ namespace Vaelastrasz.Library.Models
     //    }
     //}
 
-    public class ReadDataCiteDataModel
-    {
-        [JsonProperty("type")]
-        public DataCiteType? Type { get; set; }
-
-        [JsonProperty("attributes")]
-        public ReadDataCiteAttributesModel Attributes { get; set; }
-
-        public ReadDataCiteDataModel()
-        {
-            Attributes = new ReadDataCiteAttributesModel();
-        }
-    }
-
-    public class ReadDataCiteAttributesModel
-    {
-        [JsonProperty("doi")]
-        public string Doi { get; set; }
-
-        [JsonProperty("state")]
-        public DataCiteStateType State { get; set; }
-
-        [JsonProperty("identifiers")]
-        public List<DataCiteIdentifier> Identifiers { get; set; }
-
-        [JsonProperty("creators")]
-        public List<DataCiteCreator> Creators { get; set; }
-
-        [JsonProperty("titles")]
-        public List<DataCiteTitle> Titles { get; set; }
-
-        [JsonProperty("publisher")]
-        public string Publisher { get; set; }
-
-        [JsonProperty("publicationYear")]
-        public int PublicationYear { get; set; }
-
-        [JsonProperty("subjects")]
-        public List<DataCiteSubject> Subjects { get; set; }
-
-        [JsonProperty("contributors")]
-        public List<DataCiteCreator> Contributors { get; set; }
-
-        [JsonProperty("dates")]
-        public List<DataCiteDate> Dates { get; set; }
-
-        [JsonProperty("language")]
-        public string Language { get; set; }
-
-        [JsonProperty("types")]
-        public DataCiteTypes Types { get; set; }
-
-        [JsonProperty("relatedIdentifiers")]
-        public List<DataCiteRelatedIdentifier> RelatedIdentifiers { get; set; }
-
-        [JsonProperty("version")]
-        public string Version { get; set; }
-
-        [JsonProperty("url")]
-        public string URL { get; set; }
-
-        [JsonProperty("descriptions")]
-        public List<DataCiteDescription> Descriptions { get; set; }
-
-        public ReadDataCiteAttributesModel()
-        {
-            Creators = new List<DataCiteCreator>();
-            Contributors = new List<DataCiteCreator>();
-            Dates = new List<DataCiteDate>();
-            Descriptions = new List<DataCiteDescription>();
-            Identifiers = new List<DataCiteIdentifier>();
-            Subjects = new List<DataCiteSubject>();
-            Titles = new List<DataCiteTitle>();
-            RelatedIdentifiers = new List<DataCiteRelatedIdentifier>();
-        }
-    }
-
     #endregion read
 
     #region update
 
-    public class UpdateDataCiteModel
-    {
-        [JsonProperty("data")]
-        public UpdateDataCiteDataModel Data { get; set; }
-
-        public UpdateDataCiteModel()
-        {
-            Data = new UpdateDataCiteDataModel();
-        }
-    }
-
-    public class UpdateDataCiteDataModel
-    {
-        [JsonProperty("type")]
-        public DataCiteType? Type { get; set; }
-
-        [JsonProperty("attributes")]
-        public UpdateDataCiteAttributesModel Attributes { get; set; }
-
-        public UpdateDataCiteDataModel()
-        {
-            Attributes = new UpdateDataCiteAttributesModel();
-        }
-    }
-
     public class UpdateDataCiteAttributesModel
     {
-        [JsonProperty("doi")]
-        public string Doi { get; set; }
-
-        [JsonProperty("event")]
-        public DataCiteEventType Event { get; set; }
-
-        [JsonProperty("identifiers")]
-        public List<DataCiteIdentifier> Identifiers { get; set; }
-
-        [JsonProperty("creators")]
-        public List<DataCiteCreator> Creators { get; set; }
-
-        [JsonProperty("titles")]
-        public List<DataCiteTitle> Titles { get; set; }
-
-        [JsonProperty("publisher")]
-        public string Publisher { get; set; }
-
-        [JsonProperty("publicationYear")]
-        public int PublicationYear { get; set; }
-
-        [JsonProperty("subjects")]
-        public List<DataCiteSubject> Subjects { get; set; }
-
-        [JsonProperty("contributors")]
-        public List<DataCiteCreator> Contributors { get; set; }
-
-        [JsonProperty("dates")]
-        public List<DataCiteDate> Dates { get; set; }
-
-        [JsonProperty("language")]
-        public string Language { get; set; }
-
-        [JsonProperty("types")]
-        public DataCiteTypes Types { get; set; }
-
-        [JsonProperty("relatedIdentifiers")]
-        public List<DataCiteRelatedIdentifier> RelatedIdentifiers { get; set; }
-
-        [JsonProperty("version")]
-        public string Version { get; set; }
-
-        [JsonProperty("url")]
-        public string URL { get; set; }
-
-        [JsonProperty("descriptions")]
-        public List<DataCiteDescription> Descriptions { get; set; }
-
         public UpdateDataCiteAttributesModel()
         {
             Creators = new List<DataCiteCreator>();
@@ -318,6 +245,79 @@ namespace Vaelastrasz.Library.Models
             Titles = new List<DataCiteTitle>();
             RelatedIdentifiers = new List<DataCiteRelatedIdentifier>();
         }
+
+        [JsonProperty("contributors")]
+        public List<DataCiteCreator> Contributors { get; set; }
+
+        [JsonProperty("creators")]
+        public List<DataCiteCreator> Creators { get; set; }
+
+        [JsonProperty("dates")]
+        public List<DataCiteDate> Dates { get; set; }
+
+        [JsonProperty("descriptions")]
+        public List<DataCiteDescription> Descriptions { get; set; }
+
+        [JsonProperty("doi")]
+        public string Doi { get; set; }
+
+        [JsonProperty("event")]
+        public DataCiteEventType Event { get; set; }
+
+        [JsonProperty("identifiers")]
+        public List<DataCiteIdentifier> Identifiers { get; set; }
+
+        [JsonProperty("language")]
+        public string Language { get; set; }
+
+        [JsonProperty("publicationYear")]
+        public int PublicationYear { get; set; }
+
+        [JsonProperty("publisher")]
+        public string Publisher { get; set; }
+
+        [JsonProperty("relatedIdentifiers")]
+        public List<DataCiteRelatedIdentifier> RelatedIdentifiers { get; set; }
+
+        [JsonProperty("subjects")]
+        public List<DataCiteSubject> Subjects { get; set; }
+
+        [JsonProperty("titles")]
+        public List<DataCiteTitle> Titles { get; set; }
+
+        [JsonProperty("types")]
+        public DataCiteTypes Types { get; set; }
+
+        [JsonProperty("url")]
+        public string URL { get; set; }
+
+        [JsonProperty("version")]
+        public string Version { get; set; }
+    }
+
+    public class UpdateDataCiteDataModel
+    {
+        public UpdateDataCiteDataModel()
+        {
+            Attributes = new UpdateDataCiteAttributesModel();
+        }
+
+        [JsonProperty("attributes")]
+        public UpdateDataCiteAttributesModel Attributes { get; set; }
+
+        [JsonProperty("type")]
+        public DataCiteType? Type { get; set; }
+    }
+
+    public class UpdateDataCiteModel
+    {
+        public UpdateDataCiteModel()
+        {
+            Data = new UpdateDataCiteDataModel();
+        }
+
+        [JsonProperty("data")]
+        public UpdateDataCiteDataModel Data { get; set; }
     }
 
     #endregion update
@@ -333,19 +333,6 @@ namespace Vaelastrasz.Library.Models
 
         [EnumMember(Value = "hide")]
         Hide = 3
-    }
-
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum DataCiteStateType
-    {
-        [EnumMember(Value = "findable")]
-        Findable = 1,
-
-        [EnumMember(Value = "registered")]
-        Registered = 2,
-
-        [EnumMember(Value = "draft")]
-        Draft = 3
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
@@ -431,6 +418,19 @@ namespace Vaelastrasz.Library.Models
 
         [EnumMember(Value = "Other")]
         Other = 27
+    }
+
+    [JsonConverter(typeof(StringEnumConverter))]
+    public enum DataCiteStateType
+    {
+        [EnumMember(Value = "findable")]
+        Findable = 1,
+
+        [EnumMember(Value = "registered")]
+        Registered = 2,
+
+        [EnumMember(Value = "draft")]
+        Draft = 3
     }
 
     [JsonConverter(typeof(StringEnumConverter))]

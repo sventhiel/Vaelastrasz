@@ -13,13 +13,6 @@ namespace Vaelastrasz.Library.Tests.Models
         {
         }
 
-        private static bool Validate<T>(T obj, out ICollection<ValidationResult> results)
-        {
-            results = new List<ValidationResult>();
-
-            return Validator.TryValidateObject(obj, new ValidationContext(obj), results, true);
-        }
-
         [Test]
         public void Test1()
         {
@@ -44,14 +37,6 @@ namespace Vaelastrasz.Library.Tests.Models
             var json2 = JsonSerializer.Serialize(model, options);
         }
 
-        private IList<ValidationResult> ValidateModel(object model)
-        {
-            var validationResults = new List<ValidationResult>();
-            var ctx = new ValidationContext(model, null, null);
-            Validator.TryValidateObject(model, ctx, validationResults, true);
-            return validationResults;
-        }
-
         [Test]
         public void Test3()
         {
@@ -64,6 +49,21 @@ namespace Vaelastrasz.Library.Tests.Models
             {
                 response = (CreateDataCiteDataModel)serializer.Deserialize(xmlReader);
             }
+        }
+
+        private static bool Validate<T>(T obj, out ICollection<ValidationResult> results)
+        {
+            results = new List<ValidationResult>();
+
+            return Validator.TryValidateObject(obj, new ValidationContext(obj), results, true);
+        }
+
+        private IList<ValidationResult> ValidateModel(object model)
+        {
+            var validationResults = new List<ValidationResult>();
+            var ctx = new ValidationContext(model, null, null);
+            Validator.TryValidateObject(model, ctx, validationResults, true);
+            return validationResults;
         }
     }
 }

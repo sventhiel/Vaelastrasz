@@ -7,15 +7,15 @@ namespace Vaelastrasz.Library.Models
         private Dictionary<string, string> Placeholders;
     }
 
+    public class DeleteSuffixModel
+    {
+    }
+
     public class ReadSuffixModel
     {
     }
 
     public class UpdateSuffixModel
-    {
-    }
-
-    public class DeleteSuffixModel
     {
     }
 }

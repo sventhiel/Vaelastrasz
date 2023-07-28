@@ -14,6 +14,11 @@ namespace Vaelastrasz.Server.Services
             _connectionString = connectionString;
         }
 
+        ~UserService()
+        {
+            Dispose(false);
+        }
+
         public long Create(string name, string password, string project, string pattern, long accountId)
         {
             using var db = new LiteDatabase(_connectionString);
@@ -41,25 +46,29 @@ namespace Vaelastrasz.Server.Services
             return users.Insert(user);
         }
 
-        public bool Verify(string name, string password)
-        {
-            using var db = new LiteDatabase(_connectionString);
-            var users = db.GetCollection<User>("users");
-
-            var user = users.FindOne(u => u.Name == name);
-
-            if (user == null)
-                return false;
-
-            return (user.Password == CryptographyUtils.GetSHA512HashAsBase64(user.Salt, password));
-        }
-
         public bool Delete(long id)
         {
             using var db = new LiteDatabase(_connectionString);
             var col = db.GetCollection<User>("users");
 
             return col.Delete(id);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        public List<User> Find()
+        {
+            List<User> users = new List<User>();
+
+            using var db = new LiteDatabase(_connectionString);
+            var col = db.GetCollection<User>("users");
+            users = col.Query().ToList();
+
+            return users;
         }
 
         public User? FindById(long id)
@@ -86,17 +95,6 @@ namespace Vaelastrasz.Server.Services
             return users.First();
         }
 
-        public List<User> Find()
-        {
-            List<User> users = new List<User>();
-
-            using var db = new LiteDatabase(_connectionString);
-            var col = db.GetCollection<User>("users");
-            users = col.Query().ToList();
-
-            return users;
-        }
-
         public bool Update(long id, string name, string password, string pattern, long accountId)
         {
             using var db = new LiteDatabase(_connectionString);
@@ -107,16 +105,29 @@ namespace Vaelastrasz.Server.Services
 
             if (user == null)
                 return false;
-            
+
             user.Name = name;
             user.Pattern = pattern;
             var salt = CryptographyUtils.GetRandomBase64String(16);
             user.Salt = salt;
             user.Password = CryptographyUtils.GetSHA512HashAsBase64(salt, password);
-            user.Account = accounts.FindById(accountId); 
+            user.Account = accounts.FindById(accountId);
             user.LastUpdateDate = DateTimeOffset.UtcNow;
 
             return users.Update(user);
+        }
+
+        public bool Verify(string name, string password)
+        {
+            using var db = new LiteDatabase(_connectionString);
+            var users = db.GetCollection<User>("users");
+
+            var user = users.FindOne(u => u.Name == name);
+
+            if (user == null)
+                return false;
+
+            return (user.Password == CryptographyUtils.GetSHA512HashAsBase64(user.Salt, password));
         }
 
         protected virtual void Dispose(bool disposing)
@@ -131,17 +142,6 @@ namespace Vaelastrasz.Server.Services
                 // shared cleanup logic
                 disposed = true;
             }
-        }
-
-        ~UserService()
-        {
-            Dispose(false);
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
         }
     }
 }

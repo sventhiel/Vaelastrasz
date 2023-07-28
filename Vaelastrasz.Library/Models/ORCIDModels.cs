@@ -6,18 +6,23 @@ namespace Vaelastrasz.Library.Models
     // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
     public class ActivitiesSummary
     {
-        [JsonProperty("last-modified-date")]
-        public LastModifiedDate lastmodifieddate { get; set; }
-
         public Distinctions distinctions { get; set; }
+
         public Educations educations { get; set; }
+
         public Employments employments { get; set; }
+
         public Fundings fundings { get; set; }
 
         [JsonProperty("invited-positions")]
         public InvitedPositions invitedpositions { get; set; }
 
+        [JsonProperty("last-modified-date")]
+        public LastModifiedDate lastmodifieddate { get; set; }
+
         public Memberships memberships { get; set; }
+
+        public string path { get; set; }
 
         [JsonProperty("peer-reviews")]
         public PeerReviews peerreviews { get; set; }
@@ -29,48 +34,50 @@ namespace Vaelastrasz.Library.Models
 
         public Services services { get; set; }
         public Works works { get; set; }
-        public string path { get; set; }
     }
 
     public class Address
     {
+        public string city { get; set; }
+
+        public Country country { get; set; }
+
         [JsonProperty("created-date")]
         public CreatedDate createddate { get; set; }
+
+        [JsonProperty("display-index")]
+        public int displayindex { get; set; }
 
         [JsonProperty("last-modified-date")]
         public LastModifiedDate lastmodifieddate { get; set; }
 
-        public Source source { get; set; }
-        public Country country { get; set; }
-        public string visibility { get; set; }
         public string path { get; set; }
 
         [JsonProperty("put-code")]
         public int putcode { get; set; }
 
-        [JsonProperty("display-index")]
-        public int displayindex { get; set; }
-
-        public string city { get; set; }
         public string region { get; set; }
+        public Source source { get; set; }
+        public string visibility { get; set; }
     }
 
     public class Addresses
     {
+        public List<Address> address { get; set; }
+
         [JsonProperty("last-modified-date")]
         public LastModifiedDate lastmodifieddate { get; set; }
 
-        public List<Address> address { get; set; }
         public string path { get; set; }
     }
 
     public class AffiliationGroup
     {
-        [JsonProperty("last-modified-date")]
-        public LastModifiedDate lastmodifieddate { get; set; }
-
         [JsonProperty("external-ids")]
         public ExternalIds externalids { get; set; }
+
+        [JsonProperty("last-modified-date")]
+        public LastModifiedDate lastmodifieddate { get; set; }
 
         public List<Summary> summaries { get; set; }
     }
@@ -101,22 +108,22 @@ namespace Vaelastrasz.Library.Models
 
     public class Distinctions
     {
-        [JsonProperty("last-modified-date")]
-        public object lastmodifieddate { get; set; }
-
         [JsonProperty("affiliation-group")]
         public List<object> affiliationgroup { get; set; }
+
+        [JsonProperty("last-modified-date")]
+        public object lastmodifieddate { get; set; }
 
         public string path { get; set; }
     }
 
     public class Educations
     {
-        [JsonProperty("last-modified-date")]
-        public LastModifiedDate lastmodifieddate { get; set; }
-
         [JsonProperty("affiliation-group")]
         public List<AffiliationGroup> affiliationgroup { get; set; }
+
+        [JsonProperty("last-modified-date")]
+        public LastModifiedDate lastmodifieddate { get; set; }
 
         public string path { get; set; }
     }
@@ -126,55 +133,56 @@ namespace Vaelastrasz.Library.Models
         [JsonProperty("created-date")]
         public CreatedDate createddate { get; set; }
 
-        [JsonProperty("last-modified-date")]
-        public LastModifiedDate lastmodifieddate { get; set; }
-
-        public Source source { get; set; }
-
-        [JsonProperty("put-code")]
-        public int putcode { get; set; }
-
         [JsonProperty("department-name")]
         public object departmentname { get; set; }
-
-        [JsonProperty("role-title")]
-        public string roletitle { get; set; }
-
-        [JsonProperty("start-date")]
-        public StartDate startdate { get; set; }
-
-        [JsonProperty("end-date")]
-        public EndDate enddate { get; set; }
-
-        public Organization organization { get; set; }
-        public object url { get; set; }
-
-        [JsonProperty("external-ids")]
-        public object externalids { get; set; }
 
         [JsonProperty("display-index")]
         public string displayindex { get; set; }
 
-        public string visibility { get; set; }
+        [JsonProperty("end-date")]
+        public EndDate enddate { get; set; }
+
+        [JsonProperty("external-ids")]
+        public object externalids { get; set; }
+
+        [JsonProperty("last-modified-date")]
+        public LastModifiedDate lastmodifieddate { get; set; }
+
+        public Organization organization { get; set; }
         public string path { get; set; }
+
+        [JsonProperty("put-code")]
+        public int putcode { get; set; }
+
+        [JsonProperty("role-title")]
+        public string roletitle { get; set; }
+
+        public Source source { get; set; }
+
+        [JsonProperty("start-date")]
+        public StartDate startdate { get; set; }
+
+        public object url { get; set; }
+        public string visibility { get; set; }
     }
 
     public class Emails
     {
+        public List<object> email { get; set; }
+
         [JsonProperty("last-modified-date")]
         public object lastmodifieddate { get; set; }
 
-        public List<object> email { get; set; }
         public string path { get; set; }
     }
 
     public class Employments
     {
-        [JsonProperty("last-modified-date")]
-        public LastModifiedDate lastmodifieddate { get; set; }
-
         [JsonProperty("affiliation-group")]
         public List<AffiliationGroup> affiliationgroup { get; set; }
+
+        [JsonProperty("last-modified-date")]
+        public LastModifiedDate lastmodifieddate { get; set; }
 
         public string path { get; set; }
     }
@@ -184,53 +192,53 @@ namespace Vaelastrasz.Library.Models
         [JsonProperty("created-date")]
         public CreatedDate createddate { get; set; }
 
-        [JsonProperty("last-modified-date")]
-        public LastModifiedDate lastmodifieddate { get; set; }
-
-        public Source source { get; set; }
-
-        [JsonProperty("put-code")]
-        public int putcode { get; set; }
-
         [JsonProperty("department-name")]
         public object departmentname { get; set; }
-
-        [JsonProperty("role-title")]
-        public object roletitle { get; set; }
-
-        [JsonProperty("start-date")]
-        public StartDate startdate { get; set; }
-
-        [JsonProperty("end-date")]
-        public EndDate enddate { get; set; }
-
-        public Organization organization { get; set; }
-        public object url { get; set; }
-
-        [JsonProperty("external-ids")]
-        public object externalids { get; set; }
 
         [JsonProperty("display-index")]
         public string displayindex { get; set; }
 
-        public string visibility { get; set; }
+        [JsonProperty("end-date")]
+        public EndDate enddate { get; set; }
+
+        [JsonProperty("external-ids")]
+        public object externalids { get; set; }
+
+        [JsonProperty("last-modified-date")]
+        public LastModifiedDate lastmodifieddate { get; set; }
+
+        public Organization organization { get; set; }
         public string path { get; set; }
+
+        [JsonProperty("put-code")]
+        public int putcode { get; set; }
+
+        [JsonProperty("role-title")]
+        public object roletitle { get; set; }
+
+        public Source source { get; set; }
+
+        [JsonProperty("start-date")]
+        public StartDate startdate { get; set; }
+
+        public object url { get; set; }
+        public string visibility { get; set; }
     }
 
     public class EndDate
     {
-        public Year year { get; set; }
-        public Month month { get; set; }
         public Day day { get; set; }
+        public Month month { get; set; }
+        public Year year { get; set; }
     }
 
     public class ExternalIdentifiers
     {
-        [JsonProperty("last-modified-date")]
-        public object lastmodifieddate { get; set; }
-
         [JsonProperty("external-identifier")]
         public List<object> externalidentifier { get; set; }
+
+        [JsonProperty("last-modified-date")]
+        public object lastmodifieddate { get; set; }
 
         public string path { get; set; }
     }
@@ -248,10 +256,11 @@ namespace Vaelastrasz.Library.Models
 
     public class Fundings
     {
+        public List<object> group { get; set; }
+
         [JsonProperty("last-modified-date")]
         public object lastmodifieddate { get; set; }
 
-        public List<object> group { get; set; }
         public string path { get; set; }
     }
 
@@ -262,23 +271,24 @@ namespace Vaelastrasz.Library.Models
 
     public class History
     {
-        [JsonProperty("creation-method")]
-        public string creationmethod { get; set; }
+        public bool claimed { get; set; }
 
         [JsonProperty("completion-date")]
         public object completiondate { get; set; }
 
-        [JsonProperty("submission-date")]
-        public SubmissionDate submissiondate { get; set; }
+        [JsonProperty("creation-method")]
+        public string creationmethod { get; set; }
+
+        [JsonProperty("deactivation-date")]
+        public object deactivationdate { get; set; }
 
         [JsonProperty("last-modified-date")]
         public LastModifiedDate lastmodifieddate { get; set; }
 
-        public bool claimed { get; set; }
         public object source { get; set; }
 
-        [JsonProperty("deactivation-date")]
-        public object deactivationdate { get; set; }
+        [JsonProperty("submission-date")]
+        public SubmissionDate submissiondate { get; set; }
 
         [JsonProperty("verified-email")]
         public bool verifiedemail { get; set; }
@@ -289,21 +299,22 @@ namespace Vaelastrasz.Library.Models
 
     public class InvitedPositions
     {
-        [JsonProperty("last-modified-date")]
-        public object lastmodifieddate { get; set; }
-
         [JsonProperty("affiliation-group")]
         public List<object> affiliationgroup { get; set; }
+
+        [JsonProperty("last-modified-date")]
+        public object lastmodifieddate { get; set; }
 
         public string path { get; set; }
     }
 
     public class Keywords
     {
+        public List<object> keyword { get; set; }
+
         [JsonProperty("last-modified-date")]
         public object lastmodifieddate { get; set; }
 
-        public List<object> keyword { get; set; }
         public string path { get; set; }
     }
 
@@ -314,11 +325,11 @@ namespace Vaelastrasz.Library.Models
 
     public class Memberships
     {
-        [JsonProperty("last-modified-date")]
-        public object lastmodifieddate { get; set; }
-
         [JsonProperty("affiliation-group")]
         public List<object> affiliationgroup { get; set; }
+
+        [JsonProperty("last-modified-date")]
+        public object lastmodifieddate { get; set; }
 
         public string path { get; set; }
     }
@@ -333,57 +344,102 @@ namespace Vaelastrasz.Library.Models
         [JsonProperty("created-date")]
         public CreatedDate createddate { get; set; }
 
-        [JsonProperty("last-modified-date")]
-        public LastModifiedDate lastmodifieddate { get; set; }
-
-        [JsonProperty("given-names")]
-        public GivenNames givennames { get; set; }
+        [JsonProperty("credit-name")]
+        public object creditname { get; set; }
 
         [JsonProperty("family-name")]
         public FamilyName familyname { get; set; }
 
-        [JsonProperty("credit-name")]
-        public object creditname { get; set; }
-
-        public object source { get; set; }
-        public string visibility { get; set; }
-        public string path { get; set; }
-    }
-
-    public class OrcidIdentifier
-    {
-        public string uri { get; set; }
-        public string path { get; set; }
-        public string host { get; set; }
-    }
-
-    public class Organization
-    {
-        public string name { get; set; }
-        public Address address { get; set; }
-
-        [JsonProperty("disambiguated-organization")]
-        public DisambiguatedOrganization disambiguatedorganization { get; set; }
-    }
-
-    public class OtherName
-    {
-        [JsonProperty("created-date")]
-        public CreatedDate createddate { get; set; }
+        [JsonProperty("given-names")]
+        public GivenNames givennames { get; set; }
 
         [JsonProperty("last-modified-date")]
         public LastModifiedDate lastmodifieddate { get; set; }
 
-        public Source source { get; set; }
-        public string content { get; set; }
+        public string path { get; set; }
+        public object source { get; set; }
         public string visibility { get; set; }
+    }
+
+    public class OrcidIdentifier
+    {
+        public string host { get; set; }
+        public string path { get; set; }
+        public string uri { get; set; }
+    }
+
+    public class ORCIDModel
+    {
+        [JsonProperty("activities-summary")]
+        public ActivitiesSummary activitiessummary { get; set; }
+
+        public History history { get; set; }
+
+        [JsonProperty("orcid-identifier")]
+        public OrcidIdentifier orcididentifier { get; set; }
+
+        public string path { get; set; }
+        public ORCIDPerson person { get; set; }
+        public Preferences preferences { get; set; }
+    }
+
+    public class ORCIDPerson
+    {
+        public Addresses addresses { get; set; }
+
+        public object biography { get; set; }
+
+        public Emails emails { get; set; }
+
+        [JsonProperty("external-identifiers")]
+        public ExternalIdentifiers externalidentifiers { get; set; }
+
+        public Keywords keywords { get; set; }
+
+        [JsonProperty("last-modified-date")]
+        public LastModifiedDate lastmodifieddate { get; set; }
+
+        public Name name { get; set; }
+
+        [JsonProperty("other-names")]
+        public OtherNames othernames { get; set; }
+
+        public string path { get; set; }
+
+        [JsonProperty("researcher-urls")]
+        public ResearcherUrls researcherurls { get; set; }
+    }
+
+    public class Organization
+    {
+        public Address address { get; set; }
+
+        [JsonProperty("disambiguated-organization")]
+        public DisambiguatedOrganization disambiguatedorganization { get; set; }
+
+        public string name { get; set; }
+    }
+
+    public class OtherName
+    {
+        public string content { get; set; }
+
+        [JsonProperty("created-date")]
+        public CreatedDate createddate { get; set; }
+
+        [JsonProperty("display-index")]
+        public int displayindex { get; set; }
+
+        [JsonProperty("last-modified-date")]
+        public LastModifiedDate lastmodifieddate { get; set; }
+
         public string path { get; set; }
 
         [JsonProperty("put-code")]
         public int putcode { get; set; }
 
-        [JsonProperty("display-index")]
-        public int displayindex { get; set; }
+        public Source source { get; set; }
+        public string visibility { get; set; }
     }
 
     public class OtherNames
@@ -399,34 +455,10 @@ namespace Vaelastrasz.Library.Models
 
     public class PeerReviews
     {
+        public List<object> group { get; set; }
+
         [JsonProperty("last-modified-date")]
         public object lastmodifieddate { get; set; }
-
-        public List<object> group { get; set; }
-        public string path { get; set; }
-    }
-
-    public class ORCIDPerson
-    {
-        [JsonProperty("last-modified-date")]
-        public LastModifiedDate lastmodifieddate { get; set; }
-
-        public Name name { get; set; }
-
-        [JsonProperty("other-names")]
-        public OtherNames othernames { get; set; }
-
-        public object biography { get; set; }
-
-        [JsonProperty("researcher-urls")]
-        public ResearcherUrls researcherurls { get; set; }
-
-        public Emails emails { get; set; }
-        public Addresses addresses { get; set; }
-        public Keywords keywords { get; set; }
-
-        [JsonProperty("external-identifiers")]
-        public ExternalIdentifiers externalidentifiers { get; set; }
 
         public string path { get; set; }
     }
@@ -438,11 +470,11 @@ namespace Vaelastrasz.Library.Models
 
     public class Qualifications
     {
-        [JsonProperty("last-modified-date")]
-        public object lastmodifieddate { get; set; }
-
         [JsonProperty("affiliation-group")]
         public List<object> affiliationgroup { get; set; }
+
+        [JsonProperty("last-modified-date")]
+        public object lastmodifieddate { get; set; }
 
         public string path { get; set; }
     }
@@ -452,51 +484,43 @@ namespace Vaelastrasz.Library.Models
         [JsonProperty("last-modified-date")]
         public object lastmodifieddate { get; set; }
 
+        public string path { get; set; }
+
         [JsonProperty("researcher-url")]
         public List<object> researcherurl { get; set; }
-
-        public string path { get; set; }
     }
 
     public class ResearchResources
     {
+        public List<object> group { get; set; }
+
         [JsonProperty("last-modified-date")]
         public object lastmodifieddate { get; set; }
-
-        public List<object> group { get; set; }
-        public string path { get; set; }
-    }
-
-    public class ORCIDModel
-    {
-        [JsonProperty("orcid-identifier")]
-        public OrcidIdentifier orcididentifier { get; set; }
-
-        public Preferences preferences { get; set; }
-        public History history { get; set; }
-        public ORCIDPerson person { get; set; }
-
-        [JsonProperty("activities-summary")]
-        public ActivitiesSummary activitiessummary { get; set; }
 
         public string path { get; set; }
     }
 
     public class Services
     {
-        [JsonProperty("last-modified-date")]
-        public object lastmodifieddate { get; set; }
-
         [JsonProperty("affiliation-group")]
         public List<object> affiliationgroup { get; set; }
+
+        [JsonProperty("last-modified-date")]
+        public object lastmodifieddate { get; set; }
 
         public string path { get; set; }
     }
 
     public class Source
     {
-        [JsonProperty("source-orcid")]
-        public SourceOrcid sourceorcid { get; set; }
+        [JsonProperty("assertion-origin-client-id")]
+        public object assertionoriginclientid { get; set; }
+
+        [JsonProperty("assertion-origin-name")]
+        public object assertionoriginname { get; set; }
+
+        [JsonProperty("assertion-origin-orcid")]
+        public object assertionoriginorcid { get; set; }
 
         [JsonProperty("source-client-id")]
         public object sourceclientid { get; set; }
@@ -504,14 +528,8 @@ namespace Vaelastrasz.Library.Models
         [JsonProperty("source-name")]
         public SourceName sourcename { get; set; }
 
-        [JsonProperty("assertion-origin-orcid")]
-        public object assertionoriginorcid { get; set; }
-
-        [JsonProperty("assertion-origin-client-id")]
-        public object assertionoriginclientid { get; set; }
-
-        [JsonProperty("assertion-origin-name")]
-        public object assertionoriginname { get; set; }
+        [JsonProperty("source-orcid")]
+        public SourceOrcid sourceorcid { get; set; }
     }
 
     public class SourceName
@@ -521,16 +539,16 @@ namespace Vaelastrasz.Library.Models
 
     public class SourceOrcid
     {
-        public string uri { get; set; }
-        public string path { get; set; }
         public string host { get; set; }
+        public string path { get; set; }
+        public string uri { get; set; }
     }
 
     public class StartDate
     {
-        public Year year { get; set; }
-        public Month month { get; set; }
         public Day day { get; set; }
+        public Month month { get; set; }
+        public Year year { get; set; }
     }
 
     public class SubmissionDate
@@ -549,10 +567,11 @@ namespace Vaelastrasz.Library.Models
 
     public class Works
     {
+        public List<object> group { get; set; }
+
         [JsonProperty("last-modified-date")]
         public object lastmodifieddate { get; set; }
 
-        public List<object> group { get; set; }
         public string path { get; set; }
     }
 

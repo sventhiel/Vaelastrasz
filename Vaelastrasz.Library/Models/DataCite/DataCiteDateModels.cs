@@ -5,26 +5,6 @@ using System.Xml.Serialization;
 
 namespace Vaelastrasz.Library.Models.DataCite
 {
-    public class DataCiteDate
-    {
-        [JsonProperty("date")]
-        [XmlElement("date")]
-        public string Date { get; set; }
-
-        [JsonProperty("dateType")]
-        [XmlElement("dateType")]
-        public DataCiteDateType DateType { get; set; }
-
-        public DataCiteDate()
-        { }
-
-        public DataCiteDate(string date, DataCiteDateType type)
-        {
-            Date = date;
-            DateType = type;
-        }
-    }
-
     [JsonConverter(typeof(StringEnumConverter))]
     public enum DataCiteDateType
     {
@@ -60,5 +40,25 @@ namespace Vaelastrasz.Library.Models.DataCite
 
         [EnumMember(Value = "Other")]
         Other = 11
+    }
+
+    public class DataCiteDate
+    {
+        public DataCiteDate()
+        { }
+
+        public DataCiteDate(string date, DataCiteDateType type)
+        {
+            Date = date;
+            DateType = type;
+        }
+
+        [JsonProperty("date")]
+        [XmlElement("date")]
+        public string Date { get; set; }
+
+        [JsonProperty("dateType")]
+        [XmlElement("dateType")]
+        public DataCiteDateType DateType { get; set; }
     }
 }

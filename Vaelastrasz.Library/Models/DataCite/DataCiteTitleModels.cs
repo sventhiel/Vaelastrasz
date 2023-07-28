@@ -5,35 +5,6 @@ using System.Xml.Serialization;
 
 namespace Vaelastrasz.Library.Models.DataCite
 {
-    public class DataCiteTitle
-    {
-        [JsonProperty("title")]
-        [XmlElement("title")]
-        public string Title { get; set; }
-
-        [JsonProperty("lang")]
-        [XmlElement("lang")]
-        public string Language { get; set; }
-
-        [JsonProperty("titleType")]
-        [XmlElement("titleType")]
-        public DataCiteTitleType? TitleType { get; set; }
-
-        public DataCiteTitle()
-        { }
-
-        public DataCiteTitle(string title, string lang = null, DataCiteTitleType? titleType = null)
-        {
-            Title = title;
-
-            if (lang != null)
-                Language = lang;
-
-            if (titleType != null)
-                TitleType = titleType;
-        }
-    }
-
     [JsonConverter(typeof(StringEnumConverter))]
     public enum DataCiteTitleType
     {
@@ -48,5 +19,34 @@ namespace Vaelastrasz.Library.Models.DataCite
 
         [EnumMember(Value = "Other")]
         Other = 4
+    }
+
+    public class DataCiteTitle
+    {
+        public DataCiteTitle()
+        { }
+
+        public DataCiteTitle(string title, string lang = null, DataCiteTitleType? titleType = null)
+        {
+            Title = title;
+
+            if (lang != null)
+                Language = lang;
+
+            if (titleType != null)
+                TitleType = titleType;
+        }
+
+        [JsonProperty("lang")]
+        [XmlElement("lang")]
+        public string Language { get; set; }
+
+        [JsonProperty("title")]
+        [XmlElement("title")]
+        public string Title { get; set; }
+
+        [JsonProperty("titleType")]
+        [XmlElement("titleType")]
+        public DataCiteTitleType? TitleType { get; set; }
     }
 }

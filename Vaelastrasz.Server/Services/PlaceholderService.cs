@@ -13,6 +13,11 @@ namespace Vaelastrasz.Server.Services
             _connectionString = connectionString;
         }
 
+        ~PlaceholderService()
+        {
+            Dispose(false);
+        }
+
         public long Create(string expression, string regularExpression, long userId)
         {
             using var db = new LiteDatabase(_connectionString);
@@ -33,6 +38,20 @@ namespace Vaelastrasz.Server.Services
             return placeholders.Insert(placeholder);
         }
 
+        public bool Delete(long id)
+        {
+            using var db = new LiteDatabase(_connectionString);
+            var col = db.GetCollection<Placeholder>("placeholders");
+
+            return col.Delete(id);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
         public List<Placeholder> Find()
         {
             List<Placeholder> placeholders = new();
@@ -45,6 +64,14 @@ namespace Vaelastrasz.Server.Services
             return placeholders;
         }
 
+        public Placeholder? FindById(long id)
+        {
+            using var db = new LiteDatabase(_connectionString);
+            var col = db.GetCollection<Placeholder>("placeholders");
+
+            return col.FindById(id);
+        }
+
         public List<Placeholder> FindByUserId(long id)
         {
             List<Placeholder> placeholders = new();
@@ -55,22 +82,6 @@ namespace Vaelastrasz.Server.Services
             placeholders = col.Query().Where(p => p.User.Id == id).ToList();
 
             return placeholders;
-        }
-
-        public Placeholder? FindById(long id)
-        {
-            using var db = new LiteDatabase(_connectionString);
-            var col = db.GetCollection<Placeholder>("placeholders");
-
-            return col.FindById(id);
-        }
-
-        public bool Delete(long id)
-        {
-            using var db = new LiteDatabase(_connectionString);
-            var col = db.GetCollection<Placeholder>("placeholders");
-
-            return col.Delete(id);
         }
 
         public bool Update(long id, string expression, string regularExpression, long userId)
@@ -104,17 +115,6 @@ namespace Vaelastrasz.Server.Services
                 // shared cleanup logic
                 disposed = true;
             }
-        }
-
-        ~PlaceholderService()
-        {
-            Dispose(false);
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
         }
     }
 }

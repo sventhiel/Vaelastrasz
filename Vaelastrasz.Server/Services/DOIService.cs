@@ -13,6 +13,11 @@ namespace Vaelastrasz.Server.Services
             _connectionString = connectionString;
         }
 
+        ~DOIService()
+        {
+            Dispose(false);
+        }
+
         public long Create(string prefix, string suffix, long userId)
         {
             using var db = new LiteDatabase(_connectionString);
@@ -39,6 +44,12 @@ namespace Vaelastrasz.Server.Services
             var col = db.GetCollection<DOI>("dois");
 
             return col.Delete(id);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         public DOI? FindById(long id)
@@ -77,17 +88,6 @@ namespace Vaelastrasz.Server.Services
                 // shared cleanup logic
                 disposed = true;
             }
-        }
-
-        ~DOIService()
-        {
-            Dispose(false);
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
         }
     }
 }

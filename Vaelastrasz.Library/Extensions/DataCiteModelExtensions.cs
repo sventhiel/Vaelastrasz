@@ -34,6 +34,12 @@ namespace Vaelastrasz.Library.Extensions
             }
         }
 
+        public static CreateDataCiteModel AddTitle(this CreateDataCiteModel model, string title, string language = null, DataCiteTitleType? type = null)
+        {
+            model.Data.Attributes.Titles.Add(new DataCiteTitle(title, language, type));
+            return model;
+        }
+
         public static CreateDataCiteModel RemoveCreator(this CreateDataCiteModel model, int index)
         {
             try
@@ -45,12 +51,6 @@ namespace Vaelastrasz.Library.Extensions
             {
                 return model;
             }
-        }
-
-        public static CreateDataCiteModel AddTitle(this CreateDataCiteModel model, string title, string language = null, DataCiteTitleType? type = null)
-        {
-            model.Data.Attributes.Titles.Add(new DataCiteTitle(title, language, type));
-            return model;
         }
 
         public static CreateDataCiteModel RemoveTitle(this CreateDataCiteModel model, int index)

@@ -5,35 +5,6 @@ using System.Xml.Serialization;
 
 namespace Vaelastrasz.Library.Models.DataCite
 {
-    public class DataCiteDescription
-    {
-        [JsonProperty("lang")]
-        [XmlElement("lang")]
-        public string Language { get; set; }
-
-        [JsonProperty("description")]
-        [XmlElement("description")]
-        public string Description { get; set; }
-
-        [JsonProperty("descriptionType")]
-        [XmlElement("descriptionType")]
-        public DataCiteDescriptionType? DescriptionType { get; set; }
-
-        public DataCiteDescription()
-        { }
-
-        public DataCiteDescription(string description, string lang = null, DataCiteDescriptionType? descriptionType = null)
-        {
-            Description = description;
-
-            if (lang != null)
-                Language = lang;
-
-            if (descriptionType != null)
-                DescriptionType = descriptionType;
-        }
-    }
-
     [JsonConverter(typeof(StringEnumConverter))]
     public enum DataCiteDescriptionType
     {
@@ -54,5 +25,34 @@ namespace Vaelastrasz.Library.Models.DataCite
 
         [EnumMember(Value = "Other")]
         Other = 6
+    }
+
+    public class DataCiteDescription
+    {
+        public DataCiteDescription()
+        { }
+
+        public DataCiteDescription(string description, string lang = null, DataCiteDescriptionType? descriptionType = null)
+        {
+            Description = description;
+
+            if (lang != null)
+                Language = lang;
+
+            if (descriptionType != null)
+                DescriptionType = descriptionType;
+        }
+
+        [JsonProperty("description")]
+        [XmlElement("description")]
+        public string Description { get; set; }
+
+        [JsonProperty("descriptionType")]
+        [XmlElement("descriptionType")]
+        public DataCiteDescriptionType? DescriptionType { get; set; }
+
+        [JsonProperty("lang")]
+        [XmlElement("lang")]
+        public string Language { get; set; }
     }
 }

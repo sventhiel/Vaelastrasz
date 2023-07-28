@@ -6,10 +6,6 @@ namespace Vaelastrasz.Library.Models.DataCite
 {
     public class DataCiteGeoLocation
     {
-        [JsonProperty("geoLocationPoint")]
-        [XmlElement("geoLocationPoint")]
-        public Dictionary<string, string> GeoLocationPoint { get; set; }
-
         [JsonProperty("geoLocationBox")]
         [XmlElement("geoLocationBox")]
         public Dictionary<string, string> GeoLocationBox { get; set; }
@@ -17,5 +13,9 @@ namespace Vaelastrasz.Library.Models.DataCite
         [JsonProperty("geoLocationPlace")]
         [XmlElement("geoLocationPlace")]
         public string geoLocationPlace { get; set; }
+
+        [JsonProperty("geoLocationPoint")]
+        [XmlElement("geoLocationPoint")]
+        public Dictionary<string, string> GeoLocationPoint { get; set; }
     }
 }

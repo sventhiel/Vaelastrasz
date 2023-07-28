@@ -6,14 +6,14 @@ namespace Vaelastrasz.Library.Attributes
 {
     public class CardinalityAttribute : ValidationAttribute
     {
-        public int Minimum { get; set; }
-        public int Maximum { get; set; }
-
         public CardinalityAttribute()
         {
             Minimum = 0;
             Maximum = int.MaxValue;
         }
+
+        public int Maximum { get; set; }
+        public int Minimum { get; set; }
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {

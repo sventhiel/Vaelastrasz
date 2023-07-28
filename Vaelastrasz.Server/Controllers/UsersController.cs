@@ -10,10 +10,10 @@ namespace Vaelastrasz.Server.Controllers
     [ApiController, Route("api"), Authorize(Roles = "admin")]
     public class UsersController : ControllerBase
     {
+        private readonly ILogger<UsersController> _logger;
+        private List<Admin> _admins;
         private ConnectionString _connectionString;
         private JwtConfiguration _jwtConfiguration;
-        private List<Admin> _admins;
-        private readonly ILogger<UsersController> _logger;
 
         public UsersController(ILogger<UsersController> logger, IConfiguration configuration, ConnectionString connectionString)
         {
@@ -23,51 +23,19 @@ namespace Vaelastrasz.Server.Controllers
             _logger = logger;
         }
 
-        [HttpPost("users")]
-        public IActionResult Post(CreateUserModel model)
+        [HttpDelete("users/{id}")]
+        public IActionResult Delete(long id)
         {
             try
             {
                 using (var userService = new UserService(_connectionString))
                 {
-                    if (ModelState.IsValid)
-                    {
-                        var id = userService.Create(model.Name, model.Password, model.Project, model.Pattern, model.AccountId);
+                    var result = userService.Delete(id);
 
-                        if (!id.HasValue)
-                            return BadRequest();
+                    if (result)
+                        return Ok($"deletion of user (id:{id}) was successful.");
 
-                        var user = userService.FindById(id.Value);
-
-                        if (user == null)
-                            return BadRequest();
-
-                        return Ok(ReadUserModel.Convert(user));
-                    }
-
-                    return BadRequest();
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpGet("users/{id}")]
-        public IActionResult GetById(long id)
-        {
-            try
-            {
-                using (var userService = new UserService(_connectionString))
-                {
-                    var result = userService.FindById(id);
-
-                    if (result == null)
-                        return BadRequest("something went wrong...");
-
-                    return Ok(ReadUserModel.Convert(result));
+                    return BadRequest($"something went wrong...");
                 }
             }
             catch (Exception ex)
@@ -99,19 +67,51 @@ namespace Vaelastrasz.Server.Controllers
             }
         }
 
-        [HttpDelete("users/{id}")]
-        public IActionResult Delete(long id)
+        [HttpGet("users/{id}")]
+        public IActionResult GetById(long id)
         {
             try
             {
                 using (var userService = new UserService(_connectionString))
                 {
-                    var result = userService.Delete(id);
+                    var result = userService.FindById(id);
 
-                    if (result)
-                        return Ok($"deletion of user (id:{id}) was successful.");
+                    if (result == null)
+                        return BadRequest("something went wrong...");
 
-                    return BadRequest($"something went wrong...");
+                    return Ok(ReadUserModel.Convert(result));
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("users")]
+        public IActionResult Post(CreateUserModel model)
+        {
+            try
+            {
+                using (var userService = new UserService(_connectionString))
+                {
+                    if (ModelState.IsValid)
+                    {
+                        var id = userService.Create(model.Name, model.Password, model.Project, model.Pattern, model.AccountId);
+
+                        if (!id.HasValue)
+                            return BadRequest();
+
+                        var user = userService.FindById(id.Value);
+
+                        if (user == null)
+                            return BadRequest();
+
+                        return Ok(ReadUserModel.Convert(user));
+                    }
+
+                    return BadRequest();
                 }
             }
             catch (Exception ex)

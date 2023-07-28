@@ -5,6 +5,10 @@ namespace Vaelastrasz.Library.Models.DataCite
 {
     public class DataCiteRight
     {
+        [JsonProperty("lang")]
+        [XmlElement("lang")]
+        public string Language { get; set; }
+
         [JsonProperty("rights")]
         [XmlElement("rights")]
         public string Rights { get; set; }
@@ -12,9 +16,5 @@ namespace Vaelastrasz.Library.Models.DataCite
         [JsonProperty("rightsUri")]
         [XmlElement("rightsUri")]
         public string RightsUri { get; set; }
-
-        [JsonProperty("lang")]
-        [XmlElement("lang")]
-        public string Language { get; set; }
     }
 }
