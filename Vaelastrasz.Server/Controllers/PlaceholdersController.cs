@@ -84,5 +84,38 @@ namespace Vaelastrasz.Server.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPut("placeholders/{id}")]
+        public IActionResult Put(long id, UpdatePlaceholderModel model)
+        {
+            try
+            {
+                using (var placeholderService = new PlaceholderService(_connectionString))
+                {
+                    var placeholder = placeholderService.FindById(id);
+
+                    if (placeholder == null)
+                        return BadRequest();
+
+                    if (ModelState.IsValid)
+                    {
+                        var result = placeholderService.Update(id, model.Expression, model.RegularExpression, model.UserId);
+
+                        if (result)
+                        {
+                            placeholder = placeholderService.FindById(id);
+                            return Ok(placeholder);
+                        }
+                    }
+
+                    return BadRequest();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

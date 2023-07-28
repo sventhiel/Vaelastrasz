@@ -13,7 +13,7 @@ namespace Vaelastrasz.Server.Services
             _connectionString = connectionString;
         }
 
-        public long? Create(string prefix, string suffix, long userId)
+        public long Create(string prefix, string suffix, long userId)
         {
             using var db = new LiteDatabase(_connectionString);
             var dois = db.GetCollection<DOI>("dois");
@@ -26,7 +26,7 @@ namespace Vaelastrasz.Server.Services
             };
 
             if (users.FindById(userId) == null)
-                return null;
+                return 0;
 
             doi.User = users.FindById(userId);
 

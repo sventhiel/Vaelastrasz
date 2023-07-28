@@ -20,25 +20,19 @@ namespace Vaelastrasz.Server.Models
 
     public class UpdateAccountModel
     {
-        public long Id { get; set; }
         public string Name { get; set; }
         public string Password { get; set; }
         public string Host { get; set; }
         public string Prefix { get; set; }
-        public DateTimeOffset CreationDate { get; set; }
-        public DateTimeOffset LastUpdateDate { get; set; }
 
         public static UpdateAccountModel Convert(Account account)
         {
             return new UpdateAccountModel
             {
-                Id = account.Id,
                 Name = account.Name,
                 Password = account.Password,
                 Host = account.Host,
-                Prefix = account.Prefix,
-                CreationDate = account.CreationDate,
-                LastUpdateDate = account.LastUpdateDate
+                Prefix = account.Prefix
             };
         }
     }

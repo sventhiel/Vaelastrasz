@@ -13,7 +13,7 @@ namespace Vaelastrasz.Server.Services
             _connectionString = connectionString;
         }
 
-        public long Create(string expression, string regularExpression, long? userId)
+        public long Create(string expression, string regularExpression, long userId)
         {
             using var db = new LiteDatabase(_connectionString);
             var placeholders = db.GetCollection<Placeholder>("placeholders");
@@ -24,12 +24,11 @@ namespace Vaelastrasz.Server.Services
                 Expression = expression,
                 RegularExpression = regularExpression,
 
+                User = users.FindById(userId),
+
                 CreationDate = DateTimeOffset.UtcNow,
                 LastUpdateDate = DateTimeOffset.UtcNow
             };
-
-            if (userId != null)
-                placeholder.User = users.FindById(userId);
 
             return placeholders.Insert(placeholder);
         }
@@ -74,7 +73,7 @@ namespace Vaelastrasz.Server.Services
             return col.Delete(id);
         }
 
-        public bool Update(long id, string expression, string regularExpression, long? userId)
+        public bool Update(long id, string expression, string regularExpression, long userId)
         {
             using var db = new LiteDatabase(_connectionString);
             var placeholders = db.GetCollection<Placeholder>("placeholders");
@@ -85,14 +84,9 @@ namespace Vaelastrasz.Server.Services
             if (placeholder == null)
                 return false;
 
-            if (!string.IsNullOrEmpty(expression))
-                placeholder.Expression = expression;
-
-            if (!string.IsNullOrEmpty(regularExpression))
-                placeholder.RegularExpression = regularExpression;
-
+            placeholder.Expression = expression;
+            placeholder.RegularExpression = regularExpression;
             placeholder.User = users.FindById(userId);
-
             placeholder.LastUpdateDate = DateTimeOffset.UtcNow;
 
             return placeholders.Update(placeholder);

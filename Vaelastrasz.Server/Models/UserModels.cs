@@ -15,26 +15,22 @@ namespace Vaelastrasz.Server.Models
         public string Name { get; set; }
         public string Project { get; set; }
         public string Pattern { get; set; }
-        public long? AccountId { get; set; }
+        public long AccountId { get; set; }
         public DateTimeOffset CreationDate { get; set; }
         public DateTimeOffset LastUpdateDate { get; set; }
 
         public static ReadUserModel Convert(User user)
         {
-            var u = new ReadUserModel()
+            return new ReadUserModel()
             {
                 Id = user.Id,
                 Name = user.Name,
                 Project = user.Project,
                 Pattern = user.Pattern,
                 CreationDate = user.CreationDate,
-                LastUpdateDate = user.LastUpdateDate
+                LastUpdateDate = user.LastUpdateDate,
+                AccountId = user.Account?.Id ?? 0
             };
-
-            if (user.Account != null)
-                u.AccountId = user.Account.Id;
-
-            return u;
         }
     }
 
@@ -51,7 +47,7 @@ namespace Vaelastrasz.Server.Models
         [Required]
         public string Pattern { get; set; }
 
-        public long? AccountId { get; set; }
+        public long AccountId { get; set; }
     }
 
     public class UpdateUserModel
@@ -60,27 +56,16 @@ namespace Vaelastrasz.Server.Models
 
         public string Pattern { get; set; }
 
-        public string Password { get; set; }
-
-        public long? AccountId { get; set; }
-
-        public DateTimeOffset CreationDate { get; set; }
-        public DateTimeOffset LastUpdateDate { get; set; }
+        public long AccountId { get; set; }
 
         public static UpdateUserModel Convert(User user)
         {
-            var u = new UpdateUserModel()
+            return new UpdateUserModel()
             {
                 Name = user.Name,
                 Pattern = user.Pattern,
-                CreationDate = user.CreationDate,
-                LastUpdateDate = user.LastUpdateDate
+                AccountId = user.Account?.Id ?? 0
             };
-
-            if (user.Account != null)
-                u.AccountId = user.Account.Id;
-
-            return u;
         }
     }
 }

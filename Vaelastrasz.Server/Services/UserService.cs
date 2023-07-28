@@ -14,14 +14,14 @@ namespace Vaelastrasz.Server.Services
             _connectionString = connectionString;
         }
 
-        public long? Create(string name, string password, string project, string pattern, long? accountId)
+        public long Create(string name, string password, string project, string pattern, long accountId)
         {
             using var db = new LiteDatabase(_connectionString);
             var users = db.GetCollection<User>("users");
             var accounts = db.GetCollection<Account>("accounts");
 
             if (users.Exists(u => u.Name.Equals(name, StringComparison.OrdinalIgnoreCase)))
-                return null;
+                return 0;
 
             // salt
             var salt = CryptographyUtils.GetRandomBase64String(16);
@@ -33,12 +33,10 @@ namespace Vaelastrasz.Server.Services
                 Password = CryptographyUtils.GetSHA512HashAsBase64(salt, password),
                 Project = project,
                 Pattern = pattern,
+                Account = accounts.FindById(accountId),
                 CreationDate = DateTime.UtcNow,
                 LastUpdateDate = DateTime.UtcNow
             };
-
-            if (accountId != null)
-                user.Account = accounts.FindById(accountId);
 
             return users.Insert(user);
         }
@@ -99,29 +97,23 @@ namespace Vaelastrasz.Server.Services
             return users;
         }
 
-        public bool Update(long id, string name, string password, string pattern, long? accountId)
+        public bool Update(long id, string name, string password, string pattern, long accountId)
         {
             using var db = new LiteDatabase(_connectionString);
             var users = db.GetCollection<User>("users");
+            var accounts = db.GetCollection<Account>("accounts");
 
             var user = users.Include(u => u.Account).FindById(id);
 
             if (user == null)
                 return false;
-
-            if (!string.IsNullOrEmpty(name))
-                user.Name = name;
-
-            if (!string.IsNullOrEmpty(pattern))
-                user.Pattern = pattern;
-
-            if (!string.IsNullOrEmpty(password))
-            {
-                var salt = CryptographyUtils.GetRandomBase64String(16);
-                user.Salt = salt;
-                user.Password = CryptographyUtils.GetSHA512HashAsBase64(salt, password);
-            }
-
+            
+            user.Name = name;
+            user.Pattern = pattern;
+            var salt = CryptographyUtils.GetRandomBase64String(16);
+            user.Salt = salt;
+            user.Password = CryptographyUtils.GetSHA512HashAsBase64(salt, password);
+            user.Account = accounts.FindById(accountId); 
             user.LastUpdateDate = DateTimeOffset.UtcNow;
 
             return users.Update(user);

@@ -6,6 +6,7 @@ namespace Vaelastrasz.Server.Models
     {
         public string Expression { get; set; }
         public string RegularExpression { get; set; }
+        public long UserId { get; set; }
     }
 
     public class ReadPlaceholderModel
@@ -13,6 +14,9 @@ namespace Vaelastrasz.Server.Models
         public long Id { get; set; }
         public string Expression { get; set; }
         public string RegularExpression { get; set; }
+
+        public long UserId { get; set; }
+
         public DateTimeOffset CreationDate { get; set; }
         public DateTimeOffset LastUpdateDate { get; set; }
 
@@ -24,12 +28,17 @@ namespace Vaelastrasz.Server.Models
                 Expression = placeholder.Expression,
                 RegularExpression = placeholder.RegularExpression,
                 CreationDate = placeholder.CreationDate,
-                LastUpdateDate = placeholder.LastUpdateDate
+                LastUpdateDate = placeholder.LastUpdateDate,
+                UserId = placeholder.User?.Id ?? 0
             };
         }
     }
 
     public class UpdatePlaceholderModel
     {
+        public string Expression { get; set; }
+        public string RegularExpression { get; set; }
+
+        public long UserId { get; set; }
     }
 }
