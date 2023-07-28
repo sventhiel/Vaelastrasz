@@ -1,4 +1,5 @@
 ﻿using LiteDB;
+using Vaelastrasz.Library.Models;
 using Vaelastrasz.Server.Entities;
 
 namespace Vaelastrasz.Server.Services
@@ -84,7 +85,7 @@ namespace Vaelastrasz.Server.Services
             return placeholders;
         }
 
-        public bool Update(long id, string expression, string regularExpression, long userId)
+        public bool Update(long id, string expression, string regularExpression, long? userId)
         {
             using var db = new LiteDatabase(_connectionString);
             var placeholders = db.GetCollection<Placeholder>("placeholders");
@@ -95,9 +96,15 @@ namespace Vaelastrasz.Server.Services
             if (placeholder == null)
                 return false;
 
-            placeholder.Expression = expression;
-            placeholder.RegularExpression = regularExpression;
-            placeholder.User = users.FindById(userId);
+            if (!string.IsNullOrEmpty(expression))
+                placeholder.Expression = expression;
+
+            if (!string.IsNullOrEmpty(regularExpression))
+                placeholder.RegularExpression = regularExpression;
+
+            if (userId.HasValue)
+                placeholder.User = users.FindById(userId.Value);
+
             placeholder.LastUpdateDate = DateTimeOffset.UtcNow;
 
             return placeholders.Update(placeholder);

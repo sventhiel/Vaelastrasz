@@ -95,7 +95,7 @@ namespace Vaelastrasz.Server.Services
             return users.First();
         }
 
-        public bool Update(long id, string name, string password, string pattern, long accountId)
+        public bool Update(long id, string name, string password, string pattern, long? accountId)
         {
             using var db = new LiteDatabase(_connectionString);
             var users = db.GetCollection<User>("users");
@@ -106,12 +106,22 @@ namespace Vaelastrasz.Server.Services
             if (user == null)
                 return false;
 
-            user.Name = name;
-            user.Pattern = pattern;
-            var salt = CryptographyUtils.GetRandomBase64String(16);
-            user.Salt = salt;
-            user.Password = CryptographyUtils.GetSHA512HashAsBase64(salt, password);
-            user.Account = accounts.FindById(accountId);
+            if (!string.IsNullOrEmpty(name))
+                user.Name = name;
+
+            if (!string.IsNullOrEmpty(pattern))
+                user.Pattern = pattern;
+
+            if (!string.IsNullOrEmpty(password))
+            {
+                var salt = CryptographyUtils.GetRandomBase64String(16);
+                user.Salt = salt;
+                user.Password = CryptographyUtils.GetSHA512HashAsBase64(salt, password);
+            }
+                
+            if(accountId.HasValue)
+                user.Account = accounts.FindById(accountId.Value);
+
             user.LastUpdateDate = DateTimeOffset.UtcNow;
 
             return users.Update(user);

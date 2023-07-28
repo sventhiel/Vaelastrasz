@@ -20,7 +20,7 @@ namespace Vaelastrasz.Server.Tests
             //    var users = db.GetCollection<User>("users");
             //var user = users.FindById(null);
 
-            var user = userService.FindById(null);
+            var user = userService.FindById(0);
 
             Assert.IsNotNull(user);
         }

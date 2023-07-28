@@ -52,19 +52,9 @@ namespace Vaelastrasz.Server.Models
 
     public class UpdateUserModel
     {
-        public long AccountId { get; set; }
+        public long? AccountId { get; set; }
         public string Name { get; set; }
-
+        public string Password { get; set; }
         public string Pattern { get; set; }
-
-        public static UpdateUserModel Convert(User user)
-        {
-            return new UpdateUserModel()
-            {
-                Name = user.Name,
-                Pattern = user.Pattern,
-                AccountId = user.Account?.Id ?? 0
-            };
-        }
     }
 }

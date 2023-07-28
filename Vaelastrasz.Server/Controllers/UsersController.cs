@@ -99,11 +99,7 @@ namespace Vaelastrasz.Server.Controllers
                     if (ModelState.IsValid)
                     {
                         var id = userService.Create(model.Name, model.Password, model.Project, model.Pattern, model.AccountId);
-
-                        if (!id.HasValue)
-                            return BadRequest();
-
-                        var user = userService.FindById(id.Value);
+                        var user = userService.FindById(id);
 
                         if (user == null)
                             return BadRequest();
@@ -121,34 +117,34 @@ namespace Vaelastrasz.Server.Controllers
             }
         }
 
-        //[HttpPut("users/{id}")]
-        //public IActionResult Put(long id, UpdateUserModel model)
-        //{
-        //    try
-        //    {
-        //        using (var userService = new UserService(_connectionString))
-        //        {
-        //            var user = userService.FindById(id);
+        [HttpPut("users/{id}")]
+        public IActionResult Put(long id, UpdateUserModel model)
+        {
+            try
+            {
+                using (var userService = new UserService(_connectionString))
+                {
+                    var user = userService.FindById(id);
 
-        //            if (user == null)
-        //                return BadRequest($"something went wrong...");
+                    if (user == null)
+                        return BadRequest($"something went wrong...");
 
-        //            var result = userService.Update(id, model.Name, model.Password, model.Pattern, model.AccountId);
+                    var result = userService.Update(id, model.Name, model.Password, model.Pattern, model.AccountId);
 
-        //            if (result)
-        //            {
-        //                user = userService.FindById(id);
-        //                return Ok(user);
-        //            }
+                    if (result)
+                    {
+                        user = userService.FindById(id);
+                        return Ok(user);
+                    }
 
-        //            return BadRequest($"something went wrong...");
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError(ex, ex.Message);
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
+                    return BadRequest($"something went wrong...");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

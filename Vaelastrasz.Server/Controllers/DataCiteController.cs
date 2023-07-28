@@ -17,58 +17,12 @@ namespace Vaelastrasz.Server.Controllers
         private List<Admin> _admins;
         private ConnectionString _connectionString;
         private JwtConfiguration _jwtConfiguration;
+
         public DataCiteController(IConfiguration configuration, ConnectionString connectionString)
         {
             _connectionString = connectionString;
             _jwtConfiguration = configuration.GetSection("JWT").Get<JwtConfiguration>();
             _admins = configuration.GetSection("Admins").Get<List<Admin>>();
-        }
-
-        [HttpPost("datacite")]
-        public IActionResult Create(CreateDataCiteModel model)
-        {
-            //
-            if (User?.Identity?.Name == null)
-                return BadRequest();
-
-            var username = User.Identity.Name;
-
-            //
-            var userService = new UserService(_connectionString);
-            var user = userService.FindByName(username);
-
-            if (user == null)
-                return BadRequest();
-
-            if (user.Account == null)
-                return BadRequest();
-
-            // DOI Check
-            var placeholderService = new PlaceholderService(_connectionString);
-            var placeholders = placeholderService.FindByUserId(user.Id);
-
-            if (!DOIHelper.Validate(model.Data.Attributes.Doi, user.Account.Prefix, user.Pattern, new Dictionary<string, string>(placeholders.Select(p => new KeyValuePair<string, string>(p.Expression, p.RegularExpression)))))
-                return BadRequest("The DOI does not match the user pattern.");
-
-            var client = new RestClient($"{user.Account.Host}");
-            client.Authenticator = new HttpBasicAuthenticator(user.Account.Name, user.Account.Password);
-
-            var request = new RestRequest($"dois", Method.Post).AddJsonBody(System.Text.Json.JsonSerializer.Serialize(model));
-
-            var response = client.Execute(request);
-
-            if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
-            {
-                var result = System.Text.Json.JsonSerializer.Deserialize<ReadDataCiteModel>(response.Content);
-
-                var prefix = result.Data.Attributes.Doi.Split('/')[0];
-                var suffix = result.Data.Attributes.Doi.Split('/')[1];
-
-                var doiService = new DOIService(_connectionString);
-                doiService.Create(prefix, suffix, user.Id);
-            }
-
-            return StatusCode((int)response.StatusCode, response.Content);
         }
 
         [HttpDelete("datacite/{doi}")]
@@ -168,6 +122,53 @@ namespace Vaelastrasz.Server.Controllers
                 return BadRequest();
 
             return Ok(JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content));
+        }
+
+        [HttpPost("datacite")]
+        public IActionResult Post(CreateDataCiteModel model)
+        {
+            //
+            if (User?.Identity?.Name == null)
+                return BadRequest();
+
+            var username = User.Identity.Name;
+
+            //
+            var userService = new UserService(_connectionString);
+            var user = userService.FindByName(username);
+
+            if (user == null)
+                return BadRequest();
+
+            if (user.Account == null)
+                return BadRequest();
+
+            // DOI Check
+            var placeholderService = new PlaceholderService(_connectionString);
+            var placeholders = placeholderService.FindByUserId(user.Id);
+
+            if (!DOIHelper.Validate(model.Data.Attributes.Doi, user.Account.Prefix, user.Pattern, new Dictionary<string, string>(placeholders.Select(p => new KeyValuePair<string, string>(p.Expression, p.RegularExpression)))))
+                return BadRequest("The DOI does not match the user pattern.");
+
+            var client = new RestClient($"{user.Account.Host}");
+            client.Authenticator = new HttpBasicAuthenticator(user.Account.Name, user.Account.Password);
+
+            var request = new RestRequest($"dois", Method.Post).AddJsonBody(System.Text.Json.JsonSerializer.Serialize(model));
+
+            var response = client.Execute(request);
+
+            if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
+            {
+                var result = System.Text.Json.JsonSerializer.Deserialize<ReadDataCiteModel>(response.Content);
+
+                var prefix = result.Data.Attributes.Doi.Split('/')[0];
+                var suffix = result.Data.Attributes.Doi.Split('/')[1];
+
+                var doiService = new DOIService(_connectionString);
+                doiService.Create(prefix, suffix, user.Id);
+            }
+
+            return StatusCode((int)response.StatusCode, response.Content);
         }
         [HttpPut("datacite/{doi}")]
         public IActionResult Put(string doi)

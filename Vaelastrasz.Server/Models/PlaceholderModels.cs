@@ -38,6 +38,6 @@ namespace Vaelastrasz.Server.Models
         public string Expression { get; set; }
         public string RegularExpression { get; set; }
 
-        public long UserId { get; set; }
+        public long? UserId { get; set; }
     }
 }

@@ -49,16 +49,5 @@ namespace Vaelastrasz.Server.Models
         public string Name { get; set; }
         public string Password { get; set; }
         public string Prefix { get; set; }
-
-        public static UpdateAccountModel Convert(Account account)
-        {
-            return new UpdateAccountModel
-            {
-                Name = account.Name,
-                Password = account.Password,
-                Host = account.Host,
-                Prefix = account.Prefix
-            };
-        }
     }
 }
