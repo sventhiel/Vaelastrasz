@@ -47,7 +47,7 @@ namespace Vaelastrasz.Server.Controllers
             var client = new RestClient($"{user.Account.Host}");
             client.Authenticator = new HttpBasicAuthenticator(user.Account.Name, user.Account.Password);
 
-            var request = new RestRequest($"dois/{doi}", Method.Get);
+            var request = new RestRequest($"dois/{doi}", Method.Delete);
             request.AddHeader("Accept", "application/json");
 
             var response = client.Execute(request);
