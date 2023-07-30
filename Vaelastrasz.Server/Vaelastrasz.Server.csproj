@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Content Remove="Examples\doi_001.json" />
+    <Content Remove="Examples\doi_002.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -33,6 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Examples\doi_002.json" />
     <None Include="Examples\doi_001.json" />
   </ItemGroup>
 

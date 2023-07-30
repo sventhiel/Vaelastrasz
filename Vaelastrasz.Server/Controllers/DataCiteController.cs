@@ -26,7 +26,7 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         [HttpDelete("datacite/{doi}")]
-        public IActionResult DeleteByDOI(string doi)
+        public async Task<IActionResult> DeleteByDOI(string doi)
         {
             if (User?.Identity?.Name == null)
                 return StatusCode(400);
@@ -59,7 +59,7 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         [HttpGet("datacite")]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
             if (User?.Identity?.Name == null)
                 return StatusCode(400);
@@ -92,7 +92,7 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         [HttpGet("datacite/{doi}")]
-        public IActionResult GetByDOI(string doi)
+        public async Task<IActionResult> GetByDOI(string doi)
         {
             if (User?.Identity?.Name == null)
                 return StatusCode(400);
@@ -125,7 +125,7 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         [HttpPost("datacite")]
-        public IActionResult Post(CreateDataCiteModel model)
+        public async Task<IActionResult> Post(CreateDataCiteModel model)
         {
             //
             if (User?.Identity?.Name == null)
@@ -153,7 +153,8 @@ namespace Vaelastrasz.Server.Controllers
             var client = new RestClient($"{user.Account.Host}");
             client.Authenticator = new HttpBasicAuthenticator(user.Account.Name, user.Account.Password);
 
-            var request = new RestRequest($"dois", Method.Post).AddJsonBody(System.Text.Json.JsonSerializer.Serialize(model));
+            var request = new RestRequest($"dois", Method.Post).AddJsonBody(JsonConvert.SerializeObject(model));
+            request.AddHeader("Accept", "application/json");
 
             var response = client.Execute(request);
 
@@ -170,6 +171,7 @@ namespace Vaelastrasz.Server.Controllers
 
             return StatusCode((int)response.StatusCode, response.Content);
         }
+
         [HttpPut("datacite/{doi}")]
         public IActionResult Put(string doi)
         {

@@ -19,9 +19,10 @@ namespace Vaelastrasz.Library.Services
             client.DefaultRequestHeaders.Add("Authorization", _config.GetBasicAuthorizationHeader());
         }
 
-        public async Task<ReadDataCiteModel> Create(CreateDataCiteDataModel model)
+        public async Task<ReadDataCiteModel> Create(CreateDataCiteModel model)
         {
-            HttpResponseMessage response = await client.PostAsync($"{_config.Host}/api/datacite", new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json"));
+            var v = JsonConvert.SerializeObject(model);
+            HttpResponseMessage response = await client.PostAsync($"{_config.Host}/api/datacite", new StringContent(v, Encoding.UTF8, "application/json"));
 
             if (response.StatusCode != System.Net.HttpStatusCode.OK)
                 return null;

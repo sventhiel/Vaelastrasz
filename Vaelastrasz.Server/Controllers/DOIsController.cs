@@ -19,7 +19,7 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         [HttpPost("dois")]
-        public IActionResult Post(CreateDOIModel model)
+        public async Task<IActionResult> Post(CreateDOIModel model)
         {
             try
             {

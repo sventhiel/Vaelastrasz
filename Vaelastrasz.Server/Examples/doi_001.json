@@ -1,9 +1,8 @@
 {
   "data": {
-    "id": "string",
     "type": "dois",
     "attributes": {
-      "doi": "10.23720/20230125004",
+      "doi": "10.23720/aaaaaaab",
       "event": "hide",
       "creators": [
         {
