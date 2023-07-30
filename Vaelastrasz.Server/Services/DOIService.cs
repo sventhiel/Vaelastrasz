@@ -52,6 +52,22 @@ namespace Vaelastrasz.Server.Services
             GC.SuppressFinalize(this);
         }
 
+        public List<DOI> Find()
+        {
+            using var db = new LiteDatabase(_connectionString);
+            var col = db.GetCollection<DOI>("dois");
+
+            return col.Query().ToList();
+        }
+
+        public List<DOI> FindByUserId(long userId)
+        {
+            using var db = new LiteDatabase(_connectionString);
+            var col = db.GetCollection<DOI>("dois");
+
+            return col.Find(d => d.User.Id == userId).ToList(); ;
+        }
+
         public DOI? FindById(long id)
         {
             using var db = new LiteDatabase(_connectionString);

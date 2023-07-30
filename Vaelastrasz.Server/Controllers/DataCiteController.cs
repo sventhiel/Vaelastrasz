@@ -26,7 +26,7 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         [HttpDelete("datacite/{doi}")]
-        public async Task<IActionResult> DeleteByDOI(string doi)
+        public async Task<IActionResult> DeleteByDOIAsync(string doi)
         {
             if (User?.Identity?.Name == null)
                 return StatusCode(400);
@@ -59,7 +59,41 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         [HttpGet("datacite")]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetAsync()
+        {
+            if (User?.Identity?.Name == null)
+                return StatusCode(400);
+
+            var username = User.Identity.Name;
+
+            var userService = new UserService(_connectionString);
+            var user = userService.FindByName(username);
+
+            if (user == null)
+                return StatusCode(400);
+
+            if (user.Account == null)
+                return StatusCode(400);
+
+            var doiService = new DOIService(_connectionString);
+            var dois = doiService.FindByUserId(user.Id);
+
+            var client = new RestClient($"{user.Account.Host}");
+            client.Authenticator = new HttpBasicAuthenticator(user.Account.Name, user.Account.Password);
+
+            var request = new RestRequest($"dois", Method.Get);
+            request.AddHeader("Accept", "application/json");
+
+            var response = client.Execute(request);
+
+            if (response.StatusCode != System.Net.HttpStatusCode.OK || response.Content == null)
+                return BadRequest();
+
+            return Ok(JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content));
+        }
+
+        [HttpGet("datacite/doi")]
+        public async Task<IActionResult> GetDOIsAsync()
         {
             if (User?.Identity?.Name == null)
                 return StatusCode(400);
@@ -88,7 +122,7 @@ namespace Vaelastrasz.Server.Controllers
             if (response.StatusCode != System.Net.HttpStatusCode.OK || response.Content == null)
                 return BadRequest();
 
-            return Ok(JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content));
+            return Ok(JsonConvert.DeserializeObject<ReadDOIModel>(response.Content));
         }
 
         [HttpGet("datacite/{doi}")]

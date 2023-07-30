@@ -19,7 +19,7 @@ namespace Vaelastrasz.Library.Services
             client.DefaultRequestHeaders.Add("Authorization", _config.GetBasicAuthorizationHeader());
         }
 
-        public async Task<ReadDataCiteModel> Create(CreateDataCiteModel model)
+        public async Task<ReadDataCiteModel> CreateAsync(CreateDataCiteModel model)
         {
             var v = JsonConvert.SerializeObject(model);
             HttpResponseMessage response = await client.PostAsync($"{_config.Host}/api/datacite", new StringContent(v, Encoding.UTF8, "application/json"));
@@ -30,7 +30,7 @@ namespace Vaelastrasz.Library.Services
             return JsonConvert.DeserializeObject<ReadDataCiteModel>(await response.Content.ReadAsStringAsync());
         }
 
-        public async Task<bool> Delete(string doi)
+        public async Task<bool> DeleteAsync(string doi)
         {
             HttpResponseMessage response = await client.DeleteAsync($"{_config.Host}/api/datacite/{doi}");
 
@@ -50,7 +50,7 @@ namespace Vaelastrasz.Library.Services
             return JsonConvert.DeserializeObject<ReadDataCiteModel>(await response.Content.ReadAsStringAsync());
         }
 
-        public async Task<List<ReadDataCiteModel>> Find()
+        public async Task<List<ReadDataCiteModel>> FindAsync()
         {
             HttpResponseMessage response = await client.GetAsync($"{_config.Host}/api/datacite/");
 
@@ -61,7 +61,7 @@ namespace Vaelastrasz.Library.Services
 
         }
 
-        public async Task<ReadDataCiteModel> Update(string doi, UpdateDataCiteModel model)
+        public async Task<ReadDataCiteModel> UpdateAsync(string doi, UpdateDataCiteModel model)
         {
             HttpResponseMessage response = await client.PutAsync($"{_config.Host}/api/datacite/{doi}", new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json"));
 
