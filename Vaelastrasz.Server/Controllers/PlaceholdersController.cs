@@ -24,19 +24,28 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         [HttpDelete("placeholders/{id}")]
-        public IActionResult Delete(long id)
+        public async Task<IActionResult> Delete(long id)
         {
             try
             {
-                using (var placeholderService = new PlaceholderService(_connectionString))
-                {
-                    var result = placeholderService.Delete(id);
+                using var userService = new UserService(_connectionString);
+                var user = userService.FindByName(User?.Identity?.Name);
 
-                    if (result)
-                        return Ok($"deletion of placeholder (id:{id}) was successful.");
+                if (user == null)
+                    return Unauthorized();
 
-                    return BadRequest($"something went wrong...");
-                }
+                using var placeholderService = new PlaceholderService(_connectionString);
+                var placeholder = placeholderService.FindById(id);
+
+                if (placeholder == null || placeholder.User.Id != user.Id)
+                    return Forbid();
+
+                var result = placeholderService.Delete(id);
+
+                if (result)
+                    return Ok($"deletion of placeholder (id:{id}) was successful.");
+
+                return BadRequest($"something went wrong...");
             }
             catch (Exception ex)
             {
@@ -46,43 +55,52 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         [HttpGet("placeholders")]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            if (User?.Identity?.Name == null)
-                return BadRequest();
+            try
+            {
+                using var userService = new UserService(_connectionString);
+                var user = userService.FindByName(User?.Identity?.Name);
 
-            var username = User.Identity.Name;
+                if (user == null)
+                    return Unauthorized();
 
-            var userService = new UserService(_connectionString);
-            var user = userService.FindByName(username);
+                var placeholderService = new PlaceholderService(_connectionString);
+                var placeholders = placeholderService.FindByUserId(user.Id).Select(p => ReadPlaceholderModel.Convert(p));
 
-            if (user == null)
-                return BadRequest();
+                return Ok(placeholders);
+            }
+            catch (Exception ex)
+            {
+                // TODO: exception handling
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
 
-            var placeholderService = new PlaceholderService(_connectionString);
-            var placeholders = placeholderService.FindByUserId(user.Id).Select(p => ReadPlaceholderModel.Convert(p));
-
-            return Ok(placeholders);
         }
 
         [HttpPost("placeholders")]
-        public IActionResult Post(CreatePlaceholderModel model)
+        public async Task<IActionResult> Post(CreatePlaceholderModel model)
         {
-            if (User?.Identity?.Name == null)
-                return BadRequest();
+            try
+            {
+                using var userService = new UserService(_connectionString);
+                var user = userService.FindByName(User?.Identity?.Name);
 
-            var username = User.Identity.Name;
+                if (user == null)
+                    return Unauthorized();
 
-            var userService = new UserService(_connectionString);
-            var user = userService.FindByName(username);
+                using var placeholderService = new PlaceholderService(_connectionString);
+                var id = placeholderService.Create(model.Expression, model.RegularExpression, user.Id);
 
-            if (user == null)
-                return BadRequest();
+                var placeholder = placeholderService.FindById(id);
+                return Ok(placeholder);
+            }
+            catch (Exception ex)
+            {
+                // TODO: exception handling
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
 
-            var placeholderService = new PlaceholderService(_connectionString);
-            placeholderService.Create(model.Expression, model.RegularExpression, user.Id);
-
-            return Ok();
         }
 
         [HttpPut("placeholders/{id}")]
@@ -90,26 +108,30 @@ namespace Vaelastrasz.Server.Controllers
         {
             try
             {
-                using (var placeholderService = new PlaceholderService(_connectionString))
+                using var userService = new UserService(_connectionString);
+                var user = userService.FindByName(User?.Identity?.Name);
+
+                if (user == null)
+                    return Unauthorized();
+
+                using var placeholderService = new PlaceholderService(_connectionString);
+                var placeholder = placeholderService.FindById(id);
+
+                if (placeholder == null || placeholder.User.Id != user.Id)
+                    return Forbid();
+
+                if (ModelState.IsValid)
                 {
-                    var placeholder = placeholderService.FindById(id);
+                    var result = placeholderService.Update(id, model.Expression, model.RegularExpression, model.UserId);
 
-                    if (placeholder == null)
-                        return BadRequest();
-
-                    if (ModelState.IsValid)
+                    if (result)
                     {
-                        var result = placeholderService.Update(id, model.Expression, model.RegularExpression, model.UserId);
-
-                        if (result)
-                        {
-                            placeholder = placeholderService.FindById(id);
-                            return Ok(placeholder);
-                        }
+                        placeholder = placeholderService.FindById(id);
+                        return Ok(placeholder);
                     }
-
-                    return BadRequest();
                 }
+
+                return BadRequest();
             }
             catch (Exception ex)
             {

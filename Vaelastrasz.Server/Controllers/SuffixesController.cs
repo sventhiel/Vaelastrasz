@@ -24,13 +24,8 @@ namespace Vaelastrasz.Server.Controllers
         {
             try
             {
-                if (User?.Identity?.Name == null)
-                    return Unauthorized();
-
-                var username = User.Identity.Name;
-
-                var userService = new UserService(_connectionString);
-                var user = userService.FindByName(username);
+                using var userService = new UserService(_connectionString);
+                var user = userService.FindByName(User?.Identity?.Name);
 
                 if (user == null)
                     return Unauthorized();

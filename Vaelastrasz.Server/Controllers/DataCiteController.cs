@@ -199,7 +199,7 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         [HttpPut("datacite/{doi}")]
-        public IActionResult Put(string doi)
+        public async Task<IActionResult> Put(string doi)
         {
             try
             {

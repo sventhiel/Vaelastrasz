@@ -26,7 +26,7 @@ namespace Vaelastrasz.Server.Controllers
 
         // DELETE
         [HttpDelete("dois/{id}")]
-        public IActionResult Delete(long id)
+        public async Task<IActionResult> Delete(long id)
         {
             try
             {
