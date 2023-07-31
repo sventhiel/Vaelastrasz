@@ -124,6 +124,7 @@ namespace Vaelastrasz.Server.Controllers
                 if (user.Account == null)
                     return Forbid();
 
+                using var doiService = new DOIService(_connectionString);
                 if (doiService.FindByDOI(doi)?.User.Id != user.Id)
                     return Forbid();
 
