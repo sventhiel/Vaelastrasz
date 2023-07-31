@@ -79,7 +79,7 @@ namespace Vaelastrasz.Server.Services
             return col.Include(u => u.Account).FindById(id);
         }
 
-        public User? FindByName(string name)
+        public User? FindByName(string? name)
         {
             if (name == null)
                 return null;

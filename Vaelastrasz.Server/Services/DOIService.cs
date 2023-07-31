@@ -60,12 +60,25 @@ namespace Vaelastrasz.Server.Services
             return col.Query().ToList();
         }
 
+        public DOI? FindByDOI(string doi)
+        {
+            using var db = new LiteDatabase(_connectionString);
+            var col = db.GetCollection<DOI>("dois");
+
+            var dois = col.Find(d => $"{d.Prefix}/{d.Suffix}".Equals(doi, StringComparison.InvariantCultureIgnoreCase));
+
+            if (dois.Count() != 1)
+                return null;
+
+            return dois.First();
+        }
+
         public List<DOI> FindByUserId(long userId)
         {
             using var db = new LiteDatabase(_connectionString);
             var col = db.GetCollection<DOI>("dois");
 
-            return col.Find(d => d.User.Id == userId).ToList(); ;
+            return col.Find(d => d.User.Id == userId).ToList();
         }
 
         public DOI? FindById(long id)
@@ -74,6 +87,16 @@ namespace Vaelastrasz.Server.Services
             var col = db.GetCollection<DOI>("dois");
 
             return col.FindById(id);
+        }
+
+        public List<DOI> FindByPrefix(string prefix)
+        {
+            return null;
+        }
+
+        public List<DOI> FindBySuffix(string suffix)
+        {
+            return null;
         }
 
         public DOI? FindByPrefixAndSuffix(string prefix, string suffix)

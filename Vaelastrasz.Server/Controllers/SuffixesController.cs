@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using Vaelastrasz.Library.Models;
 using Vaelastrasz.Server.Helpers;
+using Vaelastrasz.Server.Models;
 using Vaelastrasz.Server.Services;
 
 namespace Vaelastrasz.Server.Controllers
@@ -28,7 +29,7 @@ namespace Vaelastrasz.Server.Controllers
             try
             {
                 if (User?.Identity?.Name == null)
-                    throw new ArgumentNullException(nameof(User));
+                    return Unauthorized();
 
                 var username = User.Identity.Name;
 
@@ -36,24 +37,17 @@ namespace Vaelastrasz.Server.Controllers
                 var user = userService.FindByName(username);
 
                 if (user == null)
-                    throw new ArgumentNullException(nameof(user));
+                    return Unauthorized();
 
-                if (user.Account == null)
-                    throw new ArgumentNullException(nameof(user.Account));
-
-                var placeholderService = new PlaceholderService(_connectionString);
-                var placeholders = placeholderService.FindByUserId(user.Id);
-
-                // DOI
-                var doi = DOIHelper.Create(user.Account.Prefix, user.Pattern, model.Placeholders);
+                // Suffix
+                var suffix = SuffixHelper.Create(user.Pattern, model.Placeholders);
 
                 // Validation
-                if (DOIHelper.Validate(doi, user.Account.Prefix, user.Pattern, new Dictionary<string, string>(placeholders.Select(p => new KeyValuePair<string, string>(p.Expression, p.RegularExpression)))))
-                {
-                    var doiService = new DOIService(_connectionString);
-                    doiService.Create(doi.Prefix, doi.Suffix, user.Id);
+                var placeholderService = new PlaceholderService(_connectionString);
 
-                    return Ok(doi);
+                if (SuffixHelper.Validate(suffix, user.Pattern, new Dictionary<string, string>(placeholderService.FindByUserId(user.Id).Select(p => new KeyValuePair<string, string>(p.Expression, p.RegularExpression)))))
+                {
+                    return Ok(suffix);
                 }
 
                 return BadRequest("Something went wrong.");

@@ -1,9 +1,12 @@
 ﻿using Exceptionless;
 using LiteDB;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Vaelastrasz.Library.Models;
+using Vaelastrasz.Server.Configurations;
 using Vaelastrasz.Server.Helpers;
+using Vaelastrasz.Server.Models;
 using Vaelastrasz.Server.Services;
 
 namespace Vaelastrasz.Server.Controllers
@@ -11,11 +14,133 @@ namespace Vaelastrasz.Server.Controllers
     [ApiController, Authorize(Roles = "user"), Route("api")]
     public class DOIsController : ControllerBase
     {
+        private readonly ILogger<UsersController> _logger;
+        private List<Admin> _admins;
         private ConnectionString _connectionString;
+        private JwtConfiguration _jwtConfiguration;
 
-        public DOIsController(IConfiguration configuration, ConnectionString connectionString)
+        public DOIsController(ILogger<UsersController> logger, IConfiguration configuration, ConnectionString connectionString)
         {
             _connectionString = connectionString;
+            _jwtConfiguration = configuration.GetSection("JWT").Get<JwtConfiguration>();
+            _admins = configuration.GetSection("Admins").Get<List<Admin>>();
+            _logger = logger;
         }
+
+        // POST
+        [HttpPost("dois")]
+        public async Task<IActionResult> PostAsync(CreateDOIModel model)
+        {
+            try
+            {
+                using var userService = new UserService(_connectionString);
+                var user = userService.FindByName(User?.Identity?.Name);
+
+                if (user == null)
+                    return Unauthorized();
+
+                if (user.Account == null)
+                    return Forbid();
+
+                using var placeholderService = new PlaceholderService(_connectionString);
+                var placeholders = placeholderService.FindByUserId(user.Id);
+
+                if (!DOIHelper.Validate($"{model.Prefix}/{model.Suffix}", user.Account.Prefix, user.Pattern, new Dictionary<string, string>(placeholders.Select(p => new KeyValuePair<string, string>(p.Expression, p.RegularExpression)))))
+                    return Forbid();
+
+                using var doiService = new DOIService(_connectionString);
+                var result = doiService.Create(model.Prefix, model.Suffix, model.UserId);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // GET
+        [HttpGet("dois")]
+        public async Task<IActionResult> GetAsync()
+        {
+            try
+            {
+                using var userService = new UserService(_connectionString);
+                var user = userService.FindByName(User?.Identity?.Name);
+
+                if (user == null)
+                    return Unauthorized();
+
+                using var doiService = new DOIService(_connectionString);
+                var result = doiService.FindByUserId(user.Id);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("dois/{doi}")]
+        public async Task<IActionResult> GetByDOIAsync(string doi)
+        {
+            try
+            {
+                using var userService = new UserService(_connectionString);
+                var user = userService.FindByName(User?.Identity?.Name);
+
+                if (user == null)
+                    return Unauthorized();
+
+                using var doiService = new DOIService(_connectionString);
+                var result = doiService.FindByDOI(doi);
+
+                if (result == null || result.User.Id != user.Id)
+                    return Forbid();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // DELETE
+        [HttpDelete("dois/{id}")]
+        public IActionResult Delete(long id)
+        {
+            try
+            {
+                using var userService = new UserService(_connectionString);
+                var user = userService.FindByName(User?.Identity?.Name);
+
+                if (user == null)
+                    return Unauthorized();
+
+                using var doiService = new DOIService(_connectionString);
+
+                if (doiService.FindById(id)?.User.Id != user.Id)
+                    return Forbid();
+
+                var result = doiService.Delete(id);
+
+                if (result)
+                    return Ok($"deletion of doi (id:{id}) was successful.");
+
+                return BadRequest($"something went wrong...");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // PUT
     }
 }
