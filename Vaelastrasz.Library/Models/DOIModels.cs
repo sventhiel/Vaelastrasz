@@ -1,4 +1,8 @@
-﻿namespace Vaelastrasz.Server.Models
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Vaelastrasz.Library.Models
 {
     public class CreateDOIModel
     {

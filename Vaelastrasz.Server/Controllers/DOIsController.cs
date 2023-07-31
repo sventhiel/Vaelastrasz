@@ -28,6 +28,31 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         // POST
+        [HttpPost("dois/generate")]
+        public async Task<IActionResult> PostAsync(Dictionary<string, string> placeholders)
+        {
+            try
+            {
+                using var userService = new UserService(_connectionString);
+                var user = userService.FindByName(User?.Identity?.Name);
+
+                if (user == null)
+                    return Unauthorized();
+
+                if (user.Account == null)
+                    return Forbid();
+
+                var doi = DOIHelper.Create(user.Account.Prefix, user.Pattern, placeholders);
+
+                return Ok(doi);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpPost("dois")]
         public async Task<IActionResult> PostAsync(CreateDOIModel model)
         {
