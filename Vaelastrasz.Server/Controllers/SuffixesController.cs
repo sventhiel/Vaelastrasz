@@ -1,12 +1,10 @@
 ﻿using Exceptionless;
 using LiteDB;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using Vaelastrasz.Library.Models;
 using Vaelastrasz.Server.Helpers;
-using Vaelastrasz.Server.Models;
 using Vaelastrasz.Server.Services;
 
 namespace Vaelastrasz.Server.Controllers
@@ -20,7 +18,6 @@ namespace Vaelastrasz.Server.Controllers
         {
             _connectionString = connectionString;
         }
-
 
         [HttpPost("suffixes")]
         public async Task<IActionResult> PostAsync(CreateSuffixModel model)

@@ -118,8 +118,8 @@ namespace Vaelastrasz.Server.Services
                 user.Salt = salt;
                 user.Password = CryptographyUtils.GetSHA512HashAsBase64(salt, password);
             }
-                
-            if(accountId.HasValue)
+
+            if (accountId.HasValue)
                 user.Account = accounts.FindById(accountId.Value);
 
             user.LastUpdateDate = DateTimeOffset.UtcNow;

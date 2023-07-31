@@ -40,16 +40,6 @@ namespace Vaelastrasz.Library.Services
             return true;
         }
 
-        public async Task<ReadDataCiteModel> FindByDoiAsync(string doi)
-        {
-            HttpResponseMessage response = await client.GetAsync($"{_config.Host}/api/datacite/{doi}");
-
-            if (response.StatusCode != System.Net.HttpStatusCode.OK)
-                return null;
-
-            return JsonConvert.DeserializeObject<ReadDataCiteModel>(await response.Content.ReadAsStringAsync());
-        }
-
         public async Task<List<ReadDataCiteModel>> FindAsync()
         {
             HttpResponseMessage response = await client.GetAsync($"{_config.Host}/api/datacite/");
@@ -58,7 +48,16 @@ namespace Vaelastrasz.Library.Services
                 return null;
 
             return JsonConvert.DeserializeObject<List<ReadDataCiteModel>>(await response.Content.ReadAsStringAsync());
+        }
 
+        public async Task<ReadDataCiteModel> FindByDoiAsync(string doi)
+        {
+            HttpResponseMessage response = await client.GetAsync($"{_config.Host}/api/datacite/{doi}");
+
+            if (response.StatusCode != System.Net.HttpStatusCode.OK)
+                return null;
+
+            return JsonConvert.DeserializeObject<ReadDataCiteModel>(await response.Content.ReadAsStringAsync());
         }
 
         public async Task<ReadDataCiteModel> UpdateAsync(string doi, UpdateDataCiteModel model)

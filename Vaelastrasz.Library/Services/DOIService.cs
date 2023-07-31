@@ -36,13 +36,12 @@ namespace Vaelastrasz.Library.Services
                 var response_prefix = await client.GetAsync($"{_config.Host}/api/prefixes");
                 var response_suffix = await client.PostAsync($"{_config.Host}/api/suffixes", new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json"));
 
-                if(response_prefix.IsSuccessStatusCode && response_suffix.IsSuccessStatusCode)
+                if (response_prefix.IsSuccessStatusCode && response_suffix.IsSuccessStatusCode)
                 {
                     return $"{response_prefix.Content}/{response_suffix.Content}";
                 }
 
                 return null;
-
             }
             catch (Exception e)
             {

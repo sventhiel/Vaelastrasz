@@ -1,12 +1,9 @@
-﻿using Exceptionless;
-using LiteDB;
-using Microsoft.AspNetCore.Authentication;
+﻿using LiteDB;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Vaelastrasz.Library.Models;
 using Vaelastrasz.Server.Configurations;
 using Vaelastrasz.Server.Helpers;
-using Vaelastrasz.Server.Models;
 using Vaelastrasz.Server.Services;
 
 namespace Vaelastrasz.Server.Controllers
@@ -27,9 +24,9 @@ namespace Vaelastrasz.Server.Controllers
             _logger = logger;
         }
 
-        // POST
-        [HttpPost("dois/generate")]
-        public async Task<IActionResult> PostAsync(Dictionary<string, string> placeholders)
+        // DELETE
+        [HttpDelete("dois/{id}")]
+        public IActionResult Delete(long id)
         {
             try
             {
@@ -38,45 +35,18 @@ namespace Vaelastrasz.Server.Controllers
 
                 if (user == null)
                     return Unauthorized();
-
-                if (user.Account == null)
-                    return Forbid();
-
-                var doi = DOIHelper.Create(user.Account.Prefix, user.Pattern, placeholders);
-
-                return Ok(doi);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpPost("dois")]
-        public async Task<IActionResult> PostAsync(CreateDOIModel model)
-        {
-            try
-            {
-                using var userService = new UserService(_connectionString);
-                var user = userService.FindByName(User?.Identity?.Name);
-
-                if (user == null)
-                    return Unauthorized();
-
-                if (user.Account == null)
-                    return Forbid();
-
-                using var placeholderService = new PlaceholderService(_connectionString);
-                var placeholders = placeholderService.FindByUserId(user.Id);
-
-                if (!DOIHelper.Validate($"{model.Prefix}/{model.Suffix}", user.Account.Prefix, user.Pattern, new Dictionary<string, string>(placeholders.Select(p => new KeyValuePair<string, string>(p.Expression, p.RegularExpression)))))
-                    return Forbid();
 
                 using var doiService = new DOIService(_connectionString);
-                var result = doiService.Create(model.Prefix, model.Suffix, model.UserId);
 
-                return Ok(result);
+                if (doiService.FindById(id)?.User.Id != user.Id)
+                    return Forbid();
+
+                var result = doiService.Delete(id);
+
+                if (result)
+                    return Ok($"deletion of doi (id:{id}) was successful.");
+
+                return BadRequest($"something went wrong...");
             }
             catch (Exception ex)
             {
@@ -135,9 +105,9 @@ namespace Vaelastrasz.Server.Controllers
             }
         }
 
-        // DELETE
-        [HttpDelete("dois/{id}")]
-        public IActionResult Delete(long id)
+        // POST
+        [HttpPost("dois")]
+        public async Task<IActionResult> PostAsync(CreateDOIModel model)
         {
             try
             {
@@ -147,17 +117,19 @@ namespace Vaelastrasz.Server.Controllers
                 if (user == null)
                     return Unauthorized();
 
-                using var doiService = new DOIService(_connectionString);
-
-                if (doiService.FindById(id)?.User.Id != user.Id)
+                if (user.Account == null)
                     return Forbid();
 
-                var result = doiService.Delete(id);
+                using var placeholderService = new PlaceholderService(_connectionString);
+                var placeholders = placeholderService.FindByUserId(user.Id);
 
-                if (result)
-                    return Ok($"deletion of doi (id:{id}) was successful.");
+                if (!DOIHelper.Validate($"{model.Prefix}/{model.Suffix}", user.Account.Prefix, user.Pattern, new Dictionary<string, string>(placeholders.Select(p => new KeyValuePair<string, string>(p.Expression, p.RegularExpression)))))
+                    return Forbid();
 
-                return BadRequest($"something went wrong...");
+                using var doiService = new DOIService(_connectionString);
+                var result = doiService.Create(model.Prefix, model.Suffix, model.UserId);
+
+                return Ok(result);
             }
             catch (Exception ex)
             {

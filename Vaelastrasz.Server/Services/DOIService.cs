@@ -73,14 +73,6 @@ namespace Vaelastrasz.Server.Services
             return dois.First();
         }
 
-        public List<DOI> FindByUserId(long userId)
-        {
-            using var db = new LiteDatabase(_connectionString);
-            var col = db.GetCollection<DOI>("dois");
-
-            return col.Find(d => d.User.Id == userId).ToList();
-        }
-
         public DOI? FindById(long id)
         {
             using var db = new LiteDatabase(_connectionString);
@@ -90,11 +82,6 @@ namespace Vaelastrasz.Server.Services
         }
 
         public List<DOI> FindByPrefix(string prefix)
-        {
-            return null;
-        }
-
-        public List<DOI> FindBySuffix(string suffix)
         {
             return null;
         }
@@ -113,6 +100,19 @@ namespace Vaelastrasz.Server.Services
                 return null;
 
             return dois.First();
+        }
+
+        public List<DOI> FindBySuffix(string suffix)
+        {
+            return null;
+        }
+
+        public List<DOI> FindByUserId(long userId)
+        {
+            using var db = new LiteDatabase(_connectionString);
+            var col = db.GetCollection<DOI>("dois");
+
+            return col.Find(d => d.User.Id == userId).ToList();
         }
 
         protected virtual void Dispose(bool disposing)

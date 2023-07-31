@@ -2,9 +2,6 @@
 using LiteDB;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Data;
-using Vaelastrasz.Library.Models;
-using Vaelastrasz.Server.Helpers;
 using Vaelastrasz.Server.Services;
 
 namespace Vaelastrasz.Server.Controllers
@@ -18,7 +15,6 @@ namespace Vaelastrasz.Server.Controllers
         {
             _connectionString = connectionString;
         }
-
 
         [HttpGet("prefixes")]
         public async Task<IActionResult> GetAsync()

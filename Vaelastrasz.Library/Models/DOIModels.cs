@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Vaelastrasz.Library.Models
 {
@@ -13,11 +11,11 @@ namespace Vaelastrasz.Library.Models
 
     public class ReadDOIModel
     {
+        public DateTimeOffset CreateCreationDate { get; set; }
         public long Id { get; set; }
+        public DateTimeOffset LastUpdateDate { get; set; }
         public string Prefix { get; set; }
         public string Suffix { get; set; }
         public long UserId { get; set; }
-        public DateTimeOffset CreateCreationDate { get; set; }
-        public DateTimeOffset LastUpdateDate { get; set; }
     }
 }
