@@ -18,4 +18,11 @@ namespace Vaelastrasz.Library.Models
         public string Suffix { get; set; }
         public long UserId { get; set; }
     }
+
+    public class UpdateDOIModel
+    {
+        public string Prefix { get; set; }
+        public string Suffix { get; set; }
+        public long UserId { get; set; }
+    }
 }

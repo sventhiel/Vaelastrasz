@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,16 +18,6 @@ namespace Vaelastrasz.Library.Services
         {
             _config = config;
             client.DefaultRequestHeaders.Add("Authorization", _config.GetBasicAuthorizationHeader());
-        }
-
-        public async Task<ReadDataCiteModel> CreateAsync(CreateDOIModel model)
-        {
-            HttpResponseMessage response = await client.PostAsync($"{_config.Host}/api/dois", new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json"));
-
-            if (response.StatusCode != System.Net.HttpStatusCode.OK)
-                return null;
-
-            return JsonConvert.DeserializeObject<ReadDataCiteModel>(await response.Content.ReadAsStringAsync());
         }
 
         public async Task<string> GenerateAsync(CreateSuffixModel model)
@@ -47,6 +38,31 @@ namespace Vaelastrasz.Library.Services
             {
                 return null;
             }
+        }
+
+        public async Task<ReadDOIModel> CreateAsync(CreateDOIModel model)
+        {
+            return null;
+        }
+
+        public async Task<ReadDOIModel> UpdateAsync(long id, UpdateDOIModel model)
+        {
+            return null;
+        }
+
+        public async Task<bool> DeleteAsync(long id)
+        {
+            return false;
+        }
+
+        public async Task<ReadDOIModel> FindById(long id)
+        {
+            return null;
+        }
+
+        public async Task<List<ReadDOIModel>> Find()
+        {
+            return null;
         }
     }
 }
