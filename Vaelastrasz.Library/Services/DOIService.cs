@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Vaelastrasz.Library.Configurations;
@@ -18,6 +19,51 @@ namespace Vaelastrasz.Library.Services
         {
             _config = config;
             client.DefaultRequestHeaders.Add("Authorization", _config.GetBasicAuthorizationHeader());
+        }
+
+        public async Task<ReadDOIModel> CreateAsync(CreateDOIModel model)
+        {
+            try
+            {
+                var v = JsonConvert.SerializeObject(model);
+                HttpResponseMessage response = await client.PostAsync($"{_config.Host}/api/dois", new StringContent(v, Encoding.UTF8, "application/json"));
+
+                if (response.StatusCode != System.Net.HttpStatusCode.OK)
+                    return null;
+
+                return JsonConvert.DeserializeObject<ReadDOIModel>(await response.Content.ReadAsStringAsync());
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<bool> DeleteByIdAsync(long id)
+        {
+            try
+            {
+                HttpResponseMessage response = await client.DeleteAsync($"{_config.Host}/api/dois/{id}");
+
+                if (response.StatusCode != System.Net.HttpStatusCode.NoContent)
+                    return false;
+
+                return true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<List<ReadDOIModel>> Find()
+        {
+            return null;
+        }
+
+        public async Task<ReadDOIModel> FindById(long id)
+        {
+            return null;
         }
 
         public async Task<string> GenerateAsync(CreateSuffixModel model)
@@ -40,27 +86,7 @@ namespace Vaelastrasz.Library.Services
             }
         }
 
-        public async Task<ReadDOIModel> CreateAsync(CreateDOIModel model)
-        {
-            return null;
-        }
-
         public async Task<ReadDOIModel> UpdateAsync(long id, UpdateDOIModel model)
-        {
-            return null;
-        }
-
-        public async Task<bool> DeleteAsync(long id)
-        {
-            return false;
-        }
-
-        public async Task<ReadDOIModel> FindById(long id)
-        {
-            return null;
-        }
-
-        public async Task<List<ReadDOIModel>> Find()
         {
             return null;
         }

@@ -24,7 +24,7 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         [HttpDelete("placeholders/{id}")]
-        public async Task<IActionResult> Delete(long id)
+        public async Task<IActionResult> DeleteByIdAsync(long id)
         {
             try
             {
@@ -55,7 +55,7 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         [HttpGet("placeholders")]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetAsync()
         {
             try
             {
@@ -75,11 +75,10 @@ namespace Vaelastrasz.Server.Controllers
                 // TODO: exception handling
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
-
         }
 
         [HttpPost("placeholders")]
-        public async Task<IActionResult> Post(CreatePlaceholderModel model)
+        public async Task<IActionResult> PostAsync(CreatePlaceholderModel model)
         {
             try
             {
@@ -100,11 +99,10 @@ namespace Vaelastrasz.Server.Controllers
                 // TODO: exception handling
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
-
         }
 
         [HttpPut("placeholders/{id}")]
-        public IActionResult Put(long id, UpdatePlaceholderModel model)
+        public IActionResult PutAsync(long id, UpdatePlaceholderModel model)
         {
             try
             {

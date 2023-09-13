@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
@@ -21,53 +22,88 @@ namespace Vaelastrasz.Library.Services
 
         public async Task<ReadDataCiteModel> CreateAsync(CreateDataCiteModel model)
         {
-            var v = JsonConvert.SerializeObject(model);
-            HttpResponseMessage response = await client.PostAsync($"{_config.Host}/api/datacite", new StringContent(v, Encoding.UTF8, "application/json"));
+            try
+            {
+                var v = JsonConvert.SerializeObject(model);
+                HttpResponseMessage response = await client.PostAsync($"{_config.Host}/api/datacite", new StringContent(v, Encoding.UTF8, "application/json"));
 
-            if (response.StatusCode != System.Net.HttpStatusCode.OK)
-                return null;
+                if (response.StatusCode != System.Net.HttpStatusCode.OK)
+                    return null;
 
-            return JsonConvert.DeserializeObject<ReadDataCiteModel>(await response.Content.ReadAsStringAsync());
+                return JsonConvert.DeserializeObject<ReadDataCiteModel>(await response.Content.ReadAsStringAsync());
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public async Task<bool> DeleteAsync(string doi)
         {
-            HttpResponseMessage response = await client.DeleteAsync($"{_config.Host}/api/datacite/{doi}");
+            try
+            {
+                HttpResponseMessage response = await client.DeleteAsync($"{_config.Host}/api/datacite/{doi}");
 
-            if (response.StatusCode != System.Net.HttpStatusCode.NoContent)
-                return false;
+                if (response.StatusCode != System.Net.HttpStatusCode.NoContent)
+                    return false;
 
-            return true;
+                return true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public async Task<List<ReadDataCiteModel>> FindAsync()
         {
-            HttpResponseMessage response = await client.GetAsync($"{_config.Host}/api/datacite/");
+            try
+            {
+                HttpResponseMessage response = await client.GetAsync($"{_config.Host}/api/datacite/");
 
-            if (response.StatusCode != System.Net.HttpStatusCode.OK)
-                return null;
+                if (response.StatusCode != System.Net.HttpStatusCode.OK)
+                    return null;
 
-            return JsonConvert.DeserializeObject<List<ReadDataCiteModel>>(await response.Content.ReadAsStringAsync());
+                return JsonConvert.DeserializeObject<List<ReadDataCiteModel>>(await response.Content.ReadAsStringAsync());
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public async Task<ReadDataCiteModel> FindByDoiAsync(string doi)
         {
-            HttpResponseMessage response = await client.GetAsync($"{_config.Host}/api/datacite/{doi}");
+            try
+            {
+                HttpResponseMessage response = await client.GetAsync($"{_config.Host}/api/datacite/{doi}");
 
-            if (response.StatusCode != System.Net.HttpStatusCode.OK)
-                return null;
+                if (response.StatusCode != System.Net.HttpStatusCode.OK)
+                    return null;
 
-            return JsonConvert.DeserializeObject<ReadDataCiteModel>(await response.Content.ReadAsStringAsync());
+                return JsonConvert.DeserializeObject<ReadDataCiteModel>(await response.Content.ReadAsStringAsync());
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public async Task<ReadDataCiteModel> UpdateAsync(string doi, UpdateDataCiteModel model)
         {
-            HttpResponseMessage response = await client.PutAsync($"{_config.Host}/api/datacite/{doi}", new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json"));
+            try
+            {
+                HttpResponseMessage response = await client.PutAsync($"{_config.Host}/api/datacite/{doi}", new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json"));
 
-            if (response.StatusCode != System.Net.HttpStatusCode.OK)
-                return null;
+                if (response.StatusCode != System.Net.HttpStatusCode.OK)
+                    return null;
 
-            return JsonConvert.DeserializeObject<ReadDataCiteModel>(await response.Content.ReadAsStringAsync());
+                return JsonConvert.DeserializeObject<ReadDataCiteModel>(await response.Content.ReadAsStringAsync());
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

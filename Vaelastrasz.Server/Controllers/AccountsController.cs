@@ -19,7 +19,7 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         [HttpDelete("accounts/{id}")]
-        public async Task<IActionResult> Delete(long id)
+        public async Task<IActionResult> DeleteByIdAsync(long id)
         {
             try
             {
@@ -41,7 +41,7 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         [HttpGet("accounts")]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetAsync()
         {
             try
             {
@@ -66,7 +66,7 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         [HttpGet("accounts/{id}")]
-        public async Task<IActionResult> GetById(long id)
+        public async Task<IActionResult> GetByIdAsync(long id)
         {
             try
             {
@@ -88,7 +88,7 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         [HttpPost("accounts")]
-        public async Task<IActionResult> Post(CreateAccountModel model)
+        public async Task<IActionResult> PostAsync(CreateAccountModel model)
         {
             try
             {
@@ -112,7 +112,7 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         [HttpPut("accounts/{id}")]
-        public async Task<IActionResult> Put(long id, UpdateAccountModel model)
+        public async Task<IActionResult> PutByIdAsync(long id, UpdateAccountModel model)
         {
             try
             {

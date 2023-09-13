@@ -103,12 +103,12 @@ builder.Services.AddAuthentication(options =>
     {
         options.ForwardDefaultSelector = context =>
         {
-            string authorization = context.Request.Headers[HeaderNames.Authorization];
+            //string authorization = context.Request.Headers[HeaderNames.Authorization];
 
-            if (!string.IsNullOrEmpty(authorization) && authorization.StartsWith("Basic ", StringComparison.InvariantCultureIgnoreCase))
-                return "Basic";
+            //if (!string.IsNullOrEmpty(authorization) && authorization.StartsWith("Basic ", StringComparison.InvariantCultureIgnoreCase))
 
-            return JwtBearerDefaults.AuthenticationScheme;
+            //return JwtBearerDefaults.AuthenticationScheme;
+            return "Basic";
         };
     });
 

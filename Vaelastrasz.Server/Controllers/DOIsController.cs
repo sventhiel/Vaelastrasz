@@ -25,8 +25,8 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         // DELETE
-        [HttpDelete("dois/{id}")]
-        public async Task<IActionResult> Delete(long id)
+        [HttpDelete("dois/{prefix}/{suffix}")]
+        public async Task<IActionResult> DeleteAsync(string prefix, string suffix)
         {
             try
             {
@@ -38,13 +38,13 @@ namespace Vaelastrasz.Server.Controllers
 
                 using var doiService = new DOIService(_connectionString);
 
-                if (doiService.FindById(id)?.User.Id != user.Id)
+                var result = doiService.FindByDOI(prefix, suffix);
+
+                if (result?.User.Id != user.Id)
                     return Forbid();
 
-                var result = doiService.Delete(id);
-
-                if (result)
-                    return Ok($"deletion of doi (id:{id}) was successful.");
+                if (doiService.Delete(result.Id))
+                    return Ok($"deletion of doi: {prefix}/{suffix} was successful.");
 
                 return BadRequest($"something went wrong...");
             }
@@ -79,8 +79,8 @@ namespace Vaelastrasz.Server.Controllers
             }
         }
 
-        [HttpGet("dois/{doi}")]
-        public async Task<IActionResult> GetByDOIAsync(string doi)
+        [HttpGet("dois/{prefix}/{suffix}")]
+        public async Task<IActionResult> GetAsync(string prefix, string suffix)
         {
             try
             {
@@ -91,7 +91,7 @@ namespace Vaelastrasz.Server.Controllers
                     return Unauthorized();
 
                 using var doiService = new DOIService(_connectionString);
-                var result = doiService.FindByDOI(doi);
+                var result = doiService.FindByDOI(prefix, suffix);
 
                 if (result == null || result.User.Id != user.Id)
                     return Forbid();
@@ -127,7 +127,7 @@ namespace Vaelastrasz.Server.Controllers
                     return Forbid();
 
                 using var doiService = new DOIService(_connectionString);
-                var result = doiService.Create(model.Prefix, model.Suffix, model.UserId);
+                var result = doiService.Create(model.Prefix, model.Suffix, user.Id);
 
                 return Ok(result);
             }
@@ -139,5 +139,10 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         // PUT
+        [HttpPut("dois")]
+        public async Task<IActionResult> PutByIdAsync(string prefix, string suffix, UpdateDOIModel model)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

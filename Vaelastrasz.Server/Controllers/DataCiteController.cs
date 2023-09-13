@@ -52,12 +52,11 @@ namespace Vaelastrasz.Server.Controllers
 
                 return Ok(JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 // TODO: exception handling
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
-
         }
 
         [HttpGet("datacite")]
@@ -110,8 +109,8 @@ namespace Vaelastrasz.Server.Controllers
             }
         }
 
-        [HttpGet("datacite/{doi}")]
-        public async Task<IActionResult> GetByDOIAsync(string doi)
+        [HttpGet("datacite/{prefix}/{suffix}")]
+        public async Task<IActionResult> GetByDOIAsync(string prefix, string suffix)
         {
             try
             {
@@ -125,13 +124,13 @@ namespace Vaelastrasz.Server.Controllers
                     return Forbid();
 
                 using var doiService = new DOIService(_connectionString);
-                if (doiService.FindByDOI(doi)?.User.Id != user.Id)
-                    return Forbid();
+                //if (doiService.FindByDOI(prefix, suffix)?.User.Id != user.Id)
+                //    return Forbid();
 
                 var client = new RestClient($"{user.Account.Host}");
                 client.Authenticator = new HttpBasicAuthenticator(user.Account.Name, user.Account.Password);
 
-                var request = new RestRequest($"dois/{doi}", Method.Get);
+                var request = new RestRequest($"dois/{prefix}/{suffix}", Method.Get);
                 request.AddHeader("Accept", "application/json");
 
                 var response = client.Execute(request);
@@ -146,12 +145,10 @@ namespace Vaelastrasz.Server.Controllers
                 // TODO: exception handling
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
-
-
         }
 
         [HttpPost("datacite")]
-        public async Task<IActionResult> Post(CreateDataCiteModel model)
+        public async Task<IActionResult> PostAsync(CreateDataCiteModel model)
         {
             try
             {
@@ -200,7 +197,7 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         [HttpPut("datacite/{doi}")]
-        public async Task<IActionResult> Put(string doi)
+        public async Task<IActionResult> PutByDOIAsync(string doi, UpdateDataCiteModel model)
         {
             try
             {
@@ -228,7 +225,6 @@ namespace Vaelastrasz.Server.Controllers
                 // TODO: exception handling
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
-
         }
     }
 }

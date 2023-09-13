@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,12 +21,19 @@ namespace Vaelastrasz.Library.Services
 
         public async Task<string> CreateAsync(CreateSuffixModel model)
         {
-            HttpResponseMessage response = await client.PostAsync($"{_config.Host}/api/suffixes", new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json"));
+            try
+            {
+                HttpResponseMessage response = await client.PostAsync($"{_config.Host}/api/suffixes", new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json"));
 
-            if (response.StatusCode != System.Net.HttpStatusCode.OK)
-                return null;
+                if (response.StatusCode != System.Net.HttpStatusCode.OK)
+                    return null;
 
-            return JsonConvert.DeserializeObject<string>(await response.Content.ReadAsStringAsync());
+                return JsonConvert.DeserializeObject<string>(await response.Content.ReadAsStringAsync());
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

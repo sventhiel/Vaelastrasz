@@ -60,12 +60,12 @@ namespace Vaelastrasz.Server.Services
             return col.Query().ToList();
         }
 
-        public DOI? FindByDOI(string doi)
+        public DOI? FindByDOI(string prefix, string suffix)
         {
             using var db = new LiteDatabase(_connectionString);
             var col = db.GetCollection<DOI>("dois");
 
-            var dois = col.Find(d => $"{d.Prefix}/{d.Suffix}".Equals(doi, StringComparison.InvariantCultureIgnoreCase));
+            var dois = col.Find(d => d.Prefix.Equals(prefix, StringComparison.InvariantCultureIgnoreCase) && d.Suffix.Equals(suffix, StringComparison.InvariantCultureIgnoreCase));
 
             if (dois.Count() != 1)
                 return null;

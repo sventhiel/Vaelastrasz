@@ -62,37 +62,59 @@ namespace Vaelastrasz.Server.Services
 
         public List<User> Find()
         {
-            List<User> users = new List<User>();
+            try
+            {
+                List<User> users = new List<User>();
 
-            using var db = new LiteDatabase(_connectionString);
-            var col = db.GetCollection<User>("users");
-            users = col.Query().ToList();
+                using var db = new LiteDatabase(_connectionString);
+                var col = db.GetCollection<User>("users");
+                users = col.Query().ToList();
 
-            return users;
+                return users;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public User? FindById(long id)
         {
-            using var db = new LiteDatabase(_connectionString);
-            var col = db.GetCollection<User>("users");
+            try
+            {
+                using var db = new LiteDatabase(_connectionString);
+                var col = db.GetCollection<User>("users");
 
-            return col.Include(u => u.Account).FindById(id);
+                return col.Include(u => u.Account).FindById(id);
+            }
+            catch(Exception)
+            {
+                throw;
+            }
         }
 
         public User? FindByName(string? name)
         {
-            if (name == null)
-                return null;
+            try
+            {
+                if (name == null)
+                    return null;
 
-            using var db = new LiteDatabase(_connectionString);
-            var col = db.GetCollection<User>("users");
+                using var db = new LiteDatabase(_connectionString);
+                var col = db.GetCollection<User>("users");
 
-            var users = col.Include(u => u.Account).Find(u => u.Name.Equals(name));
+                var users = col.Include(u => u.Account).Find(u => u.Name.Equals(name));
 
-            if (users.Count() != 1)
-                return null;
+                if (users.Count() != 1)
+                    return null;
 
-            return users.First();
+                return users.First();
+            }
+            catch(Exception)
+            {
+                throw;
+            }
+
         }
 
         public bool Update(long id, string name, string password, string pattern, long? accountId)
