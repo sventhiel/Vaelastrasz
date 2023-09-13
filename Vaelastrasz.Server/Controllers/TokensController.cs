@@ -48,7 +48,8 @@ namespace Vaelastrasz.Server.Controllers
                 {
                     Subject = new ClaimsIdentity(new Claim[]
                     {
-                    new Claim(ClaimTypes.Name, username)
+                        new Claim(ClaimTypes.Name, username),
+                        new Claim(ClaimTypes.Role, _admins.Any(a => a.Name.Equals(username, StringComparison.InvariantCultureIgnoreCase)) ? "admin" : "user")
                     }),
                     Expires = DateTime.Now.AddHours(_jwtConfiguration.ValidLifetime),
                     Issuer = _jwtConfiguration.ValidIssuer,
@@ -89,15 +90,13 @@ namespace Vaelastrasz.Server.Controllers
                         Subject = new ClaimsIdentity(new Claim[]
                         {
                             new Claim(ClaimTypes.Name, model.Username),
+                            new Claim(ClaimTypes.Role, _admins.Any(a => a.Name.Equals(model.Username, StringComparison.InvariantCultureIgnoreCase)) ? "admin" : "user")
                         }),
                         Expires = DateTime.Now.AddHours(_jwtConfiguration.ValidLifetime),
                         Issuer = _jwtConfiguration.ValidIssuer,
                         Audience = _jwtConfiguration.ValidAudience,
                         SigningCredentials = new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha512Signature)
                     };
-
-                    if (_admins.Any(a => a.Name.Equals(model.Username)))
-                        tokenDescriptor.Subject.AddClaim(new Claim(ClaimTypes.Role, "admin"));
 
                     var token = tokenHandler.CreateToken(tokenDescriptor);
                     return Ok(tokenHandler.WriteToken(token));
