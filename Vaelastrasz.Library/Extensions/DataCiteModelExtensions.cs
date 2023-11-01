@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Vaelastrasz.Library.Models;
 using Vaelastrasz.Library.Models.DataCite;
 
@@ -26,6 +27,32 @@ namespace Vaelastrasz.Library.Extensions
             try
             {
                 model.Data.Attributes.Creators.Add(new DataCiteCreator(name, type));
+                return model;
+            }
+            catch (Exception)
+            {
+                return model;
+            }
+        }
+
+        public static CreateDataCiteModel AddCreator(this CreateDataCiteModel model, DataCiteCreator creator)
+        {
+            try
+            {
+                model.Data.Attributes.Creators.Add(creator);
+                return model;
+            }
+            catch (Exception)
+            {
+                return model;
+            }
+        }
+
+        public static CreateDataCiteModel AddCreators(this CreateDataCiteModel model, List<DataCiteCreator> creators)
+        {
+            try
+            {
+                model.Data.Attributes.Creators.AddRange(creators);
                 return model;
             }
             catch (Exception)
@@ -84,6 +111,32 @@ namespace Vaelastrasz.Library.Extensions
             try
             {
                 model.Data.Type = type;
+                return model;
+            }
+            catch (Exception)
+            {
+                return model;
+            }
+        }
+
+        public static CreateDataCiteModel SetUrl(this CreateDataCiteModel model, string url)
+        {
+            try
+            {
+                model.Data.Attributes.URL = url;
+                return model;
+            }
+            catch (Exception)
+            {
+                return model;
+            }
+        }
+
+        public static CreateDataCiteModel SetVersion(this CreateDataCiteModel model, string version)
+        {
+            try
+            {
+                model.Data.Attributes.Version = version;
                 return model;
             }
             catch (Exception)
