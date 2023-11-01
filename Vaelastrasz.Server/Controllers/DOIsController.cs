@@ -127,7 +127,7 @@ namespace Vaelastrasz.Server.Controllers
                     return Forbid();
 
                 using var doiService = new DOIService(_connectionString);
-                var result = doiService.Create(model.Prefix, model.Suffix, user.Id);
+                var result = doiService.Create(model.Prefix, model.Suffix, user.Id, DOIStateType.Draft);
 
                 return Ok(result);
             }
@@ -139,10 +139,41 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         // PUT
-        [HttpPut("dois")]
-        public async Task<IActionResult> PutByIdAsync(string prefix, string suffix, UpdateDOIModel model)
+        [HttpPut("dois/{prefix}/{suffix}")]
+        public async Task<IActionResult> PutByDOIAsync(string prefix, string suffix, UpdateDOIModel model)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using var userService = new UserService(_connectionString);
+                var user = userService.FindByName(User?.Identity?.Name);
+
+                if (user == null)
+                    return Unauthorized();
+
+                using var doiService = new DOIService(_connectionString);
+                var doi = doiService.FindByPrefixAndSuffix(prefix, suffix);
+
+                if (doi == null || doi.User.Id != user.Id)
+                    return Forbid();
+
+                if (ModelState.IsValid)
+                {
+                    var result = doiService.Update(prefix, suffix, model.UserId);
+
+                    if (result)
+                    {
+                        doi = doiService.FindByPrefixAndSuffix(prefix, suffix);
+                        return Ok(doi);
+                    }
+                }
+
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
