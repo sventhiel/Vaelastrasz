@@ -1,4 +1,6 @@
 ﻿using LiteDB;
+using NameParser;
+using Vaelastrasz.Library.Models;
 using Vaelastrasz.Server.Entities;
 
 namespace Vaelastrasz.Server.Services
@@ -18,7 +20,7 @@ namespace Vaelastrasz.Server.Services
             Dispose(false);
         }
 
-        public long Create(string prefix, string suffix, long userId)
+        public long Create(string prefix, string suffix, long userId, DOIStateType state)
         {
             using var db = new LiteDatabase(_connectionString);
             var dois = db.GetCollection<DOI>("dois");
@@ -27,7 +29,8 @@ namespace Vaelastrasz.Server.Services
             var doi = new DOI()
             {
                 Prefix = prefix,
-                Suffix = suffix
+                Suffix = suffix,
+                State = state,
             };
 
             if (users.FindById(userId) == null)
@@ -83,7 +86,15 @@ namespace Vaelastrasz.Server.Services
 
         public List<DOI> FindByPrefix(string prefix)
         {
-            return null;
+            var dois = new List<DOI>();
+
+            if (prefix == null)
+                return dois;
+
+            using var db = new LiteDatabase(_connectionString);
+            var col = db.GetCollection<DOI>("dois");
+
+            return col.Find(d => d.Prefix.Equals(prefix, StringComparison.OrdinalIgnoreCase)).ToList();
         }
 
         public DOI? FindByPrefixAndSuffix(string prefix, string suffix)
@@ -104,7 +115,15 @@ namespace Vaelastrasz.Server.Services
 
         public List<DOI> FindBySuffix(string suffix)
         {
-            return null;
+            var dois = new List<DOI>();
+
+            if (suffix == null)
+                return dois;
+
+            using var db = new LiteDatabase(_connectionString);
+            var col = db.GetCollection<DOI>("dois");
+
+            return col.Find(d => d.Suffix.Equals(suffix, StringComparison.OrdinalIgnoreCase)).ToList();
         }
 
         public List<DOI> FindByUserId(long userId)
@@ -113,6 +132,25 @@ namespace Vaelastrasz.Server.Services
             var col = db.GetCollection<DOI>("dois");
 
             return col.Find(d => d.User.Id == userId).ToList();
+        }
+
+        public bool Update(string prefix, string suffix, long? userId)
+        {
+            using var db = new LiteDatabase(_connectionString);
+            var dois = db.GetCollection<DOI>("dois");
+            var users = db.GetCollection<User>("users");
+
+            var doi = FindByPrefixAndSuffix(prefix, suffix);
+
+            if (doi == null)
+                return false;
+
+            if (userId.HasValue)
+                doi.User = users.FindById(userId.Value);
+
+            doi.LastUpdateDate = DateTimeOffset.UtcNow;
+
+            return dois.Update(doi);
         }
 
         protected virtual void Dispose(bool disposing)
