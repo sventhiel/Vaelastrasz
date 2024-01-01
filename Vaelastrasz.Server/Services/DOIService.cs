@@ -20,7 +20,7 @@ namespace Vaelastrasz.Server.Services
             Dispose(false);
         }
 
-        public long Create(string prefix, string suffix, long userId, DOIStateType state)
+        public long Create(string prefix, string suffix, long userId, DOIStateType state = DOIStateType.Draft)
         {
             using var db = new LiteDatabase(_connectionString);
             var dois = db.GetCollection<DOI>("dois");

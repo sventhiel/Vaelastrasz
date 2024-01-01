@@ -6,7 +6,7 @@ namespace Vaelastrasz.Library.Configurations
     public class Configuration
     {
         /// <summary>
-        /// The general configuration that is needed to connect to an appropriate proxy.
+        /// The general configuration that is needed to connect to the proxy.
         /// </summary>
         /// <param name="username">The username of the credentials you will use to connect to the proxy.</param>
         /// <param name="password">The password of the <paramref name="username"/></param>

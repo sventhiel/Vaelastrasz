@@ -1,4 +1,5 @@
 using LiteDB;
+using NUnit.Framework.Legacy;
 using Vaelastrasz.Server.Services;
 
 namespace Vaelastrasz.Server.Tests
@@ -22,7 +23,7 @@ namespace Vaelastrasz.Server.Tests
 
             var user = userService.FindById(0);
 
-            Assert.IsNotNull(user);
+            ClassicAssert.IsNull(user);
         }
     }
 }

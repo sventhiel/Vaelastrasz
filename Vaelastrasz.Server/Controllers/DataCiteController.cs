@@ -1,6 +1,7 @@
 ﻿using LiteDB;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using RestSharp;
 using RestSharp.Authenticators;
@@ -39,8 +40,12 @@ namespace Vaelastrasz.Server.Controllers
                 if (user.Account == null)
                     return Forbid();
 
-                var client = new RestClient($"{user.Account.Host}");
-                client.Authenticator = new HttpBasicAuthenticator(user.Account.Name, user.Account.Password);
+                var clientOptions = new RestClientOptions($"{user.Account.Host}")
+                {
+                    Authenticator = new HttpBasicAuthenticator(user.Account.Name, user.Account.Password)
+                };
+
+                var client = new RestClient(clientOptions);
 
                 var request = new RestRequest($"dois/{doi}", Method.Delete);
                 request.AddHeader("Accept", "application/json");
@@ -81,8 +86,12 @@ namespace Vaelastrasz.Server.Controllers
                 if (dois.Count == 0)
                     return Ok(result);
 
-                var client = new RestClient($"{user.Account.Host}");
-                client.Authenticator = new HttpBasicAuthenticator(user.Account.Name, user.Account.Password);
+                var clientOptions = new RestClientOptions($"{user.Account.Host}")
+                {
+                    Authenticator = new HttpBasicAuthenticator(user.Account.Name, user.Account.Password)
+                };
+
+                var client = new RestClient(clientOptions);
 
                 foreach (var doi in dois)
                 {
@@ -127,8 +136,12 @@ namespace Vaelastrasz.Server.Controllers
                 //if (doiService.FindByDOI(prefix, suffix)?.User.Id != user.Id)
                 //    return Forbid();
 
-                var client = new RestClient($"{user.Account.Host}");
-                client.Authenticator = new HttpBasicAuthenticator(user.Account.Name, user.Account.Password);
+                var clientOptions = new RestClientOptions($"{user.Account.Host}")
+                {
+                    Authenticator = new HttpBasicAuthenticator(user.Account.Name, user.Account.Password)
+                };
+
+                var client = new RestClient(clientOptions);
 
                 var request = new RestRequest($"dois/{prefix}/{suffix}", Method.Get);
                 request.AddHeader("Accept", "application/json");
@@ -168,8 +181,12 @@ namespace Vaelastrasz.Server.Controllers
                 if (!DOIHelper.Validate(model.Data.Attributes.Doi, user.Account.Prefix, user.Pattern, new Dictionary<string, string>(placeholders.Select(p => new KeyValuePair<string, string>(p.Expression, p.RegularExpression)))))
                     return BadRequest("The DOI does not match the user pattern.");
 
-                var client = new RestClient($"{user.Account.Host}");
-                client.Authenticator = new HttpBasicAuthenticator(user.Account.Name, user.Account.Password);
+                var clientOptions = new RestClientOptions($"{user.Account.Host}")
+                {
+                    Authenticator = new HttpBasicAuthenticator(user.Account.Name, user.Account.Password)
+                };
+
+                var client = new RestClient(clientOptions);
 
                 var request = new RestRequest($"dois", Method.Post).AddJsonBody(JsonConvert.SerializeObject(model));
                 request.AddHeader("Accept", "application/json");
@@ -182,9 +199,10 @@ namespace Vaelastrasz.Server.Controllers
 
                     var prefix = result.Data.Attributes.Doi.Split('/')[0];
                     var suffix = result.Data.Attributes.Doi.Split('/')[1];
+                    var state = result.Data.Attributes.State;
 
                     var doiService = new DOIService(_connectionString);
-                    doiService.Create(prefix, suffix, user.Id);
+                    doiService.Create(prefix, suffix, user.Id, (DOIStateType)state);
                 }
 
                 return StatusCode((int)response.StatusCode, response.Content);
@@ -210,8 +228,12 @@ namespace Vaelastrasz.Server.Controllers
                 if (user.Account == null)
                     return BadRequest();
 
-                var client = new RestClient($"{user.Account.Host}");
-                client.Authenticator = new HttpBasicAuthenticator(user.Account.Name, user.Account.Password);
+                var clientOptions = new RestClientOptions($"{user.Account.Host}")
+                {
+                    Authenticator = new HttpBasicAuthenticator(user.Account.Name, user.Account.Password)
+                };
+
+                var client = new RestClient(clientOptions);
 
                 var request = new RestRequest($"dois/{doi}", Method.Put);
                 request.AddHeader("Accept", "application/json");
