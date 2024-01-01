@@ -87,7 +87,7 @@ namespace Vaelastrasz.Server.Services
 
                 return col.Include(u => u.Account).FindById(id);
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw;
             }
@@ -110,11 +110,10 @@ namespace Vaelastrasz.Server.Services
 
                 return users.First();
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw;
             }
-
         }
 
         public bool Update(long id, string name, string password, string pattern, long? accountId)
