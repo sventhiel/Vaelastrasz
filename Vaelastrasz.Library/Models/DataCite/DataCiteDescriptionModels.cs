@@ -2,30 +2,11 @@
 using Newtonsoft.Json.Converters;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
+using Vaelastrasz.Library.Types;
 
 namespace Vaelastrasz.Library.Models.DataCite
 {
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum DataCiteDescriptionType
-    {
-        [EnumMember(Value = "Abstract")]
-        Abstract = 1,
 
-        [EnumMember(Value = "Methods")]
-        Methods = 2,
-
-        [EnumMember(Value = "SeriesInformation")]
-        SeriesInformation = 3,
-
-        [EnumMember(Value = "TableOfContents")]
-        TableOfContents = 4,
-
-        [EnumMember(Value = "TechnicalInfo")]
-        TechnicalInfo = 5,
-
-        [EnumMember(Value = "Other")]
-        Other = 6
-    }
 
     public class DataCiteDescription
     {

@@ -1,21 +1,24 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+﻿using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Text;
 using System.Xml.Serialization;
 using Vaelastrasz.Library.Types;
 
 namespace Vaelastrasz.Library.Models.DataCite
 {
-    public class DataCiteCreator
+    public class DataCiteContributor
     {
-        public DataCiteCreator()
+        public DataCiteContributor()
         {
             Affiliations = new List<DataCiteAffiliation>();
             NameIdentifiers = new List<DataCiteNameIdentifier>();
         }
 
-        public DataCiteCreator(string name, DataCiteNameType type)
+        public DataCiteContributor(string name, DataCiteNameType type, DataCiteContributorType )
         {
             switch (type)
             {
@@ -41,7 +44,7 @@ namespace Vaelastrasz.Library.Models.DataCite
             }
         }
 
-        public DataCiteCreator(string firstname, string lastname)
+        public DataCiteContributor(string firstname, string lastname)
         {
             GivenName = firstname;
             FamilyName = lastname;
@@ -71,6 +74,10 @@ namespace Vaelastrasz.Library.Models.DataCite
         [JsonProperty("nameType")]
         [XmlElement("nameType")]
         public DataCiteNameType NameType { get; set; }
+
+        [JsonProperty("contributorType")]
+        [XmlElement("contributorType")]
+        public DataCiteContributorType ContributorType { get; set; }
 
         [JsonProperty("lang")]
         [XmlElement("lang")]

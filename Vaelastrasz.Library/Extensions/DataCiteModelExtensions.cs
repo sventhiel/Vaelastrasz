@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Vaelastrasz.Library.Models;
 using Vaelastrasz.Library.Models.DataCite;
+using Vaelastrasz.Library.Types;
 
 namespace Vaelastrasz.Library.Extensions
 {
@@ -22,7 +23,7 @@ namespace Vaelastrasz.Library.Extensions
             }
         }
 
-        public static CreateDataCiteModel AddCreator(this CreateDataCiteModel model, string name, DataCiteCreatorType type)
+        public static CreateDataCiteModel AddCreator(this CreateDataCiteModel model, string name, DataCiteNameType type)
         {
             try
             {

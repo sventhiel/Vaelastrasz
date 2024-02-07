@@ -25,7 +25,7 @@ namespace Vaelastrasz.Library.Tests.Services
         [Test]
         public async Task Test2()
         {
-            var config = new Configuration("sventhiel", "sventhiel", "http://localhost:5041");
+            var config = new Configuration("sventhiel", "proq3dm6", "http://localhost:5041");
 
             string text = File.ReadAllText(@"C:/Projects/github.com/sventhiel/Vaelastrasz/Vaelastrasz.Server/Examples/doi_002.json");
             var data = JsonConvert.DeserializeObject<CreateDataCiteModel>(text);
@@ -41,6 +41,20 @@ namespace Vaelastrasz.Library.Tests.Services
             string text = File.ReadAllText(@"C:/Projects/github.com/sventhiel/Vaelastrasz/Vaelastrasz.Server/Examples/doi_001.json");
             var data = JsonConvert.DeserializeObject<CreateDataCiteModel>(text);
             var data2 = new StringContent(JsonConvert.SerializeObject(data));
+        }
+
+        [Test]
+        public async Task Test4()
+        {
+            var config = new Configuration("sventhiel", "proq3dm6", "http://localhost:5041");
+            var dataCiteService = new DataCiteService(config);
+            var doiService = new DOIService(config);
+
+            var model = new CreateDataCiteModel();
+
+            model.Data.Attributes.Doi = "";
+
+            //var x = await dataCiteService.CreateAsync(data);
         }
     }
 }
