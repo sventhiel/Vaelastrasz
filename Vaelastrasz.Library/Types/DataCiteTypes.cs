@@ -426,4 +426,37 @@ namespace Vaelastrasz.Library.Types
         [EnumMember(Value = "Other")]
         Other = 4
     }
+
+    [JsonConverter(typeof(StringEnumConverter))]
+    public enum DataCiteEventType
+    {
+        [EnumMember(Value = "publish")]
+        Publish = 1,
+
+        [EnumMember(Value = "register")]
+        Register = 2,
+
+        [EnumMember(Value = "hide")]
+        Hide = 3
+    }
+
+    [JsonConverter(typeof(StringEnumConverter))]
+    public enum DataCiteStateType
+    {
+        [EnumMember(Value = "findable")]
+        Findable = 1,
+
+        [EnumMember(Value = "registered")]
+        Registered = 2,
+
+        [EnumMember(Value = "draft")]
+        Draft = 3
+    }
+
+    [JsonConverter(typeof(StringEnumConverter))]
+    public enum DataCiteType
+    {
+        [EnumMember(Value = "dois")]
+        DOIs = 1
+    }
 }
