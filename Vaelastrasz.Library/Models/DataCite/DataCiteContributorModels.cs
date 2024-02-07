@@ -7,6 +7,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Xml.Serialization;
 using Vaelastrasz.Library.Types;
+using NameParser;
 
 namespace Vaelastrasz.Library.Models.DataCite
 {
@@ -18,24 +19,26 @@ namespace Vaelastrasz.Library.Models.DataCite
             NameIdentifiers = new List<DataCiteNameIdentifier>();
         }
 
-        public DataCiteContributor(string name, DataCiteNameType type, DataCiteContributorType )
+        public DataCiteContributor(string name, DataCiteNameType nameType, DataCiteContributorType contributorType)
         {
-            switch (type)
+            switch (nameType)
             {
                 case DataCiteNameType.Personal:
-                    //var person = new HumanName(name);
+                    var person = new HumanName(name);
 
-                    GivenName = name.Substring(0, name.IndexOf(" "));
-                    //GivenName = (person.Middle.Length > 0) ? $"{person.First} {person.Middle}" : $"{person.First}";
-                    FamilyName = name.Substring(name.IndexOf(" ") + 1);
-                    //FamilyName = person.Last;
+                    //GivenName = name.Substring(0, name.IndexOf(" "));
+                    GivenName = (person.Middle.Length > 0) ? $"{person.First} {person.Middle}" : $"{person.First}";
+                    //FamilyName = name.Substring(name.IndexOf(" ") + 1);
+                    FamilyName = person.Last;
                     Name = $"{GivenName} {FamilyName}";
-                    NameType = type;
+                    NameType = nameType;
+                    ContributorType = contributorType;
                     break;
 
                 case DataCiteNameType.Organizational:
                     Name = name;
-                    NameType = type;
+                    NameType = nameType;
+                    ContributorType = contributorType;
                     break;
 
                 default:
