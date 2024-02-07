@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Converters;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
+using Vaelastrasz.Library.Types;
 
 namespace Vaelastrasz.Library.Models.DataCite
 {
