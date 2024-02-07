@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using NameParser;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -20,12 +21,12 @@ namespace Vaelastrasz.Library.Models.DataCite
             switch (type)
             {
                 case DataCiteNameType.Personal:
-                    //var person = new HumanName(name);
+                    var person = new HumanName(name);
 
-                    GivenName = name.Substring(0, name.IndexOf(" "));
-                    //GivenName = (person.Middle.Length > 0) ? $"{person.First} {person.Middle}" : $"{person.First}";
-                    FamilyName = name.Substring(name.IndexOf(" ") + 1);
-                    //FamilyName = person.Last;
+                    //GivenName = name.Substring(0, name.IndexOf(" "));
+                    GivenName = (person.Middle.Length > 0) ? $"{person.First} {person.Middle}" : $"{person.First}";
+                    //FamilyName = name.Substring(name.IndexOf(" ") + 1);
+                    FamilyName = person.Last;
                     Name = $"{GivenName} {FamilyName}";
                     NameType = type;
                     break;
