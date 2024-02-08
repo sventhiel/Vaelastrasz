@@ -24,10 +24,17 @@ namespace Vaelastrasz.Library.Models.DataCite
 
         [JsonProperty("funderIdentifierType")]
         [XmlElement("funderIdentifierType")]
-        public DataCiteFunderIdentifierType FunderIdentifierType { get; set; }
+        public DataCiteFunderIdentifierType? FunderIdentifierType { get; set; }
 
         [JsonProperty("funderName")]
         [XmlElement("funderName")]
         public string FunderName { get; set; }
+
+        public DataCiteFundingReference(string funderName, string funderIdentifier, DataCiteFunderIdentifierType? funderIdentifierType = null)
+        {
+            FunderName = funderName;
+            FunderName = funderIdentifier;
+            FunderIdentifierType = funderIdentifierType;
+        }
     }
 }

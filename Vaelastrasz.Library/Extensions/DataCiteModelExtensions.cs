@@ -10,6 +10,19 @@ namespace Vaelastrasz.Library.Extensions
     {
         #region CreateDataCiteModel
 
+        public static CreateDataCiteModel AddFundingReference(this CreateDataCiteModel model, string firstname, string lastname)
+        {
+            try
+            {
+                model.Data.Attributes.Creators.Add(new DataCiteFundingReference(firstname, lastname));
+                return model;
+            }
+            catch (Exception)
+            {
+                return model;
+            }
+        }
+
         public static CreateDataCiteModel AddCreator(this CreateDataCiteModel model, string firstname, string lastname)
         {
             try
@@ -28,6 +41,19 @@ namespace Vaelastrasz.Library.Extensions
             try
             {
                 model.Data.Attributes.Creators.Add(new DataCiteCreator(name, type));
+                return model;
+            }
+            catch (Exception)
+            {
+                return model;
+            }
+        }
+
+        public static CreateDataCiteModel AddContributor(this CreateDataCiteModel model, string name, DataCiteNameType nameType, DataCiteContributorType contributorType)
+        {
+            try
+            {
+                model.Data.Attributes.Contributors.Add(new DataCiteContributor(name, nameType, contributorType));
                 return model;
             }
             catch (Exception)
@@ -73,6 +99,19 @@ namespace Vaelastrasz.Library.Extensions
             try
             {
                 model.Data.Attributes.Creators.RemoveAt(index);
+                return model;
+            }
+            catch (Exception)
+            {
+                return model;
+            }
+        }
+
+        public static CreateDataCiteModel RemoveContributor(this CreateDataCiteModel model, int index)
+        {
+            try
+            {
+                model.Data.Attributes.Contributors.RemoveAt(index);
                 return model;
             }
             catch (Exception)

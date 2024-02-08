@@ -15,7 +15,7 @@ namespace Vaelastrasz.Library.Models
         public CreateDataCiteAttributesModel()
         {
             Creators = new List<DataCiteCreator>();
-            Contributors = new List<DataCiteCreator>();
+            Contributors = new List<DataCiteContributor>();
             Dates = new List<DataCiteDate>();
             Descriptions = new List<DataCiteDescription>();
             Identifiers = new List<DataCiteIdentifier>();
@@ -29,7 +29,7 @@ namespace Vaelastrasz.Library.Models
 
         [JsonProperty("contributors")]
         [XmlElement("contributors")]
-        public List<DataCiteCreator> Contributors { get; set; }
+        public List<DataCiteContributor> Contributors { get; set; }
 
         [Cardinality(Minimum = 1)]
         [JsonProperty("creators")]
