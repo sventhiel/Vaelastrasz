@@ -75,6 +75,19 @@ namespace Vaelastrasz.Library.Extensions
             }
         }
 
+        public static CreateDataCiteModel AddSize(this CreateDataCiteModel model, string size)
+        {
+            try
+            {
+                model.Data.Attributes.Sizes.Add(size);
+                return model;
+            }
+            catch (Exception)
+            {
+                return model;
+            }
+        }
+
         public static CreateDataCiteModel AddCreators(this CreateDataCiteModel model, List<DataCiteCreator> creators)
         {
             try
@@ -99,6 +112,32 @@ namespace Vaelastrasz.Library.Extensions
             try
             {
                 model.Data.Attributes.Creators.RemoveAt(index);
+                return model;
+            }
+            catch (Exception)
+            {
+                return model;
+            }
+        }
+
+        public static CreateDataCiteModel RemoveFundingReference(this CreateDataCiteModel model, int index)
+        {
+            try
+            {
+                model.Data.Attributes.FundingReferences.RemoveAt(index);
+                return model;
+            }
+            catch (Exception)
+            {
+                return model;
+            }
+        }
+
+        public static CreateDataCiteModel RemoveSize(this CreateDataCiteModel model, int index)
+        {
+            try
+            {
+                model.Data.Attributes.Sizes.RemoveAt(index);
                 return model;
             }
             catch (Exception)
@@ -133,11 +172,49 @@ namespace Vaelastrasz.Library.Extensions
             }
         }
 
+        public static CreateDataCiteModel SetPublicationYear(this CreateDataCiteModel model, int publicationYear)
+        {
+            try
+            {
+                model.Data.Attributes.PublicationYear = publicationYear;
+                return model;
+            }
+            catch (Exception)
+            {
+                return model;
+            }
+        }
+
+        public static CreateDataCiteModel SetPublisher(this CreateDataCiteModel model, string publisher)
+        {
+            try
+            {
+                model.Data.Attributes.Publisher = publisher;
+                return model;
+            }
+            catch (Exception)
+            {
+                return model;
+            }
+        }
         public static CreateDataCiteModel SetDoi(this CreateDataCiteModel model, string doi)
         {
             try
             {
                 model.Data.Attributes.Doi = doi;
+                return model;
+            }
+            catch (Exception)
+            {
+                return model;
+            }
+        }
+
+        public static CreateDataCiteModel SetEvent(this CreateDataCiteModel model, DataCiteEventType eventType)
+        {
+            try
+            {
+                model.Data.Attributes.Event = eventType;
                 return model;
             }
             catch (Exception)

@@ -340,7 +340,7 @@ namespace Vaelastrasz.Library.Types
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
-    public enum DataCiteResourceType
+    public enum DataCiteResourceTypeGeneral
     {
         [EnumMember(Value = "Audiovisual")]
         Audiovisual = 1,

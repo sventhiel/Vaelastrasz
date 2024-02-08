@@ -20,6 +20,18 @@ namespace Vaelastrasz.Library.Models.DataCite
 
         [JsonProperty("resourceTypeGeneral")]
         [XmlElement("resourceTypeGeneral")]
-        public string ResourceTypeGeneral { get; set; }
+        public DataCiteResourceTypeGeneral ResourceTypeGeneral { get; set; }
+
+        [JsonProperty("relatedMetadataScheme")]
+        [XmlElement("relatedMetadataScheme")]
+        public string RelatedMetadataScheme { get; set; }
+
+        [JsonProperty("schemeUri")]
+        [XmlElement("schemeUri")]
+        public string SchemeUri { get; set; }
+
+        [JsonProperty("schemeType")]
+        [XmlElement("schemeType")]
+        public string SchemeType { get; set; }
     }
 }

@@ -20,7 +20,7 @@ namespace Vaelastrasz.Library.Models.DataCite
 
         [JsonProperty("resourceTypeGeneral")]
         [XmlElement("resourceTypeGeneral")]
-        public DataCiteResourceType ResourceTypeGeneral { get; set; }
+        public DataCiteResourceTypeGeneral ResourceTypeGeneral { get; set; }
 
         [JsonProperty("ris")]
         [XmlElement("ris")]
