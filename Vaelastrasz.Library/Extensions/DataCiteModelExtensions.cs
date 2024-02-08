@@ -236,6 +236,19 @@ namespace Vaelastrasz.Library.Extensions
             }
         }
 
+        public static CreateDataCiteModel SetTypes(this CreateDataCiteModel model, DataCiteResourceTypeGeneral? resourceTypeGeneral, string resourceType, string schemaOrg, string bibtex, string citeproc, string ris)
+        {
+            try
+            {
+                model.Data.Attributes.Types = new DataCiteTypes(resourceTypeGeneral, resourceType, schemaOrg, bibtex, citeproc, ris);
+                return model;
+            }
+            catch (Exception)
+            {
+                return model;
+            }
+        }
+
         public static CreateDataCiteModel SetUrl(this CreateDataCiteModel model, string url)
         {
             try
