@@ -1,13 +1,8 @@
-﻿using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
+﻿using NameParser;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
-using System.Text;
 using System.Xml.Serialization;
 using Vaelastrasz.Library.Types;
-using NameParser;
 
 namespace Vaelastrasz.Library.Models.DataCite
 {
@@ -58,6 +53,10 @@ namespace Vaelastrasz.Library.Models.DataCite
         [XmlElement("affiliations")]
         public List<DataCiteAffiliation> Affiliations { get; set; }
 
+        [JsonProperty("contributorType")]
+        [XmlElement("contributorType")]
+        public DataCiteContributorType ContributorType { get; set; }
+
         [JsonProperty("familyName")]
         [XmlElement("familyName")]
         public string FamilyName { get; set; }
@@ -65,6 +64,10 @@ namespace Vaelastrasz.Library.Models.DataCite
         [JsonProperty("givenName")]
         [XmlElement("givenName")]
         public string GivenName { get; set; }
+
+        [JsonProperty("lang")]
+        [XmlElement("lang")]
+        public string Lang { get; set; }
 
         [JsonProperty("name")]
         [XmlElement("name")]
@@ -77,13 +80,5 @@ namespace Vaelastrasz.Library.Models.DataCite
         [JsonProperty("nameType")]
         [XmlElement("nameType")]
         public DataCiteNameType NameType { get; set; }
-
-        [JsonProperty("contributorType")]
-        [XmlElement("contributorType")]
-        public DataCiteContributorType ContributorType { get; set; }
-
-        [JsonProperty("lang")]
-        [XmlElement("lang")]
-        public string Lang { get; set; }
     }
 }

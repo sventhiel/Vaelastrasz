@@ -1,8 +1,6 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Runtime.Serialization;
 using System.Xml.Serialization;
 using Vaelastrasz.Library.Attributes;
 using Vaelastrasz.Library.Models.DataCite;
@@ -23,7 +21,10 @@ namespace Vaelastrasz.Library.Models
             Identifiers = new List<DataCiteIdentifier>();
             Subjects = new List<DataCiteSubject>();
             Titles = new List<DataCiteTitle>();
+            RightsList = new List<DataCiteRight>();
+            Sizes = new List<string>();
             RelatedIdentifiers = new List<DataCiteRelatedIdentifier>();
+            FundingReferences = new List<DataCiteFundingReference>();
         }
 
         [JsonProperty("contributors")]
@@ -53,6 +54,10 @@ namespace Vaelastrasz.Library.Models
         [XmlElement("event")]
         public DataCiteEventType Event { get; set; }
 
+        [JsonProperty("fundingReferences")]
+        [XmlElement("fundingReferences")]
+        public List<DataCiteFundingReference> FundingReferences { get; set; }
+
         [JsonProperty("identifiers")]
         [XmlElement("identifiers")]
         public List<DataCiteIdentifier> Identifiers { get; set; }
@@ -72,6 +77,14 @@ namespace Vaelastrasz.Library.Models
         [JsonProperty("relatedIdentifiers")]
         [XmlElement("relatedIdentifiers")]
         public List<DataCiteRelatedIdentifier> RelatedIdentifiers { get; set; }
+
+        [JsonProperty("rightsList")]
+        [XmlElement("rightsList")]
+        public List<DataCiteRight> RightsList { get; set; }
+
+        [JsonProperty("sizes")]
+        [XmlElement("sizes")]
+        public List<string> Sizes { get; set; }
 
         [JsonProperty("subjects")]
         [XmlElement("subjects")]
