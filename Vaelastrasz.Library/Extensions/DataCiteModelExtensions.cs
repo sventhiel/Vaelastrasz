@@ -10,11 +10,11 @@ namespace Vaelastrasz.Library.Extensions
     {
         #region CreateDataCiteModel
 
-        public static CreateDataCiteModel AddFundingReference(this CreateDataCiteModel model, string firstname, string lastname)
+        public static CreateDataCiteModel AddFundingReference(this CreateDataCiteModel model, string funderName, string funderIdentifier, DataCiteFunderIdentifierType? funderIdentifierType)
         {
             try
             {
-                model.Data.Attributes.Creators.Add(new DataCiteFundingReference(firstname, lastname));
+                model.Data.Attributes.FundingReferences.Add(new DataCiteFundingReference(funderName, funderIdentifier, funderIdentifierType));
                 return model;
             }
             catch (Exception)
