@@ -21,7 +21,8 @@ namespace Vaelastrasz.Server.Utilities
         {
             using (var sha512 = SHA512.Create())
             {
-                byte[] saltedPassword = Encoding.Latin1.GetBytes(t1);
+                // latin1 vs utf8
+                byte[] saltedPassword = Encoding.UTF8.GetBytes(t1);
                 return Convert.ToBase64String(sha512.ComputeHash(saltedPassword));
             }
         }
@@ -30,7 +31,8 @@ namespace Vaelastrasz.Server.Utilities
         {
             using (var sha512 = SHA512.Create())
             {
-                byte[] saltedPassword = (Encoding.Latin1.GetBytes(t1).Concat(Encoding.Latin1.GetBytes(t2))).ToArray();
+                // latin1 vs utf8
+                byte[] saltedPassword = (Encoding.UTF8.GetBytes(t1).Concat(Encoding.UTF8.GetBytes(t2))).ToArray();
                 return Convert.ToBase64String(sha512.ComputeHash(saltedPassword));
             }
         }

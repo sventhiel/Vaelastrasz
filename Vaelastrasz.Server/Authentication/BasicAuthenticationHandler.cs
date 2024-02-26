@@ -33,7 +33,8 @@ namespace Vaelastrasz.Server.Authentication
             if (authHeader != null && authHeader.StartsWith("basic", StringComparison.OrdinalIgnoreCase))
             {
                 var token = authHeader.Substring("Basic ".Length).Trim();
-                var credentials = Encoding.Latin1.GetString(Convert.FromBase64String(token)).Split(':');
+                // in general latin1 instead of utf8?
+                var credentials = Encoding.UTF8.GetString(Convert.FromBase64String(token)).Split(':');
 
                 //
                 // Admin
