@@ -12,7 +12,7 @@
     "Vaelastrasz.Server": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "swagger/api",
+      "launchUrl": "",
       "applicationUrl": "http://localhost:5041",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
@@ -22,7 +22,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "swagger/api",
+      "launchUrl": "",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
