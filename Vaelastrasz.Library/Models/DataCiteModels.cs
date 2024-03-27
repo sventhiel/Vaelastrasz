@@ -108,7 +108,6 @@ namespace Vaelastrasz.Library.Models
         public string Version { get; set; }
     }
 
-    [XmlRoot("data")]
     public class CreateDataCiteDataModel
     {
         public CreateDataCiteDataModel()
