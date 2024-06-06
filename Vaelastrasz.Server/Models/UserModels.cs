@@ -33,7 +33,6 @@ namespace Vaelastrasz.Server.Models
         public DateTimeOffset LastUpdateDate { get; set; }
         public string Name { get; set; }
         public string Pattern { get; set; }
-        public string Project { get; set; }
 
         public static ReadUserModel Convert(User user)
         {
@@ -41,7 +40,6 @@ namespace Vaelastrasz.Server.Models
             {
                 Id = user.Id,
                 Name = user.Name,
-                Project = user.Project,
                 Pattern = user.Pattern,
                 CreationDate = user.CreationDate,
                 LastUpdateDate = user.LastUpdateDate,

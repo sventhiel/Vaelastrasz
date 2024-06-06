@@ -1,5 +1,6 @@
 ﻿using Fare;
 using System.Text.RegularExpressions;
+using Vaelastrasz.Library.Extensions;
 
 namespace Vaelastrasz.Server.Helpers
 {
@@ -9,14 +10,7 @@ namespace Vaelastrasz.Server.Helpers
         {
             try
             {
-                // check placeholders and replace them
-                if (placeholders != null)
-                {
-                    foreach (var placeholder in placeholders)
-                    {
-                        pattern = pattern.Replace(placeholder.Key, placeholder.Value);
-                    }
-                }
+                pattern = pattern.Replace(placeholders);
 
                 // create a random suffix that matches the pattern and return it
                 Xeger xeger = new Xeger($"{pattern}", new Random());

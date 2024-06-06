@@ -36,7 +36,6 @@ namespace Vaelastrasz.Server.Services
                 Name = name,
                 Salt = salt,
                 Password = CryptographyUtils.GetSHA512HashAsBase64(salt, password),
-                Project = project,
                 Pattern = pattern,
                 Account = accounts.FindById(accountId),
                 CreationDate = DateTime.UtcNow,
