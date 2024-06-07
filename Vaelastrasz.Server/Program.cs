@@ -2,9 +2,11 @@ using Exceptionless;
 using LiteDB;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
+using Serilog.Extensions.Logging;
 using System.Text;
 using System.Text.Json.Serialization;
 using Vaelastrasz.Server.Authentication;
@@ -19,12 +21,14 @@ var configuration = new ConfigurationBuilder()
 var jwtConfiguration = configuration.GetSection("JWT").Get<JwtConfiguration>();
 
 var logger = new LoggerConfiguration()
-    .ReadFrom.Configuration(configuration)
-    .CreateLogger();
+  .ReadFrom.Configuration(configuration)
+  .Enrich.FromLogContext()
+  .CreateLogger();
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Host.UseSerilog(logger);
+builder.Logging.ClearProviders();
+builder.Logging.AddSerilog(logger);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
