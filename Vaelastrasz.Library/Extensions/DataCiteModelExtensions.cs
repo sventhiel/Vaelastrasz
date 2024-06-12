@@ -185,10 +185,19 @@ namespace Vaelastrasz.Library.Extensions
             }
         }
 
-        public static CreateDataCiteModel SetPublisher(this CreateDataCiteModel model, string publisher)
+        public static CreateDataCiteModel SetPublisher(this CreateDataCiteModel model, string name, string publisherIdentifier, string publisherIdentifierScheme, string schemeUri, string lang)
         {
             try
             {
+                var publisher = new DataCitePublisher()
+                {
+                    Name = name,
+                    PublisherIdentifier = publisherIdentifier,
+                    PublisherIdentifierScheme = publisherIdentifierScheme,
+                    SchemeUri = schemeUri,
+                    Language = lang
+                };
+
                 model.Data.Attributes.Publisher = publisher;
                 return model;
             }
