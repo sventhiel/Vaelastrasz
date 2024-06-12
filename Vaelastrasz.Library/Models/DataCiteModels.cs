@@ -123,7 +123,7 @@ namespace Vaelastrasz.Library.Models
         [JsonProperty("type")]
         [Required]
         [XmlElement("type")]
-        public DataCiteType? Type { get; set; }
+        public DataCiteType Type { get; set; }
     }
 
     public class CreateDataCiteModel

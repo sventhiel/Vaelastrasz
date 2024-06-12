@@ -10,7 +10,7 @@ namespace Vaelastrasz.Library.Extensions
     {
         #region CreateDataCiteModel
 
-        public static CreateDataCiteModel AddFundingReference(this CreateDataCiteModel model, string funderName, string funderIdentifier, DataCiteFunderIdentifierType? funderIdentifierType)
+        public static CreateDataCiteModel AddFundingReference(this CreateDataCiteModel model, string funderName, string funderIdentifier, DataCiteFunderIdentifierType funderIdentifierType = DataCiteFunderIdentifierType.Other)
         {
             try
             {
@@ -101,7 +101,7 @@ namespace Vaelastrasz.Library.Extensions
             }
         }
 
-        public static CreateDataCiteModel AddTitle(this CreateDataCiteModel model, string title, string language = null, DataCiteTitleType? type = null)
+        public static CreateDataCiteModel AddTitle(this CreateDataCiteModel model, string title, string language = null, DataCiteTitleType type = DataCiteTitleType.Other)
         {
             model.Data.Attributes.Titles.Add(new DataCiteTitle(title, language, type));
             return model;
@@ -223,7 +223,7 @@ namespace Vaelastrasz.Library.Extensions
             }
         }
 
-        public static CreateDataCiteModel SetType(this CreateDataCiteModel model, DataCiteType? type)
+        public static CreateDataCiteModel SetType(this CreateDataCiteModel model, DataCiteType type = DataCiteType.DOIs)
         {
             try
             {
@@ -236,11 +236,11 @@ namespace Vaelastrasz.Library.Extensions
             }
         }
 
-        public static CreateDataCiteModel SetTypes(this CreateDataCiteModel model, DataCiteResourceTypeGeneral? resourceTypeGeneral, string resourceType, string schemaOrg, string bibtex, string citeproc, string ris)
+        public static CreateDataCiteModel SetTypes(this CreateDataCiteModel model, string resourceType, string schemaOrg, string bibtex, string citeproc, string ris, DataCiteResourceTypeGeneral resourceTypeGeneral = DataCiteResourceTypeGeneral.Other)
         {
             try
             {
-                model.Data.Attributes.Types = new DataCiteTypes(resourceTypeGeneral, resourceType, schemaOrg, bibtex, citeproc, ris);
+                model.Data.Attributes.Types = new DataCiteTypes(resourceType, schemaOrg, bibtex, citeproc, ris, resourceTypeGeneral);
                 return model;
             }
             catch (Exception)
