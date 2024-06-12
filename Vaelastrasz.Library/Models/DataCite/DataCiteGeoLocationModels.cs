@@ -17,5 +17,10 @@ namespace Vaelastrasz.Library.Models.DataCite
         [JsonProperty("geoLocationPoint")]
         [XmlElement("geoLocationPoint")]
         public Dictionary<string, string> GeoLocationPoint { get; set; }
+
+        public DataCiteGeoLocation()
+        {
+            
+        }
     }
 }

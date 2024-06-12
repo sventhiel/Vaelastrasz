@@ -24,5 +24,10 @@ namespace Vaelastrasz.Library.Models.DataCite
         [JsonProperty("valueUri")]
         [XmlElement("valueUri")]
         public string ValueUri { get; set; }
+
+        public DataCiteSubject()
+        {
+            
+        }
     }
 }

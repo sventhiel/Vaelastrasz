@@ -33,5 +33,10 @@ namespace Vaelastrasz.Library.Models.DataCite
         [JsonProperty("schemeType")]
         [XmlElement("schemeType")]
         public string SchemeType { get; set; }
+
+        public DataCiteRelatedIdentifier()
+        {
+            
+        }
     }
 }
