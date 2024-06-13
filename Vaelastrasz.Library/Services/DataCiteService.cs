@@ -11,13 +11,18 @@ namespace Vaelastrasz.Library.Services
 {
     public class DataCiteService
     {
-        private static readonly HttpClient client = new HttpClient();
+        private HttpClient _client;
         private readonly Configuration _config;
 
         public DataCiteService(Configuration config)
         {
             _config = config;
-            client.DefaultRequestHeaders.Add("Authorization", _config.GetBasicAuthorizationHeader());
+            _client = new HttpClient();
+
+            if (_client.DefaultRequestHeaders.Contains("Authorization"))
+                _client.DefaultRequestHeaders.Remove("Authorization");
+
+            _client.DefaultRequestHeaders.Add("Authorization", _config.GetBasicAuthorizationHeader());
         }
 
         public async Task<ReadDataCiteModel> CreateAsync(CreateDataCiteModel model)
@@ -25,7 +30,7 @@ namespace Vaelastrasz.Library.Services
             try
             {
                 var v = JsonConvert.SerializeObject(model);
-                HttpResponseMessage response = await client.PostAsync($"{_config.Host}/api/datacite", new StringContent(v, Encoding.UTF8, "application/json"));
+                HttpResponseMessage response = await _client.PostAsync($"{_config.Host}/api/datacite", new StringContent(v, Encoding.UTF8, "application/json"));
 
                 if (response.StatusCode != System.Net.HttpStatusCode.OK)
                     return null;
@@ -42,7 +47,7 @@ namespace Vaelastrasz.Library.Services
         {
             try
             {
-                HttpResponseMessage response = await client.DeleteAsync($"{_config.Host}/api/datacite/{doi}");
+                HttpResponseMessage response = await _client.DeleteAsync($"{_config.Host}/api/datacite/{doi}");
 
                 if (response.StatusCode != System.Net.HttpStatusCode.NoContent)
                     return false;
@@ -59,7 +64,7 @@ namespace Vaelastrasz.Library.Services
         {
             try
             {
-                HttpResponseMessage response = await client.GetAsync($"{_config.Host}/api/datacite/");
+                HttpResponseMessage response = await _client.GetAsync($"{_config.Host}/api/datacite/");
 
                 if (response.StatusCode != System.Net.HttpStatusCode.OK)
                     return null;
@@ -76,7 +81,7 @@ namespace Vaelastrasz.Library.Services
         {
             try
             {
-                HttpResponseMessage response = await client.GetAsync($"{_config.Host}/api/datacite/{doi}");
+                HttpResponseMessage response = await _client.GetAsync($"{_config.Host}/api/datacite/{doi}");
 
                 if (response.StatusCode != System.Net.HttpStatusCode.OK)
                     return null;
@@ -93,7 +98,7 @@ namespace Vaelastrasz.Library.Services
         {
             try
             {
-                HttpResponseMessage response = await client.PutAsync($"{_config.Host}/api/datacite/{doi}", new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json"));
+                HttpResponseMessage response = await _client.PutAsync($"{_config.Host}/api/datacite/{doi}", new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json"));
 
                 if (response.StatusCode != System.Net.HttpStatusCode.OK)
                     return null;

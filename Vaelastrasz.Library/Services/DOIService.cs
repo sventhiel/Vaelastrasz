@@ -11,13 +11,18 @@ namespace Vaelastrasz.Library.Services
 {
     public class DOIService
     {
-        private static readonly HttpClient client = new HttpClient();
+        private HttpClient _client;
         private readonly Configuration _config;
 
         public DOIService(Configuration config)
         {
             _config = config;
-            client.DefaultRequestHeaders.Add("Authorization", _config.GetBasicAuthorizationHeader());
+            _client = new HttpClient();
+
+            if (_client.DefaultRequestHeaders.Contains("Authorization"))
+                _client.DefaultRequestHeaders.Remove("Authorization");
+
+            _client.DefaultRequestHeaders.Add("Authorization", _config.GetBasicAuthorizationHeader());
         }
 
         public async Task<ReadDOIModel> CreateAsync(CreateDOIModel model)
@@ -25,7 +30,7 @@ namespace Vaelastrasz.Library.Services
             try
             {
                 var v = JsonConvert.SerializeObject(model);
-                HttpResponseMessage response = await client.PostAsync($"{_config.Host}/api/dois", new StringContent(v, Encoding.UTF8, "application/json"));
+                HttpResponseMessage response = await _client.PostAsync($"{_config.Host}/api/dois", new StringContent(v, Encoding.UTF8, "application/json"));
 
                 if (response.StatusCode != System.Net.HttpStatusCode.OK)
                     return null;
@@ -42,7 +47,7 @@ namespace Vaelastrasz.Library.Services
         {
             try
             {
-                HttpResponseMessage response = await client.DeleteAsync($"{_config.Host}/api/dois/{id}");
+                HttpResponseMessage response = await _client.DeleteAsync($"{_config.Host}/api/dois/{id}");
 
                 if (response.StatusCode != System.Net.HttpStatusCode.NoContent)
                     return false;
@@ -69,12 +74,12 @@ namespace Vaelastrasz.Library.Services
         {
             try
             {
-                var response_prefix = await client.GetAsync($"{_config.Host}/api/prefixes");
-                var response_suffix = await client.PostAsync($"{_config.Host}/api/suffixes", new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json"));
+                var response_prefix = await _client.GetAsync($"{_config.Host}/api/prefixes");
+                var response_suffix = await _client.PostAsync($"{_config.Host}/api/suffixes", new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json"));
 
                 if (response_prefix.IsSuccessStatusCode && response_suffix.IsSuccessStatusCode)
                 {
-                    return $"{response_prefix.Content}/{response_suffix.Content}";
+                    return $"{await response_prefix.Content.ReadAsStringAsync()}/{await response_suffix.Content.ReadAsStringAsync()}";
                 }
 
                 return null;
