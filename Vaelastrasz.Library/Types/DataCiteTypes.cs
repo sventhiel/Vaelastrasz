@@ -336,7 +336,13 @@ namespace Vaelastrasz.Library.Types
         IsObsoletedBy = 33,
 
         [EnumMember(Value = "Obsoletes")]
-        Obsoletes = 34
+        Obsoletes = 34,
+
+        [EnumMember(Value = "IsCollectedBy")]
+        IsCollectedBy = 35,
+
+        [EnumMember(Value = "Collects")]
+        Collects = 36
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
@@ -378,50 +384,56 @@ namespace Vaelastrasz.Library.Types
         [EnumMember(Value = "Image")]
         Image = 12,
 
+        [EnumMember(Value = "Instrument")]
+        Instrument = 13,
+
         [EnumMember(Value = "InteractiveResource")]
-        InteractiveResource = 13,
+        InteractiveResource = 14,
 
         [EnumMember(Value = "JournalArticle")]
-        JournalArticle = 14,
+        JournalArticle = 15,
 
         [EnumMember(Value = "Model")]
-        Model = 15,
+        Model = 16,
 
         [EnumMember(Value = "OutputManagementPlan")]
-        OutputManagementPlan = 16,
+        OutputManagementPlan = 17,
 
         [EnumMember(Value = "PeerReview")]
-        PeerReview = 17,
+        PeerReview = 18,
 
         [EnumMember(Value = "PhysicalObject")]
-        PhysicalObject = 18,
+        PhysicalObject = 19,
 
         [EnumMember(Value = "Preprint")]
-        Preprint = 19,
+        Preprint = 20,
 
         [EnumMember(Value = "Report")]
-        Report = 20,
+        Report = 21,
 
         [EnumMember(Value = "Service")]
-        Service = 21,
+        Service = 22,
 
         [EnumMember(Value = "Software")]
-        Software = 22,
+        Software = 23,
 
         [EnumMember(Value = "Sound")]
-        Sound = 23,
+        Sound = 24,
 
         [EnumMember(Value = "Standard")]
-        Standard = 24,
+        Standard = 25,
+
+        [EnumMember(Value = "StudyRegistration")]
+        StudyRegistration = 26,
 
         [EnumMember(Value = "Text")]
-        Text = 25,
+        Text = 27,
 
         [EnumMember(Value = "Workflow")]
-        Workflow = 26,
+        Workflow = 28,
 
         [EnumMember(Value = "Other")]
-        Other = 27
+        Other = 29
     }
 
     [JsonConverter(typeof(StringEnumConverter))]

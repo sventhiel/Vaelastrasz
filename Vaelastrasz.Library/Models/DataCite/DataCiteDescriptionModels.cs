@@ -9,15 +9,13 @@ namespace Vaelastrasz.Library.Models.DataCite
         public DataCiteDescription()
         { }
 
-        public DataCiteDescription(string description, string lang = null, DataCiteDescriptionType? descriptionType = null)
+        public DataCiteDescription(string description, string lang = null, DataCiteDescriptionType descriptionType = DataCiteDescriptionType.Other)
         {
             Description = description;
+            DescriptionType = descriptionType;
 
             if (lang != null)
                 Language = lang;
-
-            if (descriptionType != null)
-                DescriptionType = descriptionType;
         }
 
         [JsonProperty("description")]

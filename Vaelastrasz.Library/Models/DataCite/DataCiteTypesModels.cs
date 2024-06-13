@@ -20,7 +20,7 @@ namespace Vaelastrasz.Library.Models.DataCite
 
         [JsonProperty("resourceTypeGeneral")]
         [XmlElement("resourceTypeGeneral")]
-        public DataCiteResourceTypeGeneral? ResourceTypeGeneral { get; set; }
+        public DataCiteResourceTypeGeneral ResourceTypeGeneral { get; set; }
 
         [JsonProperty("ris")]
         [XmlElement("ris")]
@@ -30,12 +30,11 @@ namespace Vaelastrasz.Library.Models.DataCite
         [XmlElement("schemaOrg")]
         public string SchemaOrg { get; set; }
 
-        public DataCiteTypes(DataCiteResourceTypeGeneral? resourceTypeGeneral, string resourceType, string schemaOrg, string bibtex, string citeproc, string ris) 
+        public DataCiteTypes(string resourceType, string schemaOrg, string bibtex, string citeproc, string ris, DataCiteResourceTypeGeneral resourceTypeGeneral = DataCiteResourceTypeGeneral.Other) 
         {
-            if(resourceTypeGeneral != null)
-                ResourceTypeGeneral = resourceTypeGeneral;
-            
-            if(!string.IsNullOrEmpty(resourceType))
+            ResourceTypeGeneral = resourceTypeGeneral;
+
+            if (!string.IsNullOrEmpty(resourceType))
                 ResourceType = resourceType;
             
             if(!string.IsNullOrEmpty(schemaOrg))
@@ -49,6 +48,11 @@ namespace Vaelastrasz.Library.Models.DataCite
 
             if (!string.IsNullOrEmpty(ris))
                 Ris = ris;
+        }
+
+        public DataCiteTypes()
+        {
+            
         }
     }
 }

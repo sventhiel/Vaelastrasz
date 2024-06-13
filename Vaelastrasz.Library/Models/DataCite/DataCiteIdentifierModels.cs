@@ -12,5 +12,10 @@ namespace Vaelastrasz.Library.Models.DataCite
         [JsonProperty("identifierType")]
         [XmlElement("identifierType")]
         public string IdentifierType { get; set; }
+
+        public DataCiteIdentifier()
+        {
+            
+        }
     }
 }

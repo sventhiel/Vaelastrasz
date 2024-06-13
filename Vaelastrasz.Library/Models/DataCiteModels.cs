@@ -72,7 +72,7 @@ namespace Vaelastrasz.Library.Models
 
         [JsonProperty("publisher")]
         [XmlElement("publisher")]
-        public string Publisher { get; set; }
+        public DataCitePublisher Publisher { get; set; }
 
         [JsonProperty("relatedIdentifiers")]
         [XmlElement("relatedIdentifiers")]
@@ -123,7 +123,7 @@ namespace Vaelastrasz.Library.Models
         [JsonProperty("type")]
         [Required]
         [XmlElement("type")]
-        public DataCiteType? Type { get; set; }
+        public DataCiteType Type { get; set; }
     }
 
     public class CreateDataCiteModel

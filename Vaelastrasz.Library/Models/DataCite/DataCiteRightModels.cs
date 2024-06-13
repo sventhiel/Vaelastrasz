@@ -28,5 +28,10 @@ namespace Vaelastrasz.Library.Models.DataCite
         [JsonProperty("schemeUri")]
         [XmlElement("schemeUri")]
         public string SchemeUri { get; set; }
+
+        public DataCiteRight()
+        {
+            
+        }
     }
 }
