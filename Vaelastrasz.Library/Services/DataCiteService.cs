@@ -32,7 +32,7 @@ namespace Vaelastrasz.Library.Services
                 var v = JsonConvert.SerializeObject(model);
                 HttpResponseMessage response = await _client.PostAsync($"{_config.Host}/api/datacite", new StringContent(v, Encoding.UTF8, "application/json"));
 
-                if (response.StatusCode != System.Net.HttpStatusCode.OK)
+                if (response.StatusCode != System.Net.HttpStatusCode.Created)
                     return null;
 
                 return JsonConvert.DeserializeObject<ReadDataCiteModel>(await response.Content.ReadAsStringAsync());
