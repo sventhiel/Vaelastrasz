@@ -25,52 +25,62 @@ namespace Vaelastrasz.Library.Services
             _client.DefaultRequestHeaders.Add("Authorization", _config.GetBasicAuthorizationHeader());
         }
 
-        public async Task<ReadDOIModel> CreateAsync(CreateDOIModel model)
+        public async Task<ApiResponse<ReadDOIModel>> CreateAsync(CreateDOIModel model)
         {
             try
             {
                 var v = JsonConvert.SerializeObject(model);
                 HttpResponseMessage response = await _client.PostAsync($"{_config.Host}/api/dois", new StringContent(v, Encoding.UTF8, "application/json"));
 
-                if (response.StatusCode != System.Net.HttpStatusCode.OK)
-                    return null;
-
-                return JsonConvert.DeserializeObject<ReadDOIModel>(await response.Content.ReadAsStringAsync());
+                if (response.IsSuccessStatusCode)
+                {
+                    return ApiResponse<ReadDOIModel>.Success(JsonConvert.DeserializeObject<ReadDOIModel>(await response.Content.ReadAsStringAsync()));
+                }
+                else
+                {
+                    string errorResponse = await response.Content.ReadAsStringAsync();
+                    return ApiResponse<ReadDOIModel>.Failure($"Error: {response.StatusCode}. {errorResponse}");
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                return ApiResponse<ReadDOIModel>.Failure($"Exception: {ex.Message}");
             }
         }
 
-        public async Task<bool> DeleteByIdAsync(long id)
+        public async Task<ApiResponse<bool>> DeleteByIdAsync(long id)
         {
             try
             {
                 HttpResponseMessage response = await _client.DeleteAsync($"{_config.Host}/api/dois/{id}");
 
-                if (response.StatusCode != System.Net.HttpStatusCode.NoContent)
-                    return false;
-
-                return true;
+                if (response.IsSuccessStatusCode)
+                {
+                    return ApiResponse<bool>.Success(true);
+                }
+                else
+                {
+                    string errorResponse = await response.Content.ReadAsStringAsync();
+                    return ApiResponse<bool>.Failure($"Error: {response.StatusCode}. {errorResponse}");
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                return ApiResponse<bool>.Failure($"Exception: {ex.Message}");
             }
         }
 
-        public async Task<List<ReadDOIModel>> Find()
+        public async Task<ApiResponse<List<ReadDOIModel>>> Find()
         {
             return null;
         }
 
-        public async Task<ReadDOIModel> FindById(long id)
+        public async Task<ApiResponse<ReadDOIModel>> FindById(long id)
         {
             return null;
         }
 
-        public async Task<string> GenerateAsync(CreateSuffixModel model)
+        public async Task<ApiResponse<string>> GenerateAsync(CreateSuffixModel model)
         {
             try
             {
@@ -79,18 +89,30 @@ namespace Vaelastrasz.Library.Services
 
                 if (response_prefix.IsSuccessStatusCode && response_suffix.IsSuccessStatusCode)
                 {
-                    return $"{await response_prefix.Content.ReadAsStringAsync()}/{await response_suffix.Content.ReadAsStringAsync()}";
+                    return ApiResponse<string>.Success($"{await response_prefix.Content.ReadAsStringAsync()}/{ await response_suffix.Content.ReadAsStringAsync()}");
                 }
+                else
+                {
+                    if(!response_prefix.IsSuccessStatusCode)
+                    {
+                        string errorResponse_prefix = await response_prefix.Content.ReadAsStringAsync();
+                        return ApiResponse<string>.Failure($"Error: {response_prefix.StatusCode}. {errorResponse_prefix}");
+                    }
+                    else
+                    {
+                        string errorResponse_suffix = await response_suffix.Content.ReadAsStringAsync();
+                        return ApiResponse<string>.Failure($"Error: {response_suffix.StatusCode}. {errorResponse_suffix}");
+                    }
 
-                return null;
+                }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return null;
+                return ApiResponse<string>.Failure($"Exception: {ex.Message}");
             }
         }
 
-        public async Task<ReadDOIModel> UpdateAsync(long id, UpdateDOIModel model)
+        public async Task<ApiResponse<ReadDOIModel>> UpdateAsync(long id, UpdateDOIModel model)
         {
             return null;
         }

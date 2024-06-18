@@ -12,6 +12,8 @@ namespace Vaelastrasz.Library.Models.DataCite
         {
             Affiliations = new List<DataCiteAffiliation>();
             NameIdentifiers = new List<DataCiteNameIdentifier>();
+
+            NameType = DataCiteNameType.Personal;
         }
 
         public DataCiteCreator(string name, DataCiteNameType type)

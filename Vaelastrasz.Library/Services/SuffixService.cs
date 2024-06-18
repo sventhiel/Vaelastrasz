@@ -24,20 +24,25 @@ namespace Vaelastrasz.Library.Services
             _client.DefaultRequestHeaders.Add("Authorization", _config.GetBasicAuthorizationHeader());
         }
 
-        public async Task<string> CreateAsync(CreateSuffixModel model)
+        public async Task<ApiResponse<string>> CreateAsync(CreateSuffixModel model)
         {
             try
             {
                 HttpResponseMessage response = await _client.PostAsync($"{_config.Host}/api/suffixes", new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json"));
 
-                if (response.StatusCode != System.Net.HttpStatusCode.OK)
-                    return null;
-
-                return JsonConvert.DeserializeObject<string>(await response.Content.ReadAsStringAsync());
+                if (response.IsSuccessStatusCode)
+                {
+                    return ApiResponse<string>.Success(await response.Content.ReadAsStringAsync());
+                }
+                else
+                {
+                    string errorResponse = await response.Content.ReadAsStringAsync();
+                    return ApiResponse<string>.Failure($"Error: {response.StatusCode}. {errorResponse}");
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                return ApiResponse<string>.Failure($"Exception: {ex.Message}");
             }
         }
     }
