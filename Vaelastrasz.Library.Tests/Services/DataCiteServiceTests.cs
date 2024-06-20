@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Vaelastrasz.Library.Configurations;
+using Vaelastrasz.Library.Extensions;
 using Vaelastrasz.Library.Models;
 using Vaelastrasz.Library.Services;
 
@@ -38,9 +39,17 @@ namespace Vaelastrasz.Library.Tests.Services
         [Test]
         public async Task Test3()
         {
-            string text = File.ReadAllText(@"C:/Projects/github.com/sventhiel/Vaelastrasz/Vaelastrasz.Server/Examples/doi_001.json");
-            var data = JsonConvert.DeserializeObject<CreateDataCiteModel>(text);
-            var data2 = new StringContent(JsonConvert.SerializeObject(data));
+            //string text = File.ReadAllText(@"C:/Projects/github.com/sventhiel/Vaelastrasz/Vaelastrasz.Server/Examples/doi_001.json");
+
+            var model = new CreateDataCiteModel();
+            model.AddCreator("Sven", "Thiel");
+            model.AddTitle("Test", "English", Types.DataCiteTitleType.Subtitle);
+
+
+            var config = new Configuration("bexis2test", "bexis2test", "http://localhost:5041");
+            var dataCiteService = new DataCiteService(config);
+
+            dataCiteService.CreateAsync(model);
         }
 
         [Test]

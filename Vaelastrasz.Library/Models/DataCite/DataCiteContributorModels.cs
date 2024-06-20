@@ -67,7 +67,7 @@ namespace Vaelastrasz.Library.Models.DataCite
 
         [JsonProperty("lang")]
         [XmlElement("lang")]
-        public string Lang { get; set; }
+        public string Language { get; set; }
 
         [JsonProperty("name")]
         [XmlElement("name")]

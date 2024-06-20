@@ -52,7 +52,7 @@ namespace Vaelastrasz.Library.Models.DataCite
 
         public DataCiteTypes()
         {
-            
+            ResourceTypeGeneral = DataCiteResourceTypeGeneral.Dataset;
         }
     }
 }

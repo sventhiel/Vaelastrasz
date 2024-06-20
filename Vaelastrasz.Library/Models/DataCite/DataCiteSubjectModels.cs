@@ -27,7 +27,7 @@ namespace Vaelastrasz.Library.Models.DataCite
 
         public DataCiteSubject()
         {
-            
+            Language = "en";
         }
     }
 }

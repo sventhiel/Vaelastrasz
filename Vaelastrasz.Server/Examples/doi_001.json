@@ -18,7 +18,7 @@
         {
           "title": "This is a automatic generated doi",
           "lang": "German",
-          "titleType": 1
+          "titleType": "Subtitle"
         }
       ],
       "publisher": "string",

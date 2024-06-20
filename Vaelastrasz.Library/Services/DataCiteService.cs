@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Vaelastrasz.Library.Configurations;
@@ -30,8 +31,8 @@ namespace Vaelastrasz.Library.Services
         {
             try
             {
-                var v = JsonConvert.SerializeObject(model);
-                HttpResponseMessage response = await _client.PostAsync($"{_config.Host}/api/datacite", new StringContent(v, Encoding.UTF8, "application/json"));
+                var json = JsonConvert.SerializeObject(model);
+                HttpResponseMessage response = await _client.PostAsync($"{_config.Host}/api/datacite", new StringContent(json, Encoding.UTF8, "application/json"));
 
                 if (response.IsSuccessStatusCode)
                 {

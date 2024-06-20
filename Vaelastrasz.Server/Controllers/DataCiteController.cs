@@ -147,7 +147,7 @@ namespace Vaelastrasz.Server.Controllers
 
                 var response = client.Execute(request);
 
-                if (response.StatusCode != System.Net.HttpStatusCode.OK || response.Content == null)
+                if (response.IsSuccessStatusCode || response.Content == null)
                     return BadRequest();
 
                 return Ok(JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content));
@@ -192,9 +192,9 @@ namespace Vaelastrasz.Server.Controllers
 
                 var response = client.Execute(request);
 
-                if (response.StatusCode == System.Net.HttpStatusCode.OK && response.Content != null)
+                if (response.IsSuccessStatusCode && response.Content != null)
                 {
-                    var result = System.Text.Json.JsonSerializer.Deserialize<ReadDataCiteModel>(response.Content);
+                    var result = JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content);
 
                     var prefix = result.Data.Attributes.Doi.Split('/')[0];
                     var suffix = result.Data.Attributes.Doi.Split('/')[1];

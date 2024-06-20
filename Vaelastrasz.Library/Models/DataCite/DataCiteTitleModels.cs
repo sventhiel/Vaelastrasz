@@ -7,16 +7,14 @@ namespace Vaelastrasz.Library.Models.DataCite
     public class DataCiteTitle
     {
         public DataCiteTitle()
-        { }
+        {
+        }
 
-        public DataCiteTitle(string title, string lang = null, DataCiteTitleType titleType = DataCiteTitleType.Other)
+        public DataCiteTitle(string title, string lang, DataCiteTitleType titleType)
         {
             Title = title;
             TitleType = titleType;
-
-
-            if (lang != null)
-                Language = lang;
+            Language = lang;
         }
 
         [JsonProperty("lang")]

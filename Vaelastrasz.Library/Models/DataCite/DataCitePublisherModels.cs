@@ -30,7 +30,7 @@ namespace Vaelastrasz.Library.Models.DataCite
 
         public DataCitePublisher()
         {
-
+            Language = "en";
         }
     }
 }
