@@ -9,6 +9,7 @@ using Serilog;
 using Serilog.Extensions.Logging;
 using System.Text;
 using System.Text.Json.Serialization;
+using Vaelastrasz.Library.Models;
 using Vaelastrasz.Server.Authentication;
 using Vaelastrasz.Server.Configurations;
 using Vaelastrasz.Server.Filters;
@@ -115,9 +116,7 @@ builder.Services.AddAuthentication(options =>
         };
     });
 
-//builder.Services.AddControllers();
-
-builder.Services.AddControllers().AddJsonOptions(o =>
+builder.Services.AddControllers().AddNewtonsoftJson().AddJsonOptions(o =>
 {
     o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
