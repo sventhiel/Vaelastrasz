@@ -21,7 +21,9 @@
           "titleType": "Subtitle"
         }
       ],
-      "publisher": "string",
+      "publisher": {
+        "name": "string"
+      },
       "publicationYear": 2023,
       "url": "https://google.de"
     }

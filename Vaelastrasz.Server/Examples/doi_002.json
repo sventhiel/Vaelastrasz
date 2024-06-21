@@ -14,7 +14,9 @@
           "title": "DataCite Metadata Schema Documentation for the Publication and Citation of Research Data v4.0"
         }
       ],
-      "publisher": "DataCite e.V.",
+      "publisher": {
+        "name": "string"
+      },
       "publicationYear": 2016,
       "types": {
         "resourceTypeGeneral": "Text"

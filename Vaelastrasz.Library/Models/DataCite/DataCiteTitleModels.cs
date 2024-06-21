@@ -8,6 +8,7 @@ namespace Vaelastrasz.Library.Models.DataCite
     {
         public DataCiteTitle()
         {
+            TitleType = DataCiteTitleType.Other;
         }
 
         public DataCiteTitle(string title, string lang, DataCiteTitleType titleType)

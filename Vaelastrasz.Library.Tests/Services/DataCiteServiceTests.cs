@@ -49,7 +49,7 @@ namespace Vaelastrasz.Library.Tests.Services
             var config = new Configuration("bexis2test", "bexis2test", "http://localhost:5041");
             var dataCiteService = new DataCiteService(config);
 
-            dataCiteService.CreateAsync(model);
+            var response = await dataCiteService.CreateAsync(model);
         }
 
         [Test]
