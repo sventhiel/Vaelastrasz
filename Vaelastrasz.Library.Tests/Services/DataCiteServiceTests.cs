@@ -44,7 +44,12 @@ namespace Vaelastrasz.Library.Tests.Services
             var model = new CreateDataCiteModel();
             model.AddCreator("Sven", "Thiel");
             model.AddTitle("Test", "English", Types.DataCiteTitleType.Subtitle);
-
+            model.SetDoi("10.23720/aaaaaaabaasdasd");
+            model.SetEvent(Types.DataCiteEventType.Hide);
+            model.SetPublicationYear(2024);
+            model.SetPublisher("test", "resd", "sdfsdf", "sdfsdf", "English");
+            model.SetUrl("https://google.de");
+            model.SetType(Types.DataCiteType.DOIs);
 
             var config = new Configuration("bexis2test", "bexis2test", "http://localhost:5041");
             var dataCiteService = new DataCiteService(config);
