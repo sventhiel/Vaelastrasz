@@ -1,6 +1,7 @@
 ﻿using NameParser;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Xml.Serialization;
 using Vaelastrasz.Library.Types;
 
@@ -69,6 +70,7 @@ namespace Vaelastrasz.Library.Models.DataCite
         [XmlElement("lang")]
         public string Language { get; set; }
 
+        [Required]
         [JsonProperty("name")]
         [XmlElement("name")]
         public string Name { get; set; }

@@ -6,6 +6,7 @@ using Vaelastrasz.Library.Attributes;
 using Vaelastrasz.Library.Models.DataCite;
 using Vaelastrasz.Library.Types;
 
+
 namespace Vaelastrasz.Library.Models
 {
     #region create
@@ -44,13 +45,13 @@ namespace Vaelastrasz.Library.Models
         [XmlElement("descriptions")]
         public List<DataCiteDescription> Descriptions { get; set; }
 
-        [JsonProperty("doi")]
         [Required]
+        [JsonProperty("doi")]
         [XmlElement("doi")]
         public string Doi { get; set; }
 
-        [JsonProperty("event")]
         [Required]
+        [JsonProperty("event")]
         [XmlElement("event")]
         public DataCiteEventType Event { get; set; }
 
@@ -66,10 +67,12 @@ namespace Vaelastrasz.Library.Models
         [XmlElement("language")]
         public string Language { get; set; }
 
+        [Required]
         [JsonProperty("publicationYear")]
         [XmlElement("publicationYear")]
         public int PublicationYear { get; set; }
 
+        [Required]
         [JsonProperty("publisher")]
         [XmlElement("publisher")]
         public DataCitePublisher Publisher { get; set; }
@@ -95,10 +98,12 @@ namespace Vaelastrasz.Library.Models
         [XmlElement("titles")]
         public List<DataCiteTitle> Titles { get; set; }
 
+        [Required]
         [JsonProperty("types")]
         [XmlElement("types")]
         public DataCiteTypes Types { get; set; }
 
+        [Required]
         [JsonProperty("url")]
         [XmlElement("url")]
         public string URL { get; set; }
@@ -108,6 +113,9 @@ namespace Vaelastrasz.Library.Models
         public string Version { get; set; }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class CreateDataCiteDataModel
     {
         public CreateDataCiteDataModel()
@@ -115,26 +123,32 @@ namespace Vaelastrasz.Library.Models
             Attributes = new CreateDataCiteAttributesModel();
         }
 
-        [JsonProperty("attributes")]
         [Required]
+        [JsonProperty("attributes")]
         [XmlElement("attributes")]
         public CreateDataCiteAttributesModel Attributes { get; set; }
 
-        [JsonProperty("type")]
         [Required]
+        [JsonProperty("type")]
         [XmlElement("type")]
         public DataCiteType Type { get; set; }
     }
 
+    /// <summary>
+    /// This is the general model to create a doi at DataCite.
+    /// </summary>
     public class CreateDataCiteModel
     {
+        /// <summary>
+        /// There is the necessity of the 'data' root node.
+        /// </summary>
         public CreateDataCiteModel()
         {
             Data = new CreateDataCiteDataModel();
         }
 
-        [JsonProperty("data")]
         [Required]
+        [JsonProperty("data")]
         public CreateDataCiteDataModel Data { get; set; }
     }
 

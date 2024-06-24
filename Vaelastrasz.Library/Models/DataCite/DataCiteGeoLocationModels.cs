@@ -4,6 +4,9 @@ using System.Xml.Serialization;
 
 namespace Vaelastrasz.Library.Models.DataCite
 {
+    /// <summary>
+    /// [TODO] Not implemented yet!
+    /// </summary>
     public class DataCiteGeoLocation
     {
         [JsonProperty("geoLocationBox")]
@@ -19,8 +22,6 @@ namespace Vaelastrasz.Library.Models.DataCite
         public Dictionary<string, string> GeoLocationPoint { get; set; }
 
         public DataCiteGeoLocation()
-        {
-            
-        }
+        { }
     }
 }

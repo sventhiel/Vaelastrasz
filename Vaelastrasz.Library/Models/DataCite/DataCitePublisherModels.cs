@@ -3,11 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml.Serialization;
+using System.ComponentModel.DataAnnotations;
 
 namespace Vaelastrasz.Library.Models.DataCite
 {
     public class DataCitePublisher
     {
+        [Required]
         [JsonProperty("name")]
         [XmlElement("name")]
         public string Name { get; set; }
@@ -16,6 +18,7 @@ namespace Vaelastrasz.Library.Models.DataCite
         [XmlElement("publisherIdentifier")]
         public string PublisherIdentifier { get; set; }
 
+        [Required]
         [JsonProperty("publisherIdentifierScheme")]
         [XmlElement("publisherIdentifierScheme")]
         public string PublisherIdentifierScheme { get; set; }
@@ -29,8 +32,6 @@ namespace Vaelastrasz.Library.Models.DataCite
         public string Language { get; set; }
 
         public DataCitePublisher()
-        {
-            Language = "en";
-        }
+        { }
     }
 }

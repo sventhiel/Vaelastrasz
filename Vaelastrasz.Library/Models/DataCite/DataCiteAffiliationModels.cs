@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.Xml.Serialization;
+using System.ComponentModel.DataAnnotations;
 
 namespace Vaelastrasz.Library.Models.DataCite
 {
@@ -9,6 +10,7 @@ namespace Vaelastrasz.Library.Models.DataCite
         [XmlElement("affiliationIdentifier")]
         public string AffiliationIdentifier { get; set; }
 
+        [Required]
         [JsonProperty("affiliationIdentifierScheme")]
         [XmlElement("affiliationIdentifierScheme")]
         public string AffiliationIdentifierScheme { get; set; }
@@ -22,8 +24,6 @@ namespace Vaelastrasz.Library.Models.DataCite
         public string SchemeUri { get; set; }
 
         public DataCiteAffiliation()
-        {
-            
-        }
+        { }
     }
 }

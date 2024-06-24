@@ -1,19 +1,23 @@
 ﻿using Newtonsoft.Json;
 using System.Xml.Serialization;
 using Vaelastrasz.Library.Types;
+using System.ComponentModel.DataAnnotations;
 
 namespace Vaelastrasz.Library.Models.DataCite
 {
     public class DataCiteRelatedIdentifier
     {
+        [Required]
         [JsonProperty("relatedIdentifier")]
         [XmlElement("relatedIdentifier")]
         public string RelatedIdentifier { get; set; }
 
+        [Required]
         [JsonProperty("relatedIdentifierType")]
         [XmlElement("relatedIdentifierType")]
         public DataCiteRelatedIdentifierType RelatedIdentifierType { get; set; }
 
+        [Required]
         [JsonProperty("relationType")]
         [XmlElement("relationType")]
         public DataCiteRelationType RelationType { get; set; }
@@ -35,8 +39,6 @@ namespace Vaelastrasz.Library.Models.DataCite
         public string SchemeType { get; set; }
 
         public DataCiteRelatedIdentifier()
-        {
-            
-        }
+        { }
     }
 }

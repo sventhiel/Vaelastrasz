@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Xml.Serialization;
 using Vaelastrasz.Library.Types;
+using System.ComponentModel.DataAnnotations;
 
 namespace Vaelastrasz.Library.Models.DataCite
 {
@@ -22,24 +23,17 @@ namespace Vaelastrasz.Library.Models.DataCite
         [XmlElement("funderIdentifier")]
         public string FunderIdentifier { get; set; }
 
+        [Required]
         [JsonProperty("funderIdentifierType")]
         [XmlElement("funderIdentifierType")]
         public DataCiteFunderIdentifierType FunderIdentifierType { get; set; }
 
+        [Required]
         [JsonProperty("funderName")]
         [XmlElement("funderName")]
         public string FunderName { get; set; }
 
-        public DataCiteFundingReference(string funderName, string funderIdentifier, DataCiteFunderIdentifierType funderIdentifierType = DataCiteFunderIdentifierType.Other)
-        {
-            FunderName = funderName;
-            FunderName = funderIdentifier;
-            FunderIdentifierType = funderIdentifierType;
-        }
-
         public DataCiteFundingReference()
-        {
-
-        }
+        { }
     }
 }

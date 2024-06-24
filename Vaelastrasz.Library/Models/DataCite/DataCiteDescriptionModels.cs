@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Xml.Serialization;
 using Vaelastrasz.Library.Types;
+using System.ComponentModel.DataAnnotations;
 
 namespace Vaelastrasz.Library.Models.DataCite
 {
@@ -9,22 +10,15 @@ namespace Vaelastrasz.Library.Models.DataCite
         public DataCiteDescription()
         { }
 
-        public DataCiteDescription(string description, string lang = null, DataCiteDescriptionType descriptionType = DataCiteDescriptionType.Other)
-        {
-            Description = description;
-            DescriptionType = descriptionType;
-
-            if (lang != null)
-                Language = lang;
-        }
-
+        [Required]
         [JsonProperty("description")]
         [XmlElement("description")]
         public string Description { get; set; }
 
+        [Required]
         [JsonProperty("descriptionType")]
         [XmlElement("descriptionType")]
-        public DataCiteDescriptionType? DescriptionType { get; set; }
+        public DataCiteDescriptionType DescriptionType { get; set; }
 
         [JsonProperty("lang")]
         [XmlElement("lang")]

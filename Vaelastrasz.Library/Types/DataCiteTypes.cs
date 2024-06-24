@@ -471,4 +471,11 @@ namespace Vaelastrasz.Library.Types
         [EnumMember(Value = "dois")]
         DOIs = 1
     }
+
+    [JsonConverter(typeof(StringEnumConverter))]
+    public enum DataCiteIdentifierType
+    {
+        [EnumMember(Value = "doi")]
+        DOI = 1
+    }
 }

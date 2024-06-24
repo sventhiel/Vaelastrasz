@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 using Vaelastrasz.Library.Types;
+using System.ComponentModel.DataAnnotations;
 
 namespace Vaelastrasz.Library.Models.DataCite
 {
@@ -12,8 +13,6 @@ namespace Vaelastrasz.Library.Models.DataCite
         {
             Affiliations = new List<DataCiteAffiliation>();
             NameIdentifiers = new List<DataCiteNameIdentifier>();
-
-            NameType = DataCiteNameType.Personal;
         }
 
         public DataCiteCreator(string name, DataCiteNameType type)
@@ -65,6 +64,7 @@ namespace Vaelastrasz.Library.Models.DataCite
         [XmlElement("lang")]
         public string Lang { get; set; }
 
+        [Required]
         [JsonProperty("name")]
         [XmlElement("name")]
         public string Name { get; set; }

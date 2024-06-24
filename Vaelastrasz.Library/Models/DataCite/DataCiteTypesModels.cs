@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Xml.Serialization;
 using Vaelastrasz.Library.Types;
+using System.ComponentModel.DataAnnotations;
 
 namespace Vaelastrasz.Library.Models.DataCite
 {
@@ -18,6 +19,7 @@ namespace Vaelastrasz.Library.Models.DataCite
         [XmlElement("resourceType")]
         public string ResourceType { get; set; }
 
+        [Required]
         [JsonProperty("resourceTypeGeneral")]
         [XmlElement("resourceTypeGeneral")]
         public DataCiteResourceTypeGeneral ResourceTypeGeneral { get; set; }
@@ -30,29 +32,7 @@ namespace Vaelastrasz.Library.Models.DataCite
         [XmlElement("schemaOrg")]
         public string SchemaOrg { get; set; }
 
-        public DataCiteTypes(string resourceType, string schemaOrg, string bibtex, string citeproc, string ris, DataCiteResourceTypeGeneral resourceTypeGeneral = DataCiteResourceTypeGeneral.Other) 
-        {
-            ResourceTypeGeneral = resourceTypeGeneral;
-
-            if (!string.IsNullOrEmpty(resourceType))
-                ResourceType = resourceType;
-            
-            if(!string.IsNullOrEmpty(schemaOrg))
-                SchemaOrg = schemaOrg;
-
-            if (!string.IsNullOrEmpty(bibtex))
-                Bibtex = bibtex;
-
-            if (!string.IsNullOrEmpty(citeproc))
-                Citeproc = citeproc;
-
-            if (!string.IsNullOrEmpty(ris))
-                Ris = ris;
-        }
-
         public DataCiteTypes()
-        {
-            ResourceTypeGeneral = DataCiteResourceTypeGeneral.Dataset;
-        }
+        { }
     }
 }

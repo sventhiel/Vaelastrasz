@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.Xml.Serialization;
+using System.ComponentModel.DataAnnotations;
 
 namespace Vaelastrasz.Library.Models.DataCite
 {
@@ -9,6 +10,7 @@ namespace Vaelastrasz.Library.Models.DataCite
         [XmlElement("lang")]
         public string Language { get; set; }
 
+        [Required]
         [JsonProperty("rights")]
         [XmlElement("rights")]
         public string Rights { get; set; }
@@ -30,8 +32,6 @@ namespace Vaelastrasz.Library.Models.DataCite
         public string SchemeUri { get; set; }
 
         public DataCiteRight()
-        {
-            
-        }
+        { }
     }
 }
