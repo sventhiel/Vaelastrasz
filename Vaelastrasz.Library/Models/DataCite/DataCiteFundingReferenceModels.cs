@@ -35,5 +35,15 @@ namespace Vaelastrasz.Library.Models.DataCite
 
         public DataCiteFundingReference()
         { }
+
+        public DataCiteFundingReference(DataCiteFunderIdentifierType funderIdentifierType, string funderName, string awardNumber = null, string awardTitle = null, string awardUri = null, string funderIdentifier = null)
+        {
+            FunderName = funderName;
+            FunderIdentifierType = funderIdentifierType;
+            FunderIdentifier = funderIdentifier;
+            AwardTitle = awardTitle;
+            AwardNumber = awardNumber;
+            AwardUri = awardUri;
+        }
     }
 }

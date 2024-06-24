@@ -11,6 +11,13 @@ namespace Vaelastrasz.Library.Models.DataCite
         {
         }
 
+        public DataCiteTitle(string title, string language, DataCiteTitleType titleType)
+        {
+            Title = title;
+            TitleType = titleType;
+            Language = language;
+        }
+        
         [JsonProperty("lang")]
         [XmlElement("lang")]
         public string Language { get; set; }
@@ -22,6 +29,6 @@ namespace Vaelastrasz.Library.Models.DataCite
 
         [JsonProperty("titleType")]
         [XmlElement("titleType")]
-        public DataCiteTitleType? TitleType { get; set; }
+        public DataCiteTitleType TitleType { get; set; }
     }
 }
