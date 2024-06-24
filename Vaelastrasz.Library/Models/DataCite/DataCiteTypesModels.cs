@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 using System.Xml.Serialization;
 using Vaelastrasz.Library.Types;
-using System.ComponentModel.DataAnnotations;
 
 namespace Vaelastrasz.Library.Models.DataCite
 {
@@ -43,7 +43,6 @@ namespace Vaelastrasz.Library.Models.DataCite
             ResourceType = resourceType;
             Ris = ris;
             SchemaOrg = schemaOrg;
-
         }
     }
 }

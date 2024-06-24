@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
-using System.Xml.Serialization;
 using System.ComponentModel.DataAnnotations;
+using System.Xml.Serialization;
 
 namespace Vaelastrasz.Library.Models.DataCite
 {

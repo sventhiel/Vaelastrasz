@@ -6,7 +6,6 @@ using Vaelastrasz.Library.Attributes;
 using Vaelastrasz.Library.Models.DataCite;
 using Vaelastrasz.Library.Types;
 
-
 namespace Vaelastrasz.Library.Models
 {
     #region create
@@ -114,7 +113,7 @@ namespace Vaelastrasz.Library.Models
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public class CreateDataCiteDataModel
     {

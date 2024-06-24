@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Text;
-
-namespace Vaelastrasz.Library.Models
+﻿namespace Vaelastrasz.Library.Models
 {
     public class ApiResponse<T>
     {

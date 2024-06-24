@@ -206,6 +206,7 @@ namespace Vaelastrasz.Library.Extensions
                 return model;
             }
         }
+
         public static CreateDataCiteModel SetDoi(this CreateDataCiteModel model, string doi)
         {
             try

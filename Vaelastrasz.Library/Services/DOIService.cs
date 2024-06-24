@@ -89,11 +89,11 @@ namespace Vaelastrasz.Library.Services
 
                 if (response_prefix.IsSuccessStatusCode && response_suffix.IsSuccessStatusCode)
                 {
-                    return ApiResponse<string>.Success($"{await response_prefix.Content.ReadAsStringAsync()}/{ await response_suffix.Content.ReadAsStringAsync()}");
+                    return ApiResponse<string>.Success($"{await response_prefix.Content.ReadAsStringAsync()}/{await response_suffix.Content.ReadAsStringAsync()}");
                 }
                 else
                 {
-                    if(!response_prefix.IsSuccessStatusCode)
+                    if (!response_prefix.IsSuccessStatusCode)
                     {
                         string errorResponse_prefix = await response_prefix.Content.ReadAsStringAsync();
                         return ApiResponse<string>.Failure($"Error: {response_prefix.StatusCode}. {errorResponse_prefix}");
@@ -103,7 +103,6 @@ namespace Vaelastrasz.Library.Services
                         string errorResponse_suffix = await response_suffix.Content.ReadAsStringAsync();
                         return ApiResponse<string>.Failure($"Error: {response_suffix.StatusCode}. {errorResponse_suffix}");
                     }
-
                 }
             }
             catch (Exception ex)
