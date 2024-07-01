@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using RestSharp;
 using RestSharp.Authenticators;
+using System.Net;
 using Vaelastrasz.Library.Models;
 using Vaelastrasz.Server.Configurations;
 using Vaelastrasz.Server.Helpers;
@@ -51,15 +52,16 @@ namespace Vaelastrasz.Server.Controllers
 
                 var response = client.Execute(request);
 
-                if (response.StatusCode != System.Net.HttpStatusCode.OK || response.Content == null)
-                    return BadRequest();
+                if (!response.IsSuccessStatusCode)
+                    return StatusCode((int)response.StatusCode, response.ErrorMessage);
 
+                // TODO: Should it return 200?
                 return Ok(JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content));
             }
             catch (Exception ex)
             {
                 // TODO: exception handling
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
             }
         }
 
@@ -72,7 +74,7 @@ namespace Vaelastrasz.Server.Controllers
                 var user = userService.FindByName(User?.Identity?.Name);
 
                 if (user == null)
-                    return Unauthorized(); ;
+                    return Unauthorized();
 
                 if (user.Account == null)
                     return Forbid();
@@ -99,7 +101,7 @@ namespace Vaelastrasz.Server.Controllers
 
                     var response = client.Execute(request);
 
-                    if (response.StatusCode != System.Net.HttpStatusCode.OK || response.Content == null)
+                    if (!response.IsSuccessStatusCode)
                         continue;
 
                     var item = JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content);
@@ -113,7 +115,7 @@ namespace Vaelastrasz.Server.Controllers
             catch (Exception ex)
             {
                 // TODO: exception handling
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
             }
         }
 
@@ -147,15 +149,15 @@ namespace Vaelastrasz.Server.Controllers
 
                 var response = client.Execute(request);
 
-                if (response.IsSuccessStatusCode || response.Content == null)
-                    return BadRequest();
+                if (!response.IsSuccessStatusCode)
+                    return StatusCode((int)response.StatusCode, response.ErrorMessage);
 
                 return Ok(JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content));
             }
             catch (Exception ex)
             {
                 // TODO: exception handling
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
             }
         }
 
@@ -192,24 +194,24 @@ namespace Vaelastrasz.Server.Controllers
 
                 var response = client.Execute(request);
 
-                if (response.IsSuccessStatusCode && response.Content != null)
-                {
-                    var result = JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content);
+                if (!response.IsSuccessStatusCode)
+                    return StatusCode((int)response.StatusCode, response.ErrorMessage);
 
-                    var prefix = result.Data.Attributes.Doi.Split('/')[0];
-                    var suffix = result.Data.Attributes.Doi.Split('/')[1];
-                    var state = result.Data.Attributes.State;
+                var result = JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content);
 
-                    var doiService = new DOIService(_connectionString);
-                    doiService.Create(prefix, suffix, user.Id, (DOIStateType)state);
-                }
+                var prefix = result.Data.Attributes.Doi.Split('/')[0];
+                var suffix = result.Data.Attributes.Doi.Split('/')[1];
+                var state = result.Data.Attributes.State;
 
-                return StatusCode((int)response.StatusCode, response.Content);
+                var doiService = new DOIService(_connectionString);
+                doiService.Create(prefix, suffix, user.Id, (DOIStateType)state);
+
+                return Ok(JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content));
             }
             catch (Exception ex)
             {
                 // TODO: exception handling
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
             }
         }
 
@@ -239,12 +241,15 @@ namespace Vaelastrasz.Server.Controllers
 
                 var response = client.Execute(request);
 
-                return StatusCode((int)response.StatusCode, response.Content);
+                if (!response.IsSuccessStatusCode)
+                    return StatusCode((int)response.StatusCode, response.ErrorMessage);
+
+                return Ok(JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content));
             }
             catch (Exception ex)
             {
                 // TODO: exception handling
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
             }
         }
     }
