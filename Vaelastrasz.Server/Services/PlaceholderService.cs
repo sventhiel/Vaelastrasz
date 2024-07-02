@@ -18,32 +18,51 @@ namespace Vaelastrasz.Server.Services
             Dispose(false);
         }
 
-        public long Create(string expression, string regularExpression, long userId)
+        public long? Create(string expression, string regularExpression, long userId)
         {
-            using var db = new LiteDatabase(_connectionString);
-            var placeholders = db.GetCollection<Placeholder>("placeholders");
-            var users = db.GetCollection<User>("users");
-
-            var placeholder = new Placeholder()
+            try
             {
-                Expression = expression,
-                RegularExpression = regularExpression,
+                using var db = new LiteDatabase(_connectionString);
+                var placeholders = db.GetCollection<Placeholder>("placeholders");
+                var users = db.GetCollection<User>("users");
 
-                User = users.FindById(userId),
+                var user = users.FindById(userId);
 
-                CreationDate = DateTimeOffset.UtcNow,
-                LastUpdateDate = DateTimeOffset.UtcNow
-            };
+                if (user == null)
+                    return null;
 
-            return placeholders.Insert(placeholder);
+                var placeholder = new Placeholder()
+                {
+                    Expression = expression,
+                    RegularExpression = regularExpression,
+                    User = user,
+                    CreationDate = DateTimeOffset.UtcNow,
+                    LastUpdateDate = DateTimeOffset.UtcNow
+                };
+
+                return placeholders.Insert(placeholder);
+            }
+            catch(Exception)
+            {
+                throw;
+            }
+            
         }
 
         public bool Delete(long id)
         {
-            using var db = new LiteDatabase(_connectionString);
-            var col = db.GetCollection<Placeholder>("placeholders");
+            try
+            {
+                using var db = new LiteDatabase(_connectionString);
+                var col = db.GetCollection<Placeholder>("placeholders");
 
-            return col.Delete(id);
+                return col.Delete(id);
+            }
+            catch(Exception)
+            {
+                throw;
+            }
+
         }
 
         public void Dispose()
@@ -54,59 +73,88 @@ namespace Vaelastrasz.Server.Services
 
         public List<Placeholder> Find()
         {
-            List<Placeholder> placeholders = new();
+            try
+            {
+                List<Placeholder> placeholders = new();
 
-            using var db = new LiteDatabase(_connectionString);
-            var col = db.GetCollection<Placeholder>("placeholders");
+                using var db = new LiteDatabase(_connectionString);
+                var col = db.GetCollection<Placeholder>("placeholders");
 
-            placeholders = col.Query().ToList();
+                placeholders = col.Query().ToList();
 
-            return placeholders;
+                return placeholders;
+            }
+            catch(Exception)
+            {
+                throw;
+            }
+
         }
 
         public Placeholder? FindById(long id)
         {
-            using var db = new LiteDatabase(_connectionString);
-            var col = db.GetCollection<Placeholder>("placeholders");
+            try
+            {
+                using var db = new LiteDatabase(_connectionString);
+                var col = db.GetCollection<Placeholder>("placeholders");
 
-            return col.FindById(id);
+                return col.FindById(id);
+            }
+            catch(Exception)
+            {
+                throw;
+            }
+
         }
 
-        public List<Placeholder> FindByUserId(long id)
+        public List<Placeholder> FindByUserId(long userId)
         {
-            List<Placeholder> placeholders = new();
+            try
+            {
+                List<Placeholder> placeholders = new();
 
-            using var db = new LiteDatabase(_connectionString);
-            var col = db.GetCollection<Placeholder>("placeholders");
+                using var db = new LiteDatabase(_connectionString);
+                var col = db.GetCollection<Placeholder>("placeholders");
 
-            placeholders = col.Query().Where(p => p.User.Id == id).ToList();
+                placeholders = col.Query().Where(p => p.User.Id == userId).ToList();
 
-            return placeholders;
+                return placeholders;
+            }
+            catch(Exception)
+            {
+                throw;
+            }
+
         }
 
-        public bool Update(long id, string expression, string regularExpression, long? userId)
+        public bool Update(long id, string expression, string regularExpression, long userId)
         {
-            using var db = new LiteDatabase(_connectionString);
-            var placeholders = db.GetCollection<Placeholder>("placeholders");
-            var users = db.GetCollection<User>("users");
+            try
+            {
+                using var db = new LiteDatabase(_connectionString);
+                var placeholders = db.GetCollection<Placeholder>("placeholders");
+                var users = db.GetCollection<User>("users");
 
-            var placeholder = placeholders.FindById(id);
+                var placeholder = placeholders.FindById(id);
+                if (placeholder == null)
+                    return false;
 
-            if (placeholder == null)
-                return false;
+                var user = users.FindById(userId);
+                if(user == null) 
+                    return false;
 
-            if (!string.IsNullOrEmpty(expression))
                 placeholder.Expression = expression;
-
-            if (!string.IsNullOrEmpty(regularExpression))
                 placeholder.RegularExpression = regularExpression;
+                placeholder.User = user;
+                placeholder.LastUpdateDate = DateTimeOffset.UtcNow;
 
-            if (userId.HasValue)
-                placeholder.User = users.FindById(userId.Value);
+                return placeholders.Update(placeholder);
+            }
+            catch(Exception)
+            {
+                throw;
+            }
 
-            placeholder.LastUpdateDate = DateTimeOffset.UtcNow;
-
-            return placeholders.Update(placeholder);
         }
 
         protected virtual void Dispose(bool disposing)

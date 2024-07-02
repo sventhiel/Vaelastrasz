@@ -1,8 +1,10 @@
-﻿using LiteDB;
+﻿using Exceptionless;
+using LiteDB;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
 using Vaelastrasz.Server.Configurations;
@@ -22,8 +24,8 @@ namespace Vaelastrasz.Server.Controllers
         public TokensController(ILogger<TokensController> logger, IConfiguration configuration, ConnectionString connectionString)
         {
             _connectionString = connectionString;
-            _jwtConfiguration = configuration.GetSection("JWT").Get<JwtConfiguration>();
-            _admins = configuration.GetSection("Admins").Get<List<Admin>>();
+            _jwtConfiguration = configuration.GetSection("JWT").Get<JwtConfiguration>()!;
+            _admins = configuration.GetSection("Admins").Get<List<Admin>>()!;
             _logger = logger;
         }
 
@@ -32,16 +34,21 @@ namespace Vaelastrasz.Server.Controllers
         {
             try
             {
-                if (string.IsNullOrEmpty(_jwtConfiguration.IssuerSigningKey))
-                    return BadRequest();
+                //if (User?.Identity?.Name == null)
+                //    return StatusCode((int)HttpStatusCode.Unauthorized);
 
-                if (User?.Identity?.Name == null)
-                    return BadRequest();
+                //if (string.IsNullOrEmpty(_jwtConfiguration.IssuerSigningKey))
+                //    return StatusCode((int)HttpStatusCode.InternalServerError, );
 
-                var username = User.Identity.Name;
 
-                var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtConfiguration.IssuerSigningKey));
+                // TODO: Null checks might not be necessary due to "try"-"catch" block.
+                var username = User.Identity!.Name;
+                if(username == null)
+                {
+                    return StatusCode((int)HttpStatusCode.InternalServerError);
+                }
 
+                var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtConfiguration.IssuerSigningKey!));
                 var tokenHandler = new JwtSecurityTokenHandler();
 
                 var tokenDescriptor = new SecurityTokenDescriptor()
@@ -66,7 +73,8 @@ namespace Vaelastrasz.Server.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return BadRequest(ex.Message);
+                ex.ToExceptionless().Submit();
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
             }
         }
 

@@ -1,6 +1,8 @@
-﻿using LiteDB;
+﻿using Exceptionless;
+using LiteDB;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 using Vaelastrasz.Library.Models;
 using Vaelastrasz.Server.Configurations;
 using Vaelastrasz.Server.Helpers;
@@ -11,16 +13,16 @@ namespace Vaelastrasz.Server.Controllers
     [ApiController, Authorize(Roles = "user"), Route("api")]
     public class DOIsController : ControllerBase
     {
-        private readonly ILogger<UsersController> _logger;
+        private readonly ILogger<DataCiteController> _logger;
         private List<Admin> _admins;
         private ConnectionString _connectionString;
         private JwtConfiguration _jwtConfiguration;
 
-        public DOIsController(ILogger<UsersController> logger, IConfiguration configuration, ConnectionString connectionString)
+        public DOIsController(ILogger<DataCiteController> logger, IConfiguration configuration, ConnectionString connectionString)
         {
             _connectionString = connectionString;
-            _jwtConfiguration = configuration.GetSection("JWT").Get<JwtConfiguration>();
-            _admins = configuration.GetSection("Admins").Get<List<Admin>>();
+            _jwtConfiguration = configuration.GetSection("JWT").Get<JwtConfiguration>()!;
+            _admins = configuration.GetSection("Admins").Get<List<Admin>>()!;
             _logger = logger;
         }
 
@@ -51,7 +53,7 @@ namespace Vaelastrasz.Server.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return BadRequest(ex.Message);
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
             }
         }
 
@@ -172,7 +174,8 @@ namespace Vaelastrasz.Server.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return BadRequest(ex.Message);
+                ex.ToExceptionless().Submit();
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
             }
         }
     }

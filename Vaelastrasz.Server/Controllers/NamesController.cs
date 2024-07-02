@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NameParser;
+using System.Net;
 
 namespace Vaelastrasz.Server.Controllers
 {
@@ -23,7 +24,7 @@ namespace Vaelastrasz.Server.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return BadRequest(ex.Message);
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
             }
         }
     }

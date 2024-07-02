@@ -15,15 +15,17 @@ namespace Vaelastrasz.Server.Controllers
     [ApiController, Authorize(Roles = "user"), Route("api")]
     public class DataCiteController : ControllerBase
     {
+        private readonly ILogger<DataCiteController> _logger;
         private List<Admin> _admins;
         private ConnectionString _connectionString;
         private JwtConfiguration _jwtConfiguration;
 
-        public DataCiteController(IConfiguration configuration, ConnectionString connectionString)
+        public DataCiteController(ILogger<DataCiteController> logger, IConfiguration configuration, ConnectionString connectionString)
         {
             _connectionString = connectionString;
-            _jwtConfiguration = configuration.GetSection("JWT").Get<JwtConfiguration>();
-            _admins = configuration.GetSection("Admins").Get<List<Admin>>();
+            _jwtConfiguration = configuration.GetSection("JWT").Get<JwtConfiguration>()!;
+            _admins = configuration.GetSection("Admins").Get<List<Admin>>()!;
+            _logger = logger;
         }
 
         [HttpDelete("datacite/{doi}")]
@@ -60,7 +62,7 @@ namespace Vaelastrasz.Server.Controllers
             }
             catch (Exception ex)
             {
-                // TODO: exception handling
+                _logger.LogError(ex, ex.Message);
                 return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
             }
         }
@@ -114,7 +116,7 @@ namespace Vaelastrasz.Server.Controllers
             }
             catch (Exception ex)
             {
-                // TODO: exception handling
+                _logger.LogError(ex, ex.Message);
                 return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
             }
         }
@@ -156,7 +158,7 @@ namespace Vaelastrasz.Server.Controllers
             }
             catch (Exception ex)
             {
-                // TODO: exception handling
+                _logger.LogError(ex, ex.Message);
                 return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
             }
         }
@@ -206,11 +208,17 @@ namespace Vaelastrasz.Server.Controllers
                 var doiService = new DOIService(_connectionString);
                 doiService.Create(prefix, suffix, user.Id, (DOIStateType)state);
 
+                // TODO:    What happens if the creation of the doi within Vaelastrasz is not working?
+                //          In this case, there would be no connection between DataCite and Vaelastrasz at
+                //          the beginning. Maybe it is possible to grab the information later on?
+                //          Or should it abort the whole function and de-register the doi at DataCite?
+                //          BUT what happens, if the DOI is already in state [registered | findable]?
+
                 return Ok(JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content));
             }
             catch (Exception ex)
             {
-                // TODO: exception handling
+                _logger.LogError(ex, ex.Message);
                 return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
             }
         }
@@ -244,11 +252,14 @@ namespace Vaelastrasz.Server.Controllers
                 if (!response.IsSuccessStatusCode)
                     return StatusCode((int)response.StatusCode, response.ErrorMessage);
 
+                var doiService = new DOIService(_connectionString);
+                doiService.Update("", "", 1);
+
                 return Ok(JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content));
             }
             catch (Exception ex)
             {
-                // TODO: exception handling
+                _logger.LogError(ex, ex.Message);
                 return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
             }
         }

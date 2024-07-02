@@ -22,6 +22,7 @@ namespace Vaelastrasz.Library.Models
     {
         public string Prefix { get; set; }
         public string Suffix { get; set; }
+        public DOIStateType State { get; set; } 
     }
 
     public class ReadDOIModel
@@ -32,12 +33,22 @@ namespace Vaelastrasz.Library.Models
         public string Prefix { get; set; }
         public string Suffix { get; set; }
         public long UserId { get; set; }
+
+        public DOIStateType State { get; set; }
     }
 
     public class UpdateDOIModel
     {
-        public string Prefix { get; set; }
-        public string Suffix { get; set; }
+        public DOIStateType State { get; set; }
+
         public long UserId { get; set; }
+
+        public static UpdateDOIModel Convert(UpdateDataCiteModel model, long userId)
+        {
+            return new UpdateDOIModel()
+            {
+
+            };
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using LiteDB;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 using Vaelastrasz.Server.Configurations;
 using Vaelastrasz.Server.Models;
 using Vaelastrasz.Server.Services;
@@ -18,8 +19,8 @@ namespace Vaelastrasz.Server.Controllers
         public PlaceholdersController(ILogger<PlaceholdersController> logger, IConfiguration configuration, ConnectionString connectionString)
         {
             _connectionString = connectionString;
-            _jwtConfiguration = configuration.GetSection("JWT").Get<JwtConfiguration>();
-            _admins = configuration.GetSection("Admins").Get<List<Admin>>();
+            _jwtConfiguration = configuration.GetSection("JWT").Get<JwtConfiguration>()!;
+            _admins = configuration.GetSection("Admins").Get<List<Admin>>()!;
             _logger = logger;
         }
 
@@ -96,8 +97,8 @@ namespace Vaelastrasz.Server.Controllers
             }
             catch (Exception ex)
             {
-                // TODO: exception handling
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                _logger.LogError(ex, ex.Message);
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
             }
         }
 

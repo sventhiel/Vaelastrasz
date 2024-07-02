@@ -131,7 +131,7 @@ namespace Vaelastrasz.Server.Controllers
                 {
                     if (ModelState.IsValid)
                     {
-                        var result = userService.Update(id, model.Name, model.Password, model.Pattern, model.AccountId);
+                        var result = userService.Update(id, model);
                         var user = userService.FindById(id);
 
                         // TODO: This needs to be revised, in order to return proper status and message.

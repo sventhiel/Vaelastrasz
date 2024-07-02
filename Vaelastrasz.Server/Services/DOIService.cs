@@ -19,25 +19,35 @@ namespace Vaelastrasz.Server.Services
             Dispose(false);
         }
 
-        public long Create(string prefix, string suffix, long userId, DOIStateType state = DOIStateType.Draft)
+        public long? Create(string prefix, string suffix, long userId, DOIStateType state = DOIStateType.Draft)
         {
-            using var db = new LiteDatabase(_connectionString);
-            var dois = db.GetCollection<DOI>("dois");
-            var users = db.GetCollection<User>("users");
-
-            var doi = new DOI()
+            try
             {
-                Prefix = prefix,
-                Suffix = suffix,
-                State = state,
-            };
+                using var db = new LiteDatabase(_connectionString);
+                var dois = db.GetCollection<DOI>("dois");
+                var users = db.GetCollection<User>("users");
 
-            if (users.FindById(userId) == null)
-                return 0;
+                var user = users.FindById(userId);
 
-            doi.User = users.FindById(userId);
+                if (user == null)
+                    return null;
 
-            return dois.Insert(doi);
+                var doi = new DOI()
+                {
+                    Prefix = prefix,
+                    Suffix = suffix,
+                    State = state,
+                    User = user,
+                    CreationDate = DateTimeOffset.UtcNow,
+                    LastUpdateDate = DateTimeOffset.UtcNow
+                };
+
+                return dois.Insert(doi);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public bool Delete(long id)
@@ -104,12 +114,12 @@ namespace Vaelastrasz.Server.Services
             using var db = new LiteDatabase(_connectionString);
             var col = db.GetCollection<DOI>("dois");
 
-            var dois = col.Find(d => d.Prefix.Equals(prefix, StringComparison.OrdinalIgnoreCase) && d.Suffix.Equals(suffix, StringComparison.OrdinalIgnoreCase));
+            var dois = col.Include(d => d.User).Find(d => d.Prefix.Equals(prefix, StringComparison.OrdinalIgnoreCase) && d.Suffix.Equals(suffix, StringComparison.OrdinalIgnoreCase));
 
             if (dois.Count() != 1)
                 return null;
 
-            return dois.First();
+            return ReadDOIModel.Convert(dois.First());
         }
 
         public List<DOI> FindBySuffix(string suffix)
@@ -133,19 +143,30 @@ namespace Vaelastrasz.Server.Services
             return col.Find(d => d.User.Id == userId).ToList();
         }
 
-        public bool Update(string prefix, string suffix, long? userId)
+        public bool Update(string prefix, string suffix, UpdateDOIModel model)
         {
-            using var db = new LiteDatabase(_connectionString);
-            var dois = db.GetCollection<DOI>("dois");
-            var users = db.GetCollection<User>("users");
+            try
+            {
+                using var db = new LiteDatabase(_connectionString);
+                var dois = db.GetCollection<DOI>("dois");
+                var users = db.GetCollection<User>("users");
 
-            var doi = FindByPrefixAndSuffix(prefix, suffix);
+                var doi = FindByPrefixAndSuffix(prefix, suffix);
 
-            if (doi == null)
-                return false;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
 
-            if (userId.HasValue)
-                doi.User = users.FindById(userId.Value);
+
+
+            
+
+            doi.State = model.State;
+
+            if (model.UserId > 0)
+                doi.User = users.FindById(model.UserId);
 
             doi.LastUpdateDate = DateTimeOffset.UtcNow;
 

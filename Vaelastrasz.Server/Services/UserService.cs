@@ -1,5 +1,7 @@
 ﻿using LiteDB;
+using Microsoft.Extensions.FileSystemGlobbing.Internal;
 using Vaelastrasz.Server.Entities;
+using Vaelastrasz.Server.Models;
 using Vaelastrasz.Server.Utilities;
 
 namespace Vaelastrasz.Server.Services
@@ -19,27 +21,34 @@ namespace Vaelastrasz.Server.Services
             Dispose(false);
         }
 
-        public long Create(string name, string password, string project, string pattern, long accountId)
+        public long? Create(string name, string password, string project, string pattern, long accountId, bool isActive)
         {
             using var db = new LiteDatabase(_connectionString);
             var users = db.GetCollection<User>("users");
             var accounts = db.GetCollection<Account>("accounts");
 
             if (users.Exists(u => u.Name.Equals(name, StringComparison.OrdinalIgnoreCase)))
-                return 0;
+                return null;
+
+            var account = accounts.FindById(accountId);
+
+            if(account == null)
+                return null;
 
             // salt
             var salt = CryptographyUtils.GetRandomBase64String(16);
 
-            var user = new User()
+            var user = new User
             {
                 Name = name,
                 Salt = salt,
                 Password = CryptographyUtils.GetSHA512HashAsBase64(salt, password),
                 Pattern = pattern,
-                Account = accounts.FindById(accountId),
+                Project = project,
+                IsActive = isActive,
                 CreationDate = DateTime.UtcNow,
-                LastUpdateDate = DateTime.UtcNow
+                LastUpdateDate = DateTime.UtcNow,
+                Account = account
             };
 
             return users.Insert(user);
@@ -67,9 +76,9 @@ namespace Vaelastrasz.Server.Services
 
                 using var db = new LiteDatabase(_connectionString);
                 var col = db.GetCollection<User>("users");
-                users = col.Query().ToList();
+                users = col.Include(u => u.Account).Query().ToList();
 
-                return users;
+                return users.ToList();
             }
             catch (Exception)
             {
@@ -83,8 +92,9 @@ namespace Vaelastrasz.Server.Services
             {
                 using var db = new LiteDatabase(_connectionString);
                 var col = db.GetCollection<User>("users");
+                var user = col.Include(u => u.Account).FindById(id);
 
-                return col.Include(u => u.Account).FindById(id);
+                return user;
             }
             catch (Exception)
             {
@@ -102,7 +112,7 @@ namespace Vaelastrasz.Server.Services
                 using var db = new LiteDatabase(_connectionString);
                 var col = db.GetCollection<User>("users");
 
-                var users = col.Include(u => u.Account).Find(u => u.Name.Equals(name));
+                var users = col.Include(u => u.Account).Find(u => u.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
 
                 if (users.Count() != 1)
                     return null;
@@ -115,36 +125,38 @@ namespace Vaelastrasz.Server.Services
             }
         }
 
-        public bool Update(long id, string name, string password, string pattern, long? accountId)
+        public bool Update(long id, string password, string project, string pattern, long? accountId, bool isActive)
         {
-            using var db = new LiteDatabase(_connectionString);
-            var users = db.GetCollection<User>("users");
-            var accounts = db.GetCollection<Account>("accounts");
-
-            var user = users.Include(u => u.Account).FindById(id);
-
-            if (user == null)
-                return false;
-
-            if (!string.IsNullOrEmpty(name))
-                user.Name = name;
-
-            if (!string.IsNullOrEmpty(pattern))
-                user.Pattern = pattern;
-
-            if (!string.IsNullOrEmpty(password))
+            try
             {
-                var salt = CryptographyUtils.GetRandomBase64String(16);
-                user.Salt = salt;
-                user.Password = CryptographyUtils.GetSHA512HashAsBase64(salt, password);
+                using var db = new LiteDatabase(_connectionString);
+                var users = db.GetCollection<User>("users");
+                var accounts = db.GetCollection<Account>("accounts");
+
+                var user = users.Include(u => u.Account).FindById(id);
+                if (user == null)
+                    return false;
+
+                user.Account = accountId.HasValue ? accounts.FindById(accountId) : null;
+
+                if (!string.IsNullOrEmpty(pattern))
+                    user.Pattern = pattern;
+
+                if (!string.IsNullOrEmpty(password))
+                {
+                    var salt = CryptographyUtils.GetRandomBase64String(16);
+                    user.Salt = salt;
+                    user.Password = CryptographyUtils.GetSHA512HashAsBase64(salt, password);
+                }
+
+                user.LastUpdateDate = DateTimeOffset.UtcNow;
+
+                return users.Update(user);
             }
-
-            if (accountId.HasValue)
-                user.Account = accounts.FindById(accountId.Value);
-
-            user.LastUpdateDate = DateTimeOffset.UtcNow;
-
-            return users.Update(user);
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public bool Verify(string name, string password)

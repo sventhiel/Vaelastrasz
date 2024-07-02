@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Vaelastrasz.Library.Models;
 using Vaelastrasz.Library.Models.DataCite;
 using Vaelastrasz.Library.Types;
@@ -286,5 +287,33 @@ namespace Vaelastrasz.Library.Extensions
         }
 
         #endregion CreateDataCiteModel
+
+        #region ReadDataCiteModel
+
+        public static string GetPrefix(this ReadDataCiteModel model)
+        {
+            try
+            {
+                return model.Data.Attributes.Doi.Split('/')[0];
+            }
+            catch (Exception) 
+            {
+                return "";
+            }
+        }
+
+        public static string GetSuffix(this ReadDataCiteModel model)
+        {
+            try
+            {
+                return model.Data.Attributes.Doi.Split('/')[1];
+            }
+            catch (Exception)
+            {
+                return "";
+            }
+        }
+
+        #endregion
     }
 }
