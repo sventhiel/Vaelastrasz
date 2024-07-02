@@ -1,6 +1,10 @@
-﻿using LiteDB;
+﻿using Exceptionless;
+using LiteDB;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NameParser;
+using RestSharp;
+using System.Net;
 using Vaelastrasz.Server.Configurations;
 using Vaelastrasz.Server.Models;
 using Vaelastrasz.Server.Services;
@@ -18,8 +22,8 @@ namespace Vaelastrasz.Server.Controllers
         public UsersController(ILogger<UsersController> logger, IConfiguration configuration, ConnectionString connectionString)
         {
             _connectionString = connectionString;
-            _jwtConfiguration = configuration.GetSection("JWT").Get<JwtConfiguration>();
-            _admins = configuration.GetSection("Admins").Get<List<Admin>>();
+            _jwtConfiguration = configuration.GetSection("JWT").Get<JwtConfiguration>()!;
+            _admins = configuration.GetSection("Admins").Get<List<Admin>>()!;
             _logger = logger;
         }
 
@@ -30,18 +34,17 @@ namespace Vaelastrasz.Server.Controllers
             {
                 using (var userService = new UserService(_connectionString))
                 {
-                    var result = userService.Delete(id);
+                    var response = userService.Delete(id);
 
-                    if (result)
-                        return Ok($"deletion of user (id:{id}) was successful.");
-
-                    return BadRequest($"something went wrong...");
+                    // Regardless of the return value (true, false), give back the same http status and/or message.
+                    return Ok();
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return BadRequest(ex.Message);
+                ex.ToExceptionless().Submit();
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
             }
         }
 
@@ -52,18 +55,16 @@ namespace Vaelastrasz.Server.Controllers
             {
                 using (var userService = new UserService(_connectionString))
                 {
-                    var result = userService.Find();
+                    var users = userService.Find();
 
-                    if (result == null)
-                        return BadRequest("something went wrong...");
-
-                    return Ok(new List<ReadUserModel>(result.Select(u => ReadUserModel.Convert(u))));
+                    return Ok(new List<ReadUserModel>(users.Select(u => ReadUserModel.Convert(u))));
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return BadRequest(ex.Message);
+                ex.ToExceptionless().Submit();
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
             }
         }
 
@@ -74,18 +75,19 @@ namespace Vaelastrasz.Server.Controllers
             {
                 using (var userService = new UserService(_connectionString))
                 {
-                    var result = userService.FindById(id);
+                    var user = userService.FindById(id);
 
-                    if (result == null)
-                        return BadRequest("something went wrong...");
+                    if (user == null)
+                        return Ok();
 
-                    return Ok(ReadUserModel.Convert(result));
+                    return Ok(ReadUserModel.Convert(user));
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return BadRequest(ex.Message);
+                ex.ToExceptionless().Submit();
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
             }
         }
 
@@ -101,19 +103,22 @@ namespace Vaelastrasz.Server.Controllers
                         var id = userService.Create(model.Name, model.Password, model.Project, model.Pattern, model.AccountId);
                         var user = userService.FindById(id);
 
+                        // TODO: This needs to be revised, in order to return proper status and message.
                         if (user == null)
-                            return BadRequest();
+                            return StatusCode((int)HttpStatusCode.InternalServerError);
 
-                        return Ok(ReadUserModel.Convert(user));
+                        StatusCode((int)HttpStatusCode.Created, ReadUserModel.Convert(user));
                     }
 
-                    return BadRequest();
+                    var errorMessage = string.Join(" | ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage));
+                    return BadRequest(errorMessage);
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return BadRequest(ex.Message);
+                ex.ToExceptionless().Submit();
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
             }
         }
 
@@ -124,26 +129,27 @@ namespace Vaelastrasz.Server.Controllers
             {
                 using (var userService = new UserService(_connectionString))
                 {
-                    var user = userService.FindById(id);
-
-                    if (user == null)
-                        return BadRequest($"something went wrong...");
-
-                    var result = userService.Update(id, model.Name, model.Password, model.Pattern, model.AccountId);
-
-                    if (result)
+                    if (ModelState.IsValid)
                     {
-                        user = userService.FindById(id);
-                        return Ok(user);
+                        var result = userService.Update(id, model.Name, model.Password, model.Pattern, model.AccountId);
+                        var user = userService.FindById(id);
+
+                        // TODO: This needs to be revised, in order to return proper status and message.
+                        if (user == null)
+                            return StatusCode((int)HttpStatusCode.InternalServerError);
+
+                        return Ok(ReadUserModel.Convert(user));
                     }
 
-                    return BadRequest($"something went wrong...");
+                    var errorMessage = string.Join(" | ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage));
+                    return BadRequest(errorMessage);
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return BadRequest(ex.Message);
+                ex.ToExceptionless().Submit();
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
             }
         }
     }
