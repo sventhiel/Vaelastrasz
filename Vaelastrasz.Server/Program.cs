@@ -72,7 +72,7 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddExceptionless(options =>
 {
     options.ServerUrl = "https://idiv-exceptionless.fmi.uni-jena.de";
-    options.ApiKey = "iwkavWY6hTVwQpnv6imSfp6fZJps70YzfIdI3mOI";
+    options.ApiKey = "<api-key>";
     options.IncludeUserName = true;
     options.IncludeIpAddress = true;
     options.SetVersion("v1.0");

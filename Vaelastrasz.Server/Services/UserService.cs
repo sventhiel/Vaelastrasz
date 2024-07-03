@@ -21,42 +21,35 @@ namespace Vaelastrasz.Server.Services
 
         public long Create(string name, string password, string project, string pattern, long accountId, bool isActive)
         {
-            try
+            using var db = new LiteDatabase(_connectionString);
+            var users = db.GetCollection<User>("users");
+            var accounts = db.GetCollection<Account>("accounts");
+
+            if (users.Exists(u => u.Name.Equals(name, StringComparison.OrdinalIgnoreCase)))
+                throw new ArgumentException($"The user (name:{name}) already exists.", nameof(name));
+
+            var account = accounts.FindById(accountId);
+
+            if (account == null)
+                throw new ArgumentException($"The account (id:{accountId}) does not exist.", nameof(accountId));
+
+            // salt
+            var salt = CryptographyUtils.GetRandomBase64String(16);
+
+            var user = new User
             {
-                using var db = new LiteDatabase(_connectionString);
-                var users = db.GetCollection<User>("users");
-                var accounts = db.GetCollection<Account>("accounts");
+                Name = name,
+                Salt = salt,
+                Password = CryptographyUtils.GetSHA512HashAsBase64(salt, password),
+                Pattern = pattern,
+                Project = project,
+                IsActive = isActive,
+                CreationDate = DateTime.UtcNow,
+                LastUpdateDate = DateTime.UtcNow,
+                Account = account
+            };
 
-                if (users.Exists(u => u.Name.Equals(name, StringComparison.OrdinalIgnoreCase)))
-                    throw new ArgumentException($"The user (name:{name}) already exists.", nameof(name));
-
-                var account = accounts.FindById(accountId);
-
-                if (account == null)
-                    throw new ArgumentException($"The account (id:{accountId}) does not exist.", nameof(accountId));
-
-                // salt
-                var salt = CryptographyUtils.GetRandomBase64String(16);
-
-                var user = new User
-                {
-                    Name = name,
-                    Salt = salt,
-                    Password = CryptographyUtils.GetSHA512HashAsBase64(salt, password),
-                    Pattern = pattern,
-                    Project = project,
-                    IsActive = isActive,
-                    CreationDate = DateTime.UtcNow,
-                    LastUpdateDate = DateTime.UtcNow,
-                    Account = account
-                };
-
-                return users.Insert(user);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            return users.Insert(user);
         }
 
         public bool Delete(long id)
