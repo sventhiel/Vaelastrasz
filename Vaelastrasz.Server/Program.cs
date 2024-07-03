@@ -10,6 +10,7 @@ using System.Text.Json.Serialization;
 using Vaelastrasz.Server.Authentication;
 using Vaelastrasz.Server.Configurations;
 using Vaelastrasz.Server.Filters;
+using Vaelastrasz.Server.Middleware;
 
 var configuration = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
@@ -125,6 +126,8 @@ app.UseStaticFiles();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.MapControllers();
 

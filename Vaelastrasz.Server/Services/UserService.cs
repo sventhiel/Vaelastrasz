@@ -34,7 +34,7 @@ namespace Vaelastrasz.Server.Services
                 var account = accounts.FindById(accountId);
 
                 if (account == null)
-                    throw new ResultException($"The account (id:{id}) does not exist.", nameof(id));
+                    throw new ResultException($"The account (id:{accountId} does not exist.", nameof(accountId));
 
                 // salt
                 var salt = CryptographyUtils.GetRandomBase64String(16);
@@ -108,11 +108,8 @@ namespace Vaelastrasz.Server.Services
                 var col = db.GetCollection<User>("users");
                 
                 var user = col.FindById(id);
-                
-                if(user == null)
-                    throw new ResultException($"The user (id:{id}) does not exist.", nameof(id));
 
-                return user;
+                return user ?? throw new ResultException($"The user (id:{id}) does not exist.", nameof(id));
             }
             catch (Exception)
             {

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RestSharp;
 using System.Net;
+using Vaelastrasz.Library.Exceptions;
 using Vaelastrasz.Server.Configurations;
 using Vaelastrasz.Server.Models;
 using Vaelastrasz.Server.Services;
@@ -31,13 +32,10 @@ namespace Vaelastrasz.Server.Controllers
         {
             try
             {
-                using (var userService = new UserService(_connectionString))
-                {
-                    var response = userService.Delete(id);
+                using var userService = new UserService(_connectionString);
+                var response = userService.Delete(id);
 
-                    // Regardless of the return value (true, false), give back the same http status and/or message.
-                    return Ok();
-                }
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -52,12 +50,10 @@ namespace Vaelastrasz.Server.Controllers
         {
             try
             {
-                using (var userService = new UserService(_connectionString))
-                {
-                    var users = userService.Find();
+                using var userService = new UserService(_connectionString);
+                var users = userService.Find();
 
-                    return Ok(new List<ReadUserModel>(users.Select(u => ReadUserModel.Convert(u))));
-                }
+                return Ok(new List<ReadUserModel>(users.Select(u => ReadUserModel.Convert(u))));
             }
             catch (Exception ex)
             {
@@ -70,24 +66,9 @@ namespace Vaelastrasz.Server.Controllers
         [HttpGet("users/{id}")]
         public IActionResult GetById(long id)
         {
-            try
-            {
-                using (var userService = new UserService(_connectionString))
-                {
-                    var user = userService.FindById(id);
-
-                    if (user == null)
-                        return Ok();
-
-                    return Ok(ReadUserModel.Convert(user));
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                ex.ToExceptionless().Submit();
-                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
-            }
+            using var userService = new UserService(_connectionString);
+            var user = userService.FindById(id);
+            return Ok(ReadUserModel.Convert(user));
         }
 
         [HttpPost("users")]
@@ -95,28 +76,17 @@ namespace Vaelastrasz.Server.Controllers
         {
             try
             {
-                using (var userService = new UserService(_connectionString))
+                using var userService = new UserService(_connectionString);
+                
+                if (ModelState.IsValid)
                 {
-                    if (ModelState.IsValid)
-                    {
-                        var id = userService.Create(model.Name, model.Password, model.Project, model.Pattern, model.AccountId, true);
-                        
-                        if(!id.HasValue)
-                            return StatusCode((int)HttpStatusCode.InternalServerError);
-
-
-                        var user = userService.FindById(id.Value);
-
-                        // TODO: This needs to be revised, in order to return proper status and message.
-                        if (user == null)
-                            return StatusCode((int)HttpStatusCode.InternalServerError);
-
-                        StatusCode((int)HttpStatusCode.Created, ReadUserModel.Convert(user));
-                    }
-
-                    var errorMessage = string.Join(" | ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage));
-                    return BadRequest(errorMessage);
+                    var id = userService.Create(model.Name, model.Password, model.Project, model.Pattern, model.AccountId, true);
+                    var user = userService.FindById(id);
+                    return StatusCode((int)HttpStatusCode.Created, ReadUserModel.Convert(user));
                 }
+
+                var errorMessage = string.Join(" | ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage));
+                return BadRequest(errorMessage);
             }
             catch (Exception ex)
             {
@@ -131,23 +101,18 @@ namespace Vaelastrasz.Server.Controllers
         {
             try
             {
-                using (var userService = new UserService(_connectionString))
+                using var userService = new UserService(_connectionString);
+                
+                if (ModelState.IsValid)
                 {
-                    if (ModelState.IsValid)
-                    {
-                        var result = userService.Update(id, model.Password, model.Project, model.Pattern, model.AccountId, model.IsActive);
-                        var user = userService.FindById(id);
+                    var result = userService.Update(id, model.Password, model.Project, model.Pattern, model.AccountId, model.IsActive);
+                    var user = userService.FindById(id);
 
-                        // TODO: This needs to be revised, in order to return proper status and message.
-                        if (user == null)
-                            return StatusCode((int)HttpStatusCode.InternalServerError);
-
-                        return Ok(ReadUserModel.Convert(user));
-                    }
-
-                    var errorMessage = string.Join(" | ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage));
-                    return BadRequest(errorMessage);
+                    return Ok(ReadUserModel.Convert(user));
                 }
+
+                var errorMessage = string.Join(" | ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage));
+                return BadRequest(errorMessage);
             }
             catch (Exception ex)
             {
