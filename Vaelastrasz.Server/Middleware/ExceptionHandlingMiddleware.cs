@@ -1,5 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using Exceptionless;
+using Newtonsoft.Json;
+using Serilog;
+using System;
 using System.Net;
+using Vaelastrasz.Server.Controllers;
 
 namespace Vaelastrasz.Server.Middleware
 {
@@ -20,7 +24,12 @@ namespace Vaelastrasz.Server.Middleware
             }
             catch (Exception ex)
             {
-                await HandleExceptionAsync(context, ex);
+                //Serilog
+                Log.Write(Serilog.Events.LogEventLevel.Error, ex, ex.Message);
+
+                // Exceptionless
+                ex.ToExceptionless().Submit();
+                await HandleExceptionAsync(context, ex.InnerException);
             }
         }
 

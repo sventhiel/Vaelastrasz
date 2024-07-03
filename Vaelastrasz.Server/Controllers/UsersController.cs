@@ -67,27 +67,15 @@ namespace Vaelastrasz.Server.Controllers
         [HttpPut("users/{id}")]
         public IActionResult Put(long id, UpdateUserModel model)
         {
-            try
-            {
-                using var userService = new UserService(_connectionString);
-                
-                if (ModelState.IsValid)
-                {
-                    var result = userService.Update(id, model.Password, model.Project, model.Pattern, model.AccountId, model.IsActive);
-                    var user = userService.FindById(id);
+            using var userService = new UserService(_connectionString);
 
-                    return Ok(ReadUserModel.Convert(user));
-                }
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-                var errorMessage = string.Join(" | ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage));
-                return BadRequest(errorMessage);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                ex.ToExceptionless().Submit();
-                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
-            }
+            var result = userService.Update(id, model.Password, model.Project, model.Pattern, model.AccountId, model.IsActive);
+            var user = userService.FindById(id);
+
+            return Ok(ReadUserModel.Convert(user));
         }
     }
 }
