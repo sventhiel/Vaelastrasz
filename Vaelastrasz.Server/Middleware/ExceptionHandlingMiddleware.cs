@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System.Net;
-using Vaelastrasz.Library.Exceptions;
 
 namespace Vaelastrasz.Server.Middleware
 {
@@ -37,10 +36,18 @@ namespace Vaelastrasz.Server.Middleware
             {
                 code = HttpStatusCode.Unauthorized; // 401
             }
-            else if (exception is ResultException)
-            {
-                code = HttpStatusCode.Forbidden; // 403
-            }
+            //else if (exception is PermissionDeniedException)
+            //{
+            //    code = HttpStatusCode.Forbidden; // 403
+            //}
+            //else if (exception is ResourceNotFoundException)
+            //{
+            //    code = HttpStatusCode.NotFound; // 404
+            //}
+            //else if (exception is ConflictException)
+            //{
+            //    code = HttpStatusCode.Conflict; // 409
+            //}
 
             var result = JsonConvert.SerializeObject(new { error = exception.Message });
             context.Response.ContentType = "application/json";

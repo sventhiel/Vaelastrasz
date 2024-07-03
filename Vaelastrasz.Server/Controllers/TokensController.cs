@@ -34,13 +34,6 @@ namespace Vaelastrasz.Server.Controllers
         {
             try
             {
-                //if (User?.Identity?.Name == null)
-                //    return StatusCode((int)HttpStatusCode.Unauthorized);
-
-                //if (string.IsNullOrEmpty(_jwtConfiguration.IssuerSigningKey))
-                //    return StatusCode((int)HttpStatusCode.InternalServerError, );
-
-                // TODO: Null checks might not be necessary due to "try"-"catch" block.
                 var username = User.Identity!.Name;
                 if (username == null)
                 {

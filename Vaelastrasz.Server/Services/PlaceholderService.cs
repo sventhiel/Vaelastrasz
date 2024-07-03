@@ -1,5 +1,4 @@
 ﻿using LiteDB;
-using Vaelastrasz.Library.Exceptions;
 using Vaelastrasz.Server.Entities;
 
 namespace Vaelastrasz.Server.Services
@@ -30,7 +29,7 @@ namespace Vaelastrasz.Server.Services
                 var user = users.FindById(userId);
 
                 if (user == null)
-                    throw new ResultException($"The user (id:{userId}) does not exist.", nameof(userId));
+                    throw new ArgumentException($"The user (id:{userId}) does not exist.", nameof(userId));
 
                 var placeholder = new Placeholder()
                 {
@@ -95,7 +94,7 @@ namespace Vaelastrasz.Server.Services
                 var placeholder = col.FindById(id);
 
                 if(placeholder == null)
-                    throw new ResultException($"The placeholder (id:{id}) does not exist.", nameof(id));
+                    throw new ArgumentException($"The placeholder (id:{id}) does not exist.", nameof(id));
 
                 return placeholder;
             }
@@ -134,11 +133,11 @@ namespace Vaelastrasz.Server.Services
 
                 var placeholder = placeholders.FindById(id);
                 if (placeholder == null)
-                    throw new ResultException($"The account (id:{id}) does not exist.", nameof(id));
+                    throw new ArgumentException($"The account (id:{id}) does not exist.", nameof(id));
 
                 var user = users.FindById(userId);
                 if (user == null)
-                    throw new ResultException($"The user (id:{userId}) does not exist.", nameof(userId));
+                    throw new ArgumentException($"The user (id:{userId}) does not exist.", nameof(userId));
 
                 placeholder.Expression = expression;
                 placeholder.RegularExpression = regularExpression;

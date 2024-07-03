@@ -1,5 +1,4 @@
 ﻿using LiteDB;
-using Vaelastrasz.Library.Exceptions;
 using Vaelastrasz.Server.Entities;
 
 namespace Vaelastrasz.Server.Services
@@ -92,7 +91,7 @@ namespace Vaelastrasz.Server.Services
                 var account = col.FindById(id);
 
                 if(account == null)
-                    throw new ResultException($"The account (id:{id}) does not exist.", nameof(id));
+                    throw new ArgumentException($"The account (id:{id}) does not exist.", nameof(id));
 
                 return account;
             }
@@ -111,7 +110,7 @@ namespace Vaelastrasz.Server.Services
             var account = accounts.FindById(id);
 
             if (account == null)
-                throw new ResultException($"The account (id:{id}) does not exist.", nameof(id));
+                throw new ArgumentException($"The account (id:{id}) does not exist.", nameof(id));
 
             if (!string.IsNullOrEmpty(name))
                 account.Name = name;

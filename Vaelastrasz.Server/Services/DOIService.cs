@@ -1,6 +1,5 @@
 ﻿using LiteDB;
 using NameParser;
-using Vaelastrasz.Library.Exceptions;
 using Vaelastrasz.Library.Models;
 using Vaelastrasz.Server.Entities;
 
@@ -119,7 +118,7 @@ namespace Vaelastrasz.Server.Services
                 var doi = col.FindById(id);
 
                 if(doi == null)
-                    throw new ResultException($"The doi (id:{id}) does not exist.", nameof(id));
+                    throw new ArgumentException($"The doi (id:{id}) does not exist.", nameof(id));
 
                 return doi;
             }
@@ -162,8 +161,11 @@ namespace Vaelastrasz.Server.Services
 
                 var dois = col.Find(d => d.Prefix.Equals(prefix, StringComparison.OrdinalIgnoreCase) && d.Suffix.Equals(suffix, StringComparison.OrdinalIgnoreCase));
 
-                if (dois.Count() != 1)
-                    throw new ResultException($"There are more/less than one doi.", nameof(dois));
+                if (dois.Count() == 0)
+                    throw new ArgumentException($"The doi (prefix:{prefix}, suffix: {suffix}) does not exist.");
+
+                if (dois.Count() > 1)
+                    throw new Exception($"The doi (prefix:{prefix}, suffix: {suffix}) exists more than once.");
 
                 return dois.Single();
             }
@@ -223,7 +225,7 @@ namespace Vaelastrasz.Server.Services
                 var doi = FindByPrefixAndSuffix(prefix, suffix);
 
                 if (doi == null)
-                    throw new ResultException($"The doi (doi:{prefix}/{suffix}) does not exist.", nameof(doi));
+                    throw new ArgumentException($"The doi (doi:{prefix}/{suffix}) does not exist.", nameof(doi));
 
                 doi.State = state;
                 doi.Value = value;

@@ -1,5 +1,4 @@
 ﻿using LiteDB;
-using Vaelastrasz.Library.Exceptions;
 using Vaelastrasz.Server.Entities;
 using Vaelastrasz.Server.Utilities;
 
@@ -34,7 +33,7 @@ namespace Vaelastrasz.Server.Services
                 var account = accounts.FindById(accountId);
 
                 if (account == null)
-                    throw new ResultException($"The account (id:{accountId} does not exist.", nameof(accountId));
+                    throw new ArgumentException($"The account (id:{accountId}) does not exist.", nameof(accountId));
 
                 // salt
                 var salt = CryptographyUtils.GetRandomBase64String(16);
@@ -109,7 +108,7 @@ namespace Vaelastrasz.Server.Services
                 
                 var user = col.FindById(id);
 
-                return user ?? throw new ResultException($"The user (id:{id}) does not exist.", nameof(id));
+                return user ?? throw new ArgumentException($"The user (id:{id}) does not exist.", nameof(id));
             }
             catch (Exception)
             {
@@ -127,7 +126,7 @@ namespace Vaelastrasz.Server.Services
                 var users = col.Find(u => u.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
 
                 if (users.Count() != 1)
-                    throw new ResultException($"There are more/less than one user.", nameof(users));
+                    throw new ArgumentException($"There are more/less than one user.", nameof(users));
 
                 return users.Single();
             }
@@ -147,11 +146,11 @@ namespace Vaelastrasz.Server.Services
 
                 var user = users.FindById(id);
                 if (user == null)
-                    throw new ResultException($"The user (id:{id}) does not exist.", nameof(id));
+                    throw new ArgumentException($"The user (id:{id}) does not exist.", nameof(id));
 
                 var account = accounts.FindById(accountId);
                 if (account == null)
-                    throw new ResultException($"The account (id:{accountId}) does not exist.", nameof(accountId));
+                    throw new ArgumentException($"The account (id:{accountId}) does not exist.", nameof(accountId));
 
                 var salt = CryptographyUtils.GetRandomBase64String(16);
 
@@ -177,7 +176,7 @@ namespace Vaelastrasz.Server.Services
             var user = users.FindOne(u => u.Name == name);
 
             if (user == null)
-                throw new ResultException($"The user (name:{name}) does not exist.", nameof(name));
+                throw new ArgumentException($"The user (name:{name}) does not exist.", nameof(name));
 
             return (user.Password == CryptographyUtils.GetSHA512HashAsBase64(user.Salt, password));
         }

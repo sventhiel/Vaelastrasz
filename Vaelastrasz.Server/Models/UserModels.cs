@@ -1,10 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Vaelastrasz.Server.Entities;
+using DataAnnotationsExtensions;
 
 namespace Vaelastrasz.Server.Models
 {
     public class CreateUserModel
     {
+        [Required, Min(1)]
         public long AccountId { get; set; }
 
         [Required]

@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RestSharp;
 using System.Net;
-using Vaelastrasz.Library.Exceptions;
 using Vaelastrasz.Server.Configurations;
 using Vaelastrasz.Server.Models;
 using Vaelastrasz.Server.Services;
@@ -30,37 +29,18 @@ namespace Vaelastrasz.Server.Controllers
         [HttpDelete("users/{id}")]
         public IActionResult Delete(long id)
         {
-            try
-            {
-                using var userService = new UserService(_connectionString);
-                var response = userService.Delete(id);
+            using var userService = new UserService(_connectionString);
+            var response = userService.Delete(id);
 
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                ex.ToExceptionless().Submit();
-                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
-            }
+            return Ok(response);
         }
 
         [HttpGet("users")]
         public IActionResult Get()
         {
-            try
-            {
-                using var userService = new UserService(_connectionString);
-                var users = userService.Find();
-
-                return Ok(new List<ReadUserModel>(users.Select(u => ReadUserModel.Convert(u))));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                ex.ToExceptionless().Submit();
-                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
-            }
+            using var userService = new UserService(_connectionString);
+            var users = userService.Find();
+            return Ok(new List<ReadUserModel>(users.Select(u => ReadUserModel.Convert(u))));
         }
 
         [HttpGet("users/{id}")]
@@ -74,26 +54,14 @@ namespace Vaelastrasz.Server.Controllers
         [HttpPost("users")]
         public IActionResult Post(CreateUserModel model)
         {
-            try
-            {
-                using var userService = new UserService(_connectionString);
-                
-                if (ModelState.IsValid)
-                {
-                    var id = userService.Create(model.Name, model.Password, model.Project, model.Pattern, model.AccountId, true);
-                    var user = userService.FindById(id);
-                    return StatusCode((int)HttpStatusCode.Created, ReadUserModel.Convert(user));
-                }
+            using var userService = new UserService(_connectionString);
 
-                var errorMessage = string.Join(" | ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage));
-                return BadRequest(errorMessage);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                ex.ToExceptionless().Submit();
-                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
-            }
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var id = userService.Create(model.Name, model.Password, model.Project, model.Pattern, model.AccountId, true);
+            var user = userService.FindById(id);
+            return StatusCode((int)HttpStatusCode.Created, ReadUserModel.Convert(user));
         }
 
         [HttpPut("users/{id}")]
