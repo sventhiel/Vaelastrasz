@@ -90,9 +90,11 @@ namespace Vaelastrasz.Server.Controllers
                     return Unauthorized();
 
                 using var placeholderService = new PlaceholderService(_connectionString);
-                var id = placeholderService.Create(model.Expression, model.RegularExpression, user.Id);
+                var placeholder = placeholderService.Create(model.Expression, model.RegularExpression, user.Id);
 
-                var placeholder = placeholderService.FindById(id);
+                if (placeholder == null)
+                    return StatusCode((int)HttpStatusCode.InternalServerError);
+                
                 return Ok(placeholder);
             }
             catch (Exception ex)

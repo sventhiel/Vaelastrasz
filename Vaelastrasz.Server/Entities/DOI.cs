@@ -21,6 +21,8 @@ namespace Vaelastrasz.Server.Entities
         [BsonRef("users")]
         public User User { get; set; }
 
+        public string Value { get; set; }
+
         public override string ToString()
         {
             return $"{Prefix}/{Suffix}";

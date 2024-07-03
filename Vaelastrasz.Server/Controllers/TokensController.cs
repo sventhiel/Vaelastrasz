@@ -40,10 +40,9 @@ namespace Vaelastrasz.Server.Controllers
                 //if (string.IsNullOrEmpty(_jwtConfiguration.IssuerSigningKey))
                 //    return StatusCode((int)HttpStatusCode.InternalServerError, );
 
-
                 // TODO: Null checks might not be necessary due to "try"-"catch" block.
                 var username = User.Identity!.Name;
-                if(username == null)
+                if (username == null)
                 {
                     return StatusCode((int)HttpStatusCode.InternalServerError);
                 }

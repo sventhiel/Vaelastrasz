@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using Vaelastrasz.Library.Models;
 using Vaelastrasz.Library.Models.DataCite;
 using Vaelastrasz.Library.Types;
@@ -296,7 +295,7 @@ namespace Vaelastrasz.Library.Extensions
             {
                 return model.Data.Attributes.Doi.Split('/')[0];
             }
-            catch (Exception) 
+            catch (Exception)
             {
                 return "";
             }
@@ -314,6 +313,6 @@ namespace Vaelastrasz.Library.Extensions
             }
         }
 
-        #endregion
+        #endregion ReadDataCiteModel
     }
 }

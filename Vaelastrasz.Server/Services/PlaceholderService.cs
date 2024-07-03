@@ -42,11 +42,10 @@ namespace Vaelastrasz.Server.Services
 
                 return placeholders.Insert(placeholder);
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw;
             }
-            
         }
 
         public bool Delete(long id)
@@ -58,11 +57,10 @@ namespace Vaelastrasz.Server.Services
 
                 return col.Delete(id);
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw;
             }
-
         }
 
         public void Dispose()
@@ -84,11 +82,10 @@ namespace Vaelastrasz.Server.Services
 
                 return placeholders;
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw;
             }
-
         }
 
         public Placeholder? FindById(long id)
@@ -100,11 +97,10 @@ namespace Vaelastrasz.Server.Services
 
                 return col.FindById(id);
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw;
             }
-
         }
 
         public List<Placeholder> FindByUserId(long userId)
@@ -120,11 +116,10 @@ namespace Vaelastrasz.Server.Services
 
                 return placeholders;
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw;
             }
-
         }
 
         public bool Update(long id, string expression, string regularExpression, long userId)
@@ -140,7 +135,7 @@ namespace Vaelastrasz.Server.Services
                     return false;
 
                 var user = users.FindById(userId);
-                if(user == null) 
+                if (user == null)
                     return false;
 
                 placeholder.Expression = expression;
@@ -150,11 +145,10 @@ namespace Vaelastrasz.Server.Services
 
                 return placeholders.Update(placeholder);
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw;
             }
-
         }
 
         protected virtual void Dispose(bool disposing)

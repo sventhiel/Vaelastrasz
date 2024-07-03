@@ -1,4 +1,6 @@
 ﻿using LiteDB;
+using NameParser;
+using Vaelastrasz.Library.Exceptions;
 using Vaelastrasz.Library.Models;
 using Vaelastrasz.Server.Entities;
 
@@ -19,7 +21,7 @@ namespace Vaelastrasz.Server.Services
             Dispose(false);
         }
 
-        public long? Create(string prefix, string suffix, long userId, DOIStateType state = DOIStateType.Draft)
+        public long Create(string prefix, string suffix, DOIStateType state, long userId, string value)
         {
             try
             {
@@ -30,7 +32,7 @@ namespace Vaelastrasz.Server.Services
                 var user = users.FindById(userId);
 
                 if (user == null)
-                    return null;
+                    throw new ArgumentNullException(nameof(user));
 
                 var doi = new DOI()
                 {
@@ -38,6 +40,7 @@ namespace Vaelastrasz.Server.Services
                     Suffix = suffix,
                     State = state,
                     User = user,
+                    Value = value,
                     CreationDate = DateTimeOffset.UtcNow,
                     LastUpdateDate = DateTimeOffset.UtcNow
                 };
@@ -52,10 +55,17 @@ namespace Vaelastrasz.Server.Services
 
         public bool Delete(long id)
         {
-            using var db = new LiteDatabase(_connectionString);
-            var col = db.GetCollection<DOI>("dois");
+            try
+            {
+                using var db = new LiteDatabase(_connectionString);
+                var col = db.GetCollection<DOI>("dois");
 
-            return col.Delete(id);
+                return col.Delete(id);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public void Dispose()
@@ -66,111 +76,180 @@ namespace Vaelastrasz.Server.Services
 
         public List<DOI> Find()
         {
-            using var db = new LiteDatabase(_connectionString);
-            var col = db.GetCollection<DOI>("dois");
+            try
+            {
+                using var db = new LiteDatabase(_connectionString);
+                var col = db.GetCollection<DOI>("dois");
 
-            return col.Query().ToList();
+                return col.FindAll().ToList();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
-        public DOI? FindByDOI(string prefix, string suffix)
+        public DOI FindByDOI(string doi)
         {
-            using var db = new LiteDatabase(_connectionString);
-            var col = db.GetCollection<DOI>("dois");
+            try
+            {
+                if(!doi.Contains('/'))
+                {
+                    throw new ArgumentException($"The value of doi ({doi}) is invalid.", nameof(doi));
+                }
 
-            var dois = col.Find(d => d.Prefix.Equals(prefix, StringComparison.InvariantCultureIgnoreCase) && d.Suffix.Equals(suffix, StringComparison.InvariantCultureIgnoreCase));
+                string prefix = doi.Split('/')[0];
+                string suffix = doi.Split('/')[1];
 
-            if (dois.Count() != 1)
-                return null;
-
-            return dois.First();
+                return FindByPrefixAndSuffix(prefix, suffix);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
-        public DOI? FindById(long id)
+        public DOI FindById(long id)
         {
-            using var db = new LiteDatabase(_connectionString);
-            var col = db.GetCollection<DOI>("dois");
+            try
+            {
+                using var db = new LiteDatabase(_connectionString);
+                var col = db.GetCollection<DOI>("dois");
 
-            return col.FindById(id);
+                return col.FindById(id);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public List<DOI> FindByPrefix(string prefix)
         {
-            var dois = new List<DOI>();
+            try
+            {
+                if (prefix == null)
+                    throw new ArgumentNullException(nameof(prefix));               
 
-            if (prefix == null)
-                return dois;
+                using var db = new LiteDatabase(_connectionString);
+                var col = db.GetCollection<DOI>("dois");
 
-            using var db = new LiteDatabase(_connectionString);
-            var col = db.GetCollection<DOI>("dois");
-
-            return col.Find(d => d.Prefix.Equals(prefix, StringComparison.OrdinalIgnoreCase)).ToList();
+                return col.Find(d => d.Prefix.Equals(prefix, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
-        public DOI? FindByPrefixAndSuffix(string prefix, string suffix)
+        public DOI FindByPrefixAndSuffix(string prefix, string suffix)
         {
-            if (prefix == null || suffix == null)
-                return null;
+            try
+            {
+                if (prefix == null)
+                    throw new ArgumentNullException(nameof(prefix));
 
-            using var db = new LiteDatabase(_connectionString);
-            var col = db.GetCollection<DOI>("dois");
+                if (suffix == null)
+                    throw new ArgumentNullException(nameof(suffix));
 
-            var dois = col.Include(d => d.User).Find(d => d.Prefix.Equals(prefix, StringComparison.OrdinalIgnoreCase) && d.Suffix.Equals(suffix, StringComparison.OrdinalIgnoreCase));
+                using var db = new LiteDatabase(_connectionString);
+                var col = db.GetCollection<DOI>("dois");
 
-            if (dois.Count() != 1)
-                return null;
+                var dois = col.Find(d => d.Prefix.Equals(prefix, StringComparison.OrdinalIgnoreCase) && d.Suffix.Equals(suffix, StringComparison.OrdinalIgnoreCase));
 
-            return ReadDOIModel.Convert(dois.First());
+                if (dois.Count() != 1)
+                    throw new ResultException($"", nameof(dois));
+
+                return dois.Single();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public List<DOI> FindBySuffix(string suffix)
         {
-            var dois = new List<DOI>();
+            try
+            {
+                if (suffix == null)
+                    throw new ArgumentNullException(nameof(suffix));
 
-            if (suffix == null)
-                return dois;
+                using var db = new LiteDatabase(_connectionString);
+                var col = db.GetCollection<DOI>("dois");
 
-            using var db = new LiteDatabase(_connectionString);
-            var col = db.GetCollection<DOI>("dois");
-
-            return col.Find(d => d.Suffix.Equals(suffix, StringComparison.OrdinalIgnoreCase)).ToList();
+                return col.Find(d => d.Suffix.Equals(suffix, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public List<DOI> FindByUserId(long userId)
         {
-            using var db = new LiteDatabase(_connectionString);
-            var col = db.GetCollection<DOI>("dois");
+            try
+            {
+                using var db = new LiteDatabase(_connectionString);
+                var col = db.GetCollection<DOI>("dois");
 
-            return col.Find(d => d.User.Id == userId).ToList();
+                return col.Find(d => d.User.Id == userId).ToList();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
-        public bool Update(string prefix, string suffix, UpdateDOIModel model)
+        public bool Update(string prefix, string suffix, DOIStateType state, string value)
         {
             try
             {
+                if (prefix == null)
+                    throw new ArgumentNullException(nameof(prefix));
+
+                if (suffix == null)
+                    throw new ArgumentNullException(nameof(suffix));
+
                 using var db = new LiteDatabase(_connectionString);
                 var dois = db.GetCollection<DOI>("dois");
                 var users = db.GetCollection<User>("users");
 
                 var doi = FindByPrefixAndSuffix(prefix, suffix);
 
+                if (doi == null)
+                    throw new ResultException($"The doi (doi:{prefix}/{suffix}) does not exist.", nameof(doi));
+
+                doi.State = state;
+                doi.Value = value;
+                doi.LastUpdateDate = DateTimeOffset.UtcNow;
+
+                return dois.Update(doi);
             }
             catch (Exception)
             {
                 throw;
             }
+        }
 
+        public bool Update(string doi, DOIStateType state, string value)
+        {
+            try
+            {
+                if (!doi.Contains('/'))
+                {
+                    throw new ArgumentException($"The value of doi ({doi}) is invalid.", nameof(doi));
+                }
 
+                string prefix = doi.Split('/')[0];
+                string suffix = doi.Split('/')[1];
 
-            
-
-            doi.State = model.State;
-
-            if (model.UserId > 0)
-                doi.User = users.FindById(model.UserId);
-
-            doi.LastUpdateDate = DateTimeOffset.UtcNow;
-
-            return dois.Update(doi);
+                return Update(prefix, suffix, state, value);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         protected virtual void Dispose(bool disposing)

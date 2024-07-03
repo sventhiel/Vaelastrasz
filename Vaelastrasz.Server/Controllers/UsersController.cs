@@ -2,7 +2,6 @@
 using LiteDB;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using NameParser;
 using RestSharp;
 using System.Net;
 using Vaelastrasz.Server.Configurations;
@@ -100,8 +99,13 @@ namespace Vaelastrasz.Server.Controllers
                 {
                     if (ModelState.IsValid)
                     {
-                        var id = userService.Create(model.Name, model.Password, model.Project, model.Pattern, model.AccountId);
-                        var user = userService.FindById(id);
+                        var id = userService.Create(model.Name, model.Password, model.Project, model.Pattern, model.AccountId, true);
+                        
+                        if(!id.HasValue)
+                            return StatusCode((int)HttpStatusCode.InternalServerError);
+
+
+                        var user = userService.FindById(id.Value);
 
                         // TODO: This needs to be revised, in order to return proper status and message.
                         if (user == null)
@@ -131,7 +135,7 @@ namespace Vaelastrasz.Server.Controllers
                 {
                     if (ModelState.IsValid)
                     {
-                        var result = userService.Update(id, model);
+                        var result = userService.Update(id, model.Password, model.Project, model.Pattern, model.AccountId, model.IsActive);
                         var user = userService.FindById(id);
 
                         // TODO: This needs to be revised, in order to return proper status and message.

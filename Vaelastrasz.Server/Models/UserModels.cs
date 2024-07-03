@@ -5,11 +5,14 @@ namespace Vaelastrasz.Server.Models
 {
     public class CreateUserModel
     {
-        public long? AccountId { get; set; }
+        public long AccountId { get; set; }
+
         [Required]
         public string Name { get; set; }
+
         [Required]
         public string Password { get; set; }
+
         public string Pattern { get; set; }
         public string Project { get; set; }
         public bool IsActive { get; set; }
@@ -50,7 +53,7 @@ namespace Vaelastrasz.Server.Models
 
     public class UpdateUserModel
     {
-        public long? AccountId { get; set; }
+        public long AccountId { get; set; }
         public string Name { get; set; }
         public string Password { get; set; }
         public string Pattern { get; set; }

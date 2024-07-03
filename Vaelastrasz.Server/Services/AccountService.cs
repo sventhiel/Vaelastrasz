@@ -1,4 +1,5 @@
 ﻿using LiteDB;
+using Vaelastrasz.Library.Exceptions;
 using Vaelastrasz.Server.Entities;
 
 namespace Vaelastrasz.Server.Services
@@ -20,28 +21,43 @@ namespace Vaelastrasz.Server.Services
 
         public long Create(string name, string password, string host, string prefix)
         {
-            using var db = new LiteDatabase(_connectionString);
-            var accounts = db.GetCollection<Account>("accounts");
-
-            var account = new Account()
+            try
             {
-                Name = name,
-                Password = password,
-                Host = host,
-                Prefix = prefix,
-                CreationDate = DateTimeOffset.UtcNow,
-                LastUpdateDate = DateTimeOffset.UtcNow
-            };
+                using var db = new LiteDatabase(_connectionString);
+                var accounts = db.GetCollection<Account>("accounts");
 
-            return accounts.Insert(account);
+                var account = new Account()
+                {
+                    Name = name,
+                    Password = password,
+                    Host = host,
+                    Prefix = prefix,
+                    CreationDate = DateTimeOffset.UtcNow,
+                    LastUpdateDate = DateTimeOffset.UtcNow
+                };
+
+                return accounts.Insert(account);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
         }
 
         public bool Delete(long id)
         {
-            using var db = new LiteDatabase(_connectionString);
-            var col = db.GetCollection<Account>("accounts");
+            try
+            {
+                using var db = new LiteDatabase(_connectionString);
+                var col = db.GetCollection<Account>("accounts");
 
-            return col.Delete(id);
+                return col.Delete(id);
+            }
+            catch(Exception)
+            {
+                throw;
+            }
         }
 
         public void Dispose()
@@ -52,22 +68,34 @@ namespace Vaelastrasz.Server.Services
 
         public List<Account> Find()
         {
-            var accounts = new List<Account>();
+            try
+            {
+                using var db = new LiteDatabase(_connectionString);
+                var col = db.GetCollection<Account>("accounts");
 
-            using var db = new LiteDatabase(_connectionString);
-            var col = db.GetCollection<Account>("accounts");
-
-            accounts = col.Query().ToList();
-
-            return accounts;
+                return col.Query().ToList();
+            }
+            catch (Exception) 
+            {
+                throw;
+            }
+            
         }
 
         public Account FindById(long id)
         {
-            using var db = new LiteDatabase(_connectionString);
-            var col = db.GetCollection<Account>("accounts");
+            try
+            {
+                using var db = new LiteDatabase(_connectionString);
+                var col = db.GetCollection<Account>("accounts");
 
-            return col.FindById(id);
+                return col.FindById(id);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            
         }
 
         public bool Update(long id, string name, string password, string host, string prefix)
@@ -78,7 +106,7 @@ namespace Vaelastrasz.Server.Services
             var account = accounts.FindById(id);
 
             if (account == null)
-                return false;
+                throw new ResultException($"There is no account (id:{id}).", nameof(id));
 
             if (!string.IsNullOrEmpty(name))
                 account.Name = name;

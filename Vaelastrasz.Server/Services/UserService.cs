@@ -1,7 +1,5 @@
 ﻿using LiteDB;
-using Microsoft.Extensions.FileSystemGlobbing.Internal;
 using Vaelastrasz.Server.Entities;
-using Vaelastrasz.Server.Models;
 using Vaelastrasz.Server.Utilities;
 
 namespace Vaelastrasz.Server.Services
@@ -32,7 +30,7 @@ namespace Vaelastrasz.Server.Services
 
             var account = accounts.FindById(accountId);
 
-            if(account == null)
+            if (account == null)
                 return null;
 
             // salt

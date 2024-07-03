@@ -206,7 +206,7 @@ namespace Vaelastrasz.Server.Controllers
                 var state = result.Data.Attributes.State;
 
                 var doiService = new DOIService(_connectionString);
-                doiService.Create(prefix, suffix, user.Id, (DOIStateType)state);
+                doiService.Create(prefix, suffix, (DOIStateType)state, user.Id, response.Content);
 
                 // TODO:    What happens if the creation of the doi within Vaelastrasz is not working?
                 //          In this case, there would be no connection between DataCite and Vaelastrasz at
@@ -253,7 +253,7 @@ namespace Vaelastrasz.Server.Controllers
                     return StatusCode((int)response.StatusCode, response.ErrorMessage);
 
                 var doiService = new DOIService(_connectionString);
-                doiService.Update("", "", 1);
+                doiService.Update("", "", DOIStateType.Draft, "");
 
                 return Ok(JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content));
             }

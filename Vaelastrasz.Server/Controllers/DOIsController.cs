@@ -40,7 +40,7 @@ namespace Vaelastrasz.Server.Controllers
 
                 using var doiService = new DOIService(_connectionString);
 
-                var result = doiService.FindByDOI(prefix, suffix);
+                var result = doiService.FindByPrefixAndSuffix(prefix, suffix);
 
                 if (result?.User.Id != user.Id)
                     return Forbid();
@@ -93,7 +93,7 @@ namespace Vaelastrasz.Server.Controllers
                     return Unauthorized();
 
                 using var doiService = new DOIService(_connectionString);
-                var result = doiService.FindByDOI(prefix, suffix);
+                var result = doiService.FindByPrefixAndSuffix(prefix, suffix);
 
                 if (result == null || result.User.Id != user.Id)
                     return Forbid();
@@ -129,7 +129,7 @@ namespace Vaelastrasz.Server.Controllers
                     return Forbid();
 
                 using var doiService = new DOIService(_connectionString);
-                var result = doiService.Create(model.Prefix, model.Suffix, user.Id, DOIStateType.Draft);
+                var result = doiService.Create(model.Prefix, model.Suffix, DOIStateType.Draft, user.Id, "");
 
                 return Ok(result);
             }
@@ -160,7 +160,7 @@ namespace Vaelastrasz.Server.Controllers
 
                 if (ModelState.IsValid)
                 {
-                    var result = doiService.Update(prefix, suffix, model.UserId);
+                    var result = doiService.Update(prefix, suffix, DOIStateType.Draft, "");
 
                     if (result)
                     {

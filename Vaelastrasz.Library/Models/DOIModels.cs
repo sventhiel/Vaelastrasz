@@ -22,7 +22,9 @@ namespace Vaelastrasz.Library.Models
     {
         public string Prefix { get; set; }
         public string Suffix { get; set; }
-        public DOIStateType State { get; set; } 
+        public DOIStateType Status { get; set; }
+        public long UserId { get; set; }
+        public string Value { get; set; }
     }
 
     public class ReadDOIModel
@@ -47,7 +49,6 @@ namespace Vaelastrasz.Library.Models
         {
             return new UpdateDOIModel()
             {
-
             };
         }
     }
