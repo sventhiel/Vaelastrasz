@@ -1,4 +1,5 @@
 ﻿using LiteDB;
+using Vaelastrasz.Library.Exceptions;
 using Vaelastrasz.Server.Entities;
 
 namespace Vaelastrasz.Server.Services
@@ -18,7 +19,7 @@ namespace Vaelastrasz.Server.Services
             Dispose(false);
         }
 
-        public long? Create(string expression, string regularExpression, long userId)
+        public long Create(string expression, string regularExpression, long userId)
         {
             try
             {
@@ -29,7 +30,7 @@ namespace Vaelastrasz.Server.Services
                 var user = users.FindById(userId);
 
                 if (user == null)
-                    return null;
+                    throw new ResultException($"The user (id:{userId}) does not exist.", nameof(userId));
 
                 var placeholder = new Placeholder()
                 {
@@ -73,14 +74,10 @@ namespace Vaelastrasz.Server.Services
         {
             try
             {
-                List<Placeholder> placeholders = new();
-
                 using var db = new LiteDatabase(_connectionString);
                 var col = db.GetCollection<Placeholder>("placeholders");
 
-                placeholders = col.Query().ToList();
-
-                return placeholders;
+                return col.Query().ToList();
             }
             catch (Exception)
             {
@@ -88,14 +85,19 @@ namespace Vaelastrasz.Server.Services
             }
         }
 
-        public Placeholder? FindById(long id)
+        public Placeholder FindById(long id)
         {
             try
             {
                 using var db = new LiteDatabase(_connectionString);
                 var col = db.GetCollection<Placeholder>("placeholders");
 
-                return col.FindById(id);
+                var placeholder = col.FindById(id);
+
+                if(placeholder == null)
+                    throw new ResultException($"The placeholder (id:{id}) does not exist.", nameof(id));
+
+                return placeholder;
             }
             catch (Exception)
             {
@@ -132,11 +134,11 @@ namespace Vaelastrasz.Server.Services
 
                 var placeholder = placeholders.FindById(id);
                 if (placeholder == null)
-                    return false;
+                    throw new ResultException($"The account (id:{id}) does not exist.", nameof(id));
 
                 var user = users.FindById(userId);
                 if (user == null)
-                    return false;
+                    throw new ResultException($"The user (id:{userId}) does not exist.", nameof(userId));
 
                 placeholder.Expression = expression;
                 placeholder.RegularExpression = regularExpression;

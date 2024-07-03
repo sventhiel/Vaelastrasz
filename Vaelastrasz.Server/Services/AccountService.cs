@@ -89,7 +89,12 @@ namespace Vaelastrasz.Server.Services
                 using var db = new LiteDatabase(_connectionString);
                 var col = db.GetCollection<Account>("accounts");
 
-                return col.FindById(id);
+                var account = col.FindById(id);
+
+                if(account == null)
+                    throw new ResultException($"The account (id:{id}) does not exist.", nameof(id));
+
+                return account;
             }
             catch (Exception)
             {
@@ -106,7 +111,7 @@ namespace Vaelastrasz.Server.Services
             var account = accounts.FindById(id);
 
             if (account == null)
-                throw new ResultException($"There is no account (id:{id}).", nameof(id));
+                throw new ResultException($"The account (id:{id}) does not exist.", nameof(id));
 
             if (!string.IsNullOrEmpty(name))
                 account.Name = name;

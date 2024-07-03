@@ -1,4 +1,5 @@
 ﻿using LiteDB;
+using Vaelastrasz.Library.Exceptions;
 using Vaelastrasz.Server.Entities;
 using Vaelastrasz.Server.Utilities;
 
@@ -19,45 +20,60 @@ namespace Vaelastrasz.Server.Services
             Dispose(false);
         }
 
-        public long? Create(string name, string password, string project, string pattern, long accountId, bool isActive)
+        public long Create(string name, string password, string project, string pattern, long accountId, bool isActive)
         {
-            using var db = new LiteDatabase(_connectionString);
-            var users = db.GetCollection<User>("users");
-            var accounts = db.GetCollection<Account>("accounts");
-
-            if (users.Exists(u => u.Name.Equals(name, StringComparison.OrdinalIgnoreCase)))
-                return null;
-
-            var account = accounts.FindById(accountId);
-
-            if (account == null)
-                return null;
-
-            // salt
-            var salt = CryptographyUtils.GetRandomBase64String(16);
-
-            var user = new User
+            try
             {
-                Name = name,
-                Salt = salt,
-                Password = CryptographyUtils.GetSHA512HashAsBase64(salt, password),
-                Pattern = pattern,
-                Project = project,
-                IsActive = isActive,
-                CreationDate = DateTime.UtcNow,
-                LastUpdateDate = DateTime.UtcNow,
-                Account = account
-            };
+                using var db = new LiteDatabase(_connectionString);
+                var users = db.GetCollection<User>("users");
+                var accounts = db.GetCollection<Account>("accounts");
 
-            return users.Insert(user);
+                if (users.Exists(u => u.Name.Equals(name, StringComparison.OrdinalIgnoreCase)))
+                    throw new ArgumentException($"The user (name:{name}) already exists.", nameof(name));
+
+                var account = accounts.FindById(accountId);
+
+                if (account == null)
+                    throw new ResultException($"The account (id:{id}) does not exist.", nameof(id));
+
+                // salt
+                var salt = CryptographyUtils.GetRandomBase64String(16);
+
+                var user = new User
+                {
+                    Name = name,
+                    Salt = salt,
+                    Password = CryptographyUtils.GetSHA512HashAsBase64(salt, password),
+                    Pattern = pattern,
+                    Project = project,
+                    IsActive = isActive,
+                    CreationDate = DateTime.UtcNow,
+                    LastUpdateDate = DateTime.UtcNow,
+                    Account = account
+                };
+
+                return users.Insert(user);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public bool Delete(long id)
         {
-            using var db = new LiteDatabase(_connectionString);
-            var col = db.GetCollection<User>("users");
+            try
+            {
+                using var db = new LiteDatabase(_connectionString);
+                var col = db.GetCollection<User>("users");
 
-            return col.Delete(id);
+                return col.Delete(id);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
         }
 
         public void Dispose()
@@ -74,7 +90,7 @@ namespace Vaelastrasz.Server.Services
 
                 using var db = new LiteDatabase(_connectionString);
                 var col = db.GetCollection<User>("users");
-                users = col.Include(u => u.Account).Query().ToList();
+                users = col.Query().ToList();
 
                 return users.ToList();
             }
@@ -84,13 +100,17 @@ namespace Vaelastrasz.Server.Services
             }
         }
 
-        public User? FindById(long id)
+        public User FindById(long id)
         {
             try
             {
                 using var db = new LiteDatabase(_connectionString);
                 var col = db.GetCollection<User>("users");
-                var user = col.Include(u => u.Account).FindById(id);
+                
+                var user = col.FindById(id);
+                
+                if(user == null)
+                    throw new ResultException($"The user (id:{id}) does not exist.", nameof(id));
 
                 return user;
             }
@@ -100,22 +120,19 @@ namespace Vaelastrasz.Server.Services
             }
         }
 
-        public User? FindByName(string? name)
+        public User FindByName(string name)
         {
             try
             {
-                if (name == null)
-                    return null;
-
                 using var db = new LiteDatabase(_connectionString);
                 var col = db.GetCollection<User>("users");
 
-                var users = col.Include(u => u.Account).Find(u => u.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+                var users = col.Find(u => u.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
 
                 if (users.Count() != 1)
-                    return null;
+                    throw new ResultException($"There are more/less than one user.", nameof(users));
 
-                return users.First();
+                return users.Single();
             }
             catch (Exception)
             {
@@ -123,7 +140,7 @@ namespace Vaelastrasz.Server.Services
             }
         }
 
-        public bool Update(long id, string password, string project, string pattern, long? accountId, bool isActive)
+        public bool Update(long id, string password, string project, string pattern, long accountId, bool isActive)
         {
             try
             {
@@ -131,22 +148,20 @@ namespace Vaelastrasz.Server.Services
                 var users = db.GetCollection<User>("users");
                 var accounts = db.GetCollection<Account>("accounts");
 
-                var user = users.Include(u => u.Account).FindById(id);
+                var user = users.FindById(id);
                 if (user == null)
-                    return false;
+                    throw new ResultException($"The user (id:{id}) does not exist.", nameof(id));
 
-                user.Account = accountId.HasValue ? accounts.FindById(accountId) : null;
+                var account = accounts.FindById(accountId);
+                if (account == null)
+                    throw new ResultException($"The account (id:{accountId}) does not exist.", nameof(accountId));
 
-                if (!string.IsNullOrEmpty(pattern))
-                    user.Pattern = pattern;
+                var salt = CryptographyUtils.GetRandomBase64String(16);
 
-                if (!string.IsNullOrEmpty(password))
-                {
-                    var salt = CryptographyUtils.GetRandomBase64String(16);
-                    user.Salt = salt;
-                    user.Password = CryptographyUtils.GetSHA512HashAsBase64(salt, password);
-                }
-
+                user.Account = account;
+                user.Pattern = pattern;
+                user.Salt = salt;
+                user.Password = CryptographyUtils.GetSHA512HashAsBase64(salt, password);
                 user.LastUpdateDate = DateTimeOffset.UtcNow;
 
                 return users.Update(user);
@@ -165,7 +180,7 @@ namespace Vaelastrasz.Server.Services
             var user = users.FindOne(u => u.Name == name);
 
             if (user == null)
-                return false;
+                throw new ResultException($"The user (name:{name}) does not exist.", nameof(name));
 
             return (user.Password == CryptographyUtils.GetSHA512HashAsBase64(user.Salt, password));
         }

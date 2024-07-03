@@ -116,7 +116,12 @@ namespace Vaelastrasz.Server.Services
                 using var db = new LiteDatabase(_connectionString);
                 var col = db.GetCollection<DOI>("dois");
 
-                return col.FindById(id);
+                var doi = col.FindById(id);
+
+                if(doi == null)
+                    throw new ResultException($"The doi (id:{id}) does not exist.", nameof(id));
+
+                return doi;
             }
             catch (Exception)
             {
@@ -158,7 +163,7 @@ namespace Vaelastrasz.Server.Services
                 var dois = col.Find(d => d.Prefix.Equals(prefix, StringComparison.OrdinalIgnoreCase) && d.Suffix.Equals(suffix, StringComparison.OrdinalIgnoreCase));
 
                 if (dois.Count() != 1)
-                    throw new ResultException($"", nameof(dois));
+                    throw new ResultException($"There are more/less than one doi.", nameof(dois));
 
                 return dois.Single();
             }
