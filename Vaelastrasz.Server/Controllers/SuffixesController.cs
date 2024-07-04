@@ -6,6 +6,7 @@ using Newtonsoft.Json.Linq;
 using System.Data;
 using System.Net;
 using Vaelastrasz.Library.Entities;
+using Vaelastrasz.Library.Exceptions;
 using Vaelastrasz.Library.Models;
 using Vaelastrasz.Server.Helpers;
 using Vaelastrasz.Server.Services;
@@ -38,7 +39,7 @@ namespace Vaelastrasz.Server.Controllers
             if (SuffixHelper.Validate(suffix, user.Pattern, new Dictionary<string, string>(placeholderService.FindByUserId(user.Id).Select(p => new KeyValuePair<string, string>(p.Expression, p.RegularExpression)))))
                 return Ok(suffix);
 
-            throw new ArgumentException($"The value of suffix ({suffix}) is invalid.");
+            throw new BadRequestException($"The value of suffix ({suffix}) is invalid.");
         }
     }
 }

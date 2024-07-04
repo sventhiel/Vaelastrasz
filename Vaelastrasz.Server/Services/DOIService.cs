@@ -27,11 +27,8 @@ namespace Vaelastrasz.Server.Services
             var dois = db.GetCollection<DOI>("dois");
             var users = db.GetCollection<User>("users");
 
-            var user = users.FindById(userId);
-
-            if (user == null)
-                throw new NotFoundException($"The user (id:{userId}) does not exist.");
-
+            var user = users.FindById(userId) ?? throw new NotFoundException($"The user (id:{userId}) does not exist.");
+            
             var doi = new DOI()
             {
                 Prefix = prefix,
@@ -46,7 +43,7 @@ namespace Vaelastrasz.Server.Services
             return dois.Insert(doi);
         }
 
-        public bool Delete(long id)
+        public bool DeleteById(long id)
         {
             using var db = new LiteDatabase(_connectionString);
             var col = db.GetCollection<DOI>("dois");
@@ -135,7 +132,7 @@ namespace Vaelastrasz.Server.Services
             return col.Find(d => d.User.Id == userId).ToList();
         }
 
-        public bool Update(string prefix, string suffix, DOIStateType state, string value)
+        public bool UpdateByPrefixAndSuffix(string prefix, string suffix, DOIStateType state, string value)
         {
             using var db = new LiteDatabase(_connectionString);
             var dois = db.GetCollection<DOI>("dois");
@@ -153,7 +150,7 @@ namespace Vaelastrasz.Server.Services
             return dois.Update(doi);
         }
 
-        public bool Update(string doi, DOIStateType state, string value)
+        public bool UpdateByDOI(string doi, DOIStateType state, string value)
         {
             if (!doi.Contains('/'))
                 throw new BadRequestException($"The value of doi ({doi}) is invalid.");
@@ -162,10 +159,10 @@ namespace Vaelastrasz.Server.Services
             string prefix = doi.Split('/')[0];
             string suffix = doi.Split('/')[1];
 
-            return Update(prefix, suffix, state, value);
+            return UpdateByPrefixAndSuffix(prefix, suffix, state, value);
         }
 
-        public bool Update(long id, DOIStateType state, string value)
+        public bool UpdateById(long id, DOIStateType state, string value)
         {
             using var db = new LiteDatabase(_connectionString);
             var dois = db.GetCollection<DOI>("dois");

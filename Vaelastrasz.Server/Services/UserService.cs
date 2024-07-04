@@ -53,7 +53,7 @@ namespace Vaelastrasz.Server.Services
             return users.Insert(user);
         }
 
-        public bool Delete(long id)
+        public bool DeleteById(long id)
         {
             using var db = new LiteDatabase(_connectionString);
             var col = db.GetCollection<User>("users");
@@ -104,7 +104,7 @@ namespace Vaelastrasz.Server.Services
             return users.Single();
         }
 
-        public bool Update(long id, string password, string project, string pattern, long accountId, bool isActive)
+        public bool UpdateById(long id, string password, string project, string pattern, long accountId, bool isActive)
         {
             using var db = new LiteDatabase(_connectionString);
             var users = db.GetCollection<User>("users");

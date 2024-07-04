@@ -2,11 +2,15 @@
 using LiteDB;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NameParser;
 using System.Net;
 using System.Security.Authentication;
+using Vaelastrasz.Library.Entities;
+using Vaelastrasz.Library.Exceptions;
 using Vaelastrasz.Library.Models;
 using Vaelastrasz.Server.Configurations;
 using Vaelastrasz.Server.Helpers;
+using Vaelastrasz.Server.Models;
 using Vaelastrasz.Server.Services;
 
 namespace Vaelastrasz.Server.Controllers
@@ -39,9 +43,9 @@ namespace Vaelastrasz.Server.Controllers
             var result = doiService.FindByPrefixAndSuffix(prefix, suffix);
 
             if (result.User.Id != user.Id)
-                throw new AuthenticationException($"The user (id: {user.Id}) is not allowed to perform the action..");
+                throw new UnauthorizedException($"The user (id: {user.Id}) is not allowed to perform the action..");
 
-            var response = doiService.Delete(result.Id);
+            var response = doiService.DeleteById(result.Id);
             return Ok(response);
         }
 
@@ -58,6 +62,21 @@ namespace Vaelastrasz.Server.Controllers
             return Ok(dois);
         }
 
+        [HttpGet("dois/{id}")]
+        public async Task<IActionResult> GetByIdAsync(long id)
+        {
+            using var userService = new UserService(_connectionString);
+            var user = userService.FindByName(User?.Identity?.Name);
+
+            using var doiService = new DOIService(_connectionString);
+            var doi = doiService.FindById(id);
+
+            if(doi.User.Id != user.Id)
+                throw new UnauthorizedException($"The user (id: {user.Id}) is not allowed to perform the action.");
+
+            return Ok(ReadDOIModel.Convert(doi));
+        }
+
         [HttpGet("dois/{prefix}/{suffix}")]
         public async Task<IActionResult> GetByPrefixAndSuffixAsync(string prefix, string suffix)
         {
@@ -68,7 +87,7 @@ namespace Vaelastrasz.Server.Controllers
             var result = doiService.FindByPrefixAndSuffix(prefix, suffix);
 
             if (result.User.Id != user.Id)
-                throw new AuthenticationException($"The user (id: {user.Id}) is not allowed to perform the action..");
+                throw new UnauthorizedException($"The user (id: {user.Id}) is not allowed to perform the action..");
 
             return Ok(ReadDOIModel.Convert(result));
         }
@@ -80,95 +99,56 @@ namespace Vaelastrasz.Server.Controllers
             using var userService = new UserService(_connectionString);
             var user = userService.FindByName(User.Identity!.Name!);
 
-            if (user == null)
-                return Unauthorized();
-
             if (user.Account == null)
-                return Forbid();
+                throw new NotFoundException($"The account of user (id: {user.Id}) does not exist.");
 
             using var placeholderService = new PlaceholderService(_connectionString);
             var placeholders = placeholderService.FindByUserId(user.Id);
 
             if (!DOIHelper.Validate($"{model.Prefix}/{model.Suffix}", user.Account.Prefix, user.Pattern, new Dictionary<string, string>(placeholders.Select(p => new KeyValuePair<string, string>(p.Expression, p.RegularExpression)))))
-                return Forbid();
+                throw new ForbidException($"The doi (prefix: {model.Prefix}, suffix: {model.Suffix}) is invalid.");
 
             using var doiService = new DOIService(_connectionString);
-            var result = doiService.Create(model.Prefix, model.Suffix, DOIStateType.Draft, user.Id, "");
+            var id = doiService.Create(model.Prefix, model.Suffix, DOIStateType.Draft, user.Id, "");
+            var doi = doiService.FindById(id);
 
-            return Ok(result);
+            return Created(Url.Action("GetByIdAsync", new { id = user.Id }), ReadDOIModel.Convert(doi));
+
         }
 
         // PUT
         [HttpPut("dois/{prefix}/{suffix}")]
         public async Task<IActionResult> PutByPrefixAndSuffixAsync(string prefix, string suffix, UpdateDOIModel model)
         {
-            try
-            {
-                using var userService = new UserService(_connectionString);
-                var user = userService.FindByName(User?.Identity?.Name);
+            using var userService = new UserService(_connectionString);
+            var user = userService.FindByName(User?.Identity?.Name);
 
-                if (user == null)
-                    return Unauthorized();
+            using var doiService = new DOIService(_connectionString);
+            var doi = doiService.FindByPrefixAndSuffix(prefix, suffix);
 
-                using var doiService = new DOIService(_connectionString);
-                var doi = doiService.FindByPrefixAndSuffix(prefix, suffix);
+            if (doi.User.Id != user.Id)
+                throw new UnauthorizedException($"The user (id: {user.Id}) is not allowed to perform the action.");
 
-                if (doi == null || doi.User.Id != user.Id)
-                    return Forbid();
-
-                if (ModelState.IsValid)
-                {
-                    var result = doiService.Update(prefix, suffix, DOIStateType.Draft, "");
-
-                    if (result)
-                    {
-                        doi = doiService.FindByPrefixAndSuffix(prefix, suffix);
-                        return Ok(doi);
-                    }
-                }
-
-                return BadRequest();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                ex.ToExceptionless().Submit();
-                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
-            }
+            var result = doiService.UpdateByPrefixAndSuffix(prefix, suffix, model.State, model.Value);
+            doi = doiService.FindByPrefixAndSuffix(prefix, suffix);
+            return Ok(ReadDOIModel.Convert(doi));
         }
 
         [HttpPut("dois/{doi}")]
         public async Task<IActionResult> PutByDOIAsync(string doi, UpdateDOIModel model)
         {
-            try
-            {
-                using var userService = new UserService(_connectionString);
-                var user = userService.FindByName(User.Identity!.Name!);
+            using var userService = new UserService(_connectionString);
+            var user = userService.FindByName(User.Identity!.Name!);
 
-                if (user == null)
-                    return Unauthorized();
+            using var doiService = new DOIService(_connectionString);
+            var _doi = doiService.FindByDOI(doi);
 
-                using var doiService = new DOIService(_connectionString);
+            if (_doi.User.Id != user.Id)
+                throw new UnauthorizedException($"The user (id: {user.Id}) is not allowed to perform the action.");
 
-                if (ModelState.IsValid)
-                {
-                    var result = doiService.Update(doi, DOIStateType.Draft, "");
-
-                    if (result)
-                    {
-                        //doi = doiService.FindByDOI(doi);
-                        return Ok(doi);
-                    }
-                }
-
-                return BadRequest();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                ex.ToExceptionless().Submit();
-                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
-            }
+            var result = doiService.UpdateById(_doi.Id, model.State, model.Value);
+            _doi = doiService.FindByDOI(doi);
+            return Ok(ReadDOIModel.Convert(_doi));
         }
 
         [HttpPut("dois/{id}")]
@@ -176,13 +156,10 @@ namespace Vaelastrasz.Server.Controllers
         {
             using var doiService = new DOIService(_connectionString);
 
-            if (!ModelState.IsValid)
-                return StatusCode((int)HttpStatusCode.BadRequest, ModelState);
-
-            var result = doiService.Update(id, model.State, "");
+            var result = doiService.UpdateById(id, model.State, "");
             var doi = doiService.FindById(id);
 
-            return StatusCode((int)HttpStatusCode.OK, ReadDOIModel.Convert(doi));
+            return Ok(ReadDOIModel.Convert(doi));
         }
     }
 }

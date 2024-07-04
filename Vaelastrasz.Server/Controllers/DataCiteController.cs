@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using RestSharp;
 using RestSharp.Authenticators;
 using System.Net;
+using Vaelastrasz.Library.Exceptions;
 using Vaelastrasz.Library.Models;
 using Vaelastrasz.Server.Configurations;
 using Vaelastrasz.Server.Helpers;
@@ -31,237 +32,169 @@ namespace Vaelastrasz.Server.Controllers
         [HttpDelete("datacite/{doi}")]
         public async Task<IActionResult> DeleteByDOIAsync(string doi)
         {
-            try
+            using var userService = new UserService(_connectionString);
+            var user = userService.FindByName(User?.Identity?.Name);
+
+            if (user.Account == null)
+                throw new NotFoundException($"The account of user (id: {user.Id}) does not exist.");
+
+
+            var clientOptions = new RestClientOptions($"{user.Account.Host}")
             {
-                using var userService = new UserService(_connectionString);
-                var user = userService.FindByName(User?.Identity?.Name);
+                Authenticator = new HttpBasicAuthenticator(user.Account.Name, user.Account.Password)
+            };
 
-                if (user == null)
-                    return Unauthorized();
+            var client = new RestClient(clientOptions);
 
-                if (user.Account == null)
-                    return Forbid();
+            var request = new RestRequest($"dois/{doi}", Method.Delete);
+            request.AddHeader("Accept", "application/json");
 
-                var clientOptions = new RestClientOptions($"{user.Account.Host}")
-                {
-                    Authenticator = new HttpBasicAuthenticator(user.Account.Name, user.Account.Password)
-                };
+            var response = client.Execute(request);
 
-                var client = new RestClient(clientOptions);
+            if (!response.IsSuccessStatusCode)
+                return StatusCode((int)response.StatusCode, response.ErrorMessage);
 
-                var request = new RestRequest($"dois/{doi}", Method.Delete);
-                request.AddHeader("Accept", "application/json");
-
-                var response = client.Execute(request);
-
-                if (!response.IsSuccessStatusCode)
-                    return StatusCode((int)response.StatusCode, response.ErrorMessage);
-
-                // TODO: Should it return 200?
-                return StatusCode((int)response.StatusCode, JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
-            }
+            return StatusCode((int)response.StatusCode, JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content));
         }
 
         [HttpGet("datacite")]
         public async Task<IActionResult> GetAsync()
         {
-            try
-            {
-                using var userService = new UserService(_connectionString);
-                var user = userService.FindByName(User?.Identity?.Name);
+            using var userService = new UserService(_connectionString);
+            var user = userService.FindByName(User?.Identity?.Name);
 
-                if (user == null)
-                    return Unauthorized();
+            if (user.Account == null)
+                throw new NotFoundException($"The account of user (id: {user.Id}) does not exist.");
 
-                if (user.Account == null)
-                    return Forbid();
+            var doiService = new DOIService(_connectionString);
+            var dois = doiService.FindByUserId(user.Id);
 
-                var doiService = new DOIService(_connectionString);
-                var dois = doiService.FindByUserId(user.Id);
+            var result = new List<ReadDataCiteModel>();
 
-                var result = new List<ReadDataCiteModel>();
-
-                if (dois.Count == 0)
-                    return Ok(result);
-
-                var clientOptions = new RestClientOptions($"{user.Account.Host}")
-                {
-                    Authenticator = new HttpBasicAuthenticator(user.Account.Name, user.Account.Password)
-                };
-
-                var client = new RestClient(clientOptions);
-
-                foreach (var doi in dois)
-                {
-                    var request = new RestRequest($"dois/{doi}", Method.Get);
-                    request.AddHeader("Accept", "application/json");
-
-                    var response = client.Execute(request);
-
-                    if (!response.IsSuccessStatusCode)
-                        continue;
-
-                    var item = JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content);
-
-                    if (item != null)
-                        result.Add(item);
-                }
-
+            if (dois.Count == 0)
                 return Ok(result);
-            }
-            catch (Exception ex)
+
+            var clientOptions = new RestClientOptions($"{user.Account.Host}")
             {
-                _logger.LogError(ex, ex.Message);
-                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
+                Authenticator = new HttpBasicAuthenticator(user.Account.Name, user.Account.Password)
+            };
+
+            var client = new RestClient(clientOptions);
+
+            foreach (var doi in dois)
+            {
+                var request = new RestRequest($"dois/{doi}", Method.Get);
+                request.AddHeader("Accept", "application/json");
+
+                var response = client.Execute(request);
+
+                if (!response.IsSuccessStatusCode)
+                    continue;
+
+                var item = JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content);
+
+                if (item != null)
+                    result.Add(item);
             }
+
+            return Ok(result);
         }
 
         [HttpGet("datacite/{prefix}/{suffix}")]
         public async Task<IActionResult> GetByDOIAsync(string prefix, string suffix)
         {
-            try
+            using var userService = new UserService(_connectionString);
+            var user = userService.FindByName(User?.Identity?.Name);
+
+            if (user.Account == null)
+                throw new NotFoundException($"The account of user (id: {user.Id}) does not exist.");
+
+            using var doiService = new DOIService(_connectionString);
+            var doi = doiService.FindByPrefixAndSuffix(prefix, suffix);
+
+            if (doi.User.Id != user.Id)
+                throw new UnauthorizedException($"The user (id: {user.Id}) is not allowed to perform the action.");
+
+            var clientOptions = new RestClientOptions($"{user.Account.Host}")
             {
-                using var userService = new UserService(_connectionString);
-                var user = userService.FindByName(User?.Identity?.Name);
+                Authenticator = new HttpBasicAuthenticator(user.Account.Name, user.Account.Password)
+            };
 
-                if (user == null)
-                    return Unauthorized(); ;
+            var client = new RestClient(clientOptions);
 
-                if (user.Account == null)
-                    return Forbid();
+            var request = new RestRequest($"dois/{prefix}/{suffix}", Method.Get);
+            request.AddHeader("Accept", "application/json");
 
-                using var doiService = new DOIService(_connectionString);
-                //if (doiService.FindByDOI(prefix, suffix)?.User.Id != user.Id)
-                //    return Forbid();
+            var response = client.Execute(request);
 
-                var clientOptions = new RestClientOptions($"{user.Account.Host}")
-                {
-                    Authenticator = new HttpBasicAuthenticator(user.Account.Name, user.Account.Password)
-                };
+            if (!response.IsSuccessStatusCode)
+                return StatusCode((int)response.StatusCode, response.ErrorMessage);
 
-                var client = new RestClient(clientOptions);
-
-                var request = new RestRequest($"dois/{prefix}/{suffix}", Method.Get);
-                request.AddHeader("Accept", "application/json");
-
-                var response = client.Execute(request);
-
-                if (!response.IsSuccessStatusCode)
-                    return StatusCode((int)response.StatusCode, response.ErrorMessage);
-
-                return Ok(JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
-            }
+            return StatusCode((int)response.StatusCode, JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content));
         }
 
         [HttpPost("datacite")]
         public async Task<IActionResult> PostAsync(CreateDataCiteModel model)
         {
-            try
+            using var userService = new UserService(_connectionString);
+            var user = userService.FindByName(User?.Identity?.Name);
+
+            if (user.Account == null)
+                throw new NotFoundException($"The account of user (id: {user.Id}) does not exist.");
+
+            // DOI Check
+            var placeholderService = new PlaceholderService(_connectionString);
+            var placeholders = placeholderService.FindByUserId(user.Id);
+
+            if (!DOIHelper.Validate(model.Data.Attributes.Doi, user.Account.Prefix, user.Pattern, new Dictionary<string, string>(placeholders.Select(p => new KeyValuePair<string, string>(p.Expression, p.RegularExpression)))))
+                throw new ForbidException($"The doi (doi: {model.Data.Attributes.Doi}) is invalid.");
+
+            var clientOptions = new RestClientOptions($"{user.Account.Host}")
             {
-                using var userService = new UserService(_connectionString);
-                var user = userService.FindByName(User?.Identity?.Name);
+                Authenticator = new HttpBasicAuthenticator(user.Account.Name, user.Account.Password)
+            };
 
-                if (user == null)
-                    return Unauthorized();
+            var client = new RestClient(clientOptions);
 
-                if (user.Account == null)
-                    return BadRequest();
+            var request = new RestRequest($"dois", Method.Post).AddJsonBody(JsonConvert.SerializeObject(model));
+            request.AddHeader("Accept", "application/json");
 
-                // DOI Check
-                var placeholderService = new PlaceholderService(_connectionString);
-                var placeholders = placeholderService.FindByUserId(user.Id);
+            var response = client.Execute(request);
 
-                if (!DOIHelper.Validate(model.Data.Attributes.Doi, user.Account.Prefix, user.Pattern, new Dictionary<string, string>(placeholders.Select(p => new KeyValuePair<string, string>(p.Expression, p.RegularExpression)))))
-                    return BadRequest("The DOI does not match the user pattern.");
+            if (!response.IsSuccessStatusCode)
+                return StatusCode((int)response.StatusCode, response.ErrorMessage);
 
-                var clientOptions = new RestClientOptions($"{user.Account.Host}")
-                {
-                    Authenticator = new HttpBasicAuthenticator(user.Account.Name, user.Account.Password)
-                };
-
-                var client = new RestClient(clientOptions);
-
-                var request = new RestRequest($"dois", Method.Post).AddJsonBody(JsonConvert.SerializeObject(model));
-                request.AddHeader("Accept", "application/json");
-
-                var response = client.Execute(request);
-
-                if (!response.IsSuccessStatusCode)
-                    return StatusCode((int)response.StatusCode, response.ErrorMessage);
-
-                var result = JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content);
-
-                var prefix = result.Data.Attributes.Doi.Split('/')[0];
-                var suffix = result.Data.Attributes.Doi.Split('/')[1];
-                var state = result.Data.Attributes.State;
-
-                var doiService = new DOIService(_connectionString);
-                doiService.Create(prefix, suffix, (DOIStateType)state, user.Id, response.Content);
-
-                // TODO:    What happens if the creation of the doi within Vaelastrasz is not working?
-                //          In this case, there would be no connection between DataCite and Vaelastrasz at
-                //          the beginning. Maybe it is possible to grab the information later on?
-                //          Or should it abort the whole function and de-register the doi at DataCite?
-                //          BUT what happens, if the DOI is already in state [registered | findable]?
-
-                return Ok(JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
-            }
+            return Created($"{user.Account.Host}/dois/{WebUtility.UrlEncode(model.Data.Attributes.Doi)}", JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content));
         }
 
         [HttpPut("datacite/{doi}")]
         public async Task<IActionResult> PutByDOIAsync(string doi, UpdateDataCiteModel model)
         {
-            try
+            using var userService = new UserService(_connectionString);
+            var user = userService.FindByName(User?.Identity?.Name);
+
+            if (user.Account == null)
+                throw new NotFoundException($"The account of user (id: {user.Id}) does not exist.");
+
+            var clientOptions = new RestClientOptions($"{user.Account.Host}")
             {
-                using var userService = new UserService(_connectionString);
-                var user = userService.FindByName(User?.Identity?.Name);
+                Authenticator = new HttpBasicAuthenticator(user.Account.Name, user.Account.Password)
+            };
 
-                if (user == null)
-                    return Unauthorized();
+            var client = new RestClient(clientOptions);
 
-                if (user.Account == null)
-                    return BadRequest();
+            var request = new RestRequest($"dois/{doi}", Method.Put);
+            request.AddHeader("Accept", "application/json");
 
-                var clientOptions = new RestClientOptions($"{user.Account.Host}")
-                {
-                    Authenticator = new HttpBasicAuthenticator(user.Account.Name, user.Account.Password)
-                };
+            var response = client.Execute(request);
 
-                var client = new RestClient(clientOptions);
+            if (!response.IsSuccessStatusCode)
+                return StatusCode((int)response.StatusCode, response.ErrorMessage);
 
-                var request = new RestRequest($"dois/{doi}", Method.Put);
-                request.AddHeader("Accept", "application/json");
+            var doiService = new DOIService(_connectionString);
+            doiService.UpdateByDOI(doi, DOIStateType.Findable, "");
 
-                var response = client.Execute(request);
-
-                if (!response.IsSuccessStatusCode)
-                    return StatusCode((int)response.StatusCode, response.ErrorMessage);
-
-                var doiService = new DOIService(_connectionString);
-                doiService.Update("", "", DOIStateType.Draft, "");
-
-                return Ok(JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
-            }
+            return Ok(JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content));
         }
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Security.Authentication;
+using Vaelastrasz.Library.Exceptions;
 using Vaelastrasz.Server.Configurations;
 using Vaelastrasz.Server.Models;
 using Vaelastrasz.Server.Services;
@@ -36,9 +37,9 @@ namespace Vaelastrasz.Server.Controllers
             var placeholder = placeholderService.FindById(id);
 
             if (placeholder.User.Id != user.Id)
-                throw new AuthenticationException($"The user (id: {user.Id}) is not allowed to perform the action..");
+                throw new UnauthorizedException($"The user (id: {user.Id}) is not allowed to perform the action.");
 
-            var response = placeholderService.Delete(id);
+            var response = placeholderService.DeleteById(id);
             return Ok(response);
         }
 
@@ -80,7 +81,7 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         [HttpPut("placeholders/{id}")]
-        public IActionResult PutAsync(long id, UpdatePlaceholderModel model)
+        public IActionResult PutByIdAsync(long id, UpdatePlaceholderModel model)
         {
             using var userService = new UserService(_connectionString);
             var user = userService.FindByName(User?.Identity?.Name);
@@ -89,12 +90,12 @@ namespace Vaelastrasz.Server.Controllers
             var placeholder = placeholderService.FindById(id);
 
             if (placeholder.User.Id != user.Id)
-                throw new AuthenticationException($"The user (id: {user.Id}) is not allowed to perform the action..");
+                throw new UnauthorizedException($"The user (id: {user.Id}) is not allowed to perform the action..");
 
-            var result = placeholderService.Update(id, model.Expression, model.RegularExpression, model.UserId);
+            var result = placeholderService.UpdateById(id, model.Expression, model.RegularExpression, model.UserId);
             placeholder = placeholderService.FindById(id);
             
-            return Ok(placeholder);
+            return Ok(ReadPlaceholderModel.Convert(placeholder));
         }
     }
 }

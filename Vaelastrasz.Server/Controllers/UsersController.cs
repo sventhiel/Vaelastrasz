@@ -9,7 +9,6 @@ using Vaelastrasz.Server.Services;
 
 namespace Vaelastrasz.Server.Controllers
 {
-    // rdy
     [ApiController, Route("api"), Authorize(Roles = "admin")]
     public class UsersController : ControllerBase
     {
@@ -30,7 +29,7 @@ namespace Vaelastrasz.Server.Controllers
         public async Task<IActionResult> DeleteAsync(long id)
         {
             using var userService = new UserService(_connectionString);
-            var response = userService.Delete(id);
+            var response = userService.DeleteById(id);
 
             return Ok(response);
         }
@@ -69,7 +68,7 @@ namespace Vaelastrasz.Server.Controllers
         {
             using var userService = new UserService(_connectionString);
 
-            var result = userService.Update(id, model.Password, model.Project, model.Pattern, model.AccountId, model.IsActive);
+            var result = userService.UpdateById(id, model.Password, model.Project, model.Pattern, model.AccountId, model.IsActive);
             var user = userService.FindById(id);
 
             return Ok(ReadUserModel.Convert(user));

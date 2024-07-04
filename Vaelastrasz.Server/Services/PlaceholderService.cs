@@ -42,7 +42,7 @@ namespace Vaelastrasz.Server.Services
             return placeholders.Insert(placeholder);
         }
 
-        public bool Delete(long id)
+        public bool DeleteById(long id)
         {
             using var db = new LiteDatabase(_connectionString);
             var col = db.GetCollection<Placeholder>("placeholders");
@@ -89,7 +89,7 @@ namespace Vaelastrasz.Server.Services
             return placeholders;
         }
 
-        public bool Update(long id, string expression, string regularExpression, long userId)
+        public bool UpdateById(long id, string expression, string regularExpression, long userId)
         {
             using var db = new LiteDatabase(_connectionString);
             var placeholders = db.GetCollection<Placeholder>("placeholders");
@@ -97,7 +97,7 @@ namespace Vaelastrasz.Server.Services
 
             var placeholder = placeholders.FindById(id);
             if (placeholder == null)
-                throw new NotFoundException($"The account (id:{id}) does not exist.");
+                throw new NotFoundException($"The placeholder (id:{id}) does not exist.");
 
             var user = users.FindById(userId);
             if (user == null)

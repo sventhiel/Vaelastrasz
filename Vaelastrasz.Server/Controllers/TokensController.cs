@@ -60,7 +60,7 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         [HttpPost("tokens")]
-        public async Task<IActionResult> Post(LoginUserModel model)
+        public async Task<IActionResult> PostAsync(LoginUserModel model)
         {
             using var userService = new UserService(_connectionString);
 
