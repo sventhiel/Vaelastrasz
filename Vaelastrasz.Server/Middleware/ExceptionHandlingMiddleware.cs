@@ -1,6 +1,7 @@
 ﻿using Exceptionless;
 using Newtonsoft.Json;
 using System.Net;
+using Vaelastrasz.Library.Exceptions;
 
 namespace Vaelastrasz.Server.Middleware
 {
@@ -37,26 +38,26 @@ namespace Vaelastrasz.Server.Middleware
         {
             var code = HttpStatusCode.InternalServerError; // 500 if unexpected
 
-            if (exception is ArgumentException)
+            if (exception is BadRequestException)
             {
                 code = HttpStatusCode.BadRequest; // 400
             }
-            else if (exception is UnauthorizedAccessException)
+            else if(exception is UnauthorizedException) // 401
             {
-                code = HttpStatusCode.Unauthorized; // 401
+                code = HttpStatusCode.Unauthorized; //401
             }
-            //else if (exception is PermissionDeniedException)
-            //{
-            //    code = HttpStatusCode.Forbidden; // 403
-            //}
-            //else if (exception is ResourceNotFoundException)
-            //{
-            //    code = HttpStatusCode.NotFound; // 404
-            //}
-            //else if (exception is ConflictException)
-            //{
-            //    code = HttpStatusCode.Conflict; // 409
-            //}
+            else if(exception is ForbidException)
+            {
+                code = HttpStatusCode.Forbidden; // 403
+            }
+            else if (exception is NotFoundException)
+            {
+                code = HttpStatusCode.NotFound; // 404
+            }
+            else if (exception is ConflictException)
+            {
+                code = HttpStatusCode.Conflict; // 409
+            }
 
             var result = JsonConvert.SerializeObject(new { error = exception.Message });
             context.Response.ContentType = "application/json";

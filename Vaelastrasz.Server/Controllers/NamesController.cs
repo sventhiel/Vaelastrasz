@@ -17,7 +17,7 @@ namespace Vaelastrasz.Server.Controllers
         [HttpPost("names")]
         public async Task<IActionResult> PostAsync([FromBody] string name)
         {
-            return StatusCode((int)HttpStatusCode.OK, (new HumanName(name)));
+            return Ok(new HumanName(name));
         }
     }
 }

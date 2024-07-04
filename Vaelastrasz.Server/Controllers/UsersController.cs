@@ -61,7 +61,7 @@ namespace Vaelastrasz.Server.Controllers
             var id = userService.Create(model.Name, model.Password, model.Project, model.Pattern, model.AccountId, true);
             var user = userService.FindById(id);
 
-            return Created(Url.Action("GetByIdAsync", new { id = user.Id }), user);
+            return Created(Url.Action("GetByIdAsync", new { id = user.Id }), ReadUserModel.Convert(user));
         }
 
         [HttpPut("users/{id}")]

@@ -1,5 +1,6 @@
 ﻿using LiteDB;
 using Vaelastrasz.Library.Entities;
+using Vaelastrasz.Library.Exceptions;
 
 namespace Vaelastrasz.Server.Services
 {
@@ -20,47 +21,33 @@ namespace Vaelastrasz.Server.Services
 
         public long Create(string expression, string regularExpression, long userId)
         {
-            try
+            using var db = new LiteDatabase(_connectionString);
+            var placeholders = db.GetCollection<Placeholder>("placeholders");
+            var users = db.GetCollection<User>("users");
+
+            var user = users.FindById(userId);
+
+            if (user == null)
+                throw new NotFoundException($"The user (id:{userId}) does not exist.");
+
+            var placeholder = new Placeholder()
             {
-                using var db = new LiteDatabase(_connectionString);
-                var placeholders = db.GetCollection<Placeholder>("placeholders");
-                var users = db.GetCollection<User>("users");
+                Expression = expression,
+                RegularExpression = regularExpression,
+                User = user,
+                CreationDate = DateTimeOffset.UtcNow,
+                LastUpdateDate = DateTimeOffset.UtcNow
+            };
 
-                var user = users.FindById(userId);
-
-                if (user == null)
-                    throw new ArgumentException($"The user (id:{userId}) does not exist.", nameof(userId));
-
-                var placeholder = new Placeholder()
-                {
-                    Expression = expression,
-                    RegularExpression = regularExpression,
-                    User = user,
-                    CreationDate = DateTimeOffset.UtcNow,
-                    LastUpdateDate = DateTimeOffset.UtcNow
-                };
-
-                return placeholders.Insert(placeholder);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            return placeholders.Insert(placeholder);
         }
 
         public bool Delete(long id)
         {
-            try
-            {
-                using var db = new LiteDatabase(_connectionString);
-                var col = db.GetCollection<Placeholder>("placeholders");
+            using var db = new LiteDatabase(_connectionString);
+            var col = db.GetCollection<Placeholder>("placeholders");
 
-                return col.Delete(id);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            return col.Delete(id);
         }
 
         public void Dispose()
@@ -71,85 +58,57 @@ namespace Vaelastrasz.Server.Services
 
         public List<Placeholder> Find()
         {
-            try
-            {
-                using var db = new LiteDatabase(_connectionString);
-                var col = db.GetCollection<Placeholder>("placeholders");
+            using var db = new LiteDatabase(_connectionString);
+            var col = db.GetCollection<Placeholder>("placeholders");
 
-                return col.Query().ToList();
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            return col.Query().ToList();
         }
 
         public Placeholder FindById(long id)
         {
-            try
-            {
-                using var db = new LiteDatabase(_connectionString);
-                var col = db.GetCollection<Placeholder>("placeholders");
+            using var db = new LiteDatabase(_connectionString);
+            var col = db.GetCollection<Placeholder>("placeholders");
 
-                var placeholder = col.FindById(id);
+            var placeholder = col.FindById(id);
 
-                if (placeholder == null)
-                    throw new ArgumentException($"The placeholder (id:{id}) does not exist.", nameof(id));
+            if (placeholder == null)
+                throw new NotFoundException($"The placeholder (id:{id}) does not exist.");
 
-                return placeholder;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            return placeholder;
         }
 
         public List<Placeholder> FindByUserId(long userId)
         {
-            try
-            {
-                List<Placeholder> placeholders = new();
+            List<Placeholder> placeholders = new();
 
-                using var db = new LiteDatabase(_connectionString);
-                var col = db.GetCollection<Placeholder>("placeholders");
+            using var db = new LiteDatabase(_connectionString);
+            var col = db.GetCollection<Placeholder>("placeholders");
 
-                placeholders = col.Query().Where(p => p.User.Id == userId).ToList();
+            placeholders = col.Query().Where(p => p.User.Id == userId).ToList();
 
-                return placeholders;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            return placeholders;
         }
 
         public bool Update(long id, string expression, string regularExpression, long userId)
         {
-            try
-            {
-                using var db = new LiteDatabase(_connectionString);
-                var placeholders = db.GetCollection<Placeholder>("placeholders");
-                var users = db.GetCollection<User>("users");
+            using var db = new LiteDatabase(_connectionString);
+            var placeholders = db.GetCollection<Placeholder>("placeholders");
+            var users = db.GetCollection<User>("users");
 
-                var placeholder = placeholders.FindById(id);
-                if (placeholder == null)
-                    throw new ArgumentException($"The account (id:{id}) does not exist.", nameof(id));
+            var placeholder = placeholders.FindById(id);
+            if (placeholder == null)
+                throw new NotFoundException($"The account (id:{id}) does not exist.");
 
-                var user = users.FindById(userId);
-                if (user == null)
-                    throw new ArgumentException($"The user (id:{userId}) does not exist.", nameof(userId));
+            var user = users.FindById(userId);
+            if (user == null)
+                throw new NotFoundException($"The user (id:{userId}) does not exist.");
 
-                placeholder.Expression = expression;
-                placeholder.RegularExpression = regularExpression;
-                placeholder.User = user;
-                placeholder.LastUpdateDate = DateTimeOffset.UtcNow;
+            placeholder.Expression = expression;
+            placeholder.RegularExpression = regularExpression;
+            placeholder.User = user;
+            placeholder.LastUpdateDate = DateTimeOffset.UtcNow;
 
-                return placeholders.Update(placeholder);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            return placeholders.Update(placeholder);
         }
 
         protected virtual void Dispose(bool disposing)

@@ -1,5 +1,6 @@
 ﻿using LiteDB;
 using Vaelastrasz.Library.Entities;
+using Vaelastrasz.Library.Exceptions;
 
 namespace Vaelastrasz.Server.Services
 {
@@ -20,42 +21,31 @@ namespace Vaelastrasz.Server.Services
 
         public long Create(string name, string password, string host, string prefix)
         {
-            try
-            {
-                using var db = new LiteDatabase(_connectionString);
-                var accounts = db.GetCollection<Account>("accounts");
+            using var db = new LiteDatabase(_connectionString);
+            var accounts = db.GetCollection<Account>("accounts");
 
-                var account = new Account()
-                {
-                    Name = name,
-                    Password = password,
-                    Host = host,
-                    Prefix = prefix,
-                    CreationDate = DateTimeOffset.UtcNow,
-                    LastUpdateDate = DateTimeOffset.UtcNow
-                };
+            if (accounts.Exists(u => u.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase) && u.Host.Equals(host, StringComparison.InvariantCultureIgnoreCase)))
+                throw new ConflictException($"The account (name:{name}, host: {host}) already exists.");
 
-                return accounts.Insert(account);
-            }
-            catch (Exception)
+            var account = new Account()
             {
-                throw;
-            }
+                Name = name,
+                Password = password,
+                Host = host,
+                Prefix = prefix,
+                CreationDate = DateTimeOffset.UtcNow,
+                LastUpdateDate = DateTimeOffset.UtcNow
+            };
+
+            return accounts.Insert(account);
         }
 
         public bool Delete(long id)
         {
-            try
-            {
-                using var db = new LiteDatabase(_connectionString);
-                var col = db.GetCollection<Account>("accounts");
+            using var db = new LiteDatabase(_connectionString);
+            var col = db.GetCollection<Account>("accounts");
 
-                return col.Delete(id);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            return col.Delete(id);
         }
 
         public void Dispose()
@@ -66,37 +56,23 @@ namespace Vaelastrasz.Server.Services
 
         public List<Account> Find()
         {
-            try
-            {
-                using var db = new LiteDatabase(_connectionString);
-                var col = db.GetCollection<Account>("accounts");
+            using var db = new LiteDatabase(_connectionString);
+            var col = db.GetCollection<Account>("accounts");
 
-                return col.Query().ToList();
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            return col.Query().ToList();
         }
 
         public Account FindById(long id)
         {
-            try
-            {
-                using var db = new LiteDatabase(_connectionString);
-                var col = db.GetCollection<Account>("accounts");
+            using var db = new LiteDatabase(_connectionString);
+            var col = db.GetCollection<Account>("accounts");
 
-                var account = col.FindById(id);
+            var account = col.FindById(id);
 
-                if (account == null)
-                    throw new ArgumentException($"The account (id:{id}) does not exist.", nameof(id));
+            if (account == null)
+                throw new NotFoundException($"The account (id:{id}) does not exist.");
 
-                return account;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            return account;
         }
 
         public bool Update(long id, string name, string password, string host, string prefix)
@@ -107,20 +83,12 @@ namespace Vaelastrasz.Server.Services
             var account = accounts.FindById(id);
 
             if (account == null)
-                throw new ArgumentException($"The account (id:{id}) does not exist.", nameof(id));
+                throw new NotFoundException($"The account (id:{id}) does not exist.");
 
-            if (!string.IsNullOrEmpty(name))
-                account.Name = name;
-
-            if (!string.IsNullOrEmpty(password))
-                account.Password = password;
-
-            if (!string.IsNullOrEmpty(host))
-                account.Host = host;
-
-            if (!string.IsNullOrEmpty(prefix))
-                account.Prefix = prefix;
-
+            account.Prefix = prefix;
+            account.Name = name;
+            account.Password = password;
+            account.Host = host;
             account.LastUpdateDate = DateTimeOffset.UtcNow;
 
             return accounts.Update(account);

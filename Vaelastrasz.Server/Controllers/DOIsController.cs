@@ -3,6 +3,7 @@ using LiteDB;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using System.Security.Authentication;
 using Vaelastrasz.Library.Models;
 using Vaelastrasz.Server.Configurations;
 using Vaelastrasz.Server.Helpers;
@@ -30,81 +31,46 @@ namespace Vaelastrasz.Server.Controllers
         [HttpDelete("dois/{prefix}/{suffix}")]
         public async Task<IActionResult> DeleteAsync(string prefix, string suffix)
         {
-            try
-            {
-                using var userService = new UserService(_connectionString);
-                var user = userService.FindByName(User?.Identity?.Name);
+            using var userService = new UserService(_connectionString);
+            var user = userService.FindByName(User?.Identity?.Name);
 
-                if (user == null)
-                    return Unauthorized();
+            using var doiService = new DOIService(_connectionString);
 
-                using var doiService = new DOIService(_connectionString);
+            var result = doiService.FindByPrefixAndSuffix(prefix, suffix);
 
-                var result = doiService.FindByPrefixAndSuffix(prefix, suffix);
+            if (result.User.Id != user.Id)
+                throw new AuthenticationException($"The user (id: {user.Id}) is not allowed to perform the action..");
 
-                if (result?.User.Id != user.Id)
-                    return Forbid();
-
-                if (doiService.Delete(result.Id))
-                    return Ok($"deletion of doi: {prefix}/{suffix} was successful.");
-
-                return BadRequest($"something went wrong...");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
-            }
+            var response = doiService.Delete(result.Id);
+            return Ok(response);
         }
 
         // GET
         [HttpGet("dois")]
         public async Task<IActionResult> GetAsync()
         {
-            try
-            {
-                using var userService = new UserService(_connectionString);
-                var user = userService.FindByName(User?.Identity?.Name);
+            using var userService = new UserService(_connectionString);
+            var user = userService.FindByName(User?.Identity?.Name);
 
-                if (user == null)
-                    return Unauthorized();
+            using var doiService = new DOIService(_connectionString);
+            var dois = doiService.FindByUserId(user.Id).Select(d => ReadDOIModel.Convert(d));
 
-                using var doiService = new DOIService(_connectionString);
-                var result = doiService.FindByUserId(user.Id);
-
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return BadRequest(ex.Message);
-            }
+            return Ok(dois);
         }
 
         [HttpGet("dois/{prefix}/{suffix}")]
-        public async Task<IActionResult> GetAsync(string prefix, string suffix)
+        public async Task<IActionResult> GetByPrefixAndSuffixAsync(string prefix, string suffix)
         {
-            try
-            {
-                using var userService = new UserService(_connectionString);
-                var user = userService.FindByName(User?.Identity?.Name);
+            using var userService = new UserService(_connectionString);
+            var user = userService.FindByName(User?.Identity?.Name);
 
-                if (user == null)
-                    return Unauthorized();
+            using var doiService = new DOIService(_connectionString);
+            var result = doiService.FindByPrefixAndSuffix(prefix, suffix);
 
-                using var doiService = new DOIService(_connectionString);
-                var result = doiService.FindByPrefixAndSuffix(prefix, suffix);
+            if (result.User.Id != user.Id)
+                throw new AuthenticationException($"The user (id: {user.Id}) is not allowed to perform the action..");
 
-                if (result == null || result.User.Id != user.Id)
-                    return Forbid();
-
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return BadRequest(ex.Message);
-            }
+            return Ok(ReadDOIModel.Convert(result));
         }
 
         // POST
