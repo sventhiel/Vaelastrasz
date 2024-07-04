@@ -111,38 +111,30 @@ namespace Vaelastrasz.Server.Controllers
         [HttpPost("dois")]
         public async Task<IActionResult> PostAsync(CreateDOIModel model)
         {
-            try
-            {
-                using var userService = new UserService(_connectionString);
-                var user = userService.FindByName(User?.Identity?.Name);
+            using var userService = new UserService(_connectionString);
+            var user = userService.FindByName(User.Identity!.Name!);
 
-                if (user == null)
-                    return Unauthorized();
+            if (user == null)
+                return Unauthorized();
 
-                if (user.Account == null)
-                    return Forbid();
+            if (user.Account == null)
+                return Forbid();
 
-                using var placeholderService = new PlaceholderService(_connectionString);
-                var placeholders = placeholderService.FindByUserId(user.Id);
+            using var placeholderService = new PlaceholderService(_connectionString);
+            var placeholders = placeholderService.FindByUserId(user.Id);
 
-                if (!DOIHelper.Validate($"{model.Prefix}/{model.Suffix}", user.Account.Prefix, user.Pattern, new Dictionary<string, string>(placeholders.Select(p => new KeyValuePair<string, string>(p.Expression, p.RegularExpression)))))
-                    return Forbid();
+            if (!DOIHelper.Validate($"{model.Prefix}/{model.Suffix}", user.Account.Prefix, user.Pattern, new Dictionary<string, string>(placeholders.Select(p => new KeyValuePair<string, string>(p.Expression, p.RegularExpression)))))
+                return Forbid();
 
-                using var doiService = new DOIService(_connectionString);
-                var result = doiService.Create(model.Prefix, model.Suffix, DOIStateType.Draft, user.Id, "");
+            using var doiService = new DOIService(_connectionString);
+            var result = doiService.Create(model.Prefix, model.Suffix, DOIStateType.Draft, user.Id, "");
 
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return BadRequest(ex.Message);
-            }
+            return Ok(result);
         }
 
         // PUT
         [HttpPut("dois/{prefix}/{suffix}")]
-        public async Task<IActionResult> PutByDOIAsync(string prefix, string suffix, UpdateDOIModel model)
+        public async Task<IActionResult> PutByPrefixAndSuffixAsync(string prefix, string suffix, UpdateDOIModel model)
         {
             try
             {
@@ -177,6 +169,54 @@ namespace Vaelastrasz.Server.Controllers
                 ex.ToExceptionless().Submit();
                 return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
             }
+        }
+
+        [HttpPut("dois/{doi}")]
+        public async Task<IActionResult> PutByDOIAsync(string doi, UpdateDOIModel model)
+        {
+            try
+            {
+                using var userService = new UserService(_connectionString);
+                var user = userService.FindByName(User.Identity!.Name!);
+
+                if (user == null)
+                    return Unauthorized();
+
+                using var doiService = new DOIService(_connectionString);
+
+                if (ModelState.IsValid)
+                {
+                    var result = doiService.Update(doi, DOIStateType.Draft, "");
+
+                    if (result)
+                    {
+                        //doi = doiService.FindByDOI(doi);
+                        return Ok(doi);
+                    }
+                }
+
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                ex.ToExceptionless().Submit();
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpPut("dois/{id}")]
+        public async Task<IActionResult> PutByIdAsync(long id, UpdateDOIModel model)
+        {
+            using var doiService = new DOIService(_connectionString);
+
+            if (!ModelState.IsValid)
+                return StatusCode((int)HttpStatusCode.BadRequest, ModelState);
+
+            var result = doiService.Update(id, model.State, "");
+            var doi = doiService.FindById(id);
+
+            return StatusCode((int)HttpStatusCode.OK, ReadDOIModel.Convert(doi));
         }
     }
 }

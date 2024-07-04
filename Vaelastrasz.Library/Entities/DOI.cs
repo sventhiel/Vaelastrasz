@@ -1,7 +1,8 @@
 ﻿using LiteDB;
+using System;
 using Vaelastrasz.Library.Models;
 
-namespace Vaelastrasz.Server.Entities
+namespace Vaelastrasz.Library.Entities
 {
     public class DOI
     {

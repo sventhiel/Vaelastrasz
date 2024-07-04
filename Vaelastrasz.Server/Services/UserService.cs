@@ -1,5 +1,5 @@
 ﻿using LiteDB;
-using Vaelastrasz.Server.Entities;
+using Vaelastrasz.Library.Entities;
 using Vaelastrasz.Server.Utilities;
 
 namespace Vaelastrasz.Server.Services
@@ -65,7 +65,6 @@ namespace Vaelastrasz.Server.Services
             {
                 throw;
             }
-
         }
 
         public void Dispose()
@@ -98,7 +97,7 @@ namespace Vaelastrasz.Server.Services
             {
                 using var db = new LiteDatabase(_connectionString);
                 var col = db.GetCollection<User>("users");
-                
+
                 var user = col.FindById(id);
 
                 return user ?? throw new ArgumentException($"The user (id:{id}) does not exist.", nameof(id));

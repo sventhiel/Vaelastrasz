@@ -1,5 +1,4 @@
-﻿using Exceptionless;
-using LiteDB;
+﻿using LiteDB;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -30,7 +29,7 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         [Authorize(Roles = "user"), HttpGet("tokens")]
-        public IActionResult Get()
+        public async Task<IActionResult> GetAsync()
         {
             var username = User.Identity!.Name;
             if (username == null)
@@ -62,42 +61,30 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         [HttpPost("tokens")]
-        public IActionResult Post(LoginUserModel model)
+        public async Task<IActionResult> Post(LoginUserModel model)
         {
-            try
+            using var userService = new UserService(_connectionString);
+
+            if (!userService.Verify(model.Username, model.Password))
+                return StatusCode((int)HttpStatusCode.BadRequest, "");
+
+            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtConfiguration.IssuerSigningKey ?? ""));
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var tokenDescriptor = new SecurityTokenDescriptor()
             {
-                if (string.IsNullOrEmpty(_jwtConfiguration.IssuerSigningKey))
-                    return BadRequest();
-
-                using (var userService = new UserService(_connectionString))
+                Subject = new ClaimsIdentity(new Claim[]
                 {
-                    if (!userService.Verify(model.Username, model.Password))
-                        return BadRequest();
-
-                    var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtConfiguration.IssuerSigningKey ?? ""));
-                    var tokenHandler = new JwtSecurityTokenHandler();
-                    var tokenDescriptor = new SecurityTokenDescriptor()
-                    {
-                        Subject = new ClaimsIdentity(new Claim[]
-                        {
                             new Claim(ClaimTypes.Name, model.Username),
                             new Claim(ClaimTypes.Role, _admins.Any(a => a.Name.Equals(model.Username, StringComparison.InvariantCultureIgnoreCase)) ? "admin" : "user")
-                        }),
-                        Expires = DateTime.Now.AddHours(_jwtConfiguration.ValidLifetime),
-                        Issuer = _jwtConfiguration.ValidIssuer,
-                        Audience = _jwtConfiguration.ValidAudience,
-                        SigningCredentials = new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha512)
-                    };
+                }),
+                Expires = DateTime.Now.AddHours(_jwtConfiguration.ValidLifetime),
+                Issuer = _jwtConfiguration.ValidIssuer,
+                Audience = _jwtConfiguration.ValidAudience,
+                SigningCredentials = new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha512)
+            };
 
-                    var token = tokenHandler.CreateToken(tokenDescriptor);
-                    return Ok(tokenHandler.WriteToken(token));
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return BadRequest(ex.Message);
-            }
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return StatusCode((int)HttpStatusCode.OK, tokenHandler.WriteToken(token));
         }
     }
 }

@@ -1,8 +1,8 @@
-﻿using Exceptionless;
-using LiteDB;
+﻿using LiteDB;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
+using System.Net;
 using Vaelastrasz.Library.Models;
 using Vaelastrasz.Server.Helpers;
 using Vaelastrasz.Server.Services;
@@ -22,32 +22,24 @@ namespace Vaelastrasz.Server.Controllers
         [HttpPost("suffixes")]
         public async Task<IActionResult> PostAsync(CreateSuffixModel model)
         {
-            try
+            using var userService = new UserService(_connectionString);
+            var user = userService.FindByName(User.Identity!.Name!);
+
+            if (user == null)
+                return StatusCode((int)HttpStatusCode.Unauthorized, $"");
+
+            // Suffix
+            var suffix = SuffixHelper.Create(user.Pattern, model.Placeholders);
+
+            // Validation
+            var placeholderService = new PlaceholderService(_connectionString);
+
+            if (SuffixHelper.Validate(suffix, user.Pattern, new Dictionary<string, string>(placeholderService.FindByUserId(user.Id).Select(p => new KeyValuePair<string, string>(p.Expression, p.RegularExpression)))))
             {
-                using var userService = new UserService(_connectionString);
-                var user = userService.FindByName(User?.Identity?.Name);
-
-                if (user == null)
-                    return Unauthorized();
-
-                // Suffix
-                var suffix = SuffixHelper.Create(user.Pattern, model.Placeholders);
-
-                // Validation
-                var placeholderService = new PlaceholderService(_connectionString);
-
-                if (SuffixHelper.Validate(suffix, user.Pattern, new Dictionary<string, string>(placeholderService.FindByUserId(user.Id).Select(p => new KeyValuePair<string, string>(p.Expression, p.RegularExpression)))))
-                {
-                    return Ok(suffix);
-                }
-
-                return BadRequest("Something went wrong.");
+                return Ok(suffix);
             }
-            catch (Exception e)
-            {
-                e.ToExceptionless().Submit();
-                return BadRequest(e.Message);
-            }
+
+            return BadRequest("Something went wrong.");
         }
     }
 }

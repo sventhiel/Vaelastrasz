@@ -1,6 +1,7 @@
 ﻿using LiteDB;
+using System;
 
-namespace Vaelastrasz.Server.Entities
+namespace Vaelastrasz.Library.Entities
 {
     public class Placeholder
     {

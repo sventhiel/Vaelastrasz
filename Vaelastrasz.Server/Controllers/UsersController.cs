@@ -1,5 +1,4 @@
-﻿using Exceptionless;
-using LiteDB;
+﻿using LiteDB;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RestSharp;
@@ -27,37 +26,37 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         [HttpDelete("users/{id}")]
-        public IActionResult Delete(long id)
+        public async Task<IActionResult> DeleteAsync(long id)
         {
             using var userService = new UserService(_connectionString);
             var response = userService.Delete(id);
 
-            return Ok(response);
+            return StatusCode((int)HttpStatusCode.OK, response);
         }
 
         [HttpGet("users")]
-        public IActionResult Get()
+        public async Task<IActionResult> GetAsync()
         {
             using var userService = new UserService(_connectionString);
             var users = userService.Find();
-            return Ok(new List<ReadUserModel>(users.Select(u => ReadUserModel.Convert(u))));
+            return StatusCode((int)HttpStatusCode.OK, new List<ReadUserModel>(users.Select(u => ReadUserModel.Convert(u))));
         }
 
         [HttpGet("users/{id}")]
-        public IActionResult GetById(long id)
+        public async Task<IActionResult> GetByIdAsync(long id)
         {
             using var userService = new UserService(_connectionString);
             var user = userService.FindById(id);
-            return Ok(ReadUserModel.Convert(user));
+            return StatusCode((int)HttpStatusCode.OK, ReadUserModel.Convert(user));
         }
 
         [HttpPost("users")]
-        public IActionResult Post(CreateUserModel model)
+        public async Task<IActionResult> PostAsync(CreateUserModel model)
         {
             using var userService = new UserService(_connectionString);
 
             if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+                return StatusCode((int)HttpStatusCode.BadRequest, ModelState);
 
             var id = userService.Create(model.Name, model.Password, model.Project, model.Pattern, model.AccountId, true);
             var user = userService.FindById(id);
@@ -65,17 +64,17 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         [HttpPut("users/{id}")]
-        public IActionResult Put(long id, UpdateUserModel model)
+        public async Task<IActionResult> PutAsync(long id, UpdateUserModel model)
         {
             using var userService = new UserService(_connectionString);
 
             if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+                return StatusCode((int)HttpStatusCode.BadRequest, ModelState);
 
             var result = userService.Update(id, model.Password, model.Project, model.Pattern, model.AccountId, model.IsActive);
             var user = userService.FindById(id);
 
-            return Ok(ReadUserModel.Convert(user));
+            return StatusCode((int)HttpStatusCode.OK, ReadUserModel.Convert(user));
         }
     }
 }

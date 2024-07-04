@@ -1,5 +1,5 @@
 ﻿using LiteDB;
-using Vaelastrasz.Server.Entities;
+using Vaelastrasz.Library.Entities;
 
 namespace Vaelastrasz.Server.Services
 {
@@ -93,7 +93,7 @@ namespace Vaelastrasz.Server.Services
 
                 var placeholder = col.FindById(id);
 
-                if(placeholder == null)
+                if (placeholder == null)
                     throw new ArgumentException($"The placeholder (id:{id}) does not exist.", nameof(id));
 
                 return placeholder;

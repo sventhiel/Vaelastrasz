@@ -94,7 +94,7 @@ namespace Vaelastrasz.Server.Controllers
 
                 if (placeholder == null)
                     return StatusCode((int)HttpStatusCode.InternalServerError);
-                
+
                 return Ok(placeholder);
             }
             catch (Exception ex)

@@ -1,7 +1,6 @@
 ﻿using LiteDB;
-using NameParser;
+using Vaelastrasz.Library.Entities;
 using Vaelastrasz.Library.Models;
-using Vaelastrasz.Server.Entities;
 
 namespace Vaelastrasz.Server.Services
 {
@@ -92,7 +91,7 @@ namespace Vaelastrasz.Server.Services
         {
             try
             {
-                if(!doi.Contains('/'))
+                if (!doi.Contains('/'))
                 {
                     throw new ArgumentException($"The value of doi ({doi}) is invalid.", nameof(doi));
                 }
@@ -117,7 +116,7 @@ namespace Vaelastrasz.Server.Services
 
                 var doi = col.FindById(id);
 
-                if(doi == null)
+                if (doi == null)
                     throw new ArgumentException($"The doi (id:{id}) does not exist.", nameof(id));
 
                 return doi;
@@ -133,7 +132,7 @@ namespace Vaelastrasz.Server.Services
             try
             {
                 if (prefix == null)
-                    throw new ArgumentNullException(nameof(prefix));               
+                    throw new ArgumentNullException(nameof(prefix));
 
                 using var db = new LiteDatabase(_connectionString);
                 var col = db.GetCollection<DOI>("dois");
@@ -252,6 +251,27 @@ namespace Vaelastrasz.Server.Services
                 string suffix = doi.Split('/')[1];
 
                 return Update(prefix, suffix, state, value);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public bool Update(long id, DOIStateType state, string value)
+        {
+            try
+            {
+                using var db = new LiteDatabase(_connectionString);
+                var dois = db.GetCollection<DOI>("dois");
+
+                var doi = dois.FindById(id);
+
+                doi.State = state;
+                doi.Value = value;
+                doi.LastUpdateDate = DateTimeOffset.UtcNow;
+
+                return dois.Update(doi);
             }
             catch (Exception)
             {

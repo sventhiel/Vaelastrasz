@@ -32,19 +32,14 @@ namespace Vaelastrasz.Library.Services
                 var json = JsonConvert.SerializeObject(model);
                 HttpResponseMessage response = await _client.PostAsync($"{_config.Host}/api/datacite", new StringContent(json, Encoding.UTF8, "application/json"));
 
-                if (response.IsSuccessStatusCode)
-                {
-                    return ApiResponse<ReadDataCiteModel>.Success(JsonConvert.DeserializeObject<ReadDataCiteModel>(await response.Content.ReadAsStringAsync()));
-                }
-                else
-                {
-                    string errorResponse = await response.Content.ReadAsStringAsync();
-                    return ApiResponse<ReadDataCiteModel>.Failure($"Error: {response.StatusCode}. {errorResponse}");
-                }
+                if (!response.IsSuccessStatusCode)
+                    return ApiResponse<ReadDataCiteModel>.Failure(await response.Content.ReadAsStringAsync(), response.StatusCode);
+
+                return ApiResponse<ReadDataCiteModel>.Success(JsonConvert.DeserializeObject<ReadDataCiteModel>(await response.Content.ReadAsStringAsync()), response.StatusCode);
             }
             catch (Exception ex)
             {
-                return ApiResponse<ReadDataCiteModel>.Failure($"Exception: {ex.Message}");
+                return ApiResponse<ReadDataCiteModel>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
             }
         }
 
@@ -54,19 +49,14 @@ namespace Vaelastrasz.Library.Services
             {
                 HttpResponseMessage response = await _client.DeleteAsync($"{_config.Host}/api/datacite/{doi}");
 
-                if (response.IsSuccessStatusCode)
-                {
-                    return ApiResponse<bool>.Success(true);
-                }
-                else
-                {
-                    string errorResponse = await response.Content.ReadAsStringAsync();
-                    return ApiResponse<bool>.Failure($"Error: {response.StatusCode}. {errorResponse}");
-                }
+                if (!response.IsSuccessStatusCode)
+                    return ApiResponse<bool>.Failure(await response.Content.ReadAsStringAsync(), response.StatusCode);
+
+                return ApiResponse<bool>.Success(JsonConvert.DeserializeObject<bool>(await response.Content.ReadAsStringAsync()), response.StatusCode);
             }
             catch (Exception ex)
             {
-                return ApiResponse<bool>.Failure($"Exception: {ex.Message}");
+                return ApiResponse<bool>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
             }
         }
 
@@ -74,22 +64,16 @@ namespace Vaelastrasz.Library.Services
         {
             try
             {
-                HttpResponseMessage response = await _client.GetAsync($"{_config.Host}/api/datacite/");
+                HttpResponseMessage response = await _client.GetAsync($"{_config.Host}/api/datacite");
 
-                if (response.IsSuccessStatusCode)
-                {
-                    return ApiResponse<List<ReadDataCiteModel>>.Success(JsonConvert.DeserializeObject<List<ReadDataCiteModel>>(await response.Content.ReadAsStringAsync()));
-                }
-                else
-                {
-                    string errorResponse = await response.Content.ReadAsStringAsync();
-                    return ApiResponse<List<ReadDataCiteModel>>.Failure($"Error: {response.StatusCode}. {errorResponse}");
-                }
+                if (!response.IsSuccessStatusCode)
+                    return ApiResponse<List<ReadDataCiteModel>>.Failure(await response.Content.ReadAsStringAsync(), response.StatusCode);
+
+                return ApiResponse<List<ReadDataCiteModel>>.Success(JsonConvert.DeserializeObject<List<ReadDataCiteModel>>(await response.Content.ReadAsStringAsync()), response.StatusCode);
             }
             catch (Exception ex)
             {
                 return ApiResponse<List<ReadDataCiteModel>>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
-
             }
         }
 
@@ -99,15 +83,10 @@ namespace Vaelastrasz.Library.Services
             {
                 HttpResponseMessage response = await _client.GetAsync($"{_config.Host}/api/datacite/{doi}");
 
-                if (response.IsSuccessStatusCode)
-                {
-                    return ApiResponse<ReadDataCiteModel>.Success(JsonConvert.DeserializeObject<ReadDataCiteModel>(await response.Content.ReadAsStringAsync()), response.StatusCode);
-                }
-                else
-                {
-                    string errorMessage = await response.Content.ReadAsStringAsync();
-                    return ApiResponse<ReadDataCiteModel>.Failure(errorMessage, response.StatusCode);
-                }
+                if (!response.IsSuccessStatusCode)
+                    return ApiResponse<ReadDataCiteModel>.Failure(await response.Content.ReadAsStringAsync(), response.StatusCode);
+
+                return ApiResponse<ReadDataCiteModel>.Success(JsonConvert.DeserializeObject<ReadDataCiteModel>(await response.Content.ReadAsStringAsync()), response.StatusCode);
             }
             catch (Exception ex)
             {
@@ -121,19 +100,14 @@ namespace Vaelastrasz.Library.Services
             {
                 HttpResponseMessage response = await _client.PutAsync($"{_config.Host}/api/datacite/{doi}", new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json"));
 
-                if (response.IsSuccessStatusCode)
-                {
-                    return ApiResponse<ReadDataCiteModel>.Success(JsonConvert.DeserializeObject<ReadDataCiteModel>(await response.Content.ReadAsStringAsync()));
-                }
-                else
-                {
-                    string errorResponse = await response.Content.ReadAsStringAsync();
-                    return ApiResponse<ReadDataCiteModel>.Failure($"Error: {response.StatusCode}. {errorResponse}");
-                }
+                if (!response.IsSuccessStatusCode)
+                    return ApiResponse<ReadDataCiteModel>.Failure(await response.Content.ReadAsStringAsync(), response.StatusCode);
+
+                return ApiResponse<ReadDataCiteModel>.Success(JsonConvert.DeserializeObject<ReadDataCiteModel>(await response.Content.ReadAsStringAsync()), response.StatusCode);
             }
             catch (Exception ex)
             {
-                return ApiResponse<ReadDataCiteModel>.Failure($"Exception: {ex.Message}");
+                return ApiResponse<ReadDataCiteModel>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
             }
         }
     }

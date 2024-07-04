@@ -1,26 +1,21 @@
-﻿using LiteDB;
+﻿using System;
 
-namespace Vaelastrasz.Server.Entities
+namespace Vaelastrasz.Library.Entities
 {
-    public class User
+    public class Account
     {
-        public User()
+        public Account()
         {
             CreationDate = DateTimeOffset.UtcNow;
             LastUpdateDate = DateTimeOffset.UtcNow;
         }
 
-        [BsonRef("accounts")]
-        public Account Account { get; set; }
-
         public DateTimeOffset CreationDate { get; set; }
+        public string Host { get; set; }
         public long Id { get; set; }
         public DateTimeOffset LastUpdateDate { get; set; }
         public string Name { get; set; }
         public string Password { get; set; }
-        public string Project { get; set; }
-        public string Pattern { get; set; }
-        public string Salt { get; set; }
-        public bool IsActive { get; set; }
+        public string Prefix { get; set; }
     }
 }

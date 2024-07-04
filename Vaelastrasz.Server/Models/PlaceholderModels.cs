@@ -1,4 +1,4 @@
-﻿using Vaelastrasz.Server.Entities;
+﻿using Vaelastrasz.Library.Entities;
 
 namespace Vaelastrasz.Server.Models
 {

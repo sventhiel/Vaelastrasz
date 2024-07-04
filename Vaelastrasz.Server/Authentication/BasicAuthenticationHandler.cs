@@ -67,6 +67,7 @@ namespace Vaelastrasz.Server.Authentication
 
                     var identity = new ClaimsIdentity(claims, "Basic");
                     var claimsPrincipal = new ClaimsPrincipal(identity);
+
                     return AuthenticateResult.Success(new AuthenticationTicket(claimsPrincipal, Scheme.Name));
                 }
 

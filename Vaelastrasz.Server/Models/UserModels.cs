@@ -1,6 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Vaelastrasz.Server.Entities;
-using DataAnnotationsExtensions;
+﻿using DataAnnotationsExtensions;
+using System.ComponentModel.DataAnnotations;
+using Vaelastrasz.Library.Entities;
 
 namespace Vaelastrasz.Server.Models
 {

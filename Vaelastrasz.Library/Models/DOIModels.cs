@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Converters;
 using System;
 using System.Runtime.Serialization;
+using Vaelastrasz.Library.Entities;
 
 namespace Vaelastrasz.Library.Models
 {
@@ -35,8 +36,20 @@ namespace Vaelastrasz.Library.Models
         public string Prefix { get; set; }
         public string Suffix { get; set; }
         public long UserId { get; set; }
-
         public DOIStateType State { get; set; }
+
+        public static ReadDOIModel Convert(DOI doi)
+        {
+            return new ReadDOIModel
+            {
+                Prefix = doi.Prefix,
+                Suffix = doi.Suffix,
+                UserId = doi.User.Id,
+                State = doi.State,
+                CreateCreationDate = doi.CreationDate,
+                LastUpdateDate = doi.LastUpdateDate
+            };
+        }
     }
 
     public class UpdateDOIModel

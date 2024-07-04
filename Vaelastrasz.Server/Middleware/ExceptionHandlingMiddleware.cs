@@ -1,9 +1,6 @@
 ﻿using Exceptionless;
 using Newtonsoft.Json;
-using Serilog;
-using System;
 using System.Net;
-using Vaelastrasz.Server.Controllers;
 
 namespace Vaelastrasz.Server.Middleware
 {

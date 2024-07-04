@@ -1,5 +1,5 @@
 ﻿using LiteDB;
-using Vaelastrasz.Server.Entities;
+using Vaelastrasz.Library.Entities;
 
 namespace Vaelastrasz.Server.Services
 {
@@ -41,7 +41,6 @@ namespace Vaelastrasz.Server.Services
             {
                 throw;
             }
-
         }
 
         public bool Delete(long id)
@@ -53,7 +52,7 @@ namespace Vaelastrasz.Server.Services
 
                 return col.Delete(id);
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw;
             }
@@ -74,11 +73,10 @@ namespace Vaelastrasz.Server.Services
 
                 return col.Query().ToList();
             }
-            catch (Exception) 
+            catch (Exception)
             {
                 throw;
             }
-            
         }
 
         public Account FindById(long id)
@@ -90,7 +88,7 @@ namespace Vaelastrasz.Server.Services
 
                 var account = col.FindById(id);
 
-                if(account == null)
+                if (account == null)
                     throw new ArgumentException($"The account (id:{id}) does not exist.", nameof(id));
 
                 return account;
@@ -99,7 +97,6 @@ namespace Vaelastrasz.Server.Services
             {
                 throw;
             }
-            
         }
 
         public bool Update(long id, string name, string password, string host, string prefix)

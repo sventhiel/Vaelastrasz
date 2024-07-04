@@ -32,19 +32,14 @@ namespace Vaelastrasz.Library.Services
                 var v = JsonConvert.SerializeObject(model);
                 HttpResponseMessage response = await _client.PostAsync($"{_config.Host}/api/dois", new StringContent(v, Encoding.UTF8, "application/json"));
 
-                if (response.IsSuccessStatusCode)
-                {
-                    return ApiResponse<ReadDOIModel>.Success(JsonConvert.DeserializeObject<ReadDOIModel>(await response.Content.ReadAsStringAsync()));
-                }
-                else
-                {
-                    string errorResponse = await response.Content.ReadAsStringAsync();
-                    return ApiResponse<ReadDOIModel>.Failure($"Error: {response.StatusCode}. {errorResponse}");
-                }
+                if (!response.IsSuccessStatusCode)
+                    return ApiResponse<ReadDOIModel>.Failure(await response.Content.ReadAsStringAsync(), response.StatusCode);
+
+                return ApiResponse<ReadDOIModel>.Success(JsonConvert.DeserializeObject<ReadDOIModel>(await response.Content.ReadAsStringAsync()), response.StatusCode);
             }
             catch (Exception ex)
             {
-                return ApiResponse<ReadDOIModel>.Failure($"Exception: {ex.Message}");
+                return ApiResponse<ReadDOIModel>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
             }
         }
 
@@ -54,30 +49,49 @@ namespace Vaelastrasz.Library.Services
             {
                 HttpResponseMessage response = await _client.DeleteAsync($"{_config.Host}/api/dois/{id}");
 
-                if (response.IsSuccessStatusCode)
-                {
-                    return ApiResponse<bool>.Success(true);
-                }
-                else
-                {
-                    string errorResponse = await response.Content.ReadAsStringAsync();
-                    return ApiResponse<bool>.Failure($"Error: {response.StatusCode}. {errorResponse}");
-                }
+                if (!response.IsSuccessStatusCode)
+                    return ApiResponse<bool>.Failure(await response.Content.ReadAsStringAsync(), response.StatusCode);
+
+                return ApiResponse<bool>.Success(JsonConvert.DeserializeObject<bool>(await response.Content.ReadAsStringAsync()), response.StatusCode);
             }
             catch (Exception ex)
             {
-                return ApiResponse<bool>.Failure($"Exception: {ex.Message}");
+                return ApiResponse<bool>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
             }
         }
 
         public async Task<ApiResponse<List<ReadDOIModel>>> Find()
         {
-            return null;
+            try
+            {
+                HttpResponseMessage response = await _client.GetAsync($"{_config.Host}/api/dois");
+
+                if (!response.IsSuccessStatusCode)
+                    return ApiResponse<List<ReadDOIModel>>.Failure(await response.Content.ReadAsStringAsync(), response.StatusCode);
+
+                return ApiResponse<List<ReadDOIModel>>.Success(JsonConvert.DeserializeObject<List<ReadDOIModel>>(await response.Content.ReadAsStringAsync()), response.StatusCode);
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<List<ReadDOIModel>>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
+            }
         }
 
         public async Task<ApiResponse<ReadDOIModel>> FindById(long id)
         {
-            return null;
+            try
+            {
+                HttpResponseMessage response = await _client.GetAsync($"{_config.Host}/api/dois/{id}");
+
+                if (!response.IsSuccessStatusCode)
+                    return ApiResponse<ReadDOIModel>.Failure(await response.Content.ReadAsStringAsync(), response.StatusCode);
+
+                return ApiResponse<ReadDOIModel>.Success(JsonConvert.DeserializeObject<ReadDOIModel>(await response.Content.ReadAsStringAsync()), response.StatusCode);
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<ReadDOIModel>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
+            }
         }
 
         public async Task<ApiResponse<string>> GenerateAsync(CreateSuffixModel model)
@@ -85,35 +99,70 @@ namespace Vaelastrasz.Library.Services
             try
             {
                 var response_prefix = await _client.GetAsync($"{_config.Host}/api/prefixes");
-                var response_suffix = await _client.PostAsync($"{_config.Host}/api/suffixes", new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json"));
+                if (!response_prefix.IsSuccessStatusCode)
+                    return ApiResponse<string>.Failure(await response_prefix.Content.ReadAsStringAsync(), response_prefix.StatusCode);
 
-                if (response_prefix.IsSuccessStatusCode && response_suffix.IsSuccessStatusCode)
-                {
-                    return ApiResponse<string>.Success($"{await response_prefix.Content.ReadAsStringAsync()}/{await response_suffix.Content.ReadAsStringAsync()}");
-                }
-                else
-                {
-                    if (!response_prefix.IsSuccessStatusCode)
-                    {
-                        string errorResponse_prefix = await response_prefix.Content.ReadAsStringAsync();
-                        return ApiResponse<string>.Failure($"Error: {response_prefix.StatusCode}. {errorResponse_prefix}");
-                    }
-                    else
-                    {
-                        string errorResponse_suffix = await response_suffix.Content.ReadAsStringAsync();
-                        return ApiResponse<string>.Failure($"Error: {response_suffix.StatusCode}. {errorResponse_suffix}");
-                    }
-                }
+                var response_suffix = await _client.PostAsync($"{_config.Host}/api/suffixes", new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json"));
+                if (!response_suffix.IsSuccessStatusCode)
+                    return ApiResponse<string>.Failure(await response_suffix.Content.ReadAsStringAsync(), response_suffix.StatusCode);
+
+                return ApiResponse<string>.Success($"{await response_prefix.Content.ReadAsStringAsync()}/{await response_suffix.Content.ReadAsStringAsync()}", response_suffix.StatusCode);
             }
             catch (Exception ex)
             {
-                return ApiResponse<string>.Failure($"Exception: {ex.Message}");
+                return ApiResponse<string>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
             }
         }
 
         public async Task<ApiResponse<ReadDOIModel>> UpdateAsync(long id, UpdateDOIModel model)
         {
-            return null;
+            try
+            {
+                HttpResponseMessage response = await _client.PutAsync($"{_config.Host}/api/datacite/{id}", new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json"));
+
+                if (!response.IsSuccessStatusCode)
+                    return ApiResponse<ReadDOIModel>.Failure(await response.Content.ReadAsStringAsync(), response.StatusCode);
+
+                return ApiResponse<ReadDOIModel>.Success(JsonConvert.DeserializeObject<ReadDOIModel>(await response.Content.ReadAsStringAsync()), response.StatusCode);
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<ReadDOIModel>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
+            }
+        }
+
+        public async Task<ApiResponse<ReadDOIModel>> UpdateAsync(string doi, UpdateDOIModel model)
+        {
+            try
+            {
+                HttpResponseMessage response = await _client.PutAsync($"{_config.Host}/api/datacite/{doi}", new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json"));
+
+                if (!response.IsSuccessStatusCode)
+                    return ApiResponse<ReadDOIModel>.Failure(await response.Content.ReadAsStringAsync(), response.StatusCode);
+
+                return ApiResponse<ReadDOIModel>.Success(JsonConvert.DeserializeObject<ReadDOIModel>(await response.Content.ReadAsStringAsync()), response.StatusCode);
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<ReadDOIModel>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
+            }
+        }
+
+        public async Task<ApiResponse<ReadDOIModel>> UpdateAsync(string prefix, string suffix, UpdateDOIModel model)
+        {
+            try
+            {
+                HttpResponseMessage response = await _client.PutAsync($"{_config.Host}/api/datacite/{prefix}/{suffix}", new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json"));
+
+                if (!response.IsSuccessStatusCode)
+                    return ApiResponse<ReadDOIModel>.Failure(await response.Content.ReadAsStringAsync(), response.StatusCode);
+
+                return ApiResponse<ReadDOIModel>.Success(JsonConvert.DeserializeObject<ReadDOIModel>(await response.Content.ReadAsStringAsync()), response.StatusCode);
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<ReadDOIModel>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
+            }
         }
     }
 }

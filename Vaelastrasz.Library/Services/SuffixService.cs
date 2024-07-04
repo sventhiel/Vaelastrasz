@@ -32,17 +32,16 @@ namespace Vaelastrasz.Library.Services
 
                 if (response.IsSuccessStatusCode)
                 {
-                    return ApiResponse<string>.Success(await response.Content.ReadAsStringAsync());
+                    return ApiResponse<string>.Success(await response.Content.ReadAsStringAsync(), response.StatusCode);
                 }
                 else
                 {
-                    string errorResponse = await response.Content.ReadAsStringAsync();
-                    return ApiResponse<string>.Failure($"Error: {response.StatusCode}. {errorResponse}");
+                    return ApiResponse<string>.Failure(await response.Content.ReadAsStringAsync(), System.Net.HttpStatusCode.InternalServerError);
                 }
             }
             catch (Exception ex)
             {
-                return ApiResponse<string>.Failure($"Exception: {ex.Message}");
+                return ApiResponse<string>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
             }
         }
     }
