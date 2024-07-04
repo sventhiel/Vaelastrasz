@@ -1,12 +1,16 @@
 ﻿using LiteDB;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json.Linq;
 using System.Data;
 using System.Net;
+using Vaelastrasz.Library.Entities;
 using Vaelastrasz.Library.Models;
 using Vaelastrasz.Server.Helpers;
 using Vaelastrasz.Server.Services;
 
+//ry
 namespace Vaelastrasz.Server.Controllers
 {
     [ApiController, Authorize(Roles = "user"), Route("api")]
@@ -23,10 +27,7 @@ namespace Vaelastrasz.Server.Controllers
         public async Task<IActionResult> PostAsync(CreateSuffixModel model)
         {
             using var userService = new UserService(_connectionString);
-            var user = userService.FindByName(User.Identity!.Name!);
-
-            if (user == null)
-                return StatusCode((int)HttpStatusCode.Unauthorized, $"");
+            var user = userService.FindByName(User.Identity?.Name);
 
             // Suffix
             var suffix = SuffixHelper.Create(user.Pattern, model.Placeholders);
@@ -35,11 +36,9 @@ namespace Vaelastrasz.Server.Controllers
             var placeholderService = new PlaceholderService(_connectionString);
 
             if (SuffixHelper.Validate(suffix, user.Pattern, new Dictionary<string, string>(placeholderService.FindByUserId(user.Id).Select(p => new KeyValuePair<string, string>(p.Expression, p.RegularExpression)))))
-            {
                 return Ok(suffix);
-            }
 
-            return BadRequest("Something went wrong.");
+            throw new ArgumentException($"The value of suffix ({suffix}) is invalid.");
         }
     }
 }

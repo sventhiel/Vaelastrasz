@@ -9,6 +9,7 @@ using Vaelastrasz.Server.Services;
 
 namespace Vaelastrasz.Server.Controllers
 {
+    // rdy
     [ApiController, Route("api"), Authorize(Roles = "admin")]
     public class UsersController : ControllerBase
     {
@@ -31,7 +32,7 @@ namespace Vaelastrasz.Server.Controllers
             using var userService = new UserService(_connectionString);
             var response = userService.Delete(id);
 
-            return StatusCode((int)HttpStatusCode.OK, response);
+            return Ok(response);
         }
 
         [HttpGet("users")]
@@ -39,7 +40,8 @@ namespace Vaelastrasz.Server.Controllers
         {
             using var userService = new UserService(_connectionString);
             var users = userService.Find();
-            return StatusCode((int)HttpStatusCode.OK, new List<ReadUserModel>(users.Select(u => ReadUserModel.Convert(u))));
+            
+            return Ok(new List<ReadUserModel>(users.Select(u => ReadUserModel.Convert(u))));
         }
 
         [HttpGet("users/{id}")]
@@ -47,7 +49,8 @@ namespace Vaelastrasz.Server.Controllers
         {
             using var userService = new UserService(_connectionString);
             var user = userService.FindById(id);
-            return StatusCode((int)HttpStatusCode.OK, ReadUserModel.Convert(user));
+            
+            return Ok(ReadUserModel.Convert(user));
         }
 
         [HttpPost("users")]
@@ -55,12 +58,10 @@ namespace Vaelastrasz.Server.Controllers
         {
             using var userService = new UserService(_connectionString);
 
-            if (!ModelState.IsValid)
-                return StatusCode((int)HttpStatusCode.BadRequest, ModelState);
-
             var id = userService.Create(model.Name, model.Password, model.Project, model.Pattern, model.AccountId, true);
             var user = userService.FindById(id);
-            return StatusCode((int)HttpStatusCode.Created, ReadUserModel.Convert(user));
+
+            return Created(Url.Action("GetByIdAsync", new { id = user.Id }), user);
         }
 
         [HttpPut("users/{id}")]
@@ -68,13 +69,10 @@ namespace Vaelastrasz.Server.Controllers
         {
             using var userService = new UserService(_connectionString);
 
-            if (!ModelState.IsValid)
-                return StatusCode((int)HttpStatusCode.BadRequest, ModelState);
-
             var result = userService.Update(id, model.Password, model.Project, model.Pattern, model.AccountId, model.IsActive);
             var user = userService.FindById(id);
 
-            return StatusCode((int)HttpStatusCode.OK, ReadUserModel.Convert(user));
+            return Ok(ReadUserModel.Convert(user));
         }
     }
 }

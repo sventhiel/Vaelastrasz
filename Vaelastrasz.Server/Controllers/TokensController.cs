@@ -4,12 +4,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
+using System.Security.Authentication;
 using System.Security.Claims;
 using System.Text;
+using Vaelastrasz.Library.Entities;
 using Vaelastrasz.Server.Configurations;
 using Vaelastrasz.Server.Models;
 using Vaelastrasz.Server.Services;
 
+//rdy
 namespace Vaelastrasz.Server.Controllers
 {
     [ApiController, Route("api")]
@@ -31,11 +34,7 @@ namespace Vaelastrasz.Server.Controllers
         [Authorize(Roles = "user"), HttpGet("tokens")]
         public async Task<IActionResult> GetAsync()
         {
-            var username = User.Identity!.Name;
-            if (username == null)
-            {
-                return StatusCode((int)HttpStatusCode.InternalServerError);
-            }
+            var username = User.Identity!.Name!;
 
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtConfiguration.IssuerSigningKey!));
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -66,7 +65,7 @@ namespace Vaelastrasz.Server.Controllers
             using var userService = new UserService(_connectionString);
 
             if (!userService.Verify(model.Username, model.Password))
-                return StatusCode((int)HttpStatusCode.BadRequest, "");
+                throw new AuthenticationException($"Either username ({model.Username}) or password {model.Password} are invalid.");
 
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtConfiguration.IssuerSigningKey ?? ""));
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -84,7 +83,7 @@ namespace Vaelastrasz.Server.Controllers
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            return StatusCode((int)HttpStatusCode.OK, tokenHandler.WriteToken(token));
+            return Ok(tokenHandler.WriteToken(token));
         }
     }
 }

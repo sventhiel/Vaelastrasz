@@ -1,6 +1,7 @@
 ﻿using LiteDB;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 using Vaelastrasz.Server.Models;
 using Vaelastrasz.Server.Services;
 
@@ -21,23 +22,14 @@ namespace Vaelastrasz.Server.Controllers
         [HttpDelete("accounts/{id}")]
         public async Task<IActionResult> DeleteByIdAsync(long id)
         {
-            try
-            {
-                using (var accountService = new AccountService(_connectionString))
-                {
-                    var result = accountService.Delete(id);
+            using var accountService = new AccountService(_connectionString);
+            var result = accountService.Delete(id);
 
-                    if (result)
-                        return Ok($"deletion of account (id:{id}) was successful.");
+            if (result)
+                return StatusCode((int)HttpStatusCode.OK, $"The account (id:{id}) was deleted.");
 
-                    return BadRequest($"something went wrong...");
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return BadRequest(ex.Message);
-            }
+            return StatusCode((int)HttpStatusCode.BadRequest, $"The account (id:{id}) was deleted.");
+
         }
 
         [HttpGet("accounts")]

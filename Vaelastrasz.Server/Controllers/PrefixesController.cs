@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Vaelastrasz.Server.Services;
 
+//rdy
 namespace Vaelastrasz.Server.Controllers
 {
     [ApiController, Authorize(Roles = "user"), Route("api")]
@@ -19,24 +20,13 @@ namespace Vaelastrasz.Server.Controllers
         [HttpGet("prefixes")]
         public async Task<IActionResult> GetAsync()
         {
-            try
-            {
-                using var userService = new UserService(_connectionString);
-                var user = userService.FindByName(User?.Identity?.Name);
+            using var userService = new UserService(_connectionString);
+            var user = userService.FindByName(User.Identity.Name);
 
-                if (user == null)
-                    return Unauthorized();
+            // Prefix
+            var prefix = user.Account.Prefix;
 
-                // Prefix
-                var prefix = user.Account.Prefix;
-
-                return Ok(prefix);
-            }
-            catch (Exception e)
-            {
-                e.ToExceptionless().Submit();
-                return BadRequest(e.Message);
-            }
+            return Ok(prefix);
         }
     }
 }

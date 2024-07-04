@@ -58,7 +58,7 @@ namespace Vaelastrasz.Server.Controllers
                     return StatusCode((int)response.StatusCode, response.ErrorMessage);
 
                 // TODO: Should it return 200?
-                return Ok(JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content));
+                return StatusCode((int)response.StatusCode, JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content));
             }
             catch (Exception ex)
             {

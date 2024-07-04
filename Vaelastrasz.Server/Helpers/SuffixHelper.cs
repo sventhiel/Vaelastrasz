@@ -38,9 +38,9 @@ namespace Vaelastrasz.Server.Helpers
                 Regex rg = new Regex($"{pattern}");
                 return rg.IsMatch(suffix);
             }
-            catch
+            catch(Exception)
             {
-                return false;
+                throw;
             }
         }
     }

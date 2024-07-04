@@ -92,9 +92,7 @@ namespace Vaelastrasz.Server.Services
             try
             {
                 if (!doi.Contains('/'))
-                {
                     throw new ArgumentException($"The value of doi ({doi}) is invalid.", nameof(doi));
-                }
 
                 string prefix = doi.Split('/')[0];
                 string suffix = doi.Split('/')[1];

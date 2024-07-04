@@ -17,15 +17,7 @@ namespace Vaelastrasz.Server.Controllers
         [HttpPost("names")]
         public async Task<IActionResult> PostAsync([FromBody] string name)
         {
-            try
-            {
-                return Ok(new HumanName(name));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
-            }
+            return StatusCode((int)HttpStatusCode.OK, (new HumanName(name)));
         }
     }
 }
