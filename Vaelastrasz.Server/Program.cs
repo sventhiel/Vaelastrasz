@@ -3,6 +3,7 @@ using LiteDB;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using System.Text;
@@ -17,12 +18,12 @@ var configuration = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json")
 .Build();
 
-var jwtConfiguration = configuration.GetSection("JWT").Get<JwtConfiguration>();
-
 var logger = new LoggerConfiguration()
   .ReadFrom.Configuration(configuration)
   .Enrich.FromLogContext()
   .CreateLogger();
+
+var jwtConfiguration = configuration.GetSection("JWT").Get<JwtConfiguration>();
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -108,8 +109,10 @@ builder.Services.AddAuthentication(options =>
             //string authorization = context.Request.Headers[HeaderNames.Authorization];
 
             //if (!string.IsNullOrEmpty(authorization) && authorization.StartsWith("Basic ", StringComparison.InvariantCultureIgnoreCase))
+            //    return "Basic";
 
             //return JwtBearerDefaults.AuthenticationScheme;
+
             return "Basic";
         };
     });

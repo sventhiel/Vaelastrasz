@@ -1,19 +1,22 @@
-﻿namespace Vaelastrasz.Library.Models
+﻿using System.Net;
+
+namespace Vaelastrasz.Library.Models
 {
     public class ApiResponse<T>
     {
         public bool IsSuccessful { get; set; }
         public T Data { get; set; }
         public string ErrorMessage { get; set; }
+        public HttpStatusCode Status { get; set; }
 
-        public static ApiResponse<T> Success(T data)
+        public static ApiResponse<T> Success(T data, HttpStatusCode status)
         {
-            return new ApiResponse<T> { IsSuccessful = true, Data = data };
+            return new ApiResponse<T> { IsSuccessful = true, Data = data, Status = status };
         }
 
-        public static ApiResponse<T> Failure(string errorMessage)
+        public static ApiResponse<T> Failure(string errorMessage, HttpStatusCode status)
         {
-            return new ApiResponse<T> { IsSuccessful = false, ErrorMessage = errorMessage };
+            return new ApiResponse<T> { IsSuccessful = false, ErrorMessage = errorMessage, Status = status };
         }
     }
 }

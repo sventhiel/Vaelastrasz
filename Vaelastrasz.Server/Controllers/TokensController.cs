@@ -51,7 +51,7 @@ namespace Vaelastrasz.Server.Controllers
                 Expires = DateTime.Now.AddHours(_jwtConfiguration.ValidLifetime),
                 Issuer = _jwtConfiguration.ValidIssuer,
                 Audience = _jwtConfiguration.ValidAudience,
-                SigningCredentials = new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha512Signature)
+                SigningCredentials = new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha512)
             };
 
             if (_admins.Any(a => a.Name.Equals(username)))
@@ -86,7 +86,7 @@ namespace Vaelastrasz.Server.Controllers
                         Expires = DateTime.Now.AddHours(_jwtConfiguration.ValidLifetime),
                         Issuer = _jwtConfiguration.ValidIssuer,
                         Audience = _jwtConfiguration.ValidAudience,
-                        SigningCredentials = new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha512Signature)
+                        SigningCredentials = new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha512)
                     };
 
                     var token = tokenHandler.CreateToken(tokenDescriptor);
