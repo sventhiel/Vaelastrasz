@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
+using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
 using Vaelastrasz.Server.Authentication;
@@ -67,6 +68,30 @@ builder.Services.AddSwaggerGen(options =>
     options.AddSecurityDefinition(jwtSecurityScheme.Reference.Id, jwtSecurityScheme);
     options.SchemaFilter<EnumSchemaFilter>();
     options.OperationFilter<AuthorizeHeaderOperationFilter>();
+
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v1",
+        Title = "Test API",
+        Description = "A simple example for swagger api information",
+        TermsOfService = new Uri("https://example.com/terms"),
+        Contact = new OpenApiContact
+        {
+            Name = "Your Name XYZ",
+            Email = "xyz@gmail.com",
+            Url = new Uri("https://example.com"),
+        },
+        License = new OpenApiLicense
+        {
+            Name = "Use under OpenApiLicense",
+            Url = new Uri("https://example.com/license"),
+        }
+    });
+
+    // Set the comments path for the Swagger JSON and UI.
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    options.IncludeXmlComments(xmlPath);
 });
 
 builder.Services.AddExceptionless(options =>
