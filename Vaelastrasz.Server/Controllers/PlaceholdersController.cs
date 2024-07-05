@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Security.Authentication;
+using Vaelastrasz.Library.Entities;
 using Vaelastrasz.Library.Exceptions;
+using Vaelastrasz.Library.Models;
 using Vaelastrasz.Server.Configurations;
 using Vaelastrasz.Server.Models;
 using Vaelastrasz.Server.Services;
@@ -77,7 +79,11 @@ namespace Vaelastrasz.Server.Controllers
             var id = placeholderService.Create(model.Expression, model.RegularExpression, user.Id);
             var placeholder = placeholderService.FindById(id);
 
-            return Created(Url.Action("GetByIdAsync", new { id = user.Id }), ReadPlaceholderModel.Convert(placeholder));
+            var request = HttpContext.Request;
+            string baseUrl = $"{request.Scheme}://{request.Host}{request.PathBase}";
+            string resourceUrl = $"{baseUrl}/api/placeholders/{placeholder.Id}";
+
+            return Created(resourceUrl, ReadPlaceholderModel.Convert(placeholder));
         }
 
         [HttpPut("placeholders/{id}")]

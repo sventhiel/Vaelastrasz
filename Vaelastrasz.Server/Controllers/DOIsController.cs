@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using NameParser;
 using System.Net;
 using System.Security.Authentication;
+using System.Security.Principal;
 using Vaelastrasz.Library.Entities;
 using Vaelastrasz.Library.Exceptions;
 using Vaelastrasz.Library.Models;
@@ -112,8 +113,11 @@ namespace Vaelastrasz.Server.Controllers
             var id = doiService.Create(model.Prefix, model.Suffix, DOIStateType.Draft, user.Id, "");
             var doi = doiService.FindById(id);
 
-            return Created(Url.Action("GetByIdAsync", new { id = user.Id }), ReadDOIModel.Convert(doi));
+            var request = HttpContext.Request;
+            string baseUrl = $"{request.Scheme}://{request.Host}{request.PathBase}";
+            string resourceUrl = $"{baseUrl}/api/dois/{doi.Id}";
 
+            return Created(resourceUrl, ReadDOIModel.Convert(doi));
         }
 
         // PUT

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RestSharp;
 using System.Net;
+using Vaelastrasz.Library.Entities;
 using Vaelastrasz.Server.Configurations;
 using Vaelastrasz.Server.Models;
 using Vaelastrasz.Server.Services;
@@ -60,7 +61,11 @@ namespace Vaelastrasz.Server.Controllers
             var id = userService.Create(model.Name, model.Password, model.Project, model.Pattern, model.AccountId, true);
             var user = userService.FindById(id);
 
-            return Created(Url.Action("GetByIdAsync", new { id = user.Id }), ReadUserModel.Convert(user));
+            var request = HttpContext.Request;
+            string baseUrl = $"{request.Scheme}://{request.Host}{request.PathBase}";
+            string resourceUrl = $"{baseUrl}/api/users/{user.Id}";
+
+            return Created(resourceUrl, ReadUserModel.Convert(user));
         }
 
         [HttpPut("users/{id}")]

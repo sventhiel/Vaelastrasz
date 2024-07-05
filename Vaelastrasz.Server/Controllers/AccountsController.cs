@@ -1,8 +1,6 @@
 ﻿using LiteDB;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Net;
-using Vaelastrasz.Library.Entities;
 using Vaelastrasz.Server.Models;
 using Vaelastrasz.Server.Services;
 
@@ -55,7 +53,11 @@ namespace Vaelastrasz.Server.Controllers
             var id = accountService.Create(model.Name, model.Password, model.Host, model.Prefix);
             var account = accountService.FindById(id);
 
-            return Created(Url.Action("GetByIdAsync", new { id = account.Id }), ReadAccountModel.Convert(account));
+            var request = HttpContext.Request;
+            string baseUrl = $"{request.Scheme}://{request.Host}{request.PathBase}";
+            string resourceUrl = $"{baseUrl}/api/accounts/{account.Id}";
+
+            return Created(resourceUrl, ReadAccountModel.Convert(account));
         }
 
         [HttpPut("accounts/{id}")]
