@@ -6,6 +6,7 @@ using RestSharp;
 using RestSharp.Authenticators;
 using System.Net;
 using Vaelastrasz.Library.Exceptions;
+using Vaelastrasz.Library.Extensions;
 using Vaelastrasz.Library.Models;
 using Vaelastrasz.Server.Configurations;
 using Vaelastrasz.Server.Helpers;
@@ -136,16 +137,16 @@ namespace Vaelastrasz.Server.Controllers
         [HttpPost("datacite")]
         public async Task<IActionResult> PostAsync(CreateDataCiteModel model)
         {
+            using var doiService = new DOIService(_connectionString);
+            using var placeholderService = new PlaceholderService(_connectionString);
             using var userService = new UserService(_connectionString);
-            var user = userService.FindByName(User?.Identity?.Name);
 
+            var user = userService.FindByName(User.Identity.Name);
             if (user.Account == null)
                 throw new NotFoundException($"The account of user (id: {user.Id}) does not exist.");
 
             // DOI Check
-            var placeholderService = new PlaceholderService(_connectionString);
             var placeholders = placeholderService.FindByUserId(user.Id);
-
             if (!DOIHelper.Validate(model.Data.Attributes.Doi, user.Account.Prefix, user.Pattern, new Dictionary<string, string>(placeholders.Select(p => new KeyValuePair<string, string>(p.Expression, p.RegularExpression)))))
                 throw new ForbidException($"The doi (doi: {model.Data.Attributes.Doi}) is invalid.");
 
@@ -159,11 +160,18 @@ namespace Vaelastrasz.Server.Controllers
             var request = new RestRequest($"dois", Method.Post).AddJsonBody(JsonConvert.SerializeObject(model));
             request.AddHeader("Accept", "application/json");
 
+            var doiId = doiService.Create(model.Data.Attributes.Doi.GetPrefix(), model.Data.Attributes.Doi.GetSuffix(), (DOIStateType)model.Data.Attributes.Event, user.Id, JsonConvert.SerializeObject(model));
+
             var response = client.Execute(request);
 
             if (!response.IsSuccessStatusCode)
+            {
+                doiService.DeleteById(doiId);
                 return StatusCode((int)response.StatusCode, response.ErrorMessage);
+            }
 
+            var readDataCiteModel = JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content);
+            doiService.UpdateByPrefixAndSuffix(model.Data.Attributes.Doi.GetPrefix(), model.Data.Attributes.Doi.GetSuffix(), (DOIStateType)readDataCiteModel.Data.Attributes.State, response.Content);
             return Created($"{user.Account.Host}/dois/{WebUtility.UrlEncode(model.Data.Attributes.Doi)}", JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content));
         }
 

@@ -10,5 +10,14 @@ namespace Vaelastrasz.Library.Extensions
         {
             return Regex.Replace(text, "(" + String.Join("|", replacements.Keys) + ")", delegate (Match m) { return replacements[m.Value]; });
         }
+
+        public static string GetPrefix(this string text)
+        {
+            return text.Split('/')[0];
+        }
+        public static string GetSuffix(this string text)
+        {
+            return text.Split('/')[1];
+        }
     }
 }

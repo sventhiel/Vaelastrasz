@@ -9,14 +9,23 @@ namespace Vaelastrasz.Library.Models
     [JsonConverter(typeof(StringEnumConverter))]
     public enum DOIStateType
     {
+        [EnumMember(Value = "publish")]
+        Publish = 1,
+
+        [EnumMember(Value = "register")]
+        Register = 2,
+
+        [EnumMember(Value = "hide")]
+        Hide = 3,
+
         [EnumMember(Value = "findable")]
-        Findable = 1,
+        Findable = 4,
 
         [EnumMember(Value = "registered")]
-        Registered = 2,
+        Registered = 5,
 
         [EnumMember(Value = "draft")]
-        Draft = 3
+        Draft = 6
     }
 
     public class CreateDOIModel

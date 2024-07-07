@@ -1,5 +1,7 @@
 ﻿using LiteDB;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
+using System.Xml.Linq;
 using Vaelastrasz.Library.Entities;
 using Vaelastrasz.Library.Exceptions;
 using Vaelastrasz.Library.Models;
@@ -29,6 +31,9 @@ namespace Vaelastrasz.Server.Services
 
             var user = users.FindById(userId) ?? throw new NotFoundException($"The user (id:{userId}) does not exist.");
             
+            if(dois.Find(d => d.Prefix.Equals(prefix, StringComparison.InvariantCultureIgnoreCase) && d.Suffix.Equals(suffix, StringComparison.InvariantCultureIgnoreCase)).Count() > 0)
+                throw new ConflictException($"The doi (prefix:{prefix}, suffix: {suffix}) already exists.");
+
             var doi = new DOI()
             {
                 Prefix = prefix,
