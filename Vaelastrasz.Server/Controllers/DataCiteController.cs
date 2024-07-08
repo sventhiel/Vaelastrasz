@@ -33,12 +33,12 @@ namespace Vaelastrasz.Server.Controllers
         [HttpDelete("datacite/{doi}")]
         public async Task<IActionResult> DeleteByDOIAsync(string doi)
         {
+            using var doiService = new DOIService(_connectionString);
             using var userService = new UserService(_connectionString);
-            var user = userService.FindByName(User?.Identity?.Name);
+            var user = userService.FindByName(User.Identity.Name);
 
             if (user.Account == null)
                 throw new NotFoundException($"The account of user (id: {user.Id}) does not exist.");
-
 
             var clientOptions = new RestClientOptions($"{user.Account.Host}")
             {
@@ -55,6 +55,7 @@ namespace Vaelastrasz.Server.Controllers
             if (!response.IsSuccessStatusCode)
                 return StatusCode((int)response.StatusCode, response.ErrorMessage);
 
+            doiService.DeleteByDOI(doi);
             return StatusCode((int)response.StatusCode, JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content));
         }
 

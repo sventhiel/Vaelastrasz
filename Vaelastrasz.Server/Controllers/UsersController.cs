@@ -2,8 +2,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RestSharp;
-using System.Net;
-using Vaelastrasz.Library.Entities;
 using Vaelastrasz.Server.Configurations;
 using Vaelastrasz.Server.Models;
 using Vaelastrasz.Server.Services;
@@ -45,7 +43,7 @@ namespace Vaelastrasz.Server.Controllers
         {
             using var userService = new UserService(_connectionString);
             var users = userService.Find();
-            
+
             return Ok(new List<ReadUserModel>(users.Select(u => ReadUserModel.Convert(u))));
         }
 
@@ -54,7 +52,7 @@ namespace Vaelastrasz.Server.Controllers
         {
             using var userService = new UserService(_connectionString);
             var user = userService.FindById(id);
-            
+
             return Ok(ReadUserModel.Convert(user));
         }
 

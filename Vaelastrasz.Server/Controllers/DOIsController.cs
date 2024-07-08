@@ -1,17 +1,10 @@
-﻿using Exceptionless;
-using LiteDB;
+﻿using LiteDB;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using NameParser;
-using System.Net;
-using System.Security.Authentication;
-using System.Security.Principal;
-using Vaelastrasz.Library.Entities;
 using Vaelastrasz.Library.Exceptions;
 using Vaelastrasz.Library.Models;
 using Vaelastrasz.Server.Configurations;
 using Vaelastrasz.Server.Helpers;
-using Vaelastrasz.Server.Models;
 using Vaelastrasz.Server.Services;
 
 namespace Vaelastrasz.Server.Controllers
@@ -72,7 +65,7 @@ namespace Vaelastrasz.Server.Controllers
             using var doiService = new DOIService(_connectionString);
             var doi = doiService.FindById(id);
 
-            if(doi.User.Id != user.Id)
+            if (doi.User.Id != user.Id)
                 throw new UnauthorizedException($"The user (id: {user.Id}) is not allowed to perform the action.");
 
             return Ok(ReadDOIModel.Convert(doi));

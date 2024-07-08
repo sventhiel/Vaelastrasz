@@ -1,5 +1,4 @@
-﻿using Exceptionless;
-using LiteDB;
+﻿using LiteDB;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Vaelastrasz.Server.Services;

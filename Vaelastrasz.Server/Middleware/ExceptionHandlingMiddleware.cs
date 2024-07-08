@@ -42,11 +42,11 @@ namespace Vaelastrasz.Server.Middleware
             {
                 code = HttpStatusCode.BadRequest; // 400
             }
-            else if(exception is UnauthorizedException) // 401
+            else if (exception is UnauthorizedException) // 401
             {
                 code = HttpStatusCode.Unauthorized; //401
             }
-            else if(exception is ForbidException)
+            else if (exception is ForbidException)
             {
                 code = HttpStatusCode.Forbidden; // 403
             }

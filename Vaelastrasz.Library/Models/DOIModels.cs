@@ -65,6 +65,7 @@ namespace Vaelastrasz.Library.Models
     {
         public DOIStateType State { get; set; }
         public string Value { get; set; }
+
         public static UpdateDOIModel Convert(UpdateDataCiteModel model, long userId)
         {
             return new UpdateDOIModel()

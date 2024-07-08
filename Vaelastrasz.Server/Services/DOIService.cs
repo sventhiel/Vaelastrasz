@@ -1,7 +1,4 @@
 ﻿using LiteDB;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Hosting;
-using System.Xml.Linq;
 using Vaelastrasz.Library.Entities;
 using Vaelastrasz.Library.Exceptions;
 using Vaelastrasz.Library.Models;
@@ -30,8 +27,11 @@ namespace Vaelastrasz.Server.Services
             var users = db.GetCollection<User>("users");
 
             var user = users.FindById(userId) ?? throw new NotFoundException($"The user (id:{userId}) does not exist.");
-            
-            if(dois.Find(d => d.Prefix.Equals(prefix, StringComparison.InvariantCultureIgnoreCase) && d.Suffix.Equals(suffix, StringComparison.InvariantCultureIgnoreCase)).Count() > 0)
+
+            if (!user.Account.Prefix.Equals(prefix, StringComparison.InvariantCultureIgnoreCase))
+                throw new ForbidException();
+
+            if (dois.Find(d => d.Prefix.Equals(prefix, StringComparison.InvariantCultureIgnoreCase) && d.Suffix.Equals(suffix, StringComparison.InvariantCultureIgnoreCase)).Count() > 0)
                 throw new ConflictException($"The doi (prefix:{prefix}, suffix: {suffix}) already exists.");
 
             var doi = new DOI()
@@ -54,6 +54,39 @@ namespace Vaelastrasz.Server.Services
             var col = db.GetCollection<DOI>("dois");
 
             return col.Delete(id);
+        }
+
+        public bool DeleteByPrefixAndSuffix(string prefix, string suffix)
+        {
+            using var db = new LiteDatabase(_connectionString);
+            var dois = db.GetCollection<DOI>("dois");
+            var users = db.GetCollection<User>("users");
+
+            var doi = dois.Find(d => d.Prefix.Equals(prefix, StringComparison.InvariantCultureIgnoreCase) && d.Suffix.Equals(suffix, StringComparison.InvariantCultureIgnoreCase));
+
+            if (doi.Count() == 0)
+                throw new NotFoundException($"The doi (prefix:{prefix}, suffix: {suffix}) does not exist.");
+
+            if (doi.Count() > 1)
+                throw new ConflictException($"The doi (prefix:{prefix}, suffix: {suffix}) exists more than once.");
+
+            var user = users.FindById(doi.Single().User.Id) ?? throw new NotFoundException($"The user of doi (prefix:{prefix}, suffix: {suffix}) does not exist.");
+
+            if (!user.Account.Prefix.Equals(prefix, StringComparison.InvariantCultureIgnoreCase))
+                throw new ForbidException();
+
+            return dois.Delete(doi.Single().Id);
+        }
+
+        public bool DeleteByDOI(string doi)
+        {
+            if (!doi.Contains('/'))
+                throw new BadRequestException($"The value of doi ({doi}) is invalid.");
+
+            string prefix = doi.Split('/')[0];
+            string suffix = doi.Split('/')[1];
+
+            return DeleteByPrefixAndSuffix(prefix, suffix);
         }
 
         public void Dispose()
@@ -159,7 +192,6 @@ namespace Vaelastrasz.Server.Services
         {
             if (!doi.Contains('/'))
                 throw new BadRequestException($"The value of doi ({doi}) is invalid.");
-
 
             string prefix = doi.Split('/')[0];
             string suffix = doi.Split('/')[1];

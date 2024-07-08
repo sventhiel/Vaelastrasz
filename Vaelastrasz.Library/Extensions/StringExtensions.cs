@@ -15,6 +15,7 @@ namespace Vaelastrasz.Library.Extensions
         {
             return text.Split('/')[0];
         }
+
         public static string GetSuffix(this string text)
         {
             return text.Split('/')[1];

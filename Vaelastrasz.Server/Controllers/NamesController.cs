@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NameParser;
-using System.Net;
 
 namespace Vaelastrasz.Server.Controllers
 {

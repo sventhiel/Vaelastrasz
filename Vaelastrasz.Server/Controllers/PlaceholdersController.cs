@@ -1,11 +1,7 @@
 ﻿using LiteDB;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Net;
-using System.Security.Authentication;
-using Vaelastrasz.Library.Entities;
 using Vaelastrasz.Library.Exceptions;
-using Vaelastrasz.Library.Models;
 using Vaelastrasz.Server.Configurations;
 using Vaelastrasz.Server.Models;
 using Vaelastrasz.Server.Services;
@@ -100,7 +96,7 @@ namespace Vaelastrasz.Server.Controllers
 
             var result = placeholderService.UpdateById(id, model.Expression, model.RegularExpression, model.UserId);
             placeholder = placeholderService.FindById(id);
-            
+
             return Ok(ReadPlaceholderModel.Convert(placeholder));
         }
     }
