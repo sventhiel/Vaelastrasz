@@ -14,7 +14,15 @@ namespace Vaelastrasz.Library.Extensions
         {
             try
             {
-                model.Data.Attributes.FundingReferences.Add(new DataCiteFundingReference(funderIdentifierType, funderName, awardNumber, awardTitle, awardUri, funderIdentifier));
+                model.Data.Attributes.FundingReferences.Add(new DataCiteFundingReference()
+                {
+                    AwardNumber = awardNumber,
+                    AwardTitle = awardTitle,
+                    AwardUri = awardUri,
+                    FunderIdentifier = funderIdentifier,
+                    FunderIdentifierType = funderIdentifierType,
+                    FunderName = funderName
+                });
                 return model;
             }
             catch (Exception)
@@ -27,7 +35,11 @@ namespace Vaelastrasz.Library.Extensions
         {
             try
             {
-                model.Data.Attributes.Creators.Add(new DataCiteCreator(firstname, lastname));
+                model.Data.Attributes.Creators.Add(new DataCiteCreator()
+                {
+                    GivenName = firstname,
+                    FamilyName = lastname
+                });
                 return model;
             }
             catch (Exception)
@@ -40,7 +52,11 @@ namespace Vaelastrasz.Library.Extensions
         {
             try
             {
-                model.Data.Attributes.Creators.Add(new DataCiteCreator(name, type));
+                model.Data.Attributes.Creators.Add(new DataCiteCreator()
+                {
+                    Name = name,
+                    NameType = type
+                });
                 return model;
             }
             catch (Exception)
@@ -53,7 +69,12 @@ namespace Vaelastrasz.Library.Extensions
         {
             try
             {
-                model.Data.Attributes.Contributors.Add(new DataCiteContributor(name, nameType, contributorType));
+                model.Data.Attributes.Contributors.Add(new DataCiteContributor()
+                {
+                    Name = name,
+                    ContributorType = contributorType,
+                    NameType = nameType
+                });
                 return model;
             }
             catch (Exception)
@@ -103,7 +124,12 @@ namespace Vaelastrasz.Library.Extensions
 
         public static CreateDataCiteModel AddTitle(this CreateDataCiteModel model, string title, string language, DataCiteTitleType type)
         {
-            model.Data.Attributes.Titles.Add(new DataCiteTitle(title, language, type));
+            model.Data.Attributes.Titles.Add(new DataCiteTitle()
+            {
+                Title = title,
+                Language = language,
+                TitleType = type
+            });
             return model;
         }
 
@@ -250,7 +276,16 @@ namespace Vaelastrasz.Library.Extensions
         {
             try
             {
-                model.Data.Attributes.Types = new DataCiteTypes(resourceTypeGeneral, bibtex, citeproc, resourceType, ris, schemaOrg);
+                model.Data.Attributes.Types = new DataCiteTypes()
+                {
+                    Bibtex = bibtex,
+                    Citeproc = citeproc,
+                    ResourceType = resourceType,
+                    ResourceTypeGeneral = resourceTypeGeneral,
+                    Ris = ris,
+                    SchemaOrg = schemaOrg
+                };
+
                 return model;
             }
             catch (Exception)

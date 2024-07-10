@@ -13,7 +13,7 @@ namespace Vaelastrasz.Library.Models.DataCite
         {
             Creators = new List<DataCiteRelatedItemCreator>();
             Titles = new List<DataCiteRelatedItemTitle>();
-            Contributors = new List<DataCiteRelatedItemContributor>;
+            Contributors = new List<DataCiteRelatedItemContributor>();
         }
 
         [JsonProperty("relatedItemType")]
