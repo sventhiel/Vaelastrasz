@@ -48,6 +48,17 @@ namespace Vaelastrasz.Server.Services
             return dois.Insert(doi);
         }
 
+        public bool DeleteByDOI(string doi)
+        {
+            if (!doi.Contains('/'))
+                throw new BadRequestException($"The value of doi ({doi}) is invalid.");
+
+            string prefix = doi.Split('/')[0];
+            string suffix = doi.Split('/')[1];
+
+            return DeleteByPrefixAndSuffix(prefix, suffix);
+        }
+
         public bool DeleteById(long id)
         {
             using var db = new LiteDatabase(_connectionString);
@@ -76,17 +87,6 @@ namespace Vaelastrasz.Server.Services
                 throw new ForbidException();
 
             return dois.Delete(doi.Single().Id);
-        }
-
-        public bool DeleteByDOI(string doi)
-        {
-            if (!doi.Contains('/'))
-                throw new BadRequestException($"The value of doi ({doi}) is invalid.");
-
-            string prefix = doi.Split('/')[0];
-            string suffix = doi.Split('/')[1];
-
-            return DeleteByPrefixAndSuffix(prefix, suffix);
         }
 
         public void Dispose()
@@ -170,24 +170,6 @@ namespace Vaelastrasz.Server.Services
             return col.Find(d => d.User.Id == userId).ToList();
         }
 
-        public bool UpdateByPrefixAndSuffix(string prefix, string suffix, DOIStateType state, string value)
-        {
-            using var db = new LiteDatabase(_connectionString);
-            var dois = db.GetCollection<DOI>("dois");
-            var users = db.GetCollection<User>("users");
-
-            var doi = FindByPrefixAndSuffix(prefix, suffix);
-
-            if (doi == null)
-                throw new NotFoundException($"The doi (doi:{prefix}/{suffix}) does not exist.");
-
-            doi.State = state;
-            doi.Value = value;
-            doi.LastUpdateDate = DateTimeOffset.UtcNow;
-
-            return dois.Update(doi);
-        }
-
         public bool UpdateByDOI(string doi, DOIStateType state, string value)
         {
             if (!doi.Contains('/'))
@@ -208,6 +190,24 @@ namespace Vaelastrasz.Server.Services
 
             if (doi == null)
                 throw new NotFoundException($"The doi (id:{id}) does not exist.");
+
+            doi.State = state;
+            doi.Value = value;
+            doi.LastUpdateDate = DateTimeOffset.UtcNow;
+
+            return dois.Update(doi);
+        }
+
+        public bool UpdateByPrefixAndSuffix(string prefix, string suffix, DOIStateType state, string value)
+        {
+            using var db = new LiteDatabase(_connectionString);
+            var dois = db.GetCollection<DOI>("dois");
+            var users = db.GetCollection<User>("users");
+
+            var doi = FindByPrefixAndSuffix(prefix, suffix);
+
+            if (doi == null)
+                throw new NotFoundException($"The doi (doi:{prefix}/{suffix}) does not exist.");
 
             doi.State = state;
             doi.Value = value;

@@ -31,8 +31,8 @@ namespace Vaelastrasz.Library.Models
     public class CreateDOIModel
     {
         public string Prefix { get; set; }
-        public string Suffix { get; set; }
         public DOIStateType Status { get; set; }
+        public string Suffix { get; set; }
         public long UserId { get; set; }
         public string Value { get; set; }
     }
@@ -43,9 +43,9 @@ namespace Vaelastrasz.Library.Models
         public long Id { get; set; }
         public DateTimeOffset LastUpdateDate { get; set; }
         public string Prefix { get; set; }
+        public DOIStateType State { get; set; }
         public string Suffix { get; set; }
         public long UserId { get; set; }
-        public DOIStateType State { get; set; }
 
         public static ReadDOIModel Convert(DOI doi)
         {

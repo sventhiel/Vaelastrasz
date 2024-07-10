@@ -16,12 +16,12 @@ namespace Vaelastrasz.Library.Entities
 
         public DateTimeOffset CreationDate { get; set; }
         public long Id { get; set; }
+        public bool IsActive { get; set; }
         public DateTimeOffset LastUpdateDate { get; set; }
         public string Name { get; set; }
         public string Password { get; set; }
-        public string Project { get; set; }
         public string Pattern { get; set; }
+        public string Project { get; set; }
         public string Salt { get; set; }
-        public bool IsActive { get; set; }
     }
 }

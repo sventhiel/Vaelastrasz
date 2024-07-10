@@ -113,24 +113,6 @@ namespace Vaelastrasz.Server.Controllers
             return Created(resourceUrl, ReadDOIModel.Convert(doi));
         }
 
-        // PUT
-        [HttpPut("dois/{prefix}/{suffix}")]
-        public async Task<IActionResult> PutByPrefixAndSuffixAsync(string prefix, string suffix, UpdateDOIModel model)
-        {
-            using var userService = new UserService(_connectionString);
-            var user = userService.FindByName(User?.Identity?.Name);
-
-            using var doiService = new DOIService(_connectionString);
-            var doi = doiService.FindByPrefixAndSuffix(prefix, suffix);
-
-            if (doi.User.Id != user.Id)
-                throw new UnauthorizedException($"The user (id: {user.Id}) is not allowed to perform the action.");
-
-            var result = doiService.UpdateByPrefixAndSuffix(prefix, suffix, model.State, model.Value);
-            doi = doiService.FindByPrefixAndSuffix(prefix, suffix);
-            return Ok(ReadDOIModel.Convert(doi));
-        }
-
         [HttpPut("dois/{doi}")]
         public async Task<IActionResult> PutByDOIAsync(string doi, UpdateDOIModel model)
         {
@@ -156,6 +138,24 @@ namespace Vaelastrasz.Server.Controllers
             var result = doiService.UpdateById(id, model.State, "");
             var doi = doiService.FindById(id);
 
+            return Ok(ReadDOIModel.Convert(doi));
+        }
+
+        // PUT
+        [HttpPut("dois/{prefix}/{suffix}")]
+        public async Task<IActionResult> PutByPrefixAndSuffixAsync(string prefix, string suffix, UpdateDOIModel model)
+        {
+            using var userService = new UserService(_connectionString);
+            var user = userService.FindByName(User?.Identity?.Name);
+
+            using var doiService = new DOIService(_connectionString);
+            var doi = doiService.FindByPrefixAndSuffix(prefix, suffix);
+
+            if (doi.User.Id != user.Id)
+                throw new UnauthorizedException($"The user (id: {user.Id}) is not allowed to perform the action.");
+
+            var result = doiService.UpdateByPrefixAndSuffix(prefix, suffix, model.State, model.Value);
+            doi = doiService.FindByPrefixAndSuffix(prefix, suffix);
             return Ok(ReadDOIModel.Convert(doi));
         }
     }

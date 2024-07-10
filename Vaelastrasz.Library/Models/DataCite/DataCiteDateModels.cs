@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
-using System.Xml.Serialization;
 using Vaelastrasz.Library.Types;
 
 namespace Vaelastrasz.Library.Models.DataCite
@@ -12,16 +11,13 @@ namespace Vaelastrasz.Library.Models.DataCite
 
         [Required]
         [JsonProperty("date")]
-        [XmlElement("date")]
         public string Date { get; set; }
+
+        [JsonProperty("dateInformation")]
+        public string DateInformation { get; set; }
 
         [Required]
         [JsonProperty("dateType")]
-        [XmlElement("dateType")]
         public DataCiteDateType DateType { get; set; }
-
-        [JsonProperty("dateInformation")]
-        [XmlElement("dateInformation")]
-        public string DateInformation { get; set; }
     }
 }

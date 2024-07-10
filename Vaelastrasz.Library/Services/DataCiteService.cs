@@ -11,8 +11,8 @@ namespace Vaelastrasz.Library.Services
 {
     public class DataCiteService
     {
-        private HttpClient _client;
         private readonly Configuration _config;
+        private HttpClient _client;
 
         public DataCiteService(Configuration config)
         {

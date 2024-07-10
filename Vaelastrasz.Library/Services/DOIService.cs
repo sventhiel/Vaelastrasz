@@ -11,8 +11,8 @@ namespace Vaelastrasz.Library.Services
 {
     public class DOIService
     {
-        private HttpClient _client;
         private readonly Configuration _config;
+        private HttpClient _client;
 
         public DOIService(Configuration config)
         {

@@ -10,8 +10,8 @@ namespace Vaelastrasz.Library.Services
 {
     public class SuffixService
     {
-        private HttpClient _client;
         private readonly Configuration _config;
+        private HttpClient _client;
 
         public SuffixService(Configuration config)
         {

@@ -7,8 +7,8 @@ namespace Vaelastrasz.Server.Middleware
 {
     public class ExceptionHandlingMiddleware
     {
-        private readonly RequestDelegate _next;
         private readonly ILogger<ExceptionHandlingMiddleware> _logger;
+        private readonly RequestDelegate _next;
 
         public ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
         {

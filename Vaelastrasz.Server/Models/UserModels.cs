@@ -9,6 +9,8 @@ namespace Vaelastrasz.Server.Models
         [Required, Min(1)]
         public long AccountId { get; set; }
 
+        public bool IsActive { get; set; }
+
         [Required]
         public string Name { get; set; }
 
@@ -17,7 +19,6 @@ namespace Vaelastrasz.Server.Models
 
         public string Pattern { get; set; }
         public string Project { get; set; }
-        public bool IsActive { get; set; }
     }
 
     public class LoginUserModel
@@ -31,11 +32,11 @@ namespace Vaelastrasz.Server.Models
         public long? AccountId { get; set; }
         public DateTimeOffset CreationDate { get; set; }
         public long Id { get; set; }
+        public bool IsActive { get; set; }
         public DateTimeOffset LastUpdateDate { get; set; }
         public string Name { get; set; }
-        public string Project { get; set; }
         public string Pattern { get; set; }
-        public bool IsActive { get; set; }
+        public string Project { get; set; }
 
         public static ReadUserModel Convert(User user)
         {
@@ -56,10 +57,10 @@ namespace Vaelastrasz.Server.Models
     public class UpdateUserModel
     {
         public long AccountId { get; set; }
+        public bool IsActive { get; set; }
         public string Name { get; set; }
         public string Password { get; set; }
         public string Pattern { get; set; }
         public string Project { get; set; }
-        public bool IsActive { get; set; }
     }
 }
