@@ -13,12 +13,18 @@ namespace Vaelastrasz.Library.Extensions
 
         public static string GetPrefix(this string text)
         {
-            return text.Split('/')[0];
+            if(text.Contains("/"))
+                return text.Split('/')[0];
+
+            return text;
         }
 
         public static string GetSuffix(this string text)
         {
-            return text.Split('/')[1];
+            if (text.Contains("/"))
+                return text.Split('/')[1];
+
+            return text;
         }
     }
 }
