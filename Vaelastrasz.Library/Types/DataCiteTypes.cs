@@ -473,6 +473,19 @@ namespace Vaelastrasz.Library.Types
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
+    public enum DataCiteRelatedItemNumberType
+    {
+        [EnumMember(Value = "Article")]
+        Article = 1,
+        [EnumMember(Value = "Chapter")]
+        Chapter = 2,
+        [EnumMember(Value = "Report")]
+        Report = 3,
+        [EnumMember(Value = "Other")]
+        Other = 4,
+    }
+
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum DataCiteIdentifierType
     {
         [EnumMember(Value = "doi")]

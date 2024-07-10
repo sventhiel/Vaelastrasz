@@ -34,15 +34,5 @@ namespace Vaelastrasz.Library.Models.DataCite
 
         public DataCiteTypes()
         { }
-
-        public DataCiteTypes(DataCiteResourceTypeGeneral resourceTypeGeneral, string bibtex, string citeproc, string resourceType, string ris, string schemaOrg)
-        {
-            ResourceTypeGeneral = resourceTypeGeneral;
-            Bibtex = bibtex;
-            Citeproc = citeproc;
-            ResourceType = resourceType;
-            Ris = ris;
-            SchemaOrg = schemaOrg;
-        }
     }
 }

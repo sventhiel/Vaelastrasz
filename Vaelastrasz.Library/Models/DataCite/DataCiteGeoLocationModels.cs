@@ -11,7 +11,7 @@ namespace Vaelastrasz.Library.Models.DataCite
     {
         [JsonProperty("geoLocationBox")]
         [XmlElement("geoLocationBox")]
-        public Dictionary<string, string> GeoLocationBox { get; set; }
+        public DataCiteGeoLocationBox GeoLocationBox { get; set; }
 
         [JsonProperty("geoLocationPlace")]
         [XmlElement("geoLocationPlace")]
@@ -19,9 +19,43 @@ namespace Vaelastrasz.Library.Models.DataCite
 
         [JsonProperty("geoLocationPoint")]
         [XmlElement("geoLocationPoint")]
-        public Dictionary<string, string> GeoLocationPoint { get; set; }
+        public DataCiteGeoLocationPoint GeoLocationPoint { get; set; }
 
         public DataCiteGeoLocation()
         { }
+    }
+
+    public class DataCiteGeoLocationBox
+    {
+        [JsonProperty("westBoundLongitude")]
+        [XmlElement("westBoundLongitude")]
+        public string WestBoundLongitude { get; set; }
+
+        [JsonProperty("eastBoundLongitude")]
+        [XmlElement("eastBoundLongitude")]
+        public string EastBoundLongitude { get; set; }
+
+        [JsonProperty("southBoundLatitude")]
+        [XmlElement("southBoundLatitude")]
+        public string SouthBoundLatitude { get; set; }
+
+        [JsonProperty("northBoundLatitude")]
+        [XmlElement("northBoundLatitude")]
+        public string NorthBoundLatitude { get; set; }
+
+        public DataCiteGeoLocationBox() { }
+    }
+
+    public class DataCiteGeoLocationPoint
+    {
+        [JsonProperty("pointLongitude")]
+        [XmlElement("pointLongitude")]
+        public string PointLongitude { get; set; }
+
+        [JsonProperty("pointLatitude")]
+        [XmlElement("pointLatitude")]
+        public string PointLatitude { get; set; }
+
+        public DataCiteGeoLocationPoint() { }
     }
 }

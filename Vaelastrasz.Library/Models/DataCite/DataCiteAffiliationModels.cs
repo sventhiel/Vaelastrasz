@@ -26,13 +26,5 @@ namespace Vaelastrasz.Library.Models.DataCite
 
         public DataCiteAffiliation()
         { }
-
-        public DataCiteAffiliation(string affiliationIdentifierScheme, string name, string affiliationIdentifier, string schemeUri)
-        {
-            AffiliationIdentifierScheme = affiliationIdentifierScheme;
-            Name = name;
-            AffiliationIdentifier = affiliationIdentifier;
-            SchemeUri = schemeUri;
-        }
     }
 }

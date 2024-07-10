@@ -1,21 +1,16 @@
 ﻿using Newtonsoft.Json;
-using System.ComponentModel.DataAnnotations;
+using System;
+using System.Collections.Generic;
+using System.Text;
 using System.Xml.Serialization;
 using Vaelastrasz.Library.Types;
 
 namespace Vaelastrasz.Library.Models.DataCite
 {
-    public class DataCiteTitle
+    public class DataCiteRelatedItemTitle
     {
-        public DataCiteTitle()
-        {
-        }
+        public DataCiteRelatedItemTitle() { }
 
-        [JsonProperty("lang")]
-        [XmlElement("lang")]
-        public string Language { get; set; }
-
-        [Required]
         [JsonProperty("title")]
         [XmlElement("title")]
         public string Title { get; set; }
