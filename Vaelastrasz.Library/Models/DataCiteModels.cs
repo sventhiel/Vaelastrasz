@@ -187,31 +187,6 @@ namespace Vaelastrasz.Library.Models
             FundingReferences = new List<DataCiteFundingReference>();
         }
 
-        [JsonProperty("state")]
-        public DataCiteStateType State { get; set; }
-
-        //
-        [JsonProperty("viewCount")]
-        public long ViewCount { get; set; }
-
-        [JsonProperty("downloadCount")]
-        public long DownloadCount { get; set; }
-
-        [JsonProperty("referenceCount")]
-        public long ReferenceCount { get; set; }
-
-        [JsonProperty("created")]
-        public string Created { get; set; }
-
-        [JsonProperty("registered")]
-        public string Registered { get; set; }
-
-        [JsonProperty("published")]
-        public string Published { get; set; }
-
-        [JsonProperty("updated")]
-        public string Updated { get; set; }
-
         // 12 - https://datacite-metadata-schema.readthedocs.io/en/4.5/properties/alternateidentifier/
         [JsonProperty("alternateIdentifiers")]
         public List<DataCiteAlternateIdentifier> AlternateIdentifiers { get; set; }
@@ -219,6 +194,9 @@ namespace Vaelastrasz.Library.Models
         // 7 - https://datacite-metadata-schema.readthedocs.io/en/4.5/properties/contributor/
         [JsonProperty("contributors")]
         public List<DataCiteContributor> Contributors { get; set; }
+
+        [JsonProperty("created")]
+        public string Created { get; set; }
 
         // 2 - https://datacite-metadata-schema.readthedocs.io/en/4.5/properties/creator/
         [Cardinality(Minimum = 1)]
@@ -238,11 +216,8 @@ namespace Vaelastrasz.Library.Models
         [JsonProperty("doi")]
         public string Doi { get; set; }
 
-        [JsonProperty("prefix")]
-        public string Prefix { get; set; }
-
-        [JsonProperty("suffix")]
-        public string Suffix { get; set; }
+        [JsonProperty("downloadCount")]
+        public long DownloadCount { get; set; }
 
         // 14 - https://datacite-metadata-schema.readthedocs.io/en/4.5/properties/format/
         [JsonProperty("formats")]
@@ -264,15 +239,27 @@ namespace Vaelastrasz.Library.Models
         [JsonProperty("language")]
         public string Language { get; set; }
 
+        [JsonProperty("prefix")]
+        public string Prefix { get; set; }
+
         // 5 - https://datacite-metadata-schema.readthedocs.io/en/4.5/properties/publicationyear/
         [Required]
         [JsonProperty("publicationYear")]
         public int PublicationYear { get; set; }
 
+        [JsonProperty("published")]
+        public string Published { get; set; }
+
         // 4 - https://datacite-metadata-schema.readthedocs.io/en/4.5/properties/publisher/
         [Required]
         [JsonProperty("publisher")]
         public DataCitePublisher Publisher { get; set; }
+
+        [JsonProperty("referenceCount")]
+        public long ReferenceCount { get; set; }
+
+        [JsonProperty("registered")]
+        public string Registered { get; set; }
 
         // 12 - https://datacite-metadata-schema.readthedocs.io/en/4.5/properties/relatedidentifier/
         [JsonProperty("relatedIdentifiers")]
@@ -286,9 +273,15 @@ namespace Vaelastrasz.Library.Models
         [JsonProperty("sizes")]
         public List<string> Sizes { get; set; }
 
+        [JsonProperty("state")]
+        public DataCiteStateType State { get; set; }
+
         // 6 - https://datacite-metadata-schema.readthedocs.io/en/4.5/properties/subject/
         [JsonProperty("subjects")]
         public List<DataCiteSubject> Subjects { get; set; }
+
+        [JsonProperty("suffix")]
+        public string Suffix { get; set; }
 
         // 3 - https://datacite-metadata-schema.readthedocs.io/en/4.5/properties/title/
         [Cardinality(Minimum = 1)]
@@ -300,6 +293,9 @@ namespace Vaelastrasz.Library.Models
         [JsonProperty("types")]
         public DataCiteTypes Types { get; set; }
 
+        [JsonProperty("updated")]
+        public string Updated { get; set; }
+
         // 0
         [Required]
         [JsonProperty("url")]
@@ -308,6 +304,10 @@ namespace Vaelastrasz.Library.Models
         // 15 - https://datacite-metadata-schema.readthedocs.io/en/4.5/properties/version/
         [JsonProperty("version")]
         public string Version { get; set; }
+
+        //
+        [JsonProperty("viewCount")]
+        public long ViewCount { get; set; }
     }
 
     public class ReadDataCiteDataModel
