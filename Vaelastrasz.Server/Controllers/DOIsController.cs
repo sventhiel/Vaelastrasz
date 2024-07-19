@@ -9,6 +9,9 @@ using Vaelastrasz.Server.Services;
 
 namespace Vaelastrasz.Server.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [ApiController, Authorize(Roles = "user"), Route("api")]
     public class DOIsController : ControllerBase
     {
@@ -17,6 +20,12 @@ namespace Vaelastrasz.Server.Controllers
         private ConnectionString _connectionString;
         private JwtConfiguration _jwtConfiguration;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="configuration"></param>
+        /// <param name="connectionString"></param>
         public DOIsController(ILogger<DataCiteController> logger, IConfiguration configuration, ConnectionString connectionString)
         {
             _connectionString = connectionString;
@@ -25,12 +34,18 @@ namespace Vaelastrasz.Server.Controllers
             _logger = logger;
         }
 
-        // DELETE
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="prefix"></param>
+        /// <param name="suffix"></param>
+        /// <returns></returns>
+        /// <exception cref="UnauthorizedException"></exception>
         [HttpDelete("dois/{prefix}/{suffix}")]
         public async Task<IActionResult> DeleteAsync(string prefix, string suffix)
         {
             using var userService = new UserService(_connectionString);
-            var user = userService.FindByName(User?.Identity?.Name);
+            var user = userService.FindByName(User.Identity!.Name!);
 
             using var doiService = new DOIService(_connectionString);
 
@@ -43,12 +58,15 @@ namespace Vaelastrasz.Server.Controllers
             return Ok(response);
         }
 
-        // GET
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("dois")]
         public async Task<IActionResult> GetAsync()
         {
             using var userService = new UserService(_connectionString);
-            var user = userService.FindByName(User?.Identity?.Name);
+            var user = userService.FindByName(User.Identity!.Name!);
 
             using var doiService = new DOIService(_connectionString);
             var dois = doiService.FindByUserId(user.Id).Select(d => ReadDOIModel.Convert(d));
@@ -56,11 +74,17 @@ namespace Vaelastrasz.Server.Controllers
             return Ok(dois);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <exception cref="UnauthorizedException"></exception>
         [HttpGet("dois/{id}")]
         public async Task<IActionResult> GetByIdAsync(long id)
         {
             using var userService = new UserService(_connectionString);
-            var user = userService.FindByName(User?.Identity?.Name);
+            var user = userService.FindByName(User.Identity!.Name!);
 
             using var doiService = new DOIService(_connectionString);
             var doi = doiService.FindById(id);
@@ -71,11 +95,18 @@ namespace Vaelastrasz.Server.Controllers
             return Ok(ReadDOIModel.Convert(doi));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="prefix"></param>
+        /// <param name="suffix"></param>
+        /// <returns></returns>
+        /// <exception cref="UnauthorizedException"></exception>
         [HttpGet("dois/{prefix}/{suffix}")]
         public async Task<IActionResult> GetByPrefixAndSuffixAsync(string prefix, string suffix)
         {
             using var userService = new UserService(_connectionString);
-            var user = userService.FindByName(User?.Identity?.Name);
+            var user = userService.FindByName(User.Identity!.Name!);
 
             using var doiService = new DOIService(_connectionString);
             var result = doiService.FindByPrefixAndSuffix(prefix, suffix);
@@ -86,7 +117,13 @@ namespace Vaelastrasz.Server.Controllers
             return Ok(ReadDOIModel.Convert(result));
         }
 
-        // POST
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        /// <exception cref="NotFoundException"></exception>
+        /// <exception cref="ForbidException"></exception>
         [HttpPost("dois")]
         public async Task<IActionResult> PostAsync(CreateDOIModel model)
         {
@@ -113,6 +150,13 @@ namespace Vaelastrasz.Server.Controllers
             return Created(resourceUrl, ReadDOIModel.Convert(doi));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="doi"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        /// <exception cref="UnauthorizedException"></exception>
         [HttpPut("dois/{doi}")]
         public async Task<IActionResult> PutByDOIAsync(string doi, UpdateDOIModel model)
         {
@@ -130,6 +174,12 @@ namespace Vaelastrasz.Server.Controllers
             return Ok(ReadDOIModel.Convert(_doi));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPut("dois/{id}")]
         public async Task<IActionResult> PutByIdAsync(long id, UpdateDOIModel model)
         {
@@ -141,12 +191,19 @@ namespace Vaelastrasz.Server.Controllers
             return Ok(ReadDOIModel.Convert(doi));
         }
 
-        // PUT
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="prefix"></param>
+        /// <param name="suffix"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        /// <exception cref="UnauthorizedException"></exception>
         [HttpPut("dois/{prefix}/{suffix}")]
         public async Task<IActionResult> PutByPrefixAndSuffixAsync(string prefix, string suffix, UpdateDOIModel model)
         {
             using var userService = new UserService(_connectionString);
-            var user = userService.FindByName(User?.Identity?.Name);
+            var user = userService.FindByName(User.Identity!.Name!);
 
             using var doiService = new DOIService(_connectionString);
             var doi = doiService.FindByPrefixAndSuffix(prefix, suffix);
