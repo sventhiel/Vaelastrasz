@@ -42,7 +42,7 @@ namespace Vaelastrasz.Server.Controllers
         /// <returns></returns>
         /// <exception cref="UnauthorizedException"></exception>
         [HttpDelete("dois/{prefix}/{suffix}")]
-        public async Task<IActionResult> DeleteAsync(string prefix, string suffix)
+        public IActionResult Delete(string prefix, string suffix)
         {
             using var userService = new UserService(_connectionString);
             var user = userService.FindByName(User.Identity!.Name!);
@@ -63,7 +63,7 @@ namespace Vaelastrasz.Server.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("dois")]
-        public async Task<IActionResult> GetAsync()
+        public IActionResult Get()
         {
             using var userService = new UserService(_connectionString);
             var user = userService.FindByName(User.Identity!.Name!);
@@ -81,7 +81,7 @@ namespace Vaelastrasz.Server.Controllers
         /// <returns></returns>
         /// <exception cref="UnauthorizedException"></exception>
         [HttpGet("dois/{id}")]
-        public async Task<IActionResult> GetByIdAsync(long id)
+        public IActionResult GetById(long id)
         {
             using var userService = new UserService(_connectionString);
             var user = userService.FindByName(User.Identity!.Name!);
@@ -103,7 +103,7 @@ namespace Vaelastrasz.Server.Controllers
         /// <returns></returns>
         /// <exception cref="UnauthorizedException"></exception>
         [HttpGet("dois/{prefix}/{suffix}")]
-        public async Task<IActionResult> GetByPrefixAndSuffixAsync(string prefix, string suffix)
+        public IActionResult GetByPrefixAndSuffix(string prefix, string suffix)
         {
             using var userService = new UserService(_connectionString);
             var user = userService.FindByName(User.Identity!.Name!);
@@ -125,7 +125,7 @@ namespace Vaelastrasz.Server.Controllers
         /// <exception cref="NotFoundException"></exception>
         /// <exception cref="ForbidException"></exception>
         [HttpPost("dois")]
-        public async Task<IActionResult> PostAsync(CreateDOIModel model)
+        public IActionResult Post(CreateDOIModel model)
         {
             using var userService = new UserService(_connectionString);
             var user = userService.FindByName(User.Identity!.Name!);
@@ -158,7 +158,7 @@ namespace Vaelastrasz.Server.Controllers
         /// <returns></returns>
         /// <exception cref="UnauthorizedException"></exception>
         [HttpPut("dois/{doi}")]
-        public async Task<IActionResult> PutByDOIAsync(string doi, UpdateDOIModel model)
+        public IActionResult PutByDOI(string doi, UpdateDOIModel model)
         {
             using var userService = new UserService(_connectionString);
             var user = userService.FindByName(User.Identity!.Name!);
@@ -181,7 +181,7 @@ namespace Vaelastrasz.Server.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPut("dois/{id}")]
-        public async Task<IActionResult> PutByIdAsync(long id, UpdateDOIModel model)
+        public IActionResult PutById(long id, UpdateDOIModel model)
         {
             using var doiService = new DOIService(_connectionString);
 
@@ -200,7 +200,7 @@ namespace Vaelastrasz.Server.Controllers
         /// <returns></returns>
         /// <exception cref="UnauthorizedException"></exception>
         [HttpPut("dois/{prefix}/{suffix}")]
-        public async Task<IActionResult> PutByPrefixAndSuffixAsync(string prefix, string suffix, UpdateDOIModel model)
+        public IActionResult PutByPrefixAndSuffix(string prefix, string suffix, UpdateDOIModel model)
         {
             using var userService = new UserService(_connectionString);
             var user = userService.FindByName(User.Identity!.Name!);
