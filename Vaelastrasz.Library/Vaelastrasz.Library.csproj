@@ -7,7 +7,7 @@
     <Authors>Sven Thiel</Authors>
     <Title>Vaelastrasz.Library</Title>
     <IncludeSymbols>True</IncludeSymbols>
-    <Version>2.3.2</Version>
+    <Version>2.3.3</Version>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
@@ -32,7 +32,7 @@
 
   <ItemGroup>
     <PackageReference Include="DataAnnotationsExtensions" Version="5.0.1.27" />
-    <PackageReference Include="LiteDB" Version="5.0.20" />
+    <PackageReference Include="LiteDB" Version="5.0.21" />
     <PackageReference Include="NameParserSharp" Version="1.5.0" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />

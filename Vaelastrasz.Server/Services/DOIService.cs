@@ -5,21 +5,43 @@ using Vaelastrasz.Library.Models;
 
 namespace Vaelastrasz.Server.Services
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class DOIService : IDisposable
     {
         private readonly ConnectionString _connectionString;
         private bool disposed = false;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connectionString"></param>
         public DOIService(ConnectionString connectionString)
         {
             _connectionString = connectionString;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         ~DOIService()
         {
             Dispose(false);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="prefix"></param>
+        /// <param name="suffix"></param>
+        /// <param name="state"></param>
+        /// <param name="userId"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        /// <exception cref="NotFoundException"></exception>
+        /// <exception cref="ForbidException"></exception>
+        /// <exception cref="ConflictException"></exception>
         public long Create(string prefix, string suffix, DOIStateType state, long userId, string value)
         {
             using var db = new LiteDatabase(_connectionString);
@@ -48,6 +70,12 @@ namespace Vaelastrasz.Server.Services
             return dois.Insert(doi);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="doi"></param>
+        /// <returns></returns>
+        /// <exception cref="BadRequestException"></exception>
         public bool DeleteByDOI(string doi)
         {
             if (!doi.Contains('/'))
@@ -59,6 +87,11 @@ namespace Vaelastrasz.Server.Services
             return DeleteByPrefixAndSuffix(prefix, suffix);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public bool DeleteById(long id)
         {
             using var db = new LiteDatabase(_connectionString);
@@ -67,6 +100,15 @@ namespace Vaelastrasz.Server.Services
             return col.Delete(id);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="prefix"></param>
+        /// <param name="suffix"></param>
+        /// <returns></returns>
+        /// <exception cref="NotFoundException"></exception>
+        /// <exception cref="ConflictException"></exception>
+        /// <exception cref="ForbidException"></exception>
         public bool DeleteByPrefixAndSuffix(string prefix, string suffix)
         {
             using var db = new LiteDatabase(_connectionString);
@@ -75,7 +117,7 @@ namespace Vaelastrasz.Server.Services
 
             var doi = dois.Find(d => d.Prefix.Equals(prefix, StringComparison.InvariantCultureIgnoreCase) && d.Suffix.Equals(suffix, StringComparison.InvariantCultureIgnoreCase));
 
-            if (doi.Count() == 0)
+            if (doi == null || !doi.Any())
                 throw new NotFoundException($"The doi (prefix:{prefix}, suffix: {suffix}) does not exist.");
 
             if (doi.Count() > 1)
@@ -89,12 +131,19 @@ namespace Vaelastrasz.Server.Services
             return dois.Delete(doi.Single().Id);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public List<DOI> Find()
         {
             using var db = new LiteDatabase(_connectionString);
@@ -103,6 +152,12 @@ namespace Vaelastrasz.Server.Services
             return col.FindAll().ToList();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="doi"></param>
+        /// <returns></returns>
+        /// <exception cref="BadRequestException"></exception>
         public DOI FindByDOI(string doi)
         {
             if (!doi.Contains('/'))
@@ -114,6 +169,12 @@ namespace Vaelastrasz.Server.Services
             return FindByPrefixAndSuffix(prefix, suffix);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <exception cref="NotFoundException"></exception>
         public DOI FindById(long id)
         {
             using var db = new LiteDatabase(_connectionString);
@@ -127,6 +188,11 @@ namespace Vaelastrasz.Server.Services
             return doi;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="prefix"></param>
+        /// <returns></returns>
         public List<DOI> FindByPrefix(string prefix)
         {
             using var db = new LiteDatabase(_connectionString);
@@ -135,6 +201,14 @@ namespace Vaelastrasz.Server.Services
             return col.Find(d => d.Prefix.Equals(prefix, StringComparison.OrdinalIgnoreCase)).ToList();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="prefix"></param>
+        /// <param name="suffix"></param>
+        /// <returns></returns>
+        /// <exception cref="NotFoundException"></exception>
+        /// <exception cref="ConflictException"></exception>
         public DOI FindByPrefixAndSuffix(string prefix, string suffix)
         {
             using var db = new LiteDatabase(_connectionString);
@@ -142,7 +216,7 @@ namespace Vaelastrasz.Server.Services
 
             var dois = col.Find(d => d.Prefix.Equals(prefix, StringComparison.OrdinalIgnoreCase) && d.Suffix.Equals(suffix, StringComparison.OrdinalIgnoreCase));
 
-            if (dois.Count() == 0)
+            if (dois == null || !dois.Any())
                 throw new NotFoundException($"The doi (prefix:{prefix}, suffix: {suffix}) does not exist.");
 
             if (dois.Count() > 1)
@@ -151,6 +225,12 @@ namespace Vaelastrasz.Server.Services
             return dois.Single();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="suffix"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
         public List<DOI> FindBySuffix(string suffix)
         {
             if (suffix == null)
@@ -162,6 +242,11 @@ namespace Vaelastrasz.Server.Services
             return col.Find(d => d.Suffix.Equals(suffix, StringComparison.OrdinalIgnoreCase)).ToList();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public List<DOI> FindByUserId(long userId)
         {
             using var db = new LiteDatabase(_connectionString);
@@ -170,6 +255,14 @@ namespace Vaelastrasz.Server.Services
             return col.Find(d => d.User.Id == userId).ToList();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="doi"></param>
+        /// <param name="state"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        /// <exception cref="BadRequestException"></exception>
         public bool UpdateByDOI(string doi, DOIStateType state, string value)
         {
             if (!doi.Contains('/'))
@@ -181,16 +274,21 @@ namespace Vaelastrasz.Server.Services
             return UpdateByPrefixAndSuffix(prefix, suffix, state, value);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="state"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        /// <exception cref="NotFoundException"></exception>
         public bool UpdateById(long id, DOIStateType state, string value)
         {
             using var db = new LiteDatabase(_connectionString);
             var dois = db.GetCollection<DOI>("dois");
 
-            var doi = dois.FindById(id);
-
-            if (doi == null)
-                throw new NotFoundException($"The doi (id:{id}) does not exist.");
-
+            var doi = dois.FindById(id) ?? throw new NotFoundException($"The doi (id:{id}) does not exist.");
+            
             doi.State = state;
             doi.Value = value;
             doi.LastUpdateDate = DateTimeOffset.UtcNow;
@@ -198,6 +296,15 @@ namespace Vaelastrasz.Server.Services
             return dois.Update(doi);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="prefix"></param>
+        /// <param name="suffix"></param>
+        /// <param name="state"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        /// <exception cref="NotFoundException"></exception>
         public bool UpdateByPrefixAndSuffix(string prefix, string suffix, DOIStateType state, string value)
         {
             using var db = new LiteDatabase(_connectionString);
@@ -216,6 +323,10 @@ namespace Vaelastrasz.Server.Services
             return dois.Update(doi);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="disposing"></param>
         protected virtual void Dispose(bool disposing)
         {
             if (!disposed)

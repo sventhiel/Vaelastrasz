@@ -14,6 +14,9 @@ using Vaelastrasz.Server.Services;
 
 namespace Vaelastrasz.Server.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [ApiController, Authorize(Roles = "user"), Route("api")]
     public class DataCiteController : ControllerBase
     {
@@ -22,6 +25,12 @@ namespace Vaelastrasz.Server.Controllers
         private ConnectionString _connectionString;
         private JwtConfiguration _jwtConfiguration;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="configuration"></param>
+        /// <param name="connectionString"></param>
         public DataCiteController(ILogger<DataCiteController> logger, IConfiguration configuration, ConnectionString connectionString)
         {
             _connectionString = connectionString;
@@ -30,12 +39,18 @@ namespace Vaelastrasz.Server.Controllers
             _logger = logger;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="doi"></param>
+        /// <returns></returns>
+        /// <exception cref="NotFoundException"></exception>
         [HttpDelete("datacite/{doi}")]
         public async Task<IActionResult> DeleteByDOIAsync(string doi)
         {
             using var doiService = new DOIService(_connectionString);
             using var userService = new UserService(_connectionString);
-            var user = userService.FindByName(User.Identity.Name);
+            var user = userService.FindByName(User.Identity!.Name!);
 
             if (user.Account == null)
                 throw new NotFoundException($"The account of user (id: {user.Id}) does not exist.");
@@ -50,20 +65,25 @@ namespace Vaelastrasz.Server.Controllers
             var request = new RestRequest($"dois/{doi}", Method.Delete);
             request.AddHeader("Accept", "application/json");
 
-            var response = client.Execute(request);
+            var response = await client.ExecuteAsync(request);
 
             if (!response.IsSuccessStatusCode)
                 return StatusCode((int)response.StatusCode, response.ErrorMessage);
 
             doiService.DeleteByDOI(doi);
-            return StatusCode((int)response.StatusCode, JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content));
+            return StatusCode((int)response.StatusCode, JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content!));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="NotFoundException"></exception>
         [HttpGet("datacite")]
         public async Task<IActionResult> GetAsync()
         {
             using var userService = new UserService(_connectionString);
-            var user = userService.FindByName(User?.Identity?.Name);
+            var user = userService.FindByName(User.Identity!.Name!);
 
             if (user.Account == null)
                 throw new NotFoundException($"The account of user (id: {user.Id}) does not exist.");
@@ -88,9 +108,15 @@ namespace Vaelastrasz.Server.Controllers
                 var request = new RestRequest($"dois/{doi}", Method.Get);
                 request.AddHeader("Accept", "application/json");
 
-                var response = client.Execute(request);
+                var response = await client.ExecuteAsync(request);
+
+                if (response == null)
+                    continue;
 
                 if (!response.IsSuccessStatusCode)
+                    continue;
+
+                if (response.Content == null)
                     continue;
 
                 var item = JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content);
@@ -102,11 +128,19 @@ namespace Vaelastrasz.Server.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="prefix"></param>
+        /// <param name="suffix"></param>
+        /// <returns></returns>
+        /// <exception cref="NotFoundException"></exception>
+        /// <exception cref="UnauthorizedException"></exception>
         [HttpGet("datacite/{prefix}/{suffix}")]
         public async Task<IActionResult> GetByDOIAsync(string prefix, string suffix)
         {
             using var userService = new UserService(_connectionString);
-            var user = userService.FindByName(User?.Identity?.Name);
+            var user = userService.FindByName(User.Identity!.Name!);
 
             if (user.Account == null)
                 throw new NotFoundException($"The account of user (id: {user.Id}) does not exist.");
@@ -127,14 +161,21 @@ namespace Vaelastrasz.Server.Controllers
             var request = new RestRequest($"dois/{prefix}/{suffix}", Method.Get);
             request.AddHeader("Accept", "application/json");
 
-            var response = client.Execute(request);
+            var response = await client.ExecuteAsync(request);
 
             if (!response.IsSuccessStatusCode)
                 return StatusCode((int)response.StatusCode, response.ErrorMessage);
 
-            return StatusCode((int)response.StatusCode, JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content));
+            return StatusCode((int)response.StatusCode, JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content!));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        /// <exception cref="NotFoundException"></exception>
+        /// <exception cref="ForbidException"></exception>
         [HttpPost("datacite")]
         public async Task<IActionResult> PostAsync(CreateDataCiteModel model)
         {
@@ -142,7 +183,7 @@ namespace Vaelastrasz.Server.Controllers
             using var placeholderService = new PlaceholderService(_connectionString);
             using var userService = new UserService(_connectionString);
 
-            var user = userService.FindByName(User.Identity.Name);
+            var user = userService.FindByName(User.Identity!.Name!);
             if (user.Account == null)
                 throw new NotFoundException($"The account of user (id: {user.Id}) does not exist.");
 
@@ -163,7 +204,7 @@ namespace Vaelastrasz.Server.Controllers
 
             var doiId = doiService.Create(model.Data.Attributes.Doi.GetPrefix(), model.Data.Attributes.Doi.GetSuffix(), (DOIStateType)model.Data.Attributes.Event, user.Id, JsonConvert.SerializeObject(model));
 
-            var response = client.Execute(request);
+            var response = await client.ExecuteAsync(request);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -171,16 +212,23 @@ namespace Vaelastrasz.Server.Controllers
                 return StatusCode((int)response.StatusCode, response.ErrorMessage);
             }
 
-            var readDataCiteModel = JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content);
-            doiService.UpdateByPrefixAndSuffix(model.Data.Attributes.Doi.GetPrefix(), model.Data.Attributes.Doi.GetSuffix(), (DOIStateType)readDataCiteModel.Data.Attributes.State, response.Content);
-            return Created($"{user.Account.Host}/dois/{WebUtility.UrlEncode(model.Data.Attributes.Doi)}", JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content));
+            var readDataCiteModel = JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content!);
+            doiService.UpdateByPrefixAndSuffix(model.Data.Attributes.Doi.GetPrefix(), model.Data.Attributes.Doi.GetSuffix(), (DOIStateType)readDataCiteModel!.Data.Attributes.State, response.Content!);
+            return Created($"{user.Account.Host}/dois/{WebUtility.UrlEncode(model.Data.Attributes.Doi)}", JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content!));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="doi"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        /// <exception cref="NotFoundException"></exception>
         [HttpPut("datacite/{doi}")]
         public async Task<IActionResult> PutByDOIAsync(string doi, UpdateDataCiteModel model)
         {
             using var userService = new UserService(_connectionString);
-            var user = userService.FindByName(User?.Identity?.Name);
+            var user = userService.FindByName(User.Identity!.Name!);
 
             if (user.Account == null)
                 throw new NotFoundException($"The account of user (id: {user.Id}) does not exist.");
@@ -195,7 +243,7 @@ namespace Vaelastrasz.Server.Controllers
             var request = new RestRequest($"dois/{doi}", Method.Put);
             request.AddHeader("Accept", "application/json");
 
-            var response = client.Execute(request);
+            var response = await client.ExecuteAsync(request);
 
             if (!response.IsSuccessStatusCode)
                 return StatusCode((int)response.StatusCode, response.ErrorMessage);
@@ -203,7 +251,7 @@ namespace Vaelastrasz.Server.Controllers
             var doiService = new DOIService(_connectionString);
             doiService.UpdateByDOI(doi, DOIStateType.Findable, "");
 
-            return Ok(JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content));
+            return Ok(JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content!));
         }
     }
 }
