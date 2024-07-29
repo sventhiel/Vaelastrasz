@@ -24,11 +24,6 @@ namespace Vaelastrasz.Server.Controllers
             _logger = logger;
         }
 
-        /// <summary>
-        /// Hier kommt dann etwas neues!
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
         [HttpDelete("users/{id}")]
         public async Task<IActionResult> DeleteAsync(long id)
         {
@@ -72,7 +67,7 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         [HttpPut("users/{id}")]
-        public async Task<IActionResult> PutAsync(long id, UpdateUserModel model)
+        public async Task<IActionResult> PutByIdAsync(long id, UpdateUserModel model)
         {
             using var userService = new UserService(_connectionString);
 
