@@ -42,7 +42,7 @@ namespace Vaelastrasz.Server.Services
         /// <exception cref="NotFoundException"></exception>
         /// <exception cref="ForbidException"></exception>
         /// <exception cref="ConflictException"></exception>
-        public long Create(string prefix, string suffix, DOIStateType state, long userId, string value)
+        public async Task<long> CreateAsync(string prefix, string suffix, DOIStateType state, long userId, string value)
         {
             using var db = new LiteDatabase(_connectionString);
             var dois = db.GetCollection<DOI>("dois");
@@ -67,7 +67,7 @@ namespace Vaelastrasz.Server.Services
                 LastUpdateDate = DateTimeOffset.UtcNow
             };
 
-            return dois.Insert(doi);
+            return await Task.FromResult(dois.Insert(doi));
         }
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace Vaelastrasz.Server.Services
         /// <param name="doi"></param>
         /// <returns></returns>
         /// <exception cref="BadRequestException"></exception>
-        public bool DeleteByDOI(string doi)
+        public async Task<bool> DeleteByDOIAsync(string doi)
         {
             if (!doi.Contains('/'))
                 throw new BadRequestException($"The value of doi ({doi}) is invalid.");
@@ -84,7 +84,7 @@ namespace Vaelastrasz.Server.Services
             string prefix = doi.Split('/')[0];
             string suffix = doi.Split('/')[1];
 
-            return DeleteByPrefixAndSuffix(prefix, suffix);
+            return await DeleteByPrefixAndSuffixAsync(prefix, suffix);
         }
 
         /// <summary>
@@ -92,12 +92,12 @@ namespace Vaelastrasz.Server.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public bool DeleteById(long id)
+        public async Task<bool> DeleteByIdAsync(long id)
         {
             using var db = new LiteDatabase(_connectionString);
             var col = db.GetCollection<DOI>("dois");
 
-            return col.Delete(id);
+            return await Task.FromResult(col.Delete(id));
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace Vaelastrasz.Server.Services
         /// <exception cref="NotFoundException"></exception>
         /// <exception cref="ConflictException"></exception>
         /// <exception cref="ForbidException"></exception>
-        public bool DeleteByPrefixAndSuffix(string prefix, string suffix)
+        public async Task<bool> DeleteByPrefixAndSuffixAsync(string prefix, string suffix)
         {
             using var db = new LiteDatabase(_connectionString);
             var dois = db.GetCollection<DOI>("dois");
@@ -128,7 +128,7 @@ namespace Vaelastrasz.Server.Services
             if (!user.Account.Prefix.Equals(prefix, StringComparison.InvariantCultureIgnoreCase))
                 throw new ForbidException();
 
-            return dois.Delete(doi.Single().Id);
+            return await Task.FromResult(dois.Delete(doi.Single().Id));
         }
 
         /// <summary>
@@ -144,12 +144,12 @@ namespace Vaelastrasz.Server.Services
         /// 
         /// </summary>
         /// <returns></returns>
-        public List<DOI> Find()
+        public async Task<List<DOI>> FindAsync()
         {
             using var db = new LiteDatabase(_connectionString);
             var col = db.GetCollection<DOI>("dois");
 
-            return col.FindAll().ToList();
+            return await Task.FromResult(col.FindAll().ToList());
         }
 
         /// <summary>
@@ -158,7 +158,7 @@ namespace Vaelastrasz.Server.Services
         /// <param name="doi"></param>
         /// <returns></returns>
         /// <exception cref="BadRequestException"></exception>
-        public DOI FindByDOI(string doi)
+        public async Task<DOI> FindByDOIAsync(string doi)
         {
             if (!doi.Contains('/'))
                 throw new BadRequestException($"The value of doi ({doi}) is invalid.");
@@ -166,7 +166,7 @@ namespace Vaelastrasz.Server.Services
             string prefix = doi.Split('/')[0];
             string suffix = doi.Split('/')[1];
 
-            return FindByPrefixAndSuffix(prefix, suffix);
+            return await FindByPrefixAndSuffixAsync(prefix, suffix);
         }
 
         /// <summary>
@@ -175,7 +175,7 @@ namespace Vaelastrasz.Server.Services
         /// <param name="id"></param>
         /// <returns></returns>
         /// <exception cref="NotFoundException"></exception>
-        public DOI FindById(long id)
+        public DOI FindByIdAsync(long id)
         {
             using var db = new LiteDatabase(_connectionString);
             var col = db.GetCollection<DOI>("dois");
@@ -193,7 +193,7 @@ namespace Vaelastrasz.Server.Services
         /// </summary>
         /// <param name="prefix"></param>
         /// <returns></returns>
-        public List<DOI> FindByPrefix(string prefix)
+        public List<DOI> FindByPrefixAsync(string prefix)
         {
             using var db = new LiteDatabase(_connectionString);
             var col = db.GetCollection<DOI>("dois");
@@ -209,7 +209,7 @@ namespace Vaelastrasz.Server.Services
         /// <returns></returns>
         /// <exception cref="NotFoundException"></exception>
         /// <exception cref="ConflictException"></exception>
-        public DOI FindByPrefixAndSuffix(string prefix, string suffix)
+        public async Task<DOI> FindByPrefixAndSuffixAsync(string prefix, string suffix)
         {
             using var db = new LiteDatabase(_connectionString);
             var col = db.GetCollection<DOI>("dois");
@@ -222,7 +222,7 @@ namespace Vaelastrasz.Server.Services
             if (dois.Count() > 1)
                 throw new ConflictException($"The doi (prefix:{prefix}, suffix: {suffix}) exists more than once.");
 
-            return dois.Single();
+            return await Task.FromResult(dois.Single());
         }
 
         /// <summary>
@@ -231,7 +231,7 @@ namespace Vaelastrasz.Server.Services
         /// <param name="suffix"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public List<DOI> FindBySuffix(string suffix)
+        public List<DOI> FindBySuffixAsync(string suffix)
         {
             if (suffix == null)
                 throw new ArgumentNullException(nameof(suffix));
@@ -247,7 +247,7 @@ namespace Vaelastrasz.Server.Services
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public List<DOI> FindByUserId(long userId)
+        public List<DOI> FindByUserIdAsync(long userId)
         {
             using var db = new LiteDatabase(_connectionString);
             var col = db.GetCollection<DOI>("dois");
@@ -263,7 +263,7 @@ namespace Vaelastrasz.Server.Services
         /// <param name="value"></param>
         /// <returns></returns>
         /// <exception cref="BadRequestException"></exception>
-        public bool UpdateByDOI(string doi, DOIStateType state, string value)
+        public bool UpdateByDOIAsync(string doi, DOIStateType state, string value)
         {
             if (!doi.Contains('/'))
                 throw new BadRequestException($"The value of doi ({doi}) is invalid.");
@@ -282,7 +282,7 @@ namespace Vaelastrasz.Server.Services
         /// <param name="value"></param>
         /// <returns></returns>
         /// <exception cref="NotFoundException"></exception>
-        public bool UpdateById(long id, DOIStateType state, string value)
+        public bool UpdateByIdAsync(long id, DOIStateType state, string value)
         {
             using var db = new LiteDatabase(_connectionString);
             var dois = db.GetCollection<DOI>("dois");
@@ -305,7 +305,7 @@ namespace Vaelastrasz.Server.Services
         /// <param name="value"></param>
         /// <returns></returns>
         /// <exception cref="NotFoundException"></exception>
-        public bool UpdateByPrefixAndSuffix(string prefix, string suffix, DOIStateType state, string value)
+        public bool UpdateByPrefixAndSuffixAsync(string prefix, string suffix, DOIStateType state, string value)
         {
             using var db = new LiteDatabase(_connectionString);
             var dois = db.GetCollection<DOI>("dois");

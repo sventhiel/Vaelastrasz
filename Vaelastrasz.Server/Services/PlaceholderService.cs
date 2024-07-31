@@ -19,7 +19,7 @@ namespace Vaelastrasz.Server.Services
             Dispose(false);
         }
 
-        public long Create(string expression, string regularExpression, long userId)
+        public async Task<long> CreateAsync(string expression, string regularExpression, long userId)
         {
             using var db = new LiteDatabase(_connectionString);
             var placeholders = db.GetCollection<Placeholder>("placeholders");
@@ -39,15 +39,15 @@ namespace Vaelastrasz.Server.Services
                 LastUpdateDate = DateTimeOffset.UtcNow
             };
 
-            return placeholders.Insert(placeholder);
+            return await Task.FromResult(placeholders.Insert(placeholder));
         }
 
-        public bool DeleteById(long id)
+        public async Task<bool> DeleteByIdAsync(long id)
         {
             using var db = new LiteDatabase(_connectionString);
             var col = db.GetCollection<Placeholder>("placeholders");
 
-            return col.Delete(id);
+            return await Task.FromResult(col.Delete(id));
         }
 
         public void Dispose()
@@ -56,15 +56,15 @@ namespace Vaelastrasz.Server.Services
             GC.SuppressFinalize(this);
         }
 
-        public List<Placeholder> Find()
+        public async Task<List<Placeholder>> FindAsync()
         {
             using var db = new LiteDatabase(_connectionString);
             var col = db.GetCollection<Placeholder>("placeholders");
 
-            return col.Query().ToList();
+            return await Task.FromResult(col.Query().ToList());
         }
 
-        public Placeholder FindById(long id)
+        public async Task<Placeholder> FindByIdAsync(long id)
         {
             using var db = new LiteDatabase(_connectionString);
             var col = db.GetCollection<Placeholder>("placeholders");
@@ -74,10 +74,10 @@ namespace Vaelastrasz.Server.Services
             if (placeholder == null)
                 throw new NotFoundException($"The placeholder (id:{id}) does not exist.");
 
-            return placeholder;
+            return await Task.FromResult(placeholder);
         }
 
-        public List<Placeholder> FindByUserId(long userId)
+        public async Task<List<Placeholder>> FindByUserIdAsync(long userId)
         {
             List<Placeholder> placeholders = new();
 
@@ -86,10 +86,10 @@ namespace Vaelastrasz.Server.Services
 
             placeholders = col.Query().Where(p => p.User.Id == userId).ToList();
 
-            return placeholders;
+            return await Task.FromResult(placeholders);
         }
 
-        public bool UpdateById(long id, string expression, string regularExpression, long userId)
+        public async Task<bool> UpdateByIdAsync(long id, string expression, string regularExpression, long userId)
         {
             using var db = new LiteDatabase(_connectionString);
             var placeholders = db.GetCollection<Placeholder>("placeholders");
@@ -108,7 +108,7 @@ namespace Vaelastrasz.Server.Services
             placeholder.User = user;
             placeholder.LastUpdateDate = DateTimeOffset.UtcNow;
 
-            return placeholders.Update(placeholder);
+            return await Task.FromResult(placeholders.Update(placeholder));
         }
 
         protected virtual void Dispose(bool disposing)

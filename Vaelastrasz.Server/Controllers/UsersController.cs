@@ -37,7 +37,7 @@ namespace Vaelastrasz.Server.Controllers
         public async Task<IActionResult> GetAsync()
         {
             using var userService = new UserService(_connectionString);
-            var users = userService.Find();
+            var users = await userService.Find();
 
             return Ok(new List<ReadUserModel>(users.Select(u => ReadUserModel.Convert(u))));
         }
