@@ -62,7 +62,7 @@ namespace Vaelastrasz.Server.Controllers
         {
             using var userService = new UserService(_connectionString);
 
-            if (!userService.Verify(model.Username, model.Password))
+            if (!(await userService.VerifyAsync(model.Username, model.Password)))
                 throw new AuthenticationException($"Either username ({model.Username}) or password {model.Password} are invalid.");
 
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtConfiguration.IssuerSigningKey ?? ""));

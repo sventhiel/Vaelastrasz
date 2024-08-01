@@ -29,15 +29,15 @@ namespace Vaelastrasz.Server.Controllers
         public async Task<IActionResult> DeleteByIdAsync(long id)
         {
             using var userService = new UserService(_connectionString);
-            var user = userService.FindByName(User?.Identity?.Name);
+            var user = await userService.FindByNameAsync(User?.Identity?.Name);
 
             using var placeholderService = new PlaceholderService(_connectionString);
-            var placeholder = placeholderService.FindById(id);
+            var placeholder = await placeholderService.FindByIdAsync(id);
 
             if (placeholder.User.Id != user.Id)
                 throw new UnauthorizedException($"The user (id: {user.Id}) is not allowed to perform the action.");
 
-            var response = placeholderService.DeleteById(id);
+            var response = await placeholderService.DeleteByIdAsync(id);
             return Ok(response);
         }
 
@@ -45,10 +45,10 @@ namespace Vaelastrasz.Server.Controllers
         public async Task<IActionResult> GetAsync()
         {
             using var userService = new UserService(_connectionString);
-            var user = userService.FindByName(User?.Identity?.Name);
+            var user = await userService.FindByNameAsync(User?.Identity?.Name);
 
             var placeholderService = new PlaceholderService(_connectionString);
-            var placeholders = placeholderService.FindByUserId(user.Id).Select(p => ReadPlaceholderModel.Convert(p));
+            var placeholders = (await placeholderService.FindByUserIdAsync(user.Id)).Select(p => ReadPlaceholderModel.Convert(p));
 
             return Ok(placeholders);
         }
@@ -57,10 +57,10 @@ namespace Vaelastrasz.Server.Controllers
         public async Task<IActionResult> GetByIdAsync(long id)
         {
             using var userService = new UserService(_connectionString);
-            var user = userService.FindByName(User?.Identity?.Name);
+            var user = await userService.FindByNameAsync(User?.Identity?.Name);
 
             var placeholderService = new PlaceholderService(_connectionString);
-            var placeholder = placeholderService.FindById(id);
+            var placeholder = await placeholderService.FindByIdAsync(id);
 
             return Ok(ReadPlaceholderModel.Convert(placeholder));
         }
@@ -69,11 +69,11 @@ namespace Vaelastrasz.Server.Controllers
         public async Task<IActionResult> PostAsync(CreatePlaceholderModel model)
         {
             using var userService = new UserService(_connectionString);
-            var user = userService.FindByName(User?.Identity?.Name);
+            var user = await userService.FindByNameAsync(User?.Identity?.Name);
 
             using var placeholderService = new PlaceholderService(_connectionString);
-            var id = placeholderService.Create(model.Expression, model.RegularExpression, user.Id);
-            var placeholder = placeholderService.FindById(id);
+            var id = await placeholderService.CreateAsync(model.Expression, model.RegularExpression, user.Id);
+            var placeholder = await placeholderService.FindByIdAsync(id);
 
             var request = HttpContext.Request;
             string baseUrl = $"{request.Scheme}://{request.Host}{request.PathBase}";
@@ -83,19 +83,19 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         [HttpPut("placeholders/{id}")]
-        public IActionResult PutByIdAsync(long id, UpdatePlaceholderModel model)
+        public async Task<IActionResult> PutByIdAsync(long id, UpdatePlaceholderModel model)
         {
             using var userService = new UserService(_connectionString);
-            var user = userService.FindByName(User?.Identity?.Name);
+            var user = await userService.FindByNameAsync(User?.Identity?.Name);
 
             using var placeholderService = new PlaceholderService(_connectionString);
-            var placeholder = placeholderService.FindById(id);
+            var placeholder = await placeholderService.FindByIdAsync(id);
 
             if (placeholder.User.Id != user.Id)
                 throw new UnauthorizedException($"The user (id: {user.Id}) is not allowed to perform the action..");
 
-            var result = placeholderService.UpdateById(id, model.Expression, model.RegularExpression, model.UserId);
-            placeholder = placeholderService.FindById(id);
+            var result = await placeholderService.UpdateByIdAsync(id, model.Expression, model.RegularExpression, model.UserId);
+            placeholder = await placeholderService.FindByIdAsync(id);
 
             return Ok(ReadPlaceholderModel.Convert(placeholder));
         }

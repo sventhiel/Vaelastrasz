@@ -50,7 +50,7 @@ namespace Vaelastrasz.Server.Controllers
         {
             using var doiService = new DOIService(_connectionString);
             using var userService = new UserService(_connectionString);
-            var user = userService.FindByName(User.Identity!.Name!);
+            var user = await userService.FindByNameAsync(User.Identity!.Name!);
 
             if (user.Account == null)
                 throw new NotFoundException($"The account of user (id: {user.Id}) does not exist.");
@@ -70,7 +70,7 @@ namespace Vaelastrasz.Server.Controllers
             if (!response.IsSuccessStatusCode)
                 return StatusCode((int)response.StatusCode, response.ErrorMessage);
 
-            doiService.DeleteByDOI(doi);
+            await doiService.DeleteByDOIAsync(doi);
             return StatusCode((int)response.StatusCode, JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content!));
         }
 
@@ -83,13 +83,13 @@ namespace Vaelastrasz.Server.Controllers
         public async Task<IActionResult> GetAsync()
         {
             using var userService = new UserService(_connectionString);
-            var user = userService.FindByName(User.Identity!.Name!);
+            var user = await userService.FindByNameAsync(User.Identity!.Name!);
 
             if (user.Account == null)
                 throw new NotFoundException($"The account of user (id: {user.Id}) does not exist.");
 
             var doiService = new DOIService(_connectionString);
-            var dois = doiService.FindByUserId(user.Id);
+            var dois = await doiService.FindByUserIdAsync(user.Id);
 
             var result = new List<ReadDataCiteModel>();
 
@@ -140,13 +140,13 @@ namespace Vaelastrasz.Server.Controllers
         public async Task<IActionResult> GetByDOIAsync(string prefix, string suffix)
         {
             using var userService = new UserService(_connectionString);
-            var user = userService.FindByName(User.Identity!.Name!);
+            var user = await userService.FindByNameAsync(User.Identity!.Name!);
 
             if (user.Account == null)
                 throw new NotFoundException($"The account of user (id: {user.Id}) does not exist.");
 
             using var doiService = new DOIService(_connectionString);
-            var doi = doiService.FindByPrefixAndSuffix(prefix, suffix);
+            var doi = await doiService.FindByPrefixAndSuffixAsync(prefix, suffix);
 
             if (doi.User.Id != user.Id)
                 throw new UnauthorizedException($"The user (id: {user.Id}) is not allowed to perform the action.");
@@ -183,12 +183,12 @@ namespace Vaelastrasz.Server.Controllers
             using var placeholderService = new PlaceholderService(_connectionString);
             using var userService = new UserService(_connectionString);
 
-            var user = userService.FindByName(User.Identity!.Name!);
+            var user = await userService.FindByNameAsync(User.Identity!.Name!);
             if (user.Account == null)
                 throw new NotFoundException($"The account of user (id: {user.Id}) does not exist.");
 
             // DOI Check
-            var placeholders = placeholderService.FindByUserId(user.Id);
+            var placeholders = await placeholderService.FindByUserIdAsync(user.Id);
             if (!DOIHelper.Validate(model.Data.Attributes.Doi, user.Account.Prefix, user.Pattern, new Dictionary<string, string>(placeholders.Select(p => new KeyValuePair<string, string>(p.Expression, p.RegularExpression)))))
                 throw new ForbidException($"The doi (doi: {model.Data.Attributes.Doi}) is invalid.");
 
@@ -202,18 +202,18 @@ namespace Vaelastrasz.Server.Controllers
             var request = new RestRequest($"dois", Method.Post).AddJsonBody(JsonConvert.SerializeObject(model));
             request.AddHeader("Accept", "application/json");
 
-            var doiId = doiService.Create(model.Data.Attributes.Doi.GetPrefix(), model.Data.Attributes.Doi.GetSuffix(), (DOIStateType)model.Data.Attributes.Event, user.Id, JsonConvert.SerializeObject(model));
+            var doiId = await doiService.CreateAsync(model.Data.Attributes.Doi.GetPrefix(), model.Data.Attributes.Doi.GetSuffix(), (DOIStateType)model.Data.Attributes.Event, user.Id, JsonConvert.SerializeObject(model));
 
             var response = await client.ExecuteAsync(request);
 
             if (!response.IsSuccessStatusCode)
             {
-                doiService.DeleteById(doiId);
+                await doiService.DeleteByIdAsync(doiId);
                 return StatusCode((int)response.StatusCode, response.ErrorMessage);
             }
 
             var readDataCiteModel = JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content!);
-            doiService.UpdateByPrefixAndSuffix(model.Data.Attributes.Doi.GetPrefix(), model.Data.Attributes.Doi.GetSuffix(), (DOIStateType)readDataCiteModel!.Data.Attributes.State, response.Content!);
+            await doiService.UpdateByPrefixAndSuffixAsync(model.Data.Attributes.Doi.GetPrefix(), model.Data.Attributes.Doi.GetSuffix(), (DOIStateType)readDataCiteModel!.Data.Attributes.State, response.Content!);
             return Created($"{user.Account.Host}/dois/{WebUtility.UrlEncode(model.Data.Attributes.Doi)}", JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content!));
         }
 
@@ -228,7 +228,7 @@ namespace Vaelastrasz.Server.Controllers
         public async Task<IActionResult> PutByDOIAsync(string doi, UpdateDataCiteModel model)
         {
             using var userService = new UserService(_connectionString);
-            var user = userService.FindByName(User.Identity!.Name!);
+            var user = await userService.FindByNameAsync(User.Identity!.Name!);
 
             if (user.Account == null)
                 throw new NotFoundException($"The account of user (id: {user.Id}) does not exist.");
@@ -249,7 +249,7 @@ namespace Vaelastrasz.Server.Controllers
                 return StatusCode((int)response.StatusCode, response.ErrorMessage);
 
             var doiService = new DOIService(_connectionString);
-            doiService.UpdateByDOI(doi, DOIStateType.Findable, "");
+            await doiService.UpdateByDOIAsync(doi, DOIStateType.Findable, "");
 
             return Ok(JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content!));
         }

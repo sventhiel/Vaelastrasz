@@ -12,7 +12,7 @@ namespace Vaelastrasz.Server.Tests
         }
 
         [Test]
-        public void Test1()
+        public async Task Test1()
         {
             using var db = new LiteDatabase("Filename=C:/Projects/github.com/sventhiel/Vaelastrasz/Vaelastrasz.Server/Database/Vaelastrasz.db;Connection=Shared");
 
@@ -21,7 +21,7 @@ namespace Vaelastrasz.Server.Tests
             //    var users = db.GetCollection<User>("users");
             //var user = users.FindById(null);
 
-            var user = userService.FindById(0);
+            var user = await userService.FindByIdAsync(0);
 
             ClassicAssert.IsNull(user);
         }

@@ -28,7 +28,7 @@ namespace Vaelastrasz.Server.Controllers
         public async Task<IActionResult> DeleteAsync(long id)
         {
             using var userService = new UserService(_connectionString);
-            var response = userService.DeleteById(id);
+            var response = await userService.DeleteByIdAsync(id);
 
             return Ok(response);
         }
@@ -37,7 +37,7 @@ namespace Vaelastrasz.Server.Controllers
         public async Task<IActionResult> GetAsync()
         {
             using var userService = new UserService(_connectionString);
-            var users = await userService.Find();
+            var users = await userService.FindAsync();
 
             return Ok(new List<ReadUserModel>(users.Select(u => ReadUserModel.Convert(u))));
         }
@@ -46,7 +46,7 @@ namespace Vaelastrasz.Server.Controllers
         public async Task<IActionResult> GetByIdAsync(long id)
         {
             using var userService = new UserService(_connectionString);
-            var user = userService.FindById(id);
+            var user = await userService.FindByIdAsync(id);
 
             return Ok(ReadUserModel.Convert(user));
         }
@@ -56,8 +56,8 @@ namespace Vaelastrasz.Server.Controllers
         {
             using var userService = new UserService(_connectionString);
 
-            var id = userService.Create(model.Name, model.Password, model.Project, model.Pattern, model.AccountId, true);
-            var user = userService.FindById(id);
+            var id = await userService.CreateAsync(model.Name, model.Password, model.Project, model.Pattern, model.AccountId, true);
+            var user = await userService.FindByIdAsync(id);
 
             var request = HttpContext.Request;
             string baseUrl = $"{request.Scheme}://{request.Host}{request.PathBase}";
@@ -71,8 +71,8 @@ namespace Vaelastrasz.Server.Controllers
         {
             using var userService = new UserService(_connectionString);
 
-            var result = userService.UpdateById(id, model.Password, model.Project, model.Pattern, model.AccountId, model.IsActive);
-            var user = userService.FindById(id);
+            var result = await userService.UpdateByIdAsync(id, model.Password, model.Project, model.Pattern, model.AccountId, model.IsActive);
+            var user = await userService.FindByIdAsync(id);
 
             return Ok(ReadUserModel.Convert(user));
         }

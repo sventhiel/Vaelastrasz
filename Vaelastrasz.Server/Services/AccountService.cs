@@ -38,7 +38,7 @@ namespace Vaelastrasz.Server.Services
         /// <param name="prefix"></param>
         /// <returns></returns>
         /// <exception cref="ConflictException"></exception>
-        public long Create(string name, string password, string host, string prefix)
+        public async Task<long> CreateAsync(string name, string password, string host, string prefix)
         {
             using var db = new LiteDatabase(_connectionString);
             var accounts = db.GetCollection<Account>("accounts");
@@ -56,7 +56,7 @@ namespace Vaelastrasz.Server.Services
                 LastUpdateDate = DateTimeOffset.UtcNow
             };
 
-            return accounts.Insert(account);
+            return await Task.FromResult(accounts.Insert(account));
         }
 
         /// <summary>
@@ -64,12 +64,12 @@ namespace Vaelastrasz.Server.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public bool DeleteById(long id)
+        public async Task<bool> DeleteByIdAsync(long id)
         {
             using var db = new LiteDatabase(_connectionString);
             var col = db.GetCollection<Account>("accounts");
 
-            return col.Delete(id);
+            return await Task.FromResult(col.Delete(id));
         }
 
         /// <summary>
@@ -85,12 +85,12 @@ namespace Vaelastrasz.Server.Services
         /// 
         /// </summary>
         /// <returns></returns>
-        public List<Account> Find()
+        public async Task<List<Account>> FindAsync()
         {
             using var db = new LiteDatabase(_connectionString);
             var col = db.GetCollection<Account>("accounts");
 
-            return col.Query().ToList();
+            return await Task.FromResult(col.Query().ToList());
         }
 
         /// <summary>
@@ -99,13 +99,13 @@ namespace Vaelastrasz.Server.Services
         /// <param name="id"></param>
         /// <returns></returns>
         /// <exception cref="NotFoundException"></exception>
-        public Account FindById(long id)
+        public async Task<Account> FindByIdAsync(long id)
         {
             using var db = new LiteDatabase(_connectionString);
             var col = db.GetCollection<Account>("accounts");
 
             var account = col.FindById(id) ?? throw new NotFoundException($"The account (id:{id}) does not exist.");
-            return account;
+            return await Task.FromResult(account);
         }
 
         /// <summary>
@@ -118,7 +118,7 @@ namespace Vaelastrasz.Server.Services
         /// <param name="prefix"></param>
         /// <returns></returns>
         /// <exception cref="NotFoundException"></exception>
-        public bool UpdateById(long id, string name, string password, string host, string prefix)
+        public async Task<bool> UpdateByIdAsync(long id, string name, string password, string host, string prefix)
         {
             using var db = new LiteDatabase(_connectionString);
             var accounts = db.GetCollection<Account>("accounts");
@@ -134,7 +134,7 @@ namespace Vaelastrasz.Server.Services
             account.Host = host;
             account.LastUpdateDate = DateTimeOffset.UtcNow;
 
-            return accounts.Update(account);
+            return await Task.FromResult(accounts.Update(account));
         }
 
         /// <summary>

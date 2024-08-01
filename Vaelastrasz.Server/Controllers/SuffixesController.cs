@@ -24,7 +24,7 @@ namespace Vaelastrasz.Server.Controllers
         public async Task<IActionResult> PostAsync(CreateSuffixModel model)
         {
             using var userService = new UserService(_connectionString);
-            var user = userService.FindByName(User.Identity?.Name);
+            var user = await userService.FindByNameAsync(User.Identity?.Name);
 
             // Suffix
             var suffix = SuffixHelper.Create(user.Pattern, model.Placeholders);
@@ -32,7 +32,7 @@ namespace Vaelastrasz.Server.Controllers
             // Validation
             var placeholderService = new PlaceholderService(_connectionString);
 
-            if (SuffixHelper.Validate(suffix, user.Pattern, new Dictionary<string, string>(placeholderService.FindByUserId(user.Id).Select(p => new KeyValuePair<string, string>(p.Expression, p.RegularExpression)))))
+            if (SuffixHelper.Validate(suffix, user.Pattern, new Dictionary<string, string>((await placeholderService.FindByUserIdAsync(user.Id)).Select(p => new KeyValuePair<string, string>(p.Expression, p.RegularExpression)))))
                 return Ok(suffix);
 
             throw new BadRequestException($"The value of suffix ({suffix}) is invalid.");

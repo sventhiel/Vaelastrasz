@@ -56,7 +56,7 @@ namespace Vaelastrasz.Server.Authentication
 
                 var userService = new UserService(_connectionString);
 
-                if (userService.Verify(credentials[0], credentials[1]))
+                if (await userService.VerifyAsync(credentials[0], credentials[1]))
                 {
                     var claims = new List<Claim>()
                     {

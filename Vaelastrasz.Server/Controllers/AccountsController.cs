@@ -22,7 +22,7 @@ namespace Vaelastrasz.Server.Controllers
         public async Task<IActionResult> DeleteByIdAsync(long id)
         {
             using var accountService = new AccountService(_connectionString);
-            var result = accountService.DeleteById(id);
+            var result = await accountService.DeleteByIdAsync(id);
 
             return Ok(result);
         }
@@ -31,7 +31,7 @@ namespace Vaelastrasz.Server.Controllers
         public async Task<IActionResult> GetAsync()
         {
             using var accountService = new AccountService(_connectionString);
-            var result = accountService.Find();
+            var result = await accountService.FindAsync();
 
             return Ok(new List<ReadAccountModel>(result.Select(a => ReadAccountModel.Convert(a))));
         }
@@ -40,7 +40,7 @@ namespace Vaelastrasz.Server.Controllers
         public async Task<IActionResult> GetByIdAsync(long id)
         {
             using var accountService = new AccountService(_connectionString);
-            var result = accountService.FindById(id);
+            var result = await accountService.FindByIdAsync(id);
 
             return Ok(ReadAccountModel.Convert(result));
         }
@@ -50,8 +50,8 @@ namespace Vaelastrasz.Server.Controllers
         {
             using var accountService = new AccountService(_connectionString);
 
-            var id = accountService.Create(model.Name, model.Password, model.Host, model.Prefix);
-            var account = accountService.FindById(id);
+            var id = await accountService.CreateAsync(model.Name, model.Password, model.Host, model.Prefix);
+            var account = await accountService.FindByIdAsync(id);
 
             var request = HttpContext.Request;
             string baseUrl = $"{request.Scheme}://{request.Host}{request.PathBase}";
@@ -65,8 +65,8 @@ namespace Vaelastrasz.Server.Controllers
         {
             using var accountService = new AccountService(_connectionString);
 
-            var result = accountService.UpdateById(id, model.Name, model.Password, model.Host, model.Prefix);
-            var account = accountService.FindById(id);
+            var result = await accountService.UpdateByIdAsync(id, model.Name, model.Password, model.Host, model.Prefix);
+            var account = await accountService.FindByIdAsync(id);
 
             return Ok(ReadAccountModel.Convert(account));
         }

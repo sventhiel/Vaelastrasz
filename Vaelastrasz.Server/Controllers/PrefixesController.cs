@@ -20,7 +20,7 @@ namespace Vaelastrasz.Server.Controllers
         public async Task<IActionResult> GetAsync()
         {
             using var userService = new UserService(_connectionString);
-            var user = userService.FindByName(User.Identity.Name);
+            var user = await userService.FindByNameAsync(User.Identity.Name);
 
             // Prefix
             var prefix = user.Account.Prefix;
