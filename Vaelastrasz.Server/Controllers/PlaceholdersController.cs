@@ -29,7 +29,7 @@ namespace Vaelastrasz.Server.Controllers
         public async Task<IActionResult> DeleteByIdAsync(long id)
         {
             using var userService = new UserService(_connectionString);
-            var user = await userService.FindByNameAsync(User?.Identity?.Name);
+            var user = await userService.FindByNameAsync(User.Identity!.Name!);
 
             using var placeholderService = new PlaceholderService(_connectionString);
             var placeholder = await placeholderService.FindByIdAsync(id);

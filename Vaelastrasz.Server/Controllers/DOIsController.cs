@@ -45,7 +45,7 @@ namespace Vaelastrasz.Server.Controllers
         public async Task<IActionResult> Delete(string prefix, string suffix)
         {
             using var userService = new UserService(_connectionString);
-            var user = await userService.FindByNameAsync(User.Identity!.Name!);
+            var user = await userService.FindByNameAsync(User.Identity.Name);
 
             using var doiService = new DOIService(_connectionString);
 
@@ -66,7 +66,7 @@ namespace Vaelastrasz.Server.Controllers
         public async Task<IActionResult> Get()
         {
             using var userService = new UserService(_connectionString);
-            var user = await userService.FindByNameAsync(User.Identity!.Name!);
+            var user = await userService.FindByNameAsync(User.Identity.Name);
 
             using var doiService = new DOIService(_connectionString);
             var dois = (await doiService.FindByUserIdAsync(user.Id)).Select(d => ReadDOIModel.Convert(d));
@@ -84,7 +84,7 @@ namespace Vaelastrasz.Server.Controllers
         public async Task<IActionResult> GetById(long id)
         {
             using var userService = new UserService(_connectionString);
-            var user = await userService.FindByNameAsync(User.Identity!.Name!);
+            var user = await userService.FindByNameAsync(User.Identity.Name);
 
             using var doiService = new DOIService(_connectionString);
             var doi = await doiService.FindByIdAsync(id);
@@ -106,7 +106,7 @@ namespace Vaelastrasz.Server.Controllers
         public async Task<IActionResult> GetByPrefixAndSuffix(string prefix, string suffix)
         {
             using var userService = new UserService(_connectionString);
-            var user = await userService.FindByNameAsync(User.Identity!.Name!);
+            var user = await userService.FindByNameAsync(User.Identity.Name);
 
             using var doiService = new DOIService(_connectionString);
             var result = await doiService.FindByPrefixAndSuffixAsync(prefix, suffix);
@@ -128,7 +128,7 @@ namespace Vaelastrasz.Server.Controllers
         public async Task<IActionResult> Post(CreateDOIModel model)
         {
             using var userService = new UserService(_connectionString);
-            var user = await userService.FindByNameAsync(User.Identity!.Name!);
+            var user = await userService.FindByNameAsync(User.Identity.Name);
 
             if (user.Account == null)
                 throw new NotFoundException($"The account of user (id: {user.Id}) does not exist.");
@@ -161,7 +161,7 @@ namespace Vaelastrasz.Server.Controllers
         public async Task<IActionResult> PutByDOI(string doi, UpdateDOIModel model)
         {
             using var userService = new UserService(_connectionString);
-            var user = await userService.FindByNameAsync(User.Identity!.Name!);
+            var user = await userService.FindByNameAsync(User.Identity.Name);
 
             using var doiService = new DOIService(_connectionString);
             var _doi = await doiService.FindByDOIAsync(doi);
@@ -203,7 +203,7 @@ namespace Vaelastrasz.Server.Controllers
         public async Task<IActionResult> PutByPrefixAndSuffix(string prefix, string suffix, UpdateDOIModel model)
         {
             using var userService = new UserService(_connectionString);
-            var user = await userService.FindByNameAsync(User.Identity!.Name!);
+            var user = await userService.FindByNameAsync(User.Identity.Name);
 
             using var doiService = new DOIService(_connectionString);
             var doi = await doiService.FindByPrefixAndSuffixAsync(prefix, suffix);
