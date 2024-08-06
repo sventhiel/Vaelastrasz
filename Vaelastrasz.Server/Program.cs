@@ -72,14 +72,14 @@ builder.Services.AddSwaggerGen(options =>
     options.SwaggerDoc("v1", new OpenApiInfo
     {
         Version = "v1",
-        Title = "Test API",
-        Description = "A simple example for swagger api information",
+        Title = "DataCite DOI Proxy",
+        Description = "A proxy service for BEXIS2 instances to communicate with DataCite.",
         TermsOfService = new Uri("https://example.com/terms"),
         Contact = new OpenApiContact
         {
-            Name = "Your Name XYZ",
-            Email = "xyz@gmail.com",
-            Url = new Uri("https://example.com"),
+            Name = "Sven Thiel",
+            Email = "m6thsv2@googlemail.com",
+            Url = new Uri("https://github.com/sventhiel/vaelastrasz"),
         },
         License = new OpenApiLicense
         {
