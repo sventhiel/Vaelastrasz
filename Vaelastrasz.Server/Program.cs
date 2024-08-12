@@ -30,6 +30,59 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Logging.ClearProviders();
 builder.Logging.AddSerilog(logger);
 
+// LiteDB
+builder.Services.AddSingleton(new ConnectionString(builder.Configuration["ConnectionStrings:Vaelastrasz"]));
+
+// Exceptionless
+builder.Services.AddExceptionless(options =>
+{
+    options.ServerUrl = "https://idiv-exceptionless.fmi.uni-jena.de";
+    options.ApiKey = "<api-key>";
+    options.IncludeUserName = true;
+    options.IncludeIpAddress = true;
+    options.SetVersion("v1.0");
+});
+
+builder.Services.AddControllers().AddNewtonsoftJson().AddJsonOptions(o =>
+{
+    o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = "BASIC_OR_JWT";
+    options.DefaultChallengeScheme = "BASIC_OR_JWT";
+})
+    .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>
+                ("Basic", null)
+    .AddJwtBearer(options =>
+    {
+        options.SaveToken = true;
+        options.RequireHttpsMetadata = false;
+        options.TokenValidationParameters = new TokenValidationParameters()
+        {
+            ValidateIssuer = jwtConfiguration.ValidateIssuer,
+            ValidateAudience = jwtConfiguration.ValidateAudience,
+            ValidAudience = jwtConfiguration.ValidAudience,
+            ValidIssuer = jwtConfiguration.ValidIssuer,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfiguration.IssuerSigningKey ?? ""))
+        };
+    })
+    .AddPolicyScheme("BASIC_OR_JWT", "BASIC_OR_JWT", options =>
+    {
+        options.ForwardDefaultSelector = context =>
+        {
+            //string authorization = context.Request.Headers[HeaderNames.Authorization];
+
+            //if (!string.IsNullOrEmpty(authorization) && authorization.StartsWith("Basic ", StringComparison.InvariantCultureIgnoreCase))
+            //    return "Basic";
+
+            //return JwtBearerDefaults.AuthenticationScheme;
+
+            return "Basic";
+        };
+    });
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -94,70 +147,12 @@ builder.Services.AddSwaggerGen(options =>
     options.IncludeXmlComments(xmlPath);
 });
 
-builder.Services.AddExceptionless(options =>
-{
-    options.ServerUrl = "https://idiv-exceptionless.fmi.uni-jena.de";
-    options.ApiKey = "<api-key>";
-    options.IncludeUserName = true;
-    options.IncludeIpAddress = true;
-    options.SetVersion("v1.0");
-});
-
-// LiteDB
-builder.Services.AddSingleton(new ConnectionString(builder.Configuration["ConnectionStrings:Vaelastrasz"]));
-
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultScheme = "BASIC_OR_JWT";
-    options.DefaultChallengeScheme = "BASIC_OR_JWT";
-})
-    .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>
-                ("Basic", null)
-    .AddJwtBearer(options =>
-    {
-        options.SaveToken = true;
-        options.RequireHttpsMetadata = false;
-        options.TokenValidationParameters = new TokenValidationParameters()
-        {
-            ValidateIssuer = jwtConfiguration.ValidateIssuer,
-            ValidateAudience = jwtConfiguration.ValidateAudience,
-            ValidAudience = jwtConfiguration.ValidAudience,
-            ValidIssuer = jwtConfiguration.ValidIssuer,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfiguration.IssuerSigningKey ?? ""))
-        };
-    })
-    .AddPolicyScheme("BASIC_OR_JWT", "BASIC_OR_JWT", options =>
-    {
-        options.ForwardDefaultSelector = context =>
-        {
-            //string authorization = context.Request.Headers[HeaderNames.Authorization];
-
-            //if (!string.IsNullOrEmpty(authorization) && authorization.StartsWith("Basic ", StringComparison.InvariantCultureIgnoreCase))
-            //    return "Basic";
-
-            //return JwtBearerDefaults.AuthenticationScheme;
-
-            return "Basic";
-        };
-    });
-
-builder.Services.AddControllers().AddNewtonsoftJson().AddJsonOptions(o =>
-{
-    o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-});
-
 var app = builder.Build();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-app.UseAuthentication();
-app.UseAuthorization();
-
-app.UseMiddleware<ExceptionHandlingMiddleware>();
-
-app.MapControllers();
-
+// Use Swagger middleware
 app.UseSwagger();
 app.UseSwaggerUI(options =>
 {
@@ -165,6 +160,13 @@ app.UseSwaggerUI(options =>
     options.RoutePrefix = "";
 });
 
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseExceptionless();
+
+// Map controllers
+app.MapControllers();
 
 app.Run();
