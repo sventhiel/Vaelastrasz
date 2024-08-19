@@ -15,7 +15,7 @@ namespace Vaelastrasz.Library.Models.DataCite
 
         [Required]
         [JsonProperty("relatedIdentifierType")]
-        public DataCiteRelatedIdentifierType RelatedIdentifierType { get; set; }
+        public DataCiteRelatedIdentifierType? RelatedIdentifierType { get; set; }
 
         [JsonProperty("relatedMetadataScheme")]
         public string RelatedMetadataScheme { get; set; }

@@ -35,7 +35,7 @@ namespace Vaelastrasz.Library.Models.DataCite
         public string Number { get; set; }
 
         [JsonProperty("numberType")]
-        public DataCiteRelatedItemNumberType NumberType { get; set; }
+        public DataCiteRelatedItemNumberType? NumberType { get; set; }
 
         [JsonProperty("publicationYear")]
         public string PublicationYear { get; set; }
@@ -44,7 +44,7 @@ namespace Vaelastrasz.Library.Models.DataCite
         public string Publisher { get; set; }
 
         [JsonProperty("relatedItemIdentifier")]
-        public DataCiteRelationType RelatedItemIdentifier { get; set; }
+        public DataCiteRelationType? RelatedItemIdentifier { get; set; }
 
         [JsonProperty("relatedItemType")]
         public DataCiteResourceTypeGeneral RelatedItemType { get; set; }

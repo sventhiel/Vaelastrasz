@@ -10,7 +10,7 @@ namespace Vaelastrasz.Library.Extensions
     {
         #region CreateDataCiteModel
 
-        public static CreateDataCiteModel AddContributor(this CreateDataCiteModel model, string name, DataCiteNameType nameType, DataCiteContributorType contributorType)
+        public static CreateDataCiteModel AddContributor(this CreateDataCiteModel model, string name, DataCiteNameType? nameType, DataCiteContributorType contributorType)
         {
             try
             {
@@ -45,7 +45,7 @@ namespace Vaelastrasz.Library.Extensions
             }
         }
 
-        public static CreateDataCiteModel AddCreator(this CreateDataCiteModel model, string name, DataCiteNameType type)
+        public static CreateDataCiteModel AddCreator(this CreateDataCiteModel model, string name, DataCiteNameType? type)
         {
             try
             {
@@ -122,7 +122,7 @@ namespace Vaelastrasz.Library.Extensions
             }
         }
 
-        public static CreateDataCiteModel AddTitle(this CreateDataCiteModel model, string title, string language, DataCiteTitleType type)
+        public static CreateDataCiteModel AddTitle(this CreateDataCiteModel model, string title, string language, DataCiteTitleType? type)
         {
             model.Data.Attributes.Titles.Add(new DataCiteTitle()
             {

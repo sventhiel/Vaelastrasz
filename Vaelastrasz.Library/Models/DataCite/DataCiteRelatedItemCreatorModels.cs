@@ -18,6 +18,6 @@ namespace Vaelastrasz.Library.Models.DataCite
         public string Name { get; set; }
 
         [JsonProperty("nameType")]
-        public DataCiteNameType NameType { get; set; }
+        public DataCiteNameType? NameType { get; set; }
     }
 }
