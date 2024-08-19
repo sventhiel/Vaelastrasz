@@ -70,7 +70,7 @@ namespace Vaelastrasz.Server.Services
 
             using var db = new LiteDatabase(_connectionString);
             var col = db.GetCollection<User>("users");
-            users = col.Query().ToList();
+            users = col.Include(u => u.Account).Query().ToList();
 
             return await Task.FromResult(users.ToList());
         }
@@ -80,7 +80,7 @@ namespace Vaelastrasz.Server.Services
             using var db = new LiteDatabase(_connectionString);
             var col = db.GetCollection<User>("users");
 
-            var user = col.FindById(id);
+            var user = col.Include(u => u.Account).FindById(id);
 
             return await Task.FromResult(user) ?? throw new NotFoundException($"The user (id:{id}) does not exist.");
         }
@@ -90,7 +90,7 @@ namespace Vaelastrasz.Server.Services
             using var db = new LiteDatabase(_connectionString);
             var col = db.GetCollection<User>("users");
 
-            var users = col.Find(u => u.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+            var users = col.Include(u => u.Account).Find(u => u.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
 
             if (users.Count() == 0)
                 throw new NotFoundException($"The user (name:{name}) does not exist.");

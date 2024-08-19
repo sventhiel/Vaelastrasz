@@ -48,7 +48,7 @@ namespace Vaelastrasz.Server.Services
             var dois = db.GetCollection<DOI>("dois");
             var users = db.GetCollection<User>("users");
 
-            var user = users.FindById(userId) ?? throw new NotFoundException($"The user (id:{userId}) does not exist.");
+            var user = users.Include(u => u.Account).FindById(userId) ?? throw new NotFoundException($"The user (id:{userId}) does not exist.");
 
             if (!user.Account.Prefix.Equals(prefix, StringComparison.InvariantCultureIgnoreCase))
                 throw new ForbidException();

@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using RestSharp;
 using RestSharp.Authenticators;
 using System.Net;
+using System.Web;
 using Vaelastrasz.Library.Exceptions;
 using Vaelastrasz.Library.Extensions;
 using Vaelastrasz.Library.Models;
@@ -105,7 +106,7 @@ namespace Vaelastrasz.Server.Controllers
 
             foreach (var doi in dois)
             {
-                var request = new RestRequest($"dois/{doi}", Method.Get);
+                var request = new RestRequest($"dois/{doi}?publisher=true&affiliation=true", Method.Get);
                 request.AddHeader("Accept", "application/json");
 
                 var response = await client.ExecuteAsync(request);
@@ -137,7 +138,7 @@ namespace Vaelastrasz.Server.Controllers
         /// <exception cref="NotFoundException"></exception>
         /// <exception cref="UnauthorizedException"></exception>
         [HttpGet("datacite/{prefix}/{suffix}")]
-        public async Task<IActionResult> GetByDOIAsync(string prefix, string suffix)
+        public async Task<IActionResult> GetByPrefixAndSuffixAsync(string prefix, string suffix)
         {
             using var userService = new UserService(_connectionString);
             var user = await userService.FindByNameAsync(User.Identity!.Name!);
@@ -158,7 +159,7 @@ namespace Vaelastrasz.Server.Controllers
 
             var client = new RestClient(clientOptions);
 
-            var request = new RestRequest($"dois/{prefix}/{suffix}", Method.Get);
+            var request = new RestRequest($"dois/{prefix}/{suffix}?publisher=true&affiliation=true", Method.Get);
             request.AddHeader("Accept", "application/json");
 
             var response = await client.ExecuteAsync(request);
@@ -168,6 +169,7 @@ namespace Vaelastrasz.Server.Controllers
 
             return StatusCode((int)response.StatusCode, JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content!));
         }
+
 
         /// <summary>
         /// 

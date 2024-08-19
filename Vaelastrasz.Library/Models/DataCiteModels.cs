@@ -335,17 +335,6 @@ namespace Vaelastrasz.Library.Models
         public ReadDataCiteDataModel Data { get; set; }
     }
 
-    //public class ReadListDataCiteModel
-    //{
-    //    [JsonProperty("data")]
-    //    public List<ReadDataCiteDataModel> Data { get; set; }
-
-    //    public ReadListDataCiteModel()
-    //    {
-    //        Data = new List<ReadDataCiteDataModel>();
-    //    }
-    //}
-
     #endregion read
 
     #region update

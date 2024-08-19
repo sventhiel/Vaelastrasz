@@ -18,7 +18,6 @@ namespace Vaelastrasz.Library.Models.DataCite
         [JsonProperty("publisherIdentifier")]
         public string PublisherIdentifier { get; set; }
 
-        [Required]
         [JsonProperty("publisherIdentifierScheme")]
         public string PublisherIdentifierScheme { get; set; }
 
