@@ -12,6 +12,7 @@ using Vaelastrasz.Server.Authentication;
 using Vaelastrasz.Server.Configurations;
 using Vaelastrasz.Server.Filters;
 using Vaelastrasz.Server.Middleware;
+using Vaelastrasz.Server.Resolvers;
 
 var configuration = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
@@ -43,7 +44,12 @@ builder.Services.AddExceptionless(options =>
     options.SetVersion("v1.0");
 });
 
-builder.Services.AddControllers().AddNewtonsoftJson().AddJsonOptions(o =>
+builder.Services.AddControllers().AddNewtonsoftJson(o =>
+{
+    //
+    o.SerializerSettings.ContractResolver = new VaelastraszContractResolver();
+    o.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
+}).AddJsonOptions(o =>
 {
     o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
