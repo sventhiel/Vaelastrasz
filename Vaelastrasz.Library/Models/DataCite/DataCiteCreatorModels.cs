@@ -33,6 +33,6 @@ namespace Vaelastrasz.Library.Models.DataCite
         public List<DataCiteNameIdentifier> NameIdentifiers { get; set; }
 
         [JsonProperty("nameType")]
-        public DataCiteNameType NameType { get; set; }
+        public DataCiteNameType? NameType { get; set; }
     }
 }
