@@ -42,7 +42,7 @@ namespace Vaelastrasz.Server.Controllers
         /// <returns></returns>
         /// <exception cref="UnauthorizedException"></exception>
         [HttpDelete("dois/{prefix}/{suffix}")]
-        public async Task<IActionResult> Delete(string prefix, string suffix)
+        public async Task<IActionResult> DeleteAsync(string prefix, string suffix)
         {
             using var userService = new UserService(_connectionString);
             var user = await userService.FindByNameAsync(User.Identity.Name);
@@ -63,7 +63,7 @@ namespace Vaelastrasz.Server.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("dois")]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetAsync()
         {
             using var userService = new UserService(_connectionString);
             var user = await userService.FindByNameAsync(User.Identity.Name);

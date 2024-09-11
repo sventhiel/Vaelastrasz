@@ -1,6 +1,7 @@
 ﻿using LiteDB;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 using RestSharp;
 using RestSharp.Authenticators;
@@ -9,6 +10,8 @@ using System.Web;
 using Vaelastrasz.Library.Exceptions;
 using Vaelastrasz.Library.Extensions;
 using Vaelastrasz.Library.Models;
+using Vaelastrasz.Library.Types;
+using Vaelastrasz.Server.Attributes;
 using Vaelastrasz.Server.Configurations;
 using Vaelastrasz.Server.Helpers;
 using Vaelastrasz.Server.Services;
@@ -170,6 +173,39 @@ namespace Vaelastrasz.Server.Controllers
             return StatusCode((int)response.StatusCode, JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content!));
         }
 
+        [HttpGet("datacite/{prefix}/{suffix}/citations")]
+        [SwaggerAcceptHeader("application/x-bibtex", "text/turtle")]
+        public async Task<IActionResult> GetFormattedCitationByPrefixAndSuffixAsync(string prefix, string suffix)
+        {
+            using var userService = new UserService(_connectionString);
+            var user = await userService.FindByNameAsync(User.Identity!.Name!);
+
+            if (user.Account == null)
+                throw new NotFoundException($"The account of user (id: {user.Id}) does not exist.");
+
+            using var doiService = new DOIService(_connectionString);
+            var doi = await doiService.FindByPrefixAndSuffixAsync(prefix, suffix);
+
+            if (doi.User.Id != user.Id)
+                throw new UnauthorizedException($"The user (id: {user.Id}) is not allowed to perform the action.");
+
+            var clientOptions = new RestClientOptions($"{user.Account.Host}")
+            {
+                Authenticator = new HttpBasicAuthenticator(user.Account.Name, user.Account.Password)
+            };
+
+            var client = new RestClient(clientOptions);
+
+            var request = new RestRequest($"dois/{prefix}/{suffix}", Method.Get);
+            request.AddHeader("Accept", Request.Headers["Accept"].ToString());
+
+            var response = await client.ExecuteAsync(request);
+
+            if (!response.IsSuccessStatusCode)
+                return StatusCode((int)response.StatusCode, response.ErrorMessage);
+
+            return StatusCode((int)response.StatusCode, response.Content!);
+        }
 
         /// <summary>
         /// 

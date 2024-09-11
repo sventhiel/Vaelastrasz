@@ -127,6 +127,7 @@ builder.Services.AddSwaggerGen(options =>
     options.AddSecurityDefinition(jwtSecurityScheme.Reference.Id, jwtSecurityScheme);
     options.SchemaFilter<EnumSchemaFilter>();
     options.OperationFilter<AuthorizeHeaderOperationFilter>();
+    options.OperationFilter<AcceptHeaderOperationFilter>();
 
     options.SwaggerDoc("v1", new OpenApiInfo
     {

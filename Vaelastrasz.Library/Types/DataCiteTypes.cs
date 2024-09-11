@@ -5,6 +5,19 @@ using System.Runtime.Serialization;
 namespace Vaelastrasz.Library.Types
 {
     [JsonConverter(typeof(StringEnumConverter))]
+    public enum DataCiteCitationType
+    {
+        [EnumMember(Value = "application/rdf+xml")]
+        RDF_XML = 1,
+
+        [EnumMember(Value = "text/turtle")]
+        RDF_Turtle = 2,
+
+        [EnumMember(Value = "application/vnd.citationstyles.csl+json")]
+        Citeproc_JSON = 3
+    }
+
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum DataCiteContributorType
     {
         [EnumMember(Value = "ContactPerson")]
