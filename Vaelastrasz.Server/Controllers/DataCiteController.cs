@@ -10,7 +10,6 @@ using System.Web;
 using Vaelastrasz.Library.Exceptions;
 using Vaelastrasz.Library.Extensions;
 using Vaelastrasz.Library.Models;
-using Vaelastrasz.Library.Types;
 using Vaelastrasz.Server.Attributes;
 using Vaelastrasz.Server.Configurations;
 using Vaelastrasz.Server.Helpers;
@@ -27,7 +26,6 @@ namespace Vaelastrasz.Server.Controllers
         private readonly ILogger<DataCiteController> _logger;
         private List<Admin> _admins;
         private ConnectionString _connectionString;
-        private JwtConfiguration _jwtConfiguration;
 
         /// <summary>
         /// 
@@ -38,7 +36,6 @@ namespace Vaelastrasz.Server.Controllers
         public DataCiteController(ILogger<DataCiteController> logger, IConfiguration configuration, ConnectionString connectionString)
         {
             _connectionString = connectionString;
-            _jwtConfiguration = configuration.GetSection("JWT").Get<JwtConfiguration>()!;
             _admins = configuration.GetSection("Admins").Get<List<Admin>>()!;
             _logger = logger;
         }
@@ -174,7 +171,7 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         [HttpGet("datacite/{prefix}/{suffix}/citations")]
-        [SwaggerAcceptHeader("application/x-bibtex", "text/turtle")]
+        [SwaggerCustomHeader("application/x-research-info-systems", "application/x-bibtex", "application/vnd.jats+xml", "application/vnd.codemeta.ld+json", "application/vnd.citationstyles.csl+json", "application/vnd.schemaorg.ld+json", "application/vnd.datacite.datacite+json", "application/vnd.datacite.datacite+xml")]
         public async Task<IActionResult> GetFormattedCitationByPrefixAndSuffixAsync(string prefix, string suffix)
         {
             using var userService = new UserService(_connectionString);
@@ -197,7 +194,7 @@ namespace Vaelastrasz.Server.Controllers
             var client = new RestClient(clientOptions);
 
             var request = new RestRequest($"dois/{prefix}/{suffix}", Method.Get);
-            request.AddHeader("Accept", Request.Headers["Accept"].ToString());
+            request.AddHeader("Accept", Request.Headers["X-Citation-Format"].ToString());
 
             var response = await client.ExecuteAsync(request);
 
@@ -207,13 +204,6 @@ namespace Vaelastrasz.Server.Controllers
             return StatusCode((int)response.StatusCode, response.Content!);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        /// <exception cref="NotFoundException"></exception>
-        /// <exception cref="ForbidException"></exception>
         [HttpPost("datacite")]
         public async Task<IActionResult> PostAsync(CreateDataCiteModel model)
         {
@@ -255,13 +245,6 @@ namespace Vaelastrasz.Server.Controllers
             return Created($"{user.Account.Host}/dois/{WebUtility.UrlEncode(model.Data.Attributes.Doi)}", JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content!));
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="doi"></param>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        /// <exception cref="NotFoundException"></exception>
         [HttpPut("datacite/{doi}")]
         public async Task<IActionResult> PutByDOIAsync(string doi, UpdateDataCiteModel model)
         {

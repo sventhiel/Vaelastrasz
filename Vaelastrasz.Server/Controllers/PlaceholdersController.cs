@@ -15,12 +15,10 @@ namespace Vaelastrasz.Server.Controllers
         private readonly ILogger<PlaceholdersController> _logger;
         private List<Admin> _admins;
         private ConnectionString _connectionString;
-        private JwtConfiguration _jwtConfiguration;
 
         public PlaceholdersController(ILogger<PlaceholdersController> logger, IConfiguration configuration, ConnectionString connectionString)
         {
             _connectionString = connectionString;
-            _jwtConfiguration = configuration.GetSection("JWT").Get<JwtConfiguration>()!;
             _admins = configuration.GetSection("Admins").Get<List<Admin>>()!;
             _logger = logger;
         }

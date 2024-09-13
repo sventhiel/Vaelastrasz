@@ -14,12 +14,10 @@ namespace Vaelastrasz.Server.Controllers
         private readonly ILogger<UsersController> _logger;
         private List<Admin> _admins;
         private ConnectionString _connectionString;
-        private JwtConfiguration _jwtConfiguration;
 
         public UsersController(ILogger<UsersController> logger, IConfiguration configuration, ConnectionString connectionString)
         {
             _connectionString = connectionString;
-            _jwtConfiguration = configuration.GetSection("JWT").Get<JwtConfiguration>()!;
             _admins = configuration.GetSection("Admins").Get<List<Admin>>()!;
             _logger = logger;
         }

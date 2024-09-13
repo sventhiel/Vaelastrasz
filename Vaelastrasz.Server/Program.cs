@@ -2,12 +2,15 @@ using Exceptionless;
 using LiteDB;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
+using Vaelastrasz.Library.Models;
 using Vaelastrasz.Server.Authentication;
 using Vaelastrasz.Server.Configurations;
 using Vaelastrasz.Server.Filters;
@@ -23,8 +26,6 @@ var logger = new LoggerConfiguration()
   .ReadFrom.Configuration(configuration)
   .Enrich.FromLogContext()
   .CreateLogger();
-
-var jwtConfiguration = configuration.GetSection("JWT").Get<JwtConfiguration>();
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,9 +45,9 @@ builder.Services.AddExceptionless(options =>
     options.SetVersion("v1.0");
 });
 
+builder.Services.AddMvc().AddMvcOptions(o => o.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter()));
 builder.Services.AddControllers().AddNewtonsoftJson(o =>
 {
-    //
     o.SerializerSettings.ContractResolver = new VaelastraszContractResolver();
     o.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
 }).AddJsonOptions(o =>
@@ -56,25 +57,12 @@ builder.Services.AddControllers().AddNewtonsoftJson(o =>
 
 builder.Services.AddAuthentication(options =>
 {
-    options.DefaultScheme = "BASIC_OR_JWT";
-    options.DefaultChallengeScheme = "BASIC_OR_JWT";
+    options.DefaultScheme = "BASIC";
+    options.DefaultChallengeScheme = "BASIC";
 })
     .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>
                 ("Basic", null)
-    .AddJwtBearer(options =>
-    {
-        options.SaveToken = true;
-        options.RequireHttpsMetadata = false;
-        options.TokenValidationParameters = new TokenValidationParameters()
-        {
-            ValidateIssuer = jwtConfiguration.ValidateIssuer,
-            ValidateAudience = jwtConfiguration.ValidateAudience,
-            ValidAudience = jwtConfiguration.ValidAudience,
-            ValidIssuer = jwtConfiguration.ValidIssuer,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfiguration.IssuerSigningKey ?? ""))
-        };
-    })
-    .AddPolicyScheme("BASIC_OR_JWT", "BASIC_OR_JWT", options =>
+    .AddPolicyScheme("BASIC", "BASIC", options =>
     {
         options.ForwardDefaultSelector = context =>
         {
@@ -107,27 +95,10 @@ builder.Services.AddSwaggerGen(options =>
         }
     };
 
-    var jwtSecurityScheme = new OpenApiSecurityScheme
-    {
-        BearerFormat = "JWT",
-        Name = "Bearer",
-        In = ParameterLocation.Header,
-        Type = SecuritySchemeType.Http,
-        Scheme = JwtBearerDefaults.AuthenticationScheme,
-        Description = "Put **_ONLY_** your JWT Bearer token on textbox below!",
-
-        Reference = new OpenApiReference
-        {
-            Id = JwtBearerDefaults.AuthenticationScheme,
-            Type = ReferenceType.SecurityScheme
-        }
-    };
-
     options.AddSecurityDefinition(basicSecurityScheme.Reference.Id, basicSecurityScheme);
-    options.AddSecurityDefinition(jwtSecurityScheme.Reference.Id, jwtSecurityScheme);
     options.SchemaFilter<EnumSchemaFilter>();
     options.OperationFilter<AuthorizeHeaderOperationFilter>();
-    options.OperationFilter<AcceptHeaderOperationFilter>();
+    options.OperationFilter<SwaggerCustomHeaderOperationFilter>();
 
     options.SwaggerDoc("v1", new OpenApiInfo
     {

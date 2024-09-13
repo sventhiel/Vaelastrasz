@@ -18,7 +18,6 @@ namespace Vaelastrasz.Server.Controllers
         private readonly ILogger<DataCiteController> _logger;
         private List<Admin> _admins;
         private ConnectionString _connectionString;
-        private JwtConfiguration _jwtConfiguration;
 
         /// <summary>
         /// 
@@ -29,7 +28,6 @@ namespace Vaelastrasz.Server.Controllers
         public DOIsController(ILogger<DataCiteController> logger, IConfiguration configuration, ConnectionString connectionString)
         {
             _connectionString = connectionString;
-            _jwtConfiguration = configuration.GetSection("JWT").Get<JwtConfiguration>()!;
             _admins = configuration.GetSection("Admins").Get<List<Admin>>()!;
             _logger = logger;
         }
