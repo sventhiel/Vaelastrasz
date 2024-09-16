@@ -16,11 +16,12 @@ namespace Vaelastrasz.Server.Filters
                 .Cast<SwaggerCustomHeaderAttribute>()
                 .ToList();
 
-            if (attributes.Any())
+            if (attributes.Count == 1)
             {
+                var attribute = attributes.Single();
+
                 // Extract and convert media types
-                var mediaTypes = attributes
-                    .SelectMany(attr => attr.AcceptableTypes)
+                var mediaTypes = attribute.AcceptableTypes
                     .Distinct()
                     .Select(mediaType => (IOpenApiAny)new OpenApiString(mediaType)) // Convert to IOpenApiAny
                     .ToList();
@@ -28,7 +29,7 @@ namespace Vaelastrasz.Server.Filters
                 // Add Accept header parameter to the operation
                 operation.Parameters.Add(new OpenApiParameter
                 {
-                    Name = "X-Citation-Format",
+                    Name = attribute.HeaderName,
                     In = ParameterLocation.Header,
                     Description = "Specifies the media type of the response.",
                     Required = true,

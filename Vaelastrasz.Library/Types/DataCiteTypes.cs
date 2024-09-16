@@ -5,16 +5,53 @@ using System.Runtime.Serialization;
 namespace Vaelastrasz.Library.Types
 {
     [JsonConverter(typeof(StringEnumConverter))]
-    public enum DataCiteCitationType
+    public enum DataCiteCitationStyleType
     {
-        [EnumMember(Value = "application/rdf+xml")]
-        RDF_XML = 1,
+        [EnumMember(Value = "apa")]
+        APA = 1,
 
-        [EnumMember(Value = "text/turtle")]
-        RDF_Turtle = 2,
+        [EnumMember(Value = "harvard-cite-them-right")]
+        Harvard = 2,
+
+        [EnumMember(Value = "modern-language-association")]
+        MLA = 3,
+
+        [EnumMember(Value = "vancouver")]
+        Vancouver = 4,
+
+        [EnumMember(Value = "chicago-fullnote-bibliography")]
+        Chicago = 5,
+
+        [EnumMember(Value = "ieee")]
+        IEEE = 6,
+    }
+
+    [JsonConverter(typeof(StringEnumConverter))]
+    public enum DataCiteMetadataFormatType
+    {
+        [EnumMember(Value = "application/vnd.datacite.datacite+xml")]
+        DataCite_XML = 1,
+
+        [EnumMember(Value = "application/vnd.datacite.datacite+json")]
+        DataCite_JSON = 2,
+
+        [EnumMember(Value = "application/vnd.schemaorg.ld+json")]
+        Schemaorg_JSONLD = 3,
 
         [EnumMember(Value = "application/vnd.citationstyles.csl+json")]
-        Citeproc_JSON = 3
+        Citeproc_JSON = 4,
+
+        [EnumMember(Value = "application/vnd.codemeta.ld+json")]
+        Codemeta_JSON = 5,
+
+        [EnumMember(Value = "application/x-bibtex")]
+        BibTeX = 6,
+
+        [EnumMember(Value = "application/x-research-info-systems")]
+        RIS = 7,
+
+        [EnumMember(Value = "application/vnd.jats+xml")]
+        JATS_XML = 8
     }
 
     [JsonConverter(typeof(StringEnumConverter))]

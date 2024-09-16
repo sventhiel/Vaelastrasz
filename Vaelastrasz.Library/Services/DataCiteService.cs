@@ -2,10 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Vaelastrasz.Library.Configurations;
 using Vaelastrasz.Library.Models;
+using Vaelastrasz.Library.Types;
 
 namespace Vaelastrasz.Library.Services
 {
@@ -108,6 +110,24 @@ namespace Vaelastrasz.Library.Services
             catch (Exception ex)
             {
                 return ApiResponse<ReadDataCiteModel>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
+            }
+        }
+
+        public async Task<ApiResponse<string>> GetCitationStyleByDoiAsync(string doi, DataCiteCitationStyleType citationStyle)
+        {
+            try
+            {
+                _client.DefaultRequestHeaders.Add("X-Citation-Style", JsonConvert.SerializeObject(citationStyle));
+                HttpResponseMessage response = await _client.GetAsync($"{_config.Host}/api/datacite/{doi}/citations");
+
+                if (!response.IsSuccessStatusCode)
+                    return ApiResponse<string>.Failure(await response.Content.ReadAsStringAsync(), response.StatusCode);
+
+                return ApiResponse<string>.Success(await response.Content.ReadAsStringAsync(), response.StatusCode);
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<string>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
             }
         }
     }

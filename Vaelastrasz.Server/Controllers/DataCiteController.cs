@@ -171,8 +171,41 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         [HttpGet("datacite/{prefix}/{suffix}/citations")]
-        [SwaggerCustomHeader("application/x-research-info-systems", "application/x-bibtex", "application/vnd.jats+xml", "application/vnd.codemeta.ld+json", "application/vnd.citationstyles.csl+json", "application/vnd.schemaorg.ld+json", "application/vnd.datacite.datacite+json", "application/vnd.datacite.datacite+xml")]
-        public async Task<IActionResult> GetFormattedCitationByPrefixAndSuffixAsync(string prefix, string suffix)
+        [SwaggerCustomHeader("X-Citation-Style", ["apa", "harvard-cite-them-right", "modern-language-association", "vancouver", "chicago-fullnote-bibliography", "ieee"])]
+        public async Task<IActionResult> GetCitationStyleByPrefixAndSuffixAsync(string prefix, string suffix)
+        {
+            using var userService = new UserService(_connectionString);
+            var user = await userService.FindByNameAsync(User.Identity!.Name!);
+
+            if (user.Account == null)
+                throw new NotFoundException($"The account of user (id: {user.Id}) does not exist.");
+
+            using var doiService = new DOIService(_connectionString);
+            var doi = await doiService.FindByPrefixAndSuffixAsync(prefix, suffix);
+
+            if (doi.User.Id != user.Id)
+                throw new UnauthorizedException($"The user (id: {user.Id}) is not allowed to perform the action.");
+
+            var clientOptions = new RestClientOptions($"{user.Account.Host}")
+            {
+                Authenticator = new HttpBasicAuthenticator(user.Account.Name, user.Account.Password)
+            };
+
+            var client = new RestClient(clientOptions);
+
+            var request = new RestRequest($"dois/{prefix}/{suffix}?style={Request.Headers["X-Citation-Style"].ToString()}", Method.Get);
+
+            var response = await client.ExecuteAsync(request);
+
+            if (!response.IsSuccessStatusCode)
+                return StatusCode((int)response.StatusCode, response.ErrorMessage);
+
+            return StatusCode((int)response.StatusCode, response.Content!);
+        }
+
+        [HttpGet("datacite/{prefix}/{suffix}/metadata")]
+        [SwaggerCustomHeader("X-Metadata-Format", ["application/x-research-info-systems", "application/x-bibtex", "application/vnd.jats+xml", "application/vnd.codemeta.ld+json", "application/vnd.citationstyles.csl+json", "application/vnd.schemaorg.ld+json", "application/vnd.datacite.datacite+json", "application/vnd.datacite.datacite+xml"])]
+        public async Task<IActionResult> GetMetadataFormatByPrefixAndSuffixAsync(string prefix, string suffix)
         {
             using var userService = new UserService(_connectionString);
             var user = await userService.FindByNameAsync(User.Identity!.Name!);
@@ -194,7 +227,7 @@ namespace Vaelastrasz.Server.Controllers
             var client = new RestClient(clientOptions);
 
             var request = new RestRequest($"dois/{prefix}/{suffix}", Method.Get);
-            request.AddHeader("Accept", Request.Headers["X-Citation-Format"].ToString());
+            request.AddHeader("Accept", Request.Headers["X-Metadata-Format"].ToString());
 
             var response = await client.ExecuteAsync(request);
 
