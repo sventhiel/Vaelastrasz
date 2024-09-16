@@ -113,6 +113,25 @@ namespace Vaelastrasz.Library.Services
             }
         }
 
+        public async Task<ApiResponse<string>> GetMetadataFormatByDoiAsync(string doi, DataCiteMetadataFormatType metadataFormat)
+        {
+            try
+            {
+                _client.DefaultRequestHeaders.Add("X-Metadata-Format", JsonConvert.SerializeObject(metadataFormat));
+                HttpResponseMessage response = await _client.GetAsync($"{_config.Host}/api/datacite/{doi}/metadata");
+
+                if (!response.IsSuccessStatusCode)
+                    return ApiResponse<string>.Failure(await response.Content.ReadAsStringAsync(), response.StatusCode);
+
+                return ApiResponse<string>.Success(await response.Content.ReadAsStringAsync(), response.StatusCode);
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<string>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
+            }
+        }
+
+
         public async Task<ApiResponse<string>> GetCitationStyleByDoiAsync(string doi, DataCiteCitationStyleType citationStyle)
         {
             try
