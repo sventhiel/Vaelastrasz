@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Vaelastrasz.Server.Models;
 using Vaelastrasz.Server.Services;
 using Vaelastrasz.Library.Extensions;
+using Vaelastrasz.Library.Exceptions;
 
 namespace Vaelastrasz.Server.Controllers
 {
@@ -44,8 +45,25 @@ namespace Vaelastrasz.Server.Controllers
         [HttpPost("databases")]
         public async Task<IActionResult> PostAsync(IFormFile file)
         {
-            string databasePath = new FileInfo(_connectionString.Filename).FullName;
+            if (file == null)
+                throw new BadRequestException("");
 
+            if (file.Length == 0)
+                throw new BadRequestException("");
+
+            // Validate file extension
+            var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
+            
+            if (string.IsNullOrEmpty(extension))
+                throw new BadRequestException("");
+            
+            if(extension != ".db")
+                throw new BadRequestException("");
+
+            if(file.ContentType != "application/x-litedb")
+                throw new BadRequestException("");
+
+            string databasePath = new FileInfo(_connectionString.Filename).FullName;
 
             // Save the file to the server
             using (var stream = new FileStream(databasePath, FileMode.Create))
