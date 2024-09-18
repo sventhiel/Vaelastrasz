@@ -46,22 +46,22 @@ namespace Vaelastrasz.Server.Controllers
         public async Task<IActionResult> PostAsync(IFormFile file)
         {
             if (file == null)
-                throw new BadRequestException("");
+                throw new BadRequestException("null");
 
             if (file.Length == 0)
-                throw new BadRequestException("");
+                throw new BadRequestException("0");
 
             // Validate file extension
             var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
             
             if (string.IsNullOrEmpty(extension))
-                throw new BadRequestException("");
+                throw new BadRequestException("empty extension");
             
             if(extension != ".db")
-                throw new BadRequestException("");
+                throw new BadRequestException("!= .db extension");
 
             if(file.ContentType != "application/x-litedb")
-                throw new BadRequestException("");
+                throw new BadRequestException("mime type");
 
             string databasePath = new FileInfo(_connectionString.Filename).FullName;
 
