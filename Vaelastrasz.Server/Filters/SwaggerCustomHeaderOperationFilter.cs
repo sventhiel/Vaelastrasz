@@ -40,6 +40,22 @@ namespace Vaelastrasz.Server.Filters
                     }
                 });
             }
+
+            if (operation.RequestBody?.Content != null && operation.RequestBody.Content.ContainsKey("multipart/form-data"))
+            {
+                operation.RequestBody.Content["multipart/form-data"].Schema = new OpenApiSchema
+                {
+                    Type = "object",
+                    Properties =
+                {
+                    ["file"] = new OpenApiSchema
+                    {
+                        Type = "string",
+                        Format = "binary"
+                    }
+                }
+                };
+            }
         }
     }
 }

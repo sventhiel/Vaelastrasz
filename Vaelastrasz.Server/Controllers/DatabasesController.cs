@@ -42,23 +42,23 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         [HttpPost("databases")]
-        public async Task<IActionResult> PostAsync([FromForm] FileUpload uploadFile)
+        public async Task<IActionResult> PostAsync(IFormFile file)
         {
-            IFormFile? file = uploadFile.File;
+            if (file == null || file.Length == 0)
+                return BadRequest("No file uploaded.");
 
-            //    if (file == null || file.Length == 0)
-            //    {
-            //        return BadRequest("File is empty or not uploaded.");
-            //    }
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "UploadedFiles", file.FileName);
 
-            //string databasePath = new FileInfo(_connectionString.Filename).FullName;
+            // Ensure the folder exists
+            Directory.CreateDirectory(Path.GetDirectoryName(filePath));
 
-            //using (var stream = new FileStream(databasePath, FileMode.Create))
-            //{
-            //    await file.CopyToAsync(stream);
-            //}
+            // Save the file to the server
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
 
-            return Ok();
+            return Ok(new { FilePath = filePath });
         }
     }
 }
