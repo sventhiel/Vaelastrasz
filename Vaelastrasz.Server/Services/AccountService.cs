@@ -1,6 +1,7 @@
 ﻿using LiteDB;
 using Vaelastrasz.Library.Entities;
 using Vaelastrasz.Library.Exceptions;
+using Vaelastrasz.Library.Types;
 
 namespace Vaelastrasz.Server.Services
 {
@@ -38,7 +39,7 @@ namespace Vaelastrasz.Server.Services
         /// <param name="prefix"></param>
         /// <returns></returns>
         /// <exception cref="ConflictException"></exception>
-        public async Task<long> CreateAsync(string name, string password, string host, string prefix)
+        public async Task<long> CreateAsync(string name, string password, string host, string prefix, AccountType accountType)
         {
             using var db = new LiteDatabase(_connectionString);
             var accounts = db.GetCollection<Account>("accounts");
@@ -52,6 +53,7 @@ namespace Vaelastrasz.Server.Services
                 Password = password,
                 Host = host,
                 Prefix = prefix,
+                AccountType = accountType,
                 CreationDate = DateTimeOffset.UtcNow,
                 LastUpdateDate = DateTimeOffset.UtcNow
             };

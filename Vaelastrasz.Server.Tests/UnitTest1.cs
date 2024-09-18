@@ -1,5 +1,9 @@
 using LiteDB;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using NUnit.Framework.Legacy;
+using Vaelastrasz.Library.Types;
+using Vaelastrasz.Library.Extensions;
 using Vaelastrasz.Server.Services;
 
 namespace Vaelastrasz.Server.Tests
@@ -24,6 +28,13 @@ namespace Vaelastrasz.Server.Tests
             var user = await userService.FindByIdAsync(0);
 
             ClassicAssert.IsNull(user);
+        }
+
+        [Test]
+        public async Task Test2()
+        {
+            var accountType = EnumExtensions.GetEnumMemberValue(AccountType.DataCite);
+            var type = JsonConvert.SerializeObject(DataCiteType.DOIs);
         }
     }
 }

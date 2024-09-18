@@ -10,6 +10,13 @@
   <ItemGroup>
     <Content Remove="Examples\doi_001.json" />
     <Content Remove="Examples\doi_002.json" />
+    <Content Remove="wwwroot\css\custom-swagger-ui - Copy.css" />
+    <Content Remove="wwwroot\css\swagger-ui\theme-feeling-blue.css" />
+    <Content Remove="wwwroot\css\swagger-ui\theme-flattop.css" />
+    <Content Remove="wwwroot\css\swagger-ui\theme-material.css" />
+    <Content Remove="wwwroot\css\swagger-ui\theme-monokai.css" />
+    <Content Remove="wwwroot\css\swagger-ui\theme-muted.css" />
+    <Content Remove="wwwroot\css\swagger-ui\theme-newspaper.css" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,12 +38,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Database\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="Examples\doi_002.json" />
     <None Include="Examples\doi_001.json" />
+    <None Include="wwwroot\css\swagger-ui\theme-outline.css" />
+    <None Include="wwwroot\css\swagger-ui\theme-newspaper.css" />
+    <None Include="wwwroot\css\swagger-ui\theme-muted.css" />
+    <None Include="wwwroot\css\swagger-ui\theme-monokai.css" />
+    <None Include="wwwroot\css\swagger-ui\theme-material.css" />
+    <None Include="wwwroot\css\swagger-ui\theme-flattop.css" />
+    <None Include="wwwroot\css\swagger-ui\theme-feeling-blue.css" />
   </ItemGroup>
 
   <ItemGroup>

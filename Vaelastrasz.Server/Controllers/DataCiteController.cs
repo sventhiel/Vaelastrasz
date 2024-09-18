@@ -20,7 +20,7 @@ namespace Vaelastrasz.Server.Controllers
     /// <summary>
     /// 
     /// </summary>
-    [ApiController, Authorize(Roles = "user"), Route("api")]
+    [ApiController, Authorize(Roles = "user-datacite"), Route("api")]
     public class DataCiteController : ControllerBase
     {
         private readonly ILogger<DataCiteController> _logger;

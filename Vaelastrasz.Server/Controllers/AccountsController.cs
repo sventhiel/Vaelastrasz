@@ -50,7 +50,7 @@ namespace Vaelastrasz.Server.Controllers
         {
             using var accountService = new AccountService(_connectionString);
 
-            var id = await accountService.CreateAsync(model.Name, model.Password, model.Host, model.Prefix);
+            var id = await accountService.CreateAsync(model.Name, model.Password, model.Host, model.Prefix, model.AccountType);
             var account = await accountService.FindByIdAsync(id);
 
             var request = HttpContext.Request;

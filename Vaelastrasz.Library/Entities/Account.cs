@@ -1,4 +1,5 @@
 ﻿using System;
+using Vaelastrasz.Library.Types;
 
 namespace Vaelastrasz.Library.Entities
 {
@@ -17,5 +18,7 @@ namespace Vaelastrasz.Library.Entities
         public string Name { get; set; }
         public string Password { get; set; }
         public string Prefix { get; set; }
+
+        public AccountType AccountType { get; set; }
     }
 }

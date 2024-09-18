@@ -5,6 +5,13 @@ using System.Runtime.Serialization;
 namespace Vaelastrasz.Library.Types
 {
     [JsonConverter(typeof(StringEnumConverter))]
+    public enum AccountType
+    {
+        [EnumMember(Value = "datacite")]
+        DataCite = 1
+    }
+
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum DataCiteCitationStyleType
     {
         [EnumMember(Value = "apa")]

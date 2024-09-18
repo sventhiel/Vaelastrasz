@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Vaelastrasz.Library.Entities;
+using Vaelastrasz.Library.Types;
 
 namespace Vaelastrasz.Server.Models
 {
@@ -16,6 +17,9 @@ namespace Vaelastrasz.Server.Models
 
         [Required]
         public string Prefix { get; set; }
+
+        [Required]
+        public AccountType AccountType { get; set; }    
     }
 
     public class ReadAccountModel

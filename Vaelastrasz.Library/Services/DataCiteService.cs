@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Vaelastrasz.Library.Configurations;
+using Vaelastrasz.Library.Extensions;
 using Vaelastrasz.Library.Models;
 using Vaelastrasz.Library.Types;
 
@@ -117,8 +118,10 @@ namespace Vaelastrasz.Library.Services
         {
             try
             {
-                _client.DefaultRequestHeaders.Add("X-Metadata-Format", JsonConvert.SerializeObject(metadataFormat));
-                HttpResponseMessage response = await _client.GetAsync($"{_config.Host}/api/datacite/{doi}/metadata");
+                var request = new HttpRequestMessage(HttpMethod.Get, $"{_config.Host}/api/datacite/{doi}/metadata");
+                request.Headers.Add("X-Metadata-Format", EnumExtensions.GetEnumMemberValue(metadataFormat));
+
+                HttpResponseMessage response = await _client.SendAsync(request);
 
                 if (!response.IsSuccessStatusCode)
                     return ApiResponse<string>.Failure(await response.Content.ReadAsStringAsync(), response.StatusCode);
@@ -136,8 +139,10 @@ namespace Vaelastrasz.Library.Services
         {
             try
             {
-                _client.DefaultRequestHeaders.Add("X-Citation-Style", JsonConvert.SerializeObject(citationStyle));
-                HttpResponseMessage response = await _client.GetAsync($"{_config.Host}/api/datacite/{doi}/citations");
+                var request = new HttpRequestMessage(HttpMethod.Get, $"{_config.Host}/api/datacite/{doi}/metadata");
+                request.Headers.Add("X-Citation-Style", EnumExtensions.GetEnumMemberValue(citationStyle));
+
+                HttpResponseMessage response = await _client.SendAsync(request);
 
                 if (!response.IsSuccessStatusCode)
                     return ApiResponse<string>.Failure(await response.Content.ReadAsStringAsync(), response.StatusCode);

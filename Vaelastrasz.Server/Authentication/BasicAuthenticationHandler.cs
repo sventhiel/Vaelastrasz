@@ -1,10 +1,13 @@
 ﻿using LiteDB;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
+using Vaelastrasz.Library.Extensions;
+using Vaelastrasz.Library.Types;
 using Vaelastrasz.Server.Configurations;
 using Vaelastrasz.Server.Services;
 
@@ -58,10 +61,14 @@ namespace Vaelastrasz.Server.Authentication
 
                 if (await userService.VerifyAsync(credentials[0], credentials[1]))
                 {
+                    var user = userService.FindByNameAsync(credentials[0]).Result;
+                    var accountType = EnumExtensions.GetEnumMemberValue(user.Account.AccountType);
+
                     var claims = new List<Claim>()
                     {
                         new Claim(ClaimTypes.Name, credentials[0]),
-                        new Claim(ClaimTypes.Role, "user"),
+                        new Claim(ClaimTypes.Role, $"user"),
+                        new Claim(ClaimTypes.Role, $"user-{accountType}"),
                         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                     };
 

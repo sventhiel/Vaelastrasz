@@ -4,15 +4,13 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json.Converters;
 using Serilog;
 using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
-using Vaelastrasz.Library.Models;
 using Vaelastrasz.Server.Authentication;
-using Vaelastrasz.Server.Configurations;
 using Vaelastrasz.Server.Filters;
 using Vaelastrasz.Server.Middleware;
 using Vaelastrasz.Server.Resolvers;
@@ -45,7 +43,7 @@ builder.Services.AddExceptionless(options =>
     options.SetVersion("v1.0");
 });
 
-builder.Services.AddMvc().AddMvcOptions(o => o.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter()));
+builder.Services.AddMvc();
 builder.Services.AddControllers().AddNewtonsoftJson(o =>
 {
     o.SerializerSettings.ContractResolver = new VaelastraszContractResolver();
@@ -134,6 +132,7 @@ app.UseStaticFiles();
 app.UseSwagger();
 app.UseSwaggerUI(options =>
 {
+    options.InjectStylesheet("/css/swagger-ui/theme-flattop.css");
     options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
     options.RoutePrefix = "";
 });
