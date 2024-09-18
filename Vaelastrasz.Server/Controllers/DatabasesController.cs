@@ -53,14 +53,14 @@ namespace Vaelastrasz.Server.Controllers
 
             // Validate file extension
             var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
-            
             if (string.IsNullOrEmpty(extension))
                 throw new BadRequestException("empty extension");
             
             if(extension != ".db")
                 throw new BadRequestException("!= .db extension");
 
-            if(file.ContentType != "application/x-litedb")
+            var mimeTypes = new List<string> { "application/x-litedb", "application/octet-stream" };
+            if (!mimeTypes.Contains(file.ContentType))
                 throw new BadRequestException("mime type");
 
             string databasePath = new FileInfo(_connectionString.Filename).FullName;
