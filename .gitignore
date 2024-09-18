@@ -362,3 +362,4 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /Vaelastrasz.Server/Database/Vaelastrasz.db
+/Vaelastrasz.Server/Database/Vaelastrasz.db_old
