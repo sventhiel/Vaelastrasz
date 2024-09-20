@@ -7,6 +7,9 @@ namespace Vaelastrasz.Server.Models
     public class CreateAccountModel
     {
         [Required]
+        public AccountType AccountType { get; set; }
+
+        [Required]
         public string Host { get; set; }
 
         [Required]
@@ -17,9 +20,6 @@ namespace Vaelastrasz.Server.Models
 
         [Required]
         public string Prefix { get; set; }
-
-        [Required]
-        public AccountType AccountType { get; set; }    
     }
 
     public class ReadAccountModel

@@ -6,7 +6,7 @@ using Vaelastrasz.Library.Types;
 namespace Vaelastrasz.Server.Services
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public class AccountService : IDisposable
     {
@@ -14,7 +14,7 @@ namespace Vaelastrasz.Server.Services
         private bool disposed = false;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connectionString"></param>
         public AccountService(ConnectionString connectionString)
@@ -23,7 +23,7 @@ namespace Vaelastrasz.Server.Services
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         ~AccountService()
         {
@@ -31,7 +31,7 @@ namespace Vaelastrasz.Server.Services
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="name"></param>
         /// <param name="password"></param>
@@ -62,7 +62,7 @@ namespace Vaelastrasz.Server.Services
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -75,7 +75,7 @@ namespace Vaelastrasz.Server.Services
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public void Dispose()
         {
@@ -84,7 +84,7 @@ namespace Vaelastrasz.Server.Services
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         public async Task<List<Account>> FindAsync()
@@ -96,7 +96,7 @@ namespace Vaelastrasz.Server.Services
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -111,7 +111,7 @@ namespace Vaelastrasz.Server.Services
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="id"></param>
         /// <param name="name"></param>
@@ -140,7 +140,7 @@ namespace Vaelastrasz.Server.Services
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="disposing"></param>
         protected virtual void Dispose(bool disposing)

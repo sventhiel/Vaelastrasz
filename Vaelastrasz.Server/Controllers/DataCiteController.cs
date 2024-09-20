@@ -18,7 +18,7 @@ using Vaelastrasz.Server.Services;
 namespace Vaelastrasz.Server.Controllers
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [ApiController, Authorize(Roles = "user-datacite"), Route("api")]
     public class DataCiteController : ControllerBase
@@ -28,7 +28,7 @@ namespace Vaelastrasz.Server.Controllers
         private ConnectionString _connectionString;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="logger"></param>
         /// <param name="configuration"></param>
@@ -41,7 +41,7 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="doi"></param>
         /// <returns></returns>
@@ -76,7 +76,7 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         /// <exception cref="NotFoundException"></exception>
@@ -130,7 +130,7 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="prefix"></param>
         /// <param name="suffix"></param>

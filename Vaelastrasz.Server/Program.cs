@@ -1,15 +1,10 @@
 using Exceptionless;
 using LiteDB;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Features;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.OpenApi.Models;
-using Newtonsoft.Json.Converters;
 using Serilog;
 using System.Reflection;
-using System.Text;
 using System.Text.Json.Serialization;
 using Vaelastrasz.Server.Authentication;
 using Vaelastrasz.Server.Filters;
@@ -43,7 +38,6 @@ builder.Services.AddExceptionless(options =>
     options.IncludeIpAddress = true;
     options.SetVersion("v1.0");
 });
-
 
 builder.Services.AddControllers().AddNewtonsoftJson(o =>
 {

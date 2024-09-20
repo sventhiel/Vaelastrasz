@@ -1,9 +1,8 @@
 using LiteDB;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using NUnit.Framework.Legacy;
-using Vaelastrasz.Library.Types;
 using Vaelastrasz.Library.Extensions;
+using Vaelastrasz.Library.Types;
 using Vaelastrasz.Server.Services;
 
 namespace Vaelastrasz.Server.Tests

@@ -10,7 +10,7 @@ using Vaelastrasz.Server.Services;
 namespace Vaelastrasz.Server.Controllers
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [ApiController, Authorize(Roles = "user"), Route("api")]
     public class DOIsController : ControllerBase
@@ -20,7 +20,7 @@ namespace Vaelastrasz.Server.Controllers
         private ConnectionString _connectionString;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="logger"></param>
         /// <param name="configuration"></param>
@@ -33,7 +33,7 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="prefix"></param>
         /// <param name="suffix"></param>
@@ -57,7 +57,7 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         [HttpGet("dois")]
@@ -73,7 +73,7 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -94,7 +94,7 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="prefix"></param>
         /// <param name="suffix"></param>
@@ -116,7 +116,7 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
@@ -149,7 +149,7 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="doi"></param>
         /// <param name="model"></param>
@@ -173,7 +173,7 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="id"></param>
         /// <param name="model"></param>
@@ -190,7 +190,7 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="prefix"></param>
         /// <param name="suffix"></param>

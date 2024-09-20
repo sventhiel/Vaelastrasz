@@ -6,7 +6,7 @@ using Vaelastrasz.Library.Models;
 namespace Vaelastrasz.Server.Services
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public class DOIService : IDisposable
     {
@@ -14,7 +14,7 @@ namespace Vaelastrasz.Server.Services
         private bool disposed = false;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connectionString"></param>
         public DOIService(ConnectionString connectionString)
@@ -23,7 +23,7 @@ namespace Vaelastrasz.Server.Services
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         ~DOIService()
         {
@@ -31,7 +31,7 @@ namespace Vaelastrasz.Server.Services
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="prefix"></param>
         /// <param name="suffix"></param>
@@ -71,7 +71,7 @@ namespace Vaelastrasz.Server.Services
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="doi"></param>
         /// <returns></returns>
@@ -88,7 +88,7 @@ namespace Vaelastrasz.Server.Services
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -101,7 +101,7 @@ namespace Vaelastrasz.Server.Services
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="prefix"></param>
         /// <param name="suffix"></param>
@@ -132,7 +132,7 @@ namespace Vaelastrasz.Server.Services
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public void Dispose()
         {
@@ -141,7 +141,7 @@ namespace Vaelastrasz.Server.Services
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         public async Task<List<DOI>> FindAsync()
@@ -153,7 +153,7 @@ namespace Vaelastrasz.Server.Services
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="doi"></param>
         /// <returns></returns>
@@ -170,7 +170,7 @@ namespace Vaelastrasz.Server.Services
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -186,20 +186,7 @@ namespace Vaelastrasz.Server.Services
         }
 
         /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="prefix"></param>
-        /// <returns></returns>
-        public async Task<List<DOI>> FindByPrefixAsync(string prefix)
-        {
-            using var db = new LiteDatabase(_connectionString);
-            var col = db.GetCollection<DOI>("dois");
-
-            return await Task.FromResult(col.Find(d => d.Prefix.Equals(prefix, StringComparison.OrdinalIgnoreCase)).ToList());
-        }
-
-        /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="prefix"></param>
         /// <param name="suffix"></param>
@@ -223,7 +210,20 @@ namespace Vaelastrasz.Server.Services
         }
 
         /// <summary>
-        /// 
+        ///
+        /// </summary>
+        /// <param name="prefix"></param>
+        /// <returns></returns>
+        public async Task<List<DOI>> FindByPrefixAsync(string prefix)
+        {
+            using var db = new LiteDatabase(_connectionString);
+            var col = db.GetCollection<DOI>("dois");
+
+            return await Task.FromResult(col.Find(d => d.Prefix.Equals(prefix, StringComparison.OrdinalIgnoreCase)).ToList());
+        }
+
+        /// <summary>
+        ///
         /// </summary>
         /// <param name="suffix"></param>
         /// <returns></returns>
@@ -240,7 +240,7 @@ namespace Vaelastrasz.Server.Services
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
@@ -253,7 +253,7 @@ namespace Vaelastrasz.Server.Services
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="doi"></param>
         /// <param name="state"></param>
@@ -272,7 +272,7 @@ namespace Vaelastrasz.Server.Services
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="id"></param>
         /// <param name="state"></param>
@@ -285,7 +285,7 @@ namespace Vaelastrasz.Server.Services
             var dois = db.GetCollection<DOI>("dois");
 
             var doi = dois.FindById(id) ?? throw new NotFoundException($"The doi (id:{id}) does not exist.");
-            
+
             doi.State = state;
             doi.Value = value;
             doi.LastUpdateDate = DateTimeOffset.UtcNow;
@@ -294,7 +294,7 @@ namespace Vaelastrasz.Server.Services
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="prefix"></param>
         /// <param name="suffix"></param>
@@ -321,7 +321,7 @@ namespace Vaelastrasz.Server.Services
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="disposing"></param>
         protected virtual void Dispose(bool disposing)

@@ -6,7 +6,7 @@ using Vaelastrasz.Library.Exceptions;
 namespace Vaelastrasz.Server.Middleware
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public class ExceptionHandlingMiddleware
     {
@@ -14,7 +14,7 @@ namespace Vaelastrasz.Server.Middleware
         private readonly RequestDelegate _next;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="next"></param>
         /// <param name="logger"></param>
@@ -25,7 +25,7 @@ namespace Vaelastrasz.Server.Middleware
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
@@ -48,7 +48,7 @@ namespace Vaelastrasz.Server.Middleware
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="context"></param>
         /// <param name="exception"></param>

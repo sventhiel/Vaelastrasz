@@ -11,6 +11,7 @@ namespace Vaelastrasz.Library.Entities
             LastUpdateDate = DateTimeOffset.UtcNow;
         }
 
+        public AccountType AccountType { get; set; }
         public DateTimeOffset CreationDate { get; set; }
         public string Host { get; set; }
         public long Id { get; set; }
@@ -18,7 +19,5 @@ namespace Vaelastrasz.Library.Entities
         public string Name { get; set; }
         public string Password { get; set; }
         public string Prefix { get; set; }
-
-        public AccountType AccountType { get; set; }
     }
 }

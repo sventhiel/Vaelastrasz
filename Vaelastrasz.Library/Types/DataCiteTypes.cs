@@ -34,34 +34,6 @@ namespace Vaelastrasz.Library.Types
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
-    public enum DataCiteMetadataFormatType
-    {
-        [EnumMember(Value = "application/vnd.datacite.datacite+xml")]
-        DataCite_XML = 1,
-
-        [EnumMember(Value = "application/vnd.datacite.datacite+json")]
-        DataCite_JSON = 2,
-
-        [EnumMember(Value = "application/vnd.schemaorg.ld+json")]
-        Schemaorg_JSONLD = 3,
-
-        [EnumMember(Value = "application/vnd.citationstyles.csl+json")]
-        Citeproc_JSON = 4,
-
-        [EnumMember(Value = "application/vnd.codemeta.ld+json")]
-        Codemeta_JSON = 5,
-
-        [EnumMember(Value = "application/x-bibtex")]
-        BibTeX = 6,
-
-        [EnumMember(Value = "application/x-research-info-systems")]
-        RIS = 7,
-
-        [EnumMember(Value = "application/vnd.jats+xml")]
-        JATS_XML = 8
-    }
-
-    [JsonConverter(typeof(StringEnumConverter))]
     public enum DataCiteContributorType
     {
         [EnumMember(Value = "ContactPerson")]
@@ -224,6 +196,34 @@ namespace Vaelastrasz.Library.Types
     {
         [EnumMember(Value = "doi")]
         DOI = 1
+    }
+
+    [JsonConverter(typeof(StringEnumConverter))]
+    public enum DataCiteMetadataFormatType
+    {
+        [EnumMember(Value = "application/vnd.datacite.datacite+xml")]
+        DataCite_XML = 1,
+
+        [EnumMember(Value = "application/vnd.datacite.datacite+json")]
+        DataCite_JSON = 2,
+
+        [EnumMember(Value = "application/vnd.schemaorg.ld+json")]
+        Schemaorg_JSONLD = 3,
+
+        [EnumMember(Value = "application/vnd.citationstyles.csl+json")]
+        Citeproc_JSON = 4,
+
+        [EnumMember(Value = "application/vnd.codemeta.ld+json")]
+        Codemeta_JSON = 5,
+
+        [EnumMember(Value = "application/x-bibtex")]
+        BibTeX = 6,
+
+        [EnumMember(Value = "application/x-research-info-systems")]
+        RIS = 7,
+
+        [EnumMember(Value = "application/vnd.jats+xml")]
+        JATS_XML = 8
     }
 
     [JsonConverter(typeof(StringEnumConverter))]

@@ -1,11 +1,8 @@
 ﻿using LiteDB;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Vaelastrasz.Server.Models;
-using Vaelastrasz.Server.Services;
-using Vaelastrasz.Library.Extensions;
 using Vaelastrasz.Library.Exceptions;
+using Vaelastrasz.Library.Extensions;
 
 namespace Vaelastrasz.Server.Controllers
 {
@@ -55,8 +52,8 @@ namespace Vaelastrasz.Server.Controllers
             var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
             if (string.IsNullOrEmpty(extension))
                 throw new BadRequestException("empty extension");
-            
-            if(extension != ".db")
+
+            if (extension != ".db")
                 throw new BadRequestException("!= .db extension");
 
             var mimeTypes = new List<string> { "application/x-litedb", "application/octet-stream" };

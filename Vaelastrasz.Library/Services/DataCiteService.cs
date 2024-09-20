@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Vaelastrasz.Library.Configurations;
@@ -97,20 +96,23 @@ namespace Vaelastrasz.Library.Services
             }
         }
 
-        public async Task<ApiResponse<ReadDataCiteModel>> UpdateAsync(string doi, UpdateDataCiteModel model)
+        public async Task<ApiResponse<string>> GetCitationStyleByDoiAsync(string doi, DataCiteCitationStyleType citationStyle)
         {
             try
             {
-                HttpResponseMessage response = await _client.PutAsync($"{_config.Host}/api/datacite/{doi}", new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json"));
+                var request = new HttpRequestMessage(HttpMethod.Get, $"{_config.Host}/api/datacite/{doi}/metadata");
+                request.Headers.Add("X-Citation-Style", EnumExtensions.GetEnumMemberValue(citationStyle));
+
+                HttpResponseMessage response = await _client.SendAsync(request);
 
                 if (!response.IsSuccessStatusCode)
-                    return ApiResponse<ReadDataCiteModel>.Failure(await response.Content.ReadAsStringAsync(), response.StatusCode);
+                    return ApiResponse<string>.Failure(await response.Content.ReadAsStringAsync(), response.StatusCode);
 
-                return ApiResponse<ReadDataCiteModel>.Success(JsonConvert.DeserializeObject<ReadDataCiteModel>(await response.Content.ReadAsStringAsync()), response.StatusCode);
+                return ApiResponse<string>.Success(await response.Content.ReadAsStringAsync(), response.StatusCode);
             }
             catch (Exception ex)
             {
-                return ApiResponse<ReadDataCiteModel>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
+                return ApiResponse<string>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
             }
         }
 
@@ -134,24 +136,20 @@ namespace Vaelastrasz.Library.Services
             }
         }
 
-
-        public async Task<ApiResponse<string>> GetCitationStyleByDoiAsync(string doi, DataCiteCitationStyleType citationStyle)
+        public async Task<ApiResponse<ReadDataCiteModel>> UpdateAsync(string doi, UpdateDataCiteModel model)
         {
             try
             {
-                var request = new HttpRequestMessage(HttpMethod.Get, $"{_config.Host}/api/datacite/{doi}/metadata");
-                request.Headers.Add("X-Citation-Style", EnumExtensions.GetEnumMemberValue(citationStyle));
-
-                HttpResponseMessage response = await _client.SendAsync(request);
+                HttpResponseMessage response = await _client.PutAsync($"{_config.Host}/api/datacite/{doi}", new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json"));
 
                 if (!response.IsSuccessStatusCode)
-                    return ApiResponse<string>.Failure(await response.Content.ReadAsStringAsync(), response.StatusCode);
+                    return ApiResponse<ReadDataCiteModel>.Failure(await response.Content.ReadAsStringAsync(), response.StatusCode);
 
-                return ApiResponse<string>.Success(await response.Content.ReadAsStringAsync(), response.StatusCode);
+                return ApiResponse<ReadDataCiteModel>.Success(JsonConvert.DeserializeObject<ReadDataCiteModel>(await response.Content.ReadAsStringAsync()), response.StatusCode);
             }
             catch (Exception ex)
             {
-                return ApiResponse<string>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
+                return ApiResponse<ReadDataCiteModel>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
             }
         }
     }
