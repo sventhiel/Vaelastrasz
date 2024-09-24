@@ -7,7 +7,7 @@
     <Authors>Sven Thiel</Authors>
     <Title>Vaelastrasz.Library</Title>
     <IncludeSymbols>True</IncludeSymbols>
-    <Version>2.3.6</Version>
+    <Version>2.3.7</Version>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
