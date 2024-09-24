@@ -7,8 +7,8 @@ using Vaelastrasz.Library.Extensions;
 namespace Vaelastrasz.Server.Controllers
 {
     [ApiController, Route("api"), Authorize(Roles = "admin")]
-    [RequestSizeLimit(1_000_000)]
-    [RequestFormLimits(MultipartBodyLengthLimit = 1_000_000)]
+    [RequestSizeLimit(32000000)]
+    [RequestFormLimits(MultipartBodyLengthLimit = 32000000)]
     public class DatabasesController : ControllerBase
     {
         private readonly ILogger<AccountsController> _logger;
