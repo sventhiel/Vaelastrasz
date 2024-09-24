@@ -20,7 +20,7 @@ namespace Vaelastrasz.Library.Services
             _client = new HttpClient();
         }
 
-        public async Task<ApiResponse<HumanName>> GetAsync(string name)
+        public async Task<ApiResponse<HumanName>> GetByNameAsync(string name)
         {
             try
             {
