@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Vaelastrasz.Library.Configurations;
 using Vaelastrasz.Library.Extensions;
 using Vaelastrasz.Library.Models;
+using Vaelastrasz.Library.Settings;
 using Vaelastrasz.Library.Types;
 
 namespace Vaelastrasz.Library.Services
@@ -70,7 +71,7 @@ namespace Vaelastrasz.Library.Services
                 if (!response.IsSuccessStatusCode)
                     return ApiResponse<List<ReadDataCiteModel>>.Failure(await response.Content.ReadAsStringAsync(), response.StatusCode);
 
-                return ApiResponse<List<ReadDataCiteModel>>.Success(JsonConvert.DeserializeObject<List<ReadDataCiteModel>>(await response.Content.ReadAsStringAsync()), response.StatusCode);
+                return ApiResponse<List<ReadDataCiteModel>>.Success(JsonConvert.DeserializeObject<List<ReadDataCiteModel>>(await response.Content.ReadAsStringAsync(), VaelastraszJsonSerializerSettings.Settings), response.StatusCode);
             }
             catch (Exception ex)
             {
@@ -87,7 +88,7 @@ namespace Vaelastrasz.Library.Services
                 if (!response.IsSuccessStatusCode)
                     return ApiResponse<ReadDataCiteModel>.Failure(await response.Content.ReadAsStringAsync(), response.StatusCode);
 
-                return ApiResponse<ReadDataCiteModel>.Success(JsonConvert.DeserializeObject<ReadDataCiteModel>(await response.Content.ReadAsStringAsync()), response.StatusCode);
+                return ApiResponse<ReadDataCiteModel>.Success(JsonConvert.DeserializeObject<ReadDataCiteModel>(await response.Content.ReadAsStringAsync(), VaelastraszJsonSerializerSettings.Settings), response.StatusCode);
             }
             catch (Exception ex)
             {
@@ -144,7 +145,7 @@ namespace Vaelastrasz.Library.Services
                 if (!response.IsSuccessStatusCode)
                     return ApiResponse<ReadDataCiteModel>.Failure(await response.Content.ReadAsStringAsync(), response.StatusCode);
 
-                return ApiResponse<ReadDataCiteModel>.Success(JsonConvert.DeserializeObject<ReadDataCiteModel>(await response.Content.ReadAsStringAsync()), response.StatusCode);
+                return ApiResponse<ReadDataCiteModel>.Success(JsonConvert.DeserializeObject<ReadDataCiteModel>(await response.Content.ReadAsStringAsync(), VaelastraszJsonSerializerSettings.Settings), response.StatusCode);
             }
             catch (Exception ex)
             {
