@@ -260,7 +260,7 @@ namespace Vaelastrasz.Server.Controllers
 
             var client = new RestClient(clientOptions);
 
-            var request = new RestRequest($"dois", Method.Post).AddJsonBody(JsonConvert.SerializeObject(model));
+            var request = new RestRequest($"dois?publisher=true&affiliation=true", Method.Post).AddJsonBody(JsonConvert.SerializeObject(model));
             request.AddHeader("Accept", "application/json");
 
             var doiId = await doiService.CreateAsync(model.Data.Attributes.Doi.GetPrefix(), model.Data.Attributes.Doi.GetSuffix(), (DOIStateType)model.Data.Attributes.Event, user.Id, JsonConvert.SerializeObject(model));
@@ -294,7 +294,7 @@ namespace Vaelastrasz.Server.Controllers
 
             var client = new RestClient(clientOptions);
 
-            var request = new RestRequest($"dois/{doi}", Method.Put);
+            var request = new RestRequest($"dois/{doi}?publisher=true&affiliation=true", Method.Put);
             request.AddHeader("Accept", "application/json");
 
             var response = await client.ExecuteAsync(request);

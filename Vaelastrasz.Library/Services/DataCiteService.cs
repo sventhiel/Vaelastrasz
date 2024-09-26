@@ -31,8 +31,7 @@ namespace Vaelastrasz.Library.Services
         {
             try
             {
-                var json = JsonConvert.SerializeObject(model);
-                HttpResponseMessage response = await _client.PostAsync($"{_config.Host}/api/datacite", new StringContent(json, Encoding.UTF8, "application/json"));
+                HttpResponseMessage response = await _client.PostAsync($"{_config.Host}/api/datacite", new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json"));
 
                 if (!response.IsSuccessStatusCode)
                     return ApiResponse<ReadDataCiteModel>.Failure(await response.Content.ReadAsStringAsync(), response.StatusCode);
