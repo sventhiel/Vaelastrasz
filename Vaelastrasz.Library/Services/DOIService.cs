@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 using Vaelastrasz.Library.Configurations;
@@ -39,7 +40,7 @@ namespace Vaelastrasz.Library.Services
             }
             catch (Exception ex)
             {
-                return ApiResponse<ReadDOIModel>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
+                return ApiResponse<ReadDOIModel>.Failure(ex.Message, System.Net.HttpStatusCode.InternalServerError);
             }
         }
 
@@ -56,7 +57,7 @@ namespace Vaelastrasz.Library.Services
             }
             catch (Exception ex)
             {
-                return ApiResponse<bool>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
+                return ApiResponse<bool>.Failure(ex.Message, System.Net.HttpStatusCode.InternalServerError);
             }
         }
 
@@ -73,7 +74,7 @@ namespace Vaelastrasz.Library.Services
             }
             catch (Exception ex)
             {
-                return ApiResponse<List<ReadDOIModel>>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
+                return ApiResponse<List<ReadDOIModel>>.Failure(ex.Message, System.Net.HttpStatusCode.InternalServerError);
             }
         }
 
@@ -90,7 +91,7 @@ namespace Vaelastrasz.Library.Services
             }
             catch (Exception ex)
             {
-                return ApiResponse<ReadDOIModel>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
+                return ApiResponse<ReadDOIModel>.Failure(ex.Message, System.Net.HttpStatusCode.InternalServerError);
             }
         }
 
@@ -102,7 +103,7 @@ namespace Vaelastrasz.Library.Services
                 if (!response_prefix.IsSuccessStatusCode)
                     return ApiResponse<string>.Failure(await response_prefix.Content.ReadAsStringAsync(), response_prefix.StatusCode);
 
-                var response_suffix = await _client.PostAsync($"{_config.Host}/api/suffixes", new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json"));
+                var response_suffix = await _client.PostAsJsonAsync($"{_config.Host}/api/suffixes", model);
                 if (!response_suffix.IsSuccessStatusCode)
                     return ApiResponse<string>.Failure(await response_suffix.Content.ReadAsStringAsync(), response_suffix.StatusCode);
 
@@ -110,7 +111,7 @@ namespace Vaelastrasz.Library.Services
             }
             catch (Exception ex)
             {
-                return ApiResponse<string>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
+                return ApiResponse<string>.Failure(ex.Message, System.Net.HttpStatusCode.InternalServerError);
             }
         }
 
@@ -127,7 +128,7 @@ namespace Vaelastrasz.Library.Services
             }
             catch (Exception ex)
             {
-                return ApiResponse<ReadDOIModel>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
+                return ApiResponse<ReadDOIModel>.Failure(ex.Message, System.Net.HttpStatusCode.InternalServerError);
             }
         }
 
@@ -144,7 +145,7 @@ namespace Vaelastrasz.Library.Services
             }
             catch (Exception ex)
             {
-                return ApiResponse<ReadDOIModel>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
+                return ApiResponse<ReadDOIModel>.Failure(ex.Message, System.Net.HttpStatusCode.InternalServerError);
             }
         }
 
@@ -161,7 +162,7 @@ namespace Vaelastrasz.Library.Services
             }
             catch (Exception ex)
             {
-                return ApiResponse<ReadDOIModel>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
+                return ApiResponse<ReadDOIModel>.Failure(ex.Message, System.Net.HttpStatusCode.InternalServerError);
             }
         }
     }
