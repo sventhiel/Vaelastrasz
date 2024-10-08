@@ -1,4 +1,5 @@
-﻿using Vaelastrasz.Library.Configurations;
+﻿using Newtonsoft.Json;
+using Vaelastrasz.Library.Configurations;
 using Vaelastrasz.Library.Models;
 using Vaelastrasz.Library.Services;
 
@@ -16,13 +17,21 @@ namespace Vaelastrasz.Library.Tests.Services
         {
             try
             {
-                var config = new Configuration("bexis2test", "bexis2test", "https://doi.bexis2.uni-jena.de");
+                //var config = new Configuration("Test_DOIProxy_User", "s~c9<evQ#%^h4Uyb", "https://taerar.infinite-trajectory.de");
+                //var config = new Configuration("Test_DOIProxy_User", "sventhiel", "http://localhost:5041");
+                var config = new Configuration("Test_DOIProxy_User", "sventhiel", "https://taerar.infinite-trajectory.de");
+
+
 
                 var doiService = new DOIService(config);
 
+                //var dict = "{ \"placeholders\": { \"{DatasetId}\": \"340\", \"{VersionId}\": \"1408\", \"{VersionNumber}\": \"2\" } }";
+
                 var dict = new Dictionary<string, string>
                 {
-                    { "{DatasetId}", "1" }
+                    { "{DatasetId}", "1" },
+                    {"{VersionId}", "11" },
+                    {"{VersionNumber}", "111" }
                 };
 
                 var createSuffixModel = new CreateSuffixModel()

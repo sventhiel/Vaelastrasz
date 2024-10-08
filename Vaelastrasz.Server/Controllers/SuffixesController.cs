@@ -24,7 +24,7 @@ namespace Vaelastrasz.Server.Controllers
         public async Task<IActionResult> PostAsync(CreateSuffixModel model)
         {
             using var userService = new UserService(_connectionString);
-            var user = await userService.FindByNameAsync(User.Identity?.Name);
+            var user = await userService.FindByNameAsync(User.Identity.Name);
 
             // Suffix
             var suffix = SuffixHelper.Create(user.Pattern, model.Placeholders);
