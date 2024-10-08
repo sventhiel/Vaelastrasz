@@ -154,6 +154,7 @@ app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseExceptionless();
 
 // Map controllers
+app.UseCors("AllowAll");
 app.MapControllers();
 
 app.Run();
