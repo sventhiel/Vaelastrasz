@@ -7,7 +7,7 @@
     <Authors>Sven Thiel</Authors>
     <Title>Vaelastrasz.Library</Title>
     <IncludeSymbols>True</IncludeSymbols>
-    <Version>3.0.1</Version>
+    <Version>3.0.2</Version>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
@@ -29,8 +29,10 @@
     <PackageReference Include="LiteDB" Version="5.0.21" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="2.2.0" />
     <PackageReference Include="NameParserSharp" Version="1.5.0" />
+    <PackageReference Include="RestSharp" Version="112.1.0" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="System.Net.Http.Json" Version="8.0.0" />
     <PackageReference Include="System.Xml.XmlSerializer" Version="4.3.0" />
   </ItemGroup>
 

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 using Vaelastrasz.Library.Configurations;
@@ -32,7 +33,7 @@ namespace Vaelastrasz.Library.Services
         {
             try
             {
-                HttpResponseMessage response = await _client.PostAsync($"{_config.Host}/api/datacite", new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json"));
+                HttpResponseMessage response = await _client.PostAsJsonAsync($"{_config.Host}/api/datacite", model);
 
                 if (!response.IsSuccessStatusCode)
                     return ApiResponse<ReadDataCiteModel>.Failure(await response.Content.ReadAsStringAsync(), response.StatusCode);

@@ -16,11 +16,11 @@ namespace Vaelastrasz.Library.Tests.Services
         [Test]
         public async Task Test1()
         {
-            var config = new Configuration("sventhiel", "sventhiel", "http://localhost:5041");
+            var config = new Configuration("Test_DOIProxy_User", "s~c9<evQ#%^h4Uyb", "https://doi-proxy.bgc-jena.mpg.de");
 
             var dataCiteService = new DataCiteService(config);
 
-            var x = await dataCiteService.FindByDoiAsync("10.23720%2Fapitest005");
+            var x = await dataCiteService.FindAsync();
         }
 
         [Test]
@@ -44,16 +44,17 @@ namespace Vaelastrasz.Library.Tests.Services
             //string text = File.ReadAllText(@"C:/Projects/github.com/sventhiel/Vaelastrasz/Vaelastrasz.Server/Examples/doi_001.json");
 
             var model = new CreateDataCiteModel();
-            model.AddCreator("Sven", "Thiel");
+            model.SetType(Types.DataCiteType.DOIs);
+            model.SetTypes(Types.DataCiteResourceTypeGeneral.Dataset, "", "", "", "", "");
+            model.AddCreator("Sven Thiel", Types.DataCiteNameType.Personal);
             model.AddTitle("Test", "English", Types.DataCiteTitleType.Subtitle);
-            model.SetDoi("10.23720/aaaaaaabaasdasd");
+            model.SetDoi("10.82558/atto.1.1.1");
             model.SetEvent(Types.DataCiteEventType.Hide);
             model.SetPublicationYear(2024);
             model.SetPublisher("test", "resd", "sdfsdf", "sdfsdf", "English");
             model.SetUrl("https://google.de");
-            model.SetType(Types.DataCiteType.DOIs);
 
-            var config = new Configuration("bexis2test", "bexis2test", "http://localhost:5041");
+            var config = new Configuration("Test_DOIProxy_User", "s~c9<evQ#%^h4Uyb", "https://taerar.infinite-trajectory.de");
             var dataCiteService = new DataCiteService(config);
 
             var response = await dataCiteService.CreateAsync(model);
