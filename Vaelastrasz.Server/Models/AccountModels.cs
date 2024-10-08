@@ -32,6 +32,8 @@ namespace Vaelastrasz.Server.Models
         public string Password { get; set; }
         public string Prefix { get; set; }
 
+        public AccountType AccountType { get; set; }
+
         public static ReadAccountModel Convert(Account account)
         {
             return new ReadAccountModel()
@@ -42,7 +44,8 @@ namespace Vaelastrasz.Server.Models
                 Host = account.Host,
                 Prefix = account.Prefix,
                 CreationDate = account.CreationDate,
-                LastUpdateDate = account.LastUpdateDate
+                LastUpdateDate = account.LastUpdateDate,
+                AccountType = account.AccountType
             };
         }
     }
@@ -53,5 +56,7 @@ namespace Vaelastrasz.Server.Models
         public string Name { get; set; }
         public string Password { get; set; }
         public string Prefix { get; set; }
+
+        public AccountType AccountType { get; set; }
     }
 }

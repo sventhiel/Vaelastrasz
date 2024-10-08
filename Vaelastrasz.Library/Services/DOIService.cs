@@ -40,7 +40,7 @@ namespace Vaelastrasz.Library.Services
             }
             catch (Exception ex)
             {
-                return ApiResponse<ReadDOIModel>.Failure(ex.Message, System.Net.HttpStatusCode.InternalServerError);
+                return ApiResponse<ReadDOIModel>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
             }
         }
 
@@ -57,7 +57,7 @@ namespace Vaelastrasz.Library.Services
             }
             catch (Exception ex)
             {
-                return ApiResponse<bool>.Failure(ex.Message, System.Net.HttpStatusCode.InternalServerError);
+                return ApiResponse<bool>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
             }
         }
 
@@ -74,7 +74,7 @@ namespace Vaelastrasz.Library.Services
             }
             catch (Exception ex)
             {
-                return ApiResponse<List<ReadDOIModel>>.Failure(ex.Message, System.Net.HttpStatusCode.InternalServerError);
+                return ApiResponse<List<ReadDOIModel>>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
             }
         }
 
@@ -91,7 +91,7 @@ namespace Vaelastrasz.Library.Services
             }
             catch (Exception ex)
             {
-                return ApiResponse<ReadDOIModel>.Failure(ex.Message, System.Net.HttpStatusCode.InternalServerError);
+                return ApiResponse<ReadDOIModel>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
             }
         }
 
@@ -111,7 +111,7 @@ namespace Vaelastrasz.Library.Services
             }
             catch (Exception ex)
             {
-                return ApiResponse<string>.Failure(ex.Message, System.Net.HttpStatusCode.InternalServerError);
+                return ApiResponse<string>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
             }
         }
 
@@ -128,7 +128,7 @@ namespace Vaelastrasz.Library.Services
             }
             catch (Exception ex)
             {
-                return ApiResponse<ReadDOIModel>.Failure(ex.Message, System.Net.HttpStatusCode.InternalServerError);
+                return ApiResponse<ReadDOIModel>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
             }
         }
 
@@ -145,7 +145,7 @@ namespace Vaelastrasz.Library.Services
             }
             catch (Exception ex)
             {
-                return ApiResponse<ReadDOIModel>.Failure(ex.Message, System.Net.HttpStatusCode.InternalServerError);
+                return ApiResponse<ReadDOIModel>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
             }
         }
 
@@ -162,7 +162,7 @@ namespace Vaelastrasz.Library.Services
             }
             catch (Exception ex)
             {
-                return ApiResponse<ReadDOIModel>.Failure(ex.Message, System.Net.HttpStatusCode.InternalServerError);
+                return ApiResponse<ReadDOIModel>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
             }
         }
     }

@@ -42,7 +42,7 @@ namespace Vaelastrasz.Library.Services
             }
             catch (Exception ex)
             {
-                return ApiResponse<ReadDataCiteModel>.Failure(ex.Message, System.Net.HttpStatusCode.InternalServerError);
+                return ApiResponse<ReadDataCiteModel>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
             }
         }
 
@@ -59,7 +59,7 @@ namespace Vaelastrasz.Library.Services
             }
             catch (Exception ex)
             {
-                return ApiResponse<bool>.Failure(ex.Message, System.Net.HttpStatusCode.InternalServerError);
+                return ApiResponse<bool>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
             }
         }
 
@@ -76,7 +76,7 @@ namespace Vaelastrasz.Library.Services
             }
             catch (Exception ex)
             {
-                return ApiResponse<List<ReadDataCiteModel>>.Failure(ex.Message, System.Net.HttpStatusCode.InternalServerError);
+                return ApiResponse<List<ReadDataCiteModel>>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
             }
         }
 
@@ -93,7 +93,7 @@ namespace Vaelastrasz.Library.Services
             }
             catch (Exception ex)
             {
-                return ApiResponse<ReadDataCiteModel>.Failure(ex.Message, System.Net.HttpStatusCode.InternalServerError);
+                return ApiResponse<ReadDataCiteModel>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
             }
         }
 
@@ -113,7 +113,7 @@ namespace Vaelastrasz.Library.Services
             }
             catch (Exception ex)
             {
-                return ApiResponse<string>.Failure(ex.Message, System.Net.HttpStatusCode.InternalServerError);
+                return ApiResponse<string>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
             }
         }
 
@@ -133,7 +133,7 @@ namespace Vaelastrasz.Library.Services
             }
             catch (Exception ex)
             {
-                return ApiResponse<string>.Failure(ex.Message, System.Net.HttpStatusCode.InternalServerError);
+                return ApiResponse<string>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
             }
         }
 
@@ -150,7 +150,7 @@ namespace Vaelastrasz.Library.Services
             }
             catch (Exception ex)
             {
-                return ApiResponse<ReadDataCiteModel>.Failure(ex.Message, System.Net.HttpStatusCode.InternalServerError);
+                return ApiResponse<ReadDataCiteModel>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
             }
         }
     }
