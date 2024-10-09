@@ -64,6 +64,19 @@ namespace Vaelastrasz.Server.Services
             GC.SuppressFinalize(this);
         }
 
+        public async Task<bool> ExistsByNameAsync(string name)
+        {
+            using var db = new LiteDatabase(_connectionString);
+            var col = db.GetCollection<User>("users");
+
+            var users = col.Find(u => u.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+
+            if (users.Count() != 1)
+                return await Task.FromResult(false);
+
+            return await Task.FromResult(true);
+        }
+
         public async Task<List<User>> FindAsync()
         {
             List<User> users = new List<User>();
@@ -90,7 +103,7 @@ namespace Vaelastrasz.Server.Services
             using var db = new LiteDatabase(_connectionString);
             var col = db.GetCollection<User>("users");
 
-            var users = col.Include(u => u.Account).Find(u => u.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+            var users = col.Include(u => u.Account).Find(u => u.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
 
             if (users.Count() == 0)
                 throw new NotFoundException($"The user (name:{name}) does not exist.");

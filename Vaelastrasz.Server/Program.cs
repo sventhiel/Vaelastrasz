@@ -32,11 +32,11 @@ builder.Services.AddSingleton(new ConnectionString(builder.Configuration["Connec
 // Exceptionless
 builder.Services.AddExceptionless(options =>
 {
-    options.ServerUrl = "https://idiv-exceptionless.fmi.uni-jena.de";
-    options.ApiKey = "<api-key>";
-    options.IncludeUserName = true;
-    options.IncludeIpAddress = true;
-    options.SetVersion("v1.0");
+    options.ServerUrl = builder.Configuration["Exceptionless:ServerUrl"] ?? "";
+    options.ApiKey = builder.Configuration["Exceptionless:ApiKey"] ?? "";
+    options.IncludeUserName = Convert.ToBoolean(builder.Configuration["Exceptionless:IncludeUserName"]);
+    options.IncludeIpAddress = Convert.ToBoolean(builder.Configuration["Exceptionless:IncludeIpAddress"]);
+    options.SetVersion(builder.Configuration["Exceptionless:Version"] ?? "v1.0");
 });
 
 builder.Services.AddControllers().AddNewtonsoftJson(o =>
@@ -141,7 +141,9 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
-app.UseExceptionless();
+
+if (Convert.ToBoolean(builder.Configuration["Exceptionless:Enabled"]))
+    app.UseExceptionless();
 
 // Map controllers
 app.MapControllers();

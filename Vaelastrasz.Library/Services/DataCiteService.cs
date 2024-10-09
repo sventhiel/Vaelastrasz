@@ -1,15 +1,13 @@
 ﻿using Newtonsoft.Json;
+using RestSharp;
+using RestSharp.Authenticators;
 using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Net.Http;
-using System.Net.Http.Json;
-using System.Text;
 using System.Threading.Tasks;
 using Vaelastrasz.Library.Configurations;
 using Vaelastrasz.Library.Extensions;
 using Vaelastrasz.Library.Models;
-using Vaelastrasz.Library.Settings;
 using Vaelastrasz.Library.Types;
 
 namespace Vaelastrasz.Library.Services
@@ -17,35 +15,37 @@ namespace Vaelastrasz.Library.Services
     public class DataCiteService
     {
         private readonly Configuration _config;
-        private HttpClient _client;
+        private RestClient _client;
 
         public DataCiteService(Configuration config)
         {
             _config = config;
-            _client = new HttpClient();
 
-            if (_client.DefaultRequestHeaders.Contains("Authorization"))
-                _client.DefaultRequestHeaders.Remove("Authorization");
+            var options = new RestClientOptions(_config.Host);
 
-            _client.DefaultRequestHeaders.Add("Authorization", _config.GetBasicAuthorizationHeader());
+            if (_config.Username != null && _config.Password != null)
+            {
+                options.Authenticator = new HttpBasicAuthenticator(_config.Username, _config.Password);
+            };
 
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            _client = new RestClient(options);
         }
 
         public async Task<ApiResponse<ReadDataCiteModel>> CreateAsync(CreateDataCiteModel model)
         {
             try
             {
-                HttpResponseMessage response = await _client.PostAsJsonAsync($"{_config.Host}/api/datacite", model);
+                var request = new RestRequest($"api/datacite").AddJsonBody(model);
+                var response = await _client.PostAsync(request);
 
                 if (!response.IsSuccessStatusCode)
-                    return ApiResponse<ReadDataCiteModel>.Failure(await response.Content.ReadAsStringAsync(), response.StatusCode);
+                    return ApiResponse<ReadDataCiteModel>.Failure(response.Content, response.StatusCode);
 
-                return ApiResponse<ReadDataCiteModel>.Success(JsonConvert.DeserializeObject<ReadDataCiteModel>(await response.Content.ReadAsStringAsync()), response.StatusCode);
+                return ApiResponse<ReadDataCiteModel>.Success(JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content), response.StatusCode);
             }
             catch (Exception ex)
             {
-                return ApiResponse<ReadDataCiteModel>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
+                return ApiResponse<ReadDataCiteModel>.Failure(JsonConvert.SerializeObject(ex), HttpStatusCode.InternalServerError);
             }
         }
 
@@ -53,16 +53,17 @@ namespace Vaelastrasz.Library.Services
         {
             try
             {
-                HttpResponseMessage response = await _client.DeleteAsync($"{_config.Host}/api/datacite/{doi}");
+                var request = new RestRequest($"api/datacite/{doi}");
+                var response = await _client.DeleteAsync(request);
 
                 if (!response.IsSuccessStatusCode)
-                    return ApiResponse<bool>.Failure(await response.Content.ReadAsStringAsync(), response.StatusCode);
+                    return ApiResponse<bool>.Failure(response.Content, response.StatusCode);
 
-                return ApiResponse<bool>.Success(JsonConvert.DeserializeObject<bool>(await response.Content.ReadAsStringAsync()), response.StatusCode);
+                return ApiResponse<bool>.Success(JsonConvert.DeserializeObject<bool>(response.Content), response.StatusCode);
             }
             catch (Exception ex)
             {
-                return ApiResponse<bool>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
+                return ApiResponse<bool>.Failure(JsonConvert.SerializeObject(ex), HttpStatusCode.InternalServerError);
             }
         }
 
@@ -70,16 +71,17 @@ namespace Vaelastrasz.Library.Services
         {
             try
             {
-                HttpResponseMessage response = await _client.GetAsync($"{_config.Host}/api/datacite");
+                var request = new RestRequest($"api/datacite");
+                var response = await _client.GetAsync(request);
 
                 if (!response.IsSuccessStatusCode)
-                    return ApiResponse<List<ReadDataCiteModel>>.Failure(await response.Content.ReadAsStringAsync(), response.StatusCode);
+                    return ApiResponse<List<ReadDataCiteModel>>.Failure(response.Content, response.StatusCode);
 
-                return ApiResponse<List<ReadDataCiteModel>>.Success(JsonConvert.DeserializeObject<List<ReadDataCiteModel>>(await response.Content.ReadAsStringAsync(), VaelastraszJsonSerializerSettings.Settings), response.StatusCode);
+                return ApiResponse<List<ReadDataCiteModel>>.Success(JsonConvert.DeserializeObject<List<ReadDataCiteModel>>(response.Content), response.StatusCode);
             }
             catch (Exception ex)
             {
-                return ApiResponse<List<ReadDataCiteModel>>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
+                return ApiResponse<List<ReadDataCiteModel>>.Failure(JsonConvert.SerializeObject(ex), HttpStatusCode.InternalServerError);
             }
         }
 
@@ -87,16 +89,17 @@ namespace Vaelastrasz.Library.Services
         {
             try
             {
-                HttpResponseMessage response = await _client.GetAsync($"{_config.Host}/api/datacite/{doi}");
+                var request = new RestRequest($"api/datacite/{doi}");
+                var response = await _client.GetAsync(request);
 
                 if (!response.IsSuccessStatusCode)
-                    return ApiResponse<ReadDataCiteModel>.Failure(await response.Content.ReadAsStringAsync(), response.StatusCode);
+                    return ApiResponse<ReadDataCiteModel>.Failure(response.Content, response.StatusCode);
 
-                return ApiResponse<ReadDataCiteModel>.Success(JsonConvert.DeserializeObject<ReadDataCiteModel>(await response.Content.ReadAsStringAsync(), VaelastraszJsonSerializerSettings.Settings), response.StatusCode);
+                return ApiResponse<ReadDataCiteModel>.Success(JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content), response.StatusCode);
             }
             catch (Exception ex)
             {
-                return ApiResponse<ReadDataCiteModel>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
+                return ApiResponse<ReadDataCiteModel>.Failure(JsonConvert.SerializeObject(ex), HttpStatusCode.InternalServerError);
             }
         }
 
@@ -104,19 +107,19 @@ namespace Vaelastrasz.Library.Services
         {
             try
             {
-                var request = new HttpRequestMessage(HttpMethod.Get, $"{_config.Host}/api/datacite/{doi}/metadata");
-                request.Headers.Add("X-Citation-Style", EnumExtensions.GetEnumMemberValue(citationStyle));
+                var request = new RestRequest($"api/datacite/{doi}/metadata");
+                request.AddHeader("X-Citation-Style", EnumExtensions.GetEnumMemberValue(citationStyle));
 
-                HttpResponseMessage response = await _client.SendAsync(request);
+                var response = await _client.GetAsync(request);
 
                 if (!response.IsSuccessStatusCode)
-                    return ApiResponse<string>.Failure(await response.Content.ReadAsStringAsync(), response.StatusCode);
+                    return ApiResponse<string>.Failure(response.Content, response.StatusCode);
 
-                return ApiResponse<string>.Success(await response.Content.ReadAsStringAsync(), response.StatusCode);
+                return ApiResponse<string>.Success(response.Content, response.StatusCode);
             }
             catch (Exception ex)
             {
-                return ApiResponse<string>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
+                return ApiResponse<string>.Failure(JsonConvert.SerializeObject(ex), HttpStatusCode.InternalServerError);
             }
         }
 
@@ -124,19 +127,19 @@ namespace Vaelastrasz.Library.Services
         {
             try
             {
-                var request = new HttpRequestMessage(HttpMethod.Get, $"{_config.Host}/api/datacite/{doi}/metadata");
-                request.Headers.Add("X-Metadata-Format", EnumExtensions.GetEnumMemberValue(metadataFormat));
+                var request = new RestRequest($"api/datacite/{doi}/metadata");
+                request.AddHeader("X-Metadata-Format", EnumExtensions.GetEnumMemberValue(metadataFormat));
 
-                HttpResponseMessage response = await _client.SendAsync(request);
+                var response = await _client.GetAsync(request);
 
                 if (!response.IsSuccessStatusCode)
-                    return ApiResponse<string>.Failure(await response.Content.ReadAsStringAsync(), response.StatusCode);
+                    return ApiResponse<string>.Failure(response.Content, response.StatusCode);
 
-                return ApiResponse<string>.Success(await response.Content.ReadAsStringAsync(), response.StatusCode);
+                return ApiResponse<string>.Success(response.Content, response.StatusCode);
             }
             catch (Exception ex)
             {
-                return ApiResponse<string>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
+                return ApiResponse<string>.Failure(JsonConvert.SerializeObject(ex), HttpStatusCode.InternalServerError);
             }
         }
 
@@ -144,16 +147,17 @@ namespace Vaelastrasz.Library.Services
         {
             try
             {
-                HttpResponseMessage response = await _client.PutAsync($"{_config.Host}/api/datacite/{doi}", new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json"));
+                var request = new RestRequest($"/api/datacite/{doi}").AddJsonBody(model);
+                var response = await _client.PutAsync(request);
 
                 if (!response.IsSuccessStatusCode)
-                    return ApiResponse<ReadDataCiteModel>.Failure(await response.Content.ReadAsStringAsync(), response.StatusCode);
+                    return ApiResponse<ReadDataCiteModel>.Failure(response.Content, response.StatusCode);
 
-                return ApiResponse<ReadDataCiteModel>.Success(JsonConvert.DeserializeObject<ReadDataCiteModel>(await response.Content.ReadAsStringAsync(), VaelastraszJsonSerializerSettings.Settings), response.StatusCode);
+                return ApiResponse<ReadDataCiteModel>.Success(JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content), response.StatusCode);
             }
             catch (Exception ex)
             {
-                return ApiResponse<ReadDataCiteModel>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
+                return ApiResponse<ReadDataCiteModel>.Failure(JsonConvert.SerializeObject(ex), HttpStatusCode.InternalServerError);
             }
         }
     }

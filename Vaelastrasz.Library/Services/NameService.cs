@@ -1,10 +1,9 @@
 ﻿using NameParser;
 using Newtonsoft.Json;
+using RestSharp;
+using RestSharp.Authenticators;
 using System;
 using System.Net;
-using System.Net.Http;
-using System.Net.Http.Json;
-using System.Text;
 using System.Threading.Tasks;
 using Vaelastrasz.Library.Configurations;
 using Vaelastrasz.Library.Models;
@@ -14,31 +13,37 @@ namespace Vaelastrasz.Library.Services
     public class NameService
     {
         private readonly Configuration _config;
-        private HttpClient _client;
+        private RestClient _client;
 
         public NameService(Configuration config)
         {
             _config = config;
-            _client = new HttpClient();
 
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            var options = new RestClientOptions(_config.Host);
 
+            if (_config.Username != null && _config.Password != null)
+            {
+                options.Authenticator = new HttpBasicAuthenticator(_config.Username, _config.Password);
+            };
+
+            _client = new RestClient(options);
         }
 
         public async Task<ApiResponse<HumanName>> GetByNameAsync(string name)
         {
             try
             {
-                HttpResponseMessage response = await _client.PostAsJsonAsync($"{_config.Host}/api/names", name);
+                var request = new RestRequest($"api/names").AddStringBody(name, ContentType.Plain);
+                var response = await _client.PostAsync(request);
 
                 if (!response.IsSuccessStatusCode)
-                    return ApiResponse<HumanName>.Failure(await response.Content.ReadAsStringAsync(), response.StatusCode);
+                    return ApiResponse<HumanName>.Failure(response.Content, response.StatusCode);
 
-                return ApiResponse<HumanName>.Success(JsonConvert.DeserializeObject<HumanName>(await response.Content.ReadAsStringAsync()), response.StatusCode);
+                return ApiResponse<HumanName>.Success(JsonConvert.DeserializeObject<HumanName>(response.Content), response.StatusCode);
             }
             catch (Exception ex)
             {
-                return ApiResponse<HumanName>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
+                return ApiResponse<HumanName>.Failure(JsonConvert.SerializeObject(ex), HttpStatusCode.InternalServerError);
             }
         }
     }

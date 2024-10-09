@@ -19,27 +19,30 @@ namespace Vaelastrasz.Library.Tests.Services
             {
                 //var config = new Configuration("Test_DOIProxy_User", "s~c9<evQ#%^h4Uyb", "https://taerar.infinite-trajectory.de");
                 //var config = new Configuration("Test_DOIProxy_User", "sventhiel", "http://localhost:5041");
-                var config = new Configuration("Test_DOIProxy_User", "sventhiel", "https://taerar.infinite-trajectory.de");
-
+                //var config = new Configuration("sventhiel", "sventhiel", "https://taerar2.infinite-trajectory.de");
+                var config = new Configuration("sventhiel", "s~c9<evQ#%^h4Uyb", "https://doi-proxy.bgc-jena.mpg.de");
 
 
                 var doiService = new DOIService(config);
 
+                var x = await doiService.FindAsync();
+
+
                 //var dict = "{ \"placeholders\": { \"{DatasetId}\": \"340\", \"{VersionId}\": \"1408\", \"{VersionNumber}\": \"2\" } }";
 
-                var dict = new Dictionary<string, string>
-                {
-                    { "{DatasetId}", "1" },
-                    {"{VersionId}", "11" },
-                    {"{VersionNumber}", "111" }
-                };
+                //var dict = new Dictionary<string, string>
+                //{
+                //    { "{DatasetId}", "1" },
+                //    {"{VersionId}", "11" },
+                //    {"{VersionNumber}", "111" }
+                //};
 
-                var createSuffixModel = new CreateSuffixModel()
-                {
-                    Placeholders = dict
-                };
+                //var createSuffixModel = new CreateSuffixModel()
+                //{
+                //    Placeholders = dict
+                //};
 
-                var doi = await doiService.GenerateAsync(createSuffixModel);
+                //var doi = await doiService.GenerateAsync(createSuffixModel);
             }
             catch (Exception ex)
             {

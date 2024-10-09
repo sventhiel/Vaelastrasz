@@ -78,7 +78,7 @@ namespace Vaelastrasz.Server.Middleware
                 code = HttpStatusCode.Conflict; // 409
             }
 
-            var result = JsonConvert.SerializeObject(new { error = exception.Message });
+            var result = JsonConvert.SerializeObject(exception);
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)code;
             return context.Response.WriteAsync(result);

@@ -24,6 +24,7 @@ namespace Vaelastrasz.Server.Models
 
     public class ReadAccountModel
     {
+        public AccountType AccountType { get; set; }
         public DateTimeOffset CreationDate { get; set; }
         public string Host { get; set; }
         public long Id { get; set; }
@@ -31,8 +32,6 @@ namespace Vaelastrasz.Server.Models
         public string Name { get; set; }
         public string Password { get; set; }
         public string Prefix { get; set; }
-
-        public AccountType AccountType { get; set; }
 
         public static ReadAccountModel Convert(Account account)
         {
@@ -52,11 +51,10 @@ namespace Vaelastrasz.Server.Models
 
     public class UpdateAccountModel
     {
+        public AccountType AccountType { get; set; }
         public string Host { get; set; }
         public string Name { get; set; }
         public string Password { get; set; }
         public string Prefix { get; set; }
-
-        public AccountType AccountType { get; set; }
     }
 }

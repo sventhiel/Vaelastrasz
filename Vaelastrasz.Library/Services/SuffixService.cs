@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
+using RestSharp;
+using RestSharp.Authenticators;
 using System;
 using System.Net;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Vaelastrasz.Library.Configurations;
 using Vaelastrasz.Library.Models;
@@ -12,38 +12,41 @@ namespace Vaelastrasz.Library.Services
     public class SuffixService
     {
         private readonly Configuration _config;
-        private HttpClient _client;
+        private RestClient _client;
 
         public SuffixService(Configuration config)
         {
             _config = config;
-            _client = new HttpClient();
 
-            if (_client.DefaultRequestHeaders.Contains("Authorization"))
-                _client.DefaultRequestHeaders.Remove("Authorization");
+            var options = new RestClientOptions(_config.Host);
 
-            _client.DefaultRequestHeaders.Add("Authorization", _config.GetBasicAuthorizationHeader());
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            if (_config.Username != null && _config.Password != null)
+            {
+                options.Authenticator = new HttpBasicAuthenticator(_config.Username, _config.Password);
+            };
+
+            _client = new RestClient(options);
         }
 
         public async Task<ApiResponse<string>> CreateAsync(CreateSuffixModel model)
         {
             try
             {
-                HttpResponseMessage response = await _client.PostAsync($"{_config.Host}/api/suffixes", new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json"));
+                var request = new RestRequest($"api/suffixes").AddJsonBody(model);
+                var response = await _client.PostAsync(request);
 
                 if (response.IsSuccessStatusCode)
                 {
-                    return ApiResponse<string>.Success(await response.Content.ReadAsStringAsync(), response.StatusCode);
+                    return ApiResponse<string>.Success(response.Content, response.StatusCode);
                 }
                 else
                 {
-                    return ApiResponse<string>.Failure(await response.Content.ReadAsStringAsync(), System.Net.HttpStatusCode.InternalServerError);
+                    return ApiResponse<string>.Failure(response.Content, response.StatusCode);
                 }
             }
             catch (Exception ex)
             {
-                return ApiResponse<string>.Failure(JsonConvert.SerializeObject(new { exception = ex.Message }), System.Net.HttpStatusCode.InternalServerError);
+                return ApiResponse<string>.Failure(JsonConvert.SerializeObject(ex), HttpStatusCode.InternalServerError);
             }
         }
     }
