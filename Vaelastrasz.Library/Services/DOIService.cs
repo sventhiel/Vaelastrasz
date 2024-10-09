@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
@@ -18,12 +19,23 @@ namespace Vaelastrasz.Library.Services
         public DOIService(Configuration config)
         {
             _config = config;
+
+            //var handler = new HttpClientHandler
+            //{
+            //    ServerCertificateCustomValidationCallback = (message, cert, chain, sslPolicyErrors) => true // For testing only
+            //};
+
+            //_client = new HttpClient(handler);
+
             _client = new HttpClient();
 
             if (_client.DefaultRequestHeaders.Contains("Authorization"))
                 _client.DefaultRequestHeaders.Remove("Authorization");
 
             _client.DefaultRequestHeaders.Add("Authorization", _config.GetBasicAuthorizationHeader());
+
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
         }
 
         public async Task<ApiResponse<ReadDOIModel>> CreateAsync(CreateDOIModel model)
@@ -61,7 +73,7 @@ namespace Vaelastrasz.Library.Services
             }
         }
 
-        public async Task<ApiResponse<List<ReadDOIModel>>> Find()
+        public async Task<ApiResponse<List<ReadDOIModel>>> FindAsync()
         {
             try
             {
@@ -78,7 +90,7 @@ namespace Vaelastrasz.Library.Services
             }
         }
 
-        public async Task<ApiResponse<ReadDOIModel>> FindById(long id)
+        public async Task<ApiResponse<ReadDOIModel>> FindByIdAsync(long id)
         {
             try
             {

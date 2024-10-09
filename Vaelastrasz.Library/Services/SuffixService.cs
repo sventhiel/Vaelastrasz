@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,6 +23,7 @@ namespace Vaelastrasz.Library.Services
                 _client.DefaultRequestHeaders.Remove("Authorization");
 
             _client.DefaultRequestHeaders.Add("Authorization", _config.GetBasicAuthorizationHeader());
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
         }
 
         public async Task<ApiResponse<string>> CreateAsync(CreateSuffixModel model)

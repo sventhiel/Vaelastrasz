@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
@@ -27,6 +28,8 @@ namespace Vaelastrasz.Library.Services
                 _client.DefaultRequestHeaders.Remove("Authorization");
 
             _client.DefaultRequestHeaders.Add("Authorization", _config.GetBasicAuthorizationHeader());
+
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
         }
 
         public async Task<ApiResponse<ReadDataCiteModel>> CreateAsync(CreateDataCiteModel model)

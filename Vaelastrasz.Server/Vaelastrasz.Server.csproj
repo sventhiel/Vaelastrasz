@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-	<Version>3.0.4</Version>
+	<Version>3.0.5</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -41,13 +41,27 @@
   <ItemGroup>
     <None Include="Examples\doi_002.json" />
     <None Include="Examples\doi_001.json" />
-    <None Include="wwwroot\css\swagger-ui\theme-outline.css" />
-    <None Include="wwwroot\css\swagger-ui\theme-newspaper.css" />
-    <None Include="wwwroot\css\swagger-ui\theme-muted.css" />
-    <None Include="wwwroot\css\swagger-ui\theme-monokai.css" />
-    <None Include="wwwroot\css\swagger-ui\theme-material.css" />
-    <None Include="wwwroot\css\swagger-ui\theme-flattop.css" />
-    <None Include="wwwroot\css\swagger-ui\theme-feeling-blue.css" />
+    <None Include="wwwroot\css\swagger-ui\theme-outline.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="wwwroot\css\swagger-ui\theme-newspaper.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="wwwroot\css\swagger-ui\theme-muted.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="wwwroot\css\swagger-ui\theme-monokai.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="wwwroot\css\swagger-ui\theme-material.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="wwwroot\css\swagger-ui\theme-flattop.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="wwwroot\css\swagger-ui\theme-feeling-blue.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>

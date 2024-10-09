@@ -123,16 +123,6 @@ builder.Services.Configure<FormOptions>(options =>
     options.MultipartBodyLengthLimit = 50 * 1024 * 1024; // 50 MB limit
 });
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAll", builder =>
-    {
-        builder.AllowAnyOrigin()
-               .AllowAnyMethod()
-               .AllowAnyHeader();
-    });
-});
-
 var app = builder.Build();
 
 app.UseHttpsRedirection();
@@ -154,7 +144,6 @@ app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseExceptionless();
 
 // Map controllers
-app.UseCors("AllowAll");
 app.MapControllers();
 
 app.Run();

@@ -1,6 +1,7 @@
 ﻿using NameParser;
 using Newtonsoft.Json;
 using System;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
@@ -19,6 +20,9 @@ namespace Vaelastrasz.Library.Services
         {
             _config = config;
             _client = new HttpClient();
+
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
         }
 
         public async Task<ApiResponse<HumanName>> GetByNameAsync(string name)
