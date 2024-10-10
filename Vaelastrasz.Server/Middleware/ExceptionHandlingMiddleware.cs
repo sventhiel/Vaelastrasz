@@ -1,6 +1,8 @@
 ﻿using Exceptionless;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Newtonsoft.Json;
+using RestSharp;
 using System.Net;
 using Vaelastrasz.Library.Exceptions;
 
@@ -30,11 +32,11 @@ namespace Vaelastrasz.Server.Middleware
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        public async Task Invoke(HttpContext context)
+        public async Task Invoke(HttpContext httpContext)
         {
             try
             {
-                await _next(context);
+                await _next(httpContext);
             }
             catch (Exception ex)
             {
@@ -44,51 +46,34 @@ namespace Vaelastrasz.Server.Middleware
                 // Exceptionless
                 ex.ToExceptionless().Submit();
 
-                var response = await HandleExceptionAsync(context, ex);
-
-                // Translate HttpResponseMessage to HttpContext.Response
-                context.Response.StatusCode = (int)response.StatusCode;
-                context.Response.ContentType = "application/json";
-                await context.Response.WriteAsync(response.Content.ReadAsStringAsync().Result);
+                await HandleExceptionAsync(httpContext, ex);
             }
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="context"></param>
-        /// <param name="exception"></param>
-        /// <returns></returns>
-        public static async Task<HttpResponseMessage> HandleExceptionAsync(HttpContext context, Exception exception)
+        private Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
-            var code = HttpStatusCode.InternalServerError; // 500 if unexpected
-
-            if (exception is BadRequestException)
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = exception switch
             {
-                code = HttpStatusCode.BadRequest; // 400
-            }
-            else if (exception is UnauthorizedException) // 401
-            {
-                code = HttpStatusCode.Unauthorized; //401
-            }
-            else if (exception is ForbidException)
-            {
-                code = HttpStatusCode.Forbidden; // 403
-            }
-            else if (exception is NotFoundException)
-            {
-                code = HttpStatusCode.NotFound; // 404
-            }
-            else if (exception is ConflictException)
-            {
-                code = HttpStatusCode.Conflict; // 409
-            }
-
-            return new HttpResponseMessage(code)
-            {
-                Content = new StringContent(exception.Message),
-                ReasonPhrase = exception.GetType().Name
+                ArgumentException => StatusCodes.Status400BadRequest,
+                BadRequestException => StatusCodes.Status400BadRequest,
+                UnauthorizedAccessException => StatusCodes.Status401Unauthorized,
+                UnauthorizedException => StatusCodes.Status401Unauthorized,
+                ForbidException => StatusCodes.Status403Forbidden,
+                KeyNotFoundException => StatusCodes.Status404NotFound,
+                NotFoundException => StatusCodes.Status404NotFound,
+                ConflictException => StatusCodes.Status409Conflict,
+                _ => StatusCodes.Status500InternalServerError
             };
+
+            var response = new
+            {
+                context.Response.StatusCode,
+                exception.Message,
+                Details = exception.StackTrace // You can remove stack trace in production
+            };
+
+            return context.Response.WriteAsJsonAsync(response);
         }
     }
 }
