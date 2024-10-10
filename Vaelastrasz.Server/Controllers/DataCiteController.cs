@@ -258,12 +258,12 @@ namespace Vaelastrasz.Server.Controllers
 
             var client = new RestClient(clientOptions);
 
-            var request = new RestRequest($"dois?publisher=true&affiliation=true", Method.Post).AddJsonBody(JsonConvert.SerializeObject(model));
+            var request = new RestRequest($"dois?publisher=true&affiliation=true").AddJsonBody(JsonConvert.SerializeObject(model));
             request.AddHeader("Accept", "application/json");
 
             var doiId = await doiService.CreateAsync(model.Data.Attributes.Doi.GetPrefix(), model.Data.Attributes.Doi.GetSuffix(), (DOIStateType)model.Data.Attributes.Event, user.Id, JsonConvert.SerializeObject(model));
 
-            var response = await client.ExecuteAsync(request);
+            var response = await client.PostAsync(request);
 
             if (!response.IsSuccessStatusCode)
             {
