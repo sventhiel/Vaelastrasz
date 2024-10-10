@@ -69,7 +69,7 @@ namespace Vaelastrasz.Server.Controllers
         {
             using var userService = new UserService(_connectionString);
 
-            var result = await userService.UpdateByIdAsync(id, model.Password, model.Project, model.Pattern, model.AccountId, model.IsActive);
+            var result = await userService.UpdateByIdAsync(id, model.Name, model.Password, model.Project, model.Pattern, model.AccountId, model.IsActive);
             var user = await userService.FindByIdAsync(id);
 
             return Ok(ReadUserModel.Convert(user));

@@ -114,7 +114,7 @@ namespace Vaelastrasz.Server.Services
             return await Task.FromResult(users.Single());
         }
 
-        public async Task<bool> UpdateByIdAsync(long id, string password, string project, string pattern, long accountId, bool isActive)
+        public async Task<bool> UpdateByIdAsync(long id, string name, string password, string project, string pattern, long accountId, bool isActive)
         {
             using var db = new LiteDatabase(_connectionString);
             var users = db.GetCollection<User>("users");
@@ -124,10 +124,13 @@ namespace Vaelastrasz.Server.Services
             var account = accounts.FindById(accountId) ?? throw new NotFoundException($"The account (id:{accountId}) does not exist.");
             var salt = CryptographyUtils.GetRandomBase64String(16);
 
-            user.Account = account;
-            user.Pattern = pattern;
+            user.Name = name;
             user.Salt = salt;
             user.Password = CryptographyUtils.GetSHA512HashAsBase64(salt, password);
+            user.Project = project;
+            user.Pattern = pattern;
+            user.Account = account;
+            user.IsActive = isActive;
             user.LastUpdateDate = DateTimeOffset.UtcNow;
 
             return await Task.FromResult(users.Update(user));
