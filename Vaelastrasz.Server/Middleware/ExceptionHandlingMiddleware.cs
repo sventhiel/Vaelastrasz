@@ -51,7 +51,7 @@ namespace Vaelastrasz.Server.Middleware
                 // Write response to HttpContext (convert RestResponse to HttpResponse)
                 httpContext.Response.ContentType = "application/json";
                 httpContext.Response.StatusCode = (int)restResponse.StatusCode;
-                await httpContext.Response.WriteAsync(restResponse.Content);
+                await httpContext.Response.WriteAsJsonAsync(restResponse.Content);
             }
         }
 
