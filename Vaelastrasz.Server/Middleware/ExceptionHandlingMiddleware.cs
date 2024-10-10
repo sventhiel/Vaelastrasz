@@ -1,4 +1,5 @@
 ﻿using Exceptionless;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Newtonsoft.Json;
 using System.Net;
 using Vaelastrasz.Library.Exceptions;
@@ -43,7 +44,12 @@ namespace Vaelastrasz.Server.Middleware
                 // Exceptionless
                 ex.ToExceptionless().Submit();
 
-                await HandleExceptionAsync(context, ex);
+                var response = await HandleExceptionAsync(context, ex);
+
+                // Translate HttpResponseMessage to HttpContext.Response
+                context.Response.StatusCode = (int)response.StatusCode;
+                context.Response.ContentType = "application/json";
+                await context.Response.WriteAsync(response.Content.ReadAsStringAsync().Result);
             }
         }
 
@@ -53,7 +59,7 @@ namespace Vaelastrasz.Server.Middleware
         /// <param name="context"></param>
         /// <param name="exception"></param>
         /// <returns></returns>
-        private static Task HandleExceptionAsync(HttpContext context, Exception exception)
+        public static async Task<HttpResponseMessage> HandleExceptionAsync(HttpContext context, Exception exception)
         {
             var code = HttpStatusCode.InternalServerError; // 500 if unexpected
 
@@ -78,10 +84,11 @@ namespace Vaelastrasz.Server.Middleware
                 code = HttpStatusCode.Conflict; // 409
             }
 
-            var result = JsonConvert.SerializeObject(exception);
-            context.Response.ContentType = "application/json";
-            context.Response.StatusCode = (int)code;
-            return context.Response.WriteAsync(result);
+            return new HttpResponseMessage(code)
+            {
+                Content = new StringContent(exception.Message),
+                ReasonPhrase = exception.GetType().Name
+            };
         }
     }
 }

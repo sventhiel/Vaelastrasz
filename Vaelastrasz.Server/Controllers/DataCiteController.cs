@@ -251,7 +251,7 @@ namespace Vaelastrasz.Server.Controllers
             if (!DOIHelper.Validate(model.Data.Attributes.Doi, user.Account.Prefix, user.Pattern, new Dictionary<string, string>(placeholders.Select(p => new KeyValuePair<string, string>(p.Expression, p.RegularExpression)))))
                 throw new ForbidException($"The doi (doi: {model.Data.Attributes.Doi}) is invalid.");
 
-            var clientOptions = new RestClientOptions($"https://api.test.datacite.org") //{user.Account.Host}")
+            var clientOptions = new RestClientOptions($"{user.Account.Host}")
             {
                 Authenticator = new HttpBasicAuthenticator(user.Account.Name, user.Account.Password)
             };

@@ -50,7 +50,7 @@ namespace Vaelastrasz.Server.Controllers
             var result = await doiService.FindByPrefixAndSuffixAsync(prefix, suffix);
 
             if (result.User.Id != user.Id)
-                throw new UnauthorizedException($"The user (id: {user.Id}) is not allowed to perform the action..");
+                throw new UnauthorizedException($"The user (id: {user.Id}) is not allowed to perform the action.");
 
             var response = await doiService.DeleteByIdAsync(result.Id);
             return Ok(response);
