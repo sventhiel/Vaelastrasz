@@ -25,24 +25,24 @@ namespace Vaelastrasz.Library.Tests.Services
 
                 var doiService = new DOIService(config);
 
-                var x = await doiService.FindAsync();
+                //var x = await doiService.FindAsync();
 
 
                 //var dict = "{ \"placeholders\": { \"{DatasetId}\": \"340\", \"{VersionId}\": \"1408\", \"{VersionNumber}\": \"2\" } }";
 
-                //var dict = new Dictionary<string, string>
-                //{
-                //    { "{DatasetId}", "1" },
-                //    {"{VersionId}", "11" },
-                //    {"{VersionNumber}", "111" }
-                //};
+                var dict = new Dictionary<string, string>
+                {
+                    { "{DatasetId}", "1" },
+                    {"{VersionId}", "asdasd" },
+                    {"{VersionNumber}", "111" }
+                };
 
-                //var createSuffixModel = new CreateSuffixModel()
-                //{
-                //    Placeholders = dict
-                //};
+                var createSuffixModel = new CreateSuffixModel()
+                {
+                    Placeholders = dict
+                };
 
-                //var doi = await doiService.GenerateAsync(createSuffixModel);
+                var doi = await doiService.GenerateAsync(createSuffixModel);
             }
             catch (Exception ex)
             {

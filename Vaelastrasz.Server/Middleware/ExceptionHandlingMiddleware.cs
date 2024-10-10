@@ -1,8 +1,6 @@
 ﻿using Exceptionless;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using Newtonsoft.Json;
-using RestSharp;
 using System.Net;
 using Vaelastrasz.Library.Exceptions;
 
@@ -32,11 +30,11 @@ namespace Vaelastrasz.Server.Middleware
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        public async Task InvokeAsync(HttpContext httpContext)
+        public async Task Invoke(HttpContext context)
         {
             try
             {
-                await _next(httpContext);
+                await _next(context);
             }
             catch (Exception ex)
             {
@@ -46,37 +44,42 @@ namespace Vaelastrasz.Server.Middleware
                 // Exceptionless
                 ex.ToExceptionless().Submit();
 
-                var restResponse = await HandleExceptionAsync(ex);
-
-                // Write response to HttpContext (convert RestResponse to HttpResponse)
-                httpContext.Response.ContentType = "application/json";
-                httpContext.Response.StatusCode = (int)restResponse.StatusCode;
-                await httpContext.Response.WriteAsJsonAsync(restResponse.Content);
+                await HandleExceptionAsync(context, ex);
             }
         }
 
-        public async Task<RestResponse> HandleExceptionAsync(Exception exception)
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="exception"></param>
+        /// <returns></returns>
+        private static Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
-            var restResponse = new RestResponse
+            var statusCode = exception switch
             {
-                Content = $"An error occurred: {exception.Message}",
-                ErrorException = exception,
-                StatusCode = exception switch
-                {
-                    ArgumentException => HttpStatusCode.BadRequest,
-                    BadRequestException => HttpStatusCode.BadRequest,
-                    UnauthorizedAccessException => HttpStatusCode.Unauthorized,
-                    UnauthorizedException => HttpStatusCode.Unauthorized,
-                    ForbidException => HttpStatusCode.Forbidden,
-                    KeyNotFoundException => HttpStatusCode.NotFound,
-                    NotFoundException => HttpStatusCode.NotFound,
-                    ConflictException => HttpStatusCode.Conflict,
-                    _ => HttpStatusCode.InternalServerError
-                },
-                StatusDescription = "Error",
+                BadRequestException => StatusCodes.Status400BadRequest,
+                UnauthorizedException => StatusCodes.Status401Unauthorized,
+                ForbidException => StatusCodes.Status401Unauthorized,
+                NotFoundException => StatusCodes.Status404NotFound,
+                ConflictException => StatusCodes.Status409Conflict,
+                _ => StatusCodes.Status500InternalServerError
             };
 
-            return await Task.FromResult(restResponse);
+            context.Response.StatusCode = statusCode;
+
+            var response = new
+            {
+                statusCode,
+                message = exception.Message,
+                detail = exception.StackTrace // You can include more details for development purposes
+            };
+
+            // Serialize the response object to JSON
+            var jsonResponse = JsonConvert.SerializeObject(response);
+
+            // Write the response to the output
+            return context.Response.WriteAsync(jsonResponse);
         }
     }
 }
