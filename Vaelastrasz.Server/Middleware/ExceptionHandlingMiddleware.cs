@@ -72,6 +72,7 @@ namespace Vaelastrasz.Server.Middleware
             {
                 statusCode,
                 message = exception.Message,
+                exceptionType = exception.GetType().Name,
                 detail = exception.StackTrace // You can include more details for development purposes
             };
 

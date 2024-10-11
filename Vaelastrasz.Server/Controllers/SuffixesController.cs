@@ -7,7 +7,6 @@ using Vaelastrasz.Library.Models;
 using Vaelastrasz.Server.Helpers;
 using Vaelastrasz.Server.Services;
 
-//ry
 namespace Vaelastrasz.Server.Controllers
 {
     [ApiController, Authorize(Roles = "user"), Route("api")]
