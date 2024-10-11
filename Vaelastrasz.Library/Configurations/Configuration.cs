@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Http.Headers;
 using System.Text;
 
 namespace Vaelastrasz.Library.Configurations
@@ -19,6 +20,11 @@ namespace Vaelastrasz.Library.Configurations
         public string GetBasicAuthorizationHeader()
         {
             return $"Basic {Convert.ToBase64String(Encoding.UTF8.GetBytes($"{Username}:{Password}"))}";
+        }
+
+        public AuthenticationHeaderValue GetBasicAuthenticationHeaderValue()
+        {
+            return new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes($"{Username}:{Password}")));
         }
     }
 }

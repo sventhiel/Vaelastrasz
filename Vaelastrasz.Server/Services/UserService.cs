@@ -1,6 +1,8 @@
 ﻿using LiteDB;
+using System.Text.RegularExpressions;
 using Vaelastrasz.Library.Entities;
 using Vaelastrasz.Library.Exceptions;
+using Vaelastrasz.Library.Extensions;
 using Vaelastrasz.Server.Utilities;
 
 namespace Vaelastrasz.Server.Services
@@ -30,6 +32,9 @@ namespace Vaelastrasz.Server.Services
                 throw new ConflictException($"The user (name:{name}) already exists.");
 
             var account = accounts.FindById(accountId) ?? throw new NotFoundException($"The account (id:{accountId}) does not exist.");
+
+            //if(!pattern.IsValidRegex())
+            //    throw new BadRequestException($"The pattern ({pattern}) is not a valid regex.");
 
             // salt
             var salt = CryptographyUtils.GetRandomBase64String(16);

@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using RestSharp;
-using RestSharp.Authenticators;
 using System.Net;
+using System.Net.Http.Headers;
+using System.Text;
 using Vaelastrasz.Library.Exceptions;
 using Vaelastrasz.Library.Extensions;
 using Vaelastrasz.Library.Models;
@@ -54,23 +54,20 @@ namespace Vaelastrasz.Server.Controllers
             if (user.Account == null)
                 throw new NotFoundException($"The account of user (id: {user.Id}) does not exist.");
 
-            var clientOptions = new RestClientOptions($"{user.Account.Host}")
-            {
-                Authenticator = new HttpBasicAuthenticator(user.Account.Name, user.Account.Password)
-            };
+            var client = new HttpClient();
 
-            var client = new RestClient(clientOptions);
+            client.BaseAddress = new Uri(user.Account.Host);
 
-            var request = new RestRequest($"dois/{doi}", Method.Delete);
-            request.AddHeader("Accept", "application/json");
+            if (user.Account.Name != null && user.Account.Password != null)
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes($"{user.Account.Name}:{user.Account.Password}")));
 
-            var response = await client.ExecuteAsync(request);
+            var response = await client.DeleteAsync($"dois/{doi}");
 
             if (!response.IsSuccessStatusCode)
-                return StatusCode((int)response.StatusCode, response.ErrorMessage);
+                return StatusCode((int)response.StatusCode, await response.Content.ReadAsStringAsync());
 
             await doiService.DeleteByDOIAsync(doi);
-            return StatusCode((int)response.StatusCode, JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content!));
+            return StatusCode((int)response.StatusCode, JsonConvert.DeserializeObject<ReadDataCiteModel>(await response.Content.ReadAsStringAsync()));
         }
 
         /// <summary>
@@ -95,19 +92,16 @@ namespace Vaelastrasz.Server.Controllers
             if (dois.Count == 0)
                 return Ok(result);
 
-            var clientOptions = new RestClientOptions($"{user.Account.Host}")
-            {
-                Authenticator = new HttpBasicAuthenticator(user.Account.Name, user.Account.Password)
-            };
+            var client = new HttpClient();
 
-            var client = new RestClient(clientOptions);
+            client.BaseAddress = new Uri(user.Account.Host);
+
+            if (user.Account.Name != null && user.Account.Password != null)
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes($"{user.Account.Name}:{user.Account.Password}")));
 
             foreach (var doi in dois)
             {
-                var request = new RestRequest($"dois/{doi}?publisher=true&affiliation=true", Method.Get);
-                request.AddHeader("Accept", "application/json");
-
-                var response = await client.ExecuteAsync(request);
+                var response = await client.GetAsync($"dois/{doi}?publisher=true&affiliation=true");
 
                 if (response == null)
                     continue;
@@ -118,7 +112,7 @@ namespace Vaelastrasz.Server.Controllers
                 if (response.Content == null)
                     continue;
 
-                var item = JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content);
+                var item = JsonConvert.DeserializeObject<ReadDataCiteModel>(await response.Content.ReadAsStringAsync());
 
                 if (item != null)
                     result.Add(item);
@@ -150,22 +144,22 @@ namespace Vaelastrasz.Server.Controllers
             if (doi.User.Id != user.Id)
                 throw new UnauthorizedException($"The user (id: {user.Id}) is not allowed to perform the action.");
 
-            var clientOptions = new RestClientOptions($"{user.Account.Host}")
-            {
-                Authenticator = new HttpBasicAuthenticator(user.Account.Name, user.Account.Password)
-            };
+            var client = new HttpClient();
 
-            var client = new RestClient(clientOptions);
+            client.BaseAddress = new Uri(user.Account.Host);
 
-            var request = new RestRequest($"dois/{prefix}/{suffix}?publisher=true&affiliation=true", Method.Get);
-            request.AddHeader("Accept", "application/json");
+            if (user.Account.Name != null && user.Account.Password != null)
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes($"{user.Account.Name}:{user.Account.Password}")));
 
-            var response = await client.ExecuteAsync(request);
+            //var request = new HttpRequestMessage(HttpMethod.Get, $"dois/{prefix}/{suffix}?publisher=true&affiliation=true");
+            //request.Headers.Add("Accept", "application/json");
+
+            var response = await client.GetAsync($"dois/{prefix}/{suffix}?publisher=true&affiliation=true");
 
             if (!response.IsSuccessStatusCode)
-                return StatusCode((int)response.StatusCode, response.ErrorMessage);
+                return StatusCode((int)response.StatusCode, await response.Content.ReadAsStringAsync());
 
-            return StatusCode((int)response.StatusCode, JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content!));
+            return StatusCode((int)response.StatusCode, JsonConvert.DeserializeObject<ReadDataCiteModel>(await response.Content.ReadAsStringAsync()));
         }
 
         [HttpGet("datacite/{prefix}/{suffix}/citations")]
@@ -184,21 +178,19 @@ namespace Vaelastrasz.Server.Controllers
             if (doi.User.Id != user.Id)
                 throw new UnauthorizedException($"The user (id: {user.Id}) is not allowed to perform the action.");
 
-            var clientOptions = new RestClientOptions($"{user.Account.Host}")
-            {
-                Authenticator = new HttpBasicAuthenticator(user.Account.Name, user.Account.Password)
-            };
+            var client = new HttpClient();
 
-            var client = new RestClient(clientOptions);
+            client.BaseAddress = new Uri(user.Account.Host);
 
-            var request = new RestRequest($"dois/{prefix}/{suffix}?style={Request.Headers["X-Citation-Style"].ToString()}", Method.Get);
+            if (user.Account.Name != null && user.Account.Password != null)
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes($"{user.Account.Name}:{user.Account.Password}")));
 
-            var response = await client.ExecuteAsync(request);
+            var response = await client.GetAsync($"dois/{prefix}/{suffix}?style={Request.Headers["X-Citation-Style"].ToString()}");
 
             if (!response.IsSuccessStatusCode)
-                return StatusCode((int)response.StatusCode, response.ErrorMessage);
+                return StatusCode((int)response.StatusCode, await response.Content.ReadAsStringAsync());
 
-            return StatusCode((int)response.StatusCode, response.Content!);
+            return StatusCode((int)response.StatusCode, await response.Content.ReadAsStringAsync());
         }
 
         [HttpGet("datacite/{prefix}/{suffix}/metadata")]
@@ -217,22 +209,22 @@ namespace Vaelastrasz.Server.Controllers
             if (doi.User.Id != user.Id)
                 throw new UnauthorizedException($"The user (id: {user.Id}) is not allowed to perform the action.");
 
-            var clientOptions = new RestClientOptions($"{user.Account.Host}")
-            {
-                Authenticator = new HttpBasicAuthenticator(user.Account.Name, user.Account.Password)
-            };
+            var client = new HttpClient();
 
-            var client = new RestClient(clientOptions);
+            client.BaseAddress = new Uri(user.Account.Host);
 
-            var request = new RestRequest($"dois/{prefix}/{suffix}", Method.Get);
-            request.AddHeader("Accept", Request.Headers["X-Metadata-Format"].ToString());
+            if (user.Account.Name != null && user.Account.Password != null)
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes($"{user.Account.Name}:{user.Account.Password}")));
 
-            var response = await client.ExecuteAsync(request);
+            var request = new HttpRequestMessage(HttpMethod.Get, $"dois/{prefix}/{suffix}");
+            request.Headers.Add("Accept", Request.Headers["X-Metadata-Format"].ToString());
+
+            var response = await client.SendAsync(request);
 
             if (!response.IsSuccessStatusCode)
-                return StatusCode((int)response.StatusCode, response.ErrorMessage);
+                return StatusCode((int)response.StatusCode, await response.Content.ReadAsStringAsync());
 
-            return StatusCode((int)response.StatusCode, response.Content!);
+            return StatusCode((int)response.StatusCode, await response.Content.ReadAsStringAsync());
         }
 
         [HttpPost("datacite")]
@@ -251,29 +243,26 @@ namespace Vaelastrasz.Server.Controllers
             if (!DOIHelper.Validate(model.Data.Attributes.Doi, user.Account.Prefix, user.Pattern, new Dictionary<string, string>(placeholders.Select(p => new KeyValuePair<string, string>(p.Expression, p.RegularExpression)))))
                 throw new ForbidException($"The doi (doi: {model.Data.Attributes.Doi}) is invalid.");
 
-            var clientOptions = new RestClientOptions($"{user.Account.Host}")
-            {
-                Authenticator = new HttpBasicAuthenticator(user.Account.Name, user.Account.Password)
-            };
+            var client = new HttpClient();
 
-            var client = new RestClient(clientOptions);
+            client.BaseAddress = new Uri(user.Account.Host);
 
-            var request = new RestRequest($"dois?publisher=true&affiliation=true").AddJsonBody(JsonConvert.SerializeObject(model));
-            request.AddHeader("Accept", "application/json");
+            if (user.Account.Name != null && user.Account.Password != null)
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes($"{user.Account.Name}:{user.Account.Password}")));
 
             var doiId = await doiService.CreateAsync(model.Data.Attributes.Doi.GetPrefix(), model.Data.Attributes.Doi.GetSuffix(), (DOIStateType)model.Data.Attributes.Event, user.Id, JsonConvert.SerializeObject(model));
 
-            var response = await client.PostAsync(request);
+            var response = await client.PostAsync($"dois?publisher=true&affiliation=true", model.AsJson());
 
             if (!response.IsSuccessStatusCode)
             {
                 await doiService.DeleteByIdAsync(doiId);
-                return StatusCode((int)response.StatusCode, response.ErrorMessage);
+                return StatusCode((int)response.StatusCode, await response.Content.ReadAsStringAsync());
             }
 
-            var readDataCiteModel = JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content!);
-            await doiService.UpdateByPrefixAndSuffixAsync(model.Data.Attributes.Doi.GetPrefix(), model.Data.Attributes.Doi.GetSuffix(), (DOIStateType)readDataCiteModel!.Data.Attributes.State, response.Content!);
-            return Created($"{user.Account.Host}/dois/{WebUtility.UrlEncode(model.Data.Attributes.Doi)}", JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content!));
+            var readDataCiteModel = JsonConvert.DeserializeObject<ReadDataCiteModel>(await response.Content.ReadAsStringAsync());
+            await doiService.UpdateByPrefixAndSuffixAsync(model.Data.Attributes.Doi.GetPrefix(), model.Data.Attributes.Doi.GetSuffix(), (DOIStateType)readDataCiteModel!.Data.Attributes.State, await response.Content.ReadAsStringAsync());
+            return Created($"{user.Account.Host}/dois/{WebUtility.UrlEncode(model.Data.Attributes.Doi)}", JsonConvert.DeserializeObject<ReadDataCiteModel>(await response.Content.ReadAsStringAsync()));
         }
 
         [HttpPut("datacite/{doi}")]
@@ -285,25 +274,24 @@ namespace Vaelastrasz.Server.Controllers
             if (user.Account == null)
                 throw new NotFoundException($"The account of user (id: {user.Id}) does not exist.");
 
-            var clientOptions = new RestClientOptions($"{user.Account.Host}")
-            {
-                Authenticator = new HttpBasicAuthenticator(user.Account.Name, user.Account.Password)
-            };
+            var client = new HttpClient();
 
-            var client = new RestClient(clientOptions);
+            client.BaseAddress = new Uri(user.Account.Host);
 
-            var request = new RestRequest($"dois/{doi}?publisher=true&affiliation=true", Method.Put);
-            request.AddHeader("Accept", "application/json");
+            if (user.Account.Name != null && user.Account.Password != null)
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes($"{user.Account.Name}:{user.Account.Password}")));
 
-            var response = await client.ExecuteAsync(request);
+            var response = await client.PutAsync($"dois/{doi}?publisher=true&affiliation=true", model.AsJson());
 
             if (!response.IsSuccessStatusCode)
-                return StatusCode((int)response.StatusCode, response.ErrorMessage);
+                return StatusCode((int)response.StatusCode, await response.Content.ReadAsStringAsync());
+
+            var updatedModel = JsonConvert.DeserializeObject<ReadDataCiteModel>(await response.Content.ReadAsStringAsync());
 
             var doiService = new DOIService(_connectionString);
-            await doiService.UpdateByDOIAsync(doi, DOIStateType.Findable, "");
+            await doiService.UpdateByDOIAsync(doi, (DOIStateType)updatedModel.Data.Attributes.State, "");
 
-            return Ok(JsonConvert.DeserializeObject<ReadDataCiteModel>(response.Content!));
+            return Ok(updatedModel);
         }
     }
 }

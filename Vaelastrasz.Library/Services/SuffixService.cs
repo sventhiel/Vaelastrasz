@@ -1,10 +1,12 @@
-﻿using Newtonsoft.Json;
-using RestSharp;
-using RestSharp.Authenticators;
+﻿using NameParser;
+using Newtonsoft.Json;
 using System;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Vaelastrasz.Library.Configurations;
+using Vaelastrasz.Library.Extensions;
 using Vaelastrasz.Library.Models;
 
 namespace Vaelastrasz.Library.Services
@@ -12,37 +14,29 @@ namespace Vaelastrasz.Library.Services
     public class SuffixService
     {
         private readonly Configuration _config;
-        private RestClient _client;
+        private HttpClient _client;
 
         public SuffixService(Configuration config)
         {
             _config = config;
+            _client = new HttpClient();
 
-            var options = new RestClientOptions(_config.Host);
+            _client.BaseAddress = new Uri(_config.Host);
 
             if (_config.Username != null && _config.Password != null)
-            {
-                options.Authenticator = new HttpBasicAuthenticator(_config.Username, _config.Password);
-            };
-
-            _client = new RestClient(options);
+                _client.DefaultRequestHeaders.Authorization = _config.GetBasicAuthenticationHeaderValue();
         }
 
         public async Task<ApiResponse<string>> CreateAsync(CreateSuffixModel model)
         {
             try
             {
-                var request = new RestRequest($"api/suffixes").AddJsonBody(model);
-                var response = await _client.PostAsync(request);
+                var response = await _client.PostAsync($"api/suffixes", model.AsJson());
 
-                if (response.IsSuccessStatusCode)
-                {
-                    return ApiResponse<string>.Success(response.Content, response.StatusCode);
-                }
-                else
-                {
-                    return ApiResponse<string>.Failure(response.Content, response.StatusCode);
-                }
+                if (!response.IsSuccessStatusCode)
+                    return ApiResponse<string>.Failure(await response.Content.ReadAsStringAsync(), response.StatusCode);
+
+                return ApiResponse<string>.Success(await response.Content.ReadAsStringAsync(), response.StatusCode);
             }
             catch (Exception ex)
             {

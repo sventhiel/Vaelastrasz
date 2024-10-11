@@ -1,11 +1,12 @@
 ﻿using NameParser;
 using Newtonsoft.Json;
-using RestSharp;
-using RestSharp.Authenticators;
 using System;
 using System.Net;
+using System.Net.Http;
+using System.Reflection;
 using System.Threading.Tasks;
 using Vaelastrasz.Library.Configurations;
+using Vaelastrasz.Library.Extensions;
 using Vaelastrasz.Library.Models;
 
 namespace Vaelastrasz.Library.Services
@@ -13,33 +14,29 @@ namespace Vaelastrasz.Library.Services
     public class NameService
     {
         private readonly Configuration _config;
-        private RestClient _client;
+        private HttpClient _client;
 
         public NameService(Configuration config)
         {
             _config = config;
+            _client = new HttpClient();
 
-            var options = new RestClientOptions(_config.Host);
+            _client.BaseAddress = new Uri(_config.Host);
 
             if (_config.Username != null && _config.Password != null)
-            {
-                options.Authenticator = new HttpBasicAuthenticator(_config.Username, _config.Password);
-            };
-
-            _client = new RestClient(options);
+                _client.DefaultRequestHeaders.Authorization = _config.GetBasicAuthenticationHeaderValue();
         }
 
         public async Task<ApiResponse<HumanName>> GetByNameAsync(string name)
         {
             try
             {
-                var request = new RestRequest($"api/names").AddStringBody(name, ContentType.Plain);
-                var response = await _client.PostAsync(request);
+                var response = await _client.PostAsync($"api/names", name.AsJson());
 
                 if (!response.IsSuccessStatusCode)
-                    return ApiResponse<HumanName>.Failure(response.Content, response.StatusCode);
+                    return ApiResponse<HumanName>.Failure(await response.Content.ReadAsStringAsync(), response.StatusCode);
 
-                return ApiResponse<HumanName>.Success(JsonConvert.DeserializeObject<HumanName>(response.Content), response.StatusCode);
+                return ApiResponse<HumanName>.Success(JsonConvert.DeserializeObject<HumanName>(await response.Content.ReadAsStringAsync()), response.StatusCode);
             }
             catch (Exception ex)
             {

@@ -1,11 +1,13 @@
 ﻿using Newtonsoft.Json;
-using RestSharp;
-using RestSharp.Authenticators;
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Net.Http;
+using System.Reflection;
 using System.Threading.Tasks;
 using Vaelastrasz.Library.Configurations;
+using Vaelastrasz.Library.Entities;
+using Vaelastrasz.Library.Extensions;
 using Vaelastrasz.Library.Models;
 
 namespace Vaelastrasz.Library.Services
@@ -13,33 +15,29 @@ namespace Vaelastrasz.Library.Services
     public class DOIService
     {
         private readonly Configuration _config;
-        private RestClient _client;
+        private HttpClient _client;
 
         public DOIService(Configuration config)
         {
             _config = config;
+            _client = new HttpClient();
 
-            var options = new RestClientOptions(_config.Host);
+            _client.BaseAddress = new Uri(_config.Host);
 
             if (_config.Username != null && _config.Password != null)
-            {
-                options.Authenticator = new HttpBasicAuthenticator(_config.Username, _config.Password);
-            };
-
-            _client = new RestClient(options);
+                _client.DefaultRequestHeaders.Authorization = _config.GetBasicAuthenticationHeaderValue();
         }
 
         public async Task<ApiResponse<ReadDOIModel>> CreateAsync(CreateDOIModel model)
         {
             try
             {
-                var request = new RestRequest($"api/dois").AddJsonBody(model);
-                var response = await _client.PostAsync(request);
+                var response = await _client.PostAsync($"api/dois", model.AsJson());
 
-                if (!response.IsSuccessful)
-                    return ApiResponse<ReadDOIModel>.Failure(response.Content, response.StatusCode);
+                if (!response.IsSuccessStatusCode)
+                    return ApiResponse<ReadDOIModel>.Failure(await response.Content.ReadAsStringAsync(), response.StatusCode);
 
-                return ApiResponse<ReadDOIModel>.Success(JsonConvert.DeserializeObject<ReadDOIModel>(response.Content), response.StatusCode);
+                return ApiResponse<ReadDOIModel>.Success(JsonConvert.DeserializeObject<ReadDOIModel>(await response.Content.ReadAsStringAsync()), response.StatusCode);
             }
             catch (Exception ex)
             {
@@ -51,13 +49,12 @@ namespace Vaelastrasz.Library.Services
         {
             try
             {
-                var request = new RestRequest($"api/dois/{id}");
-                var response = await _client.DeleteAsync(request);
+                var response = await _client.DeleteAsync($"api/dois/{id}");
 
                 if (!response.IsSuccessStatusCode)
-                    return ApiResponse<bool>.Failure(response.Content, response.StatusCode);
+                    return ApiResponse<bool>.Failure(await response.Content.ReadAsStringAsync(), response.StatusCode);
 
-                return ApiResponse<bool>.Success(JsonConvert.DeserializeObject<bool>(response.Content), response.StatusCode);
+                return ApiResponse<bool>.Success(JsonConvert.DeserializeObject<bool>(await response.Content.ReadAsStringAsync()), response.StatusCode);
             }
             catch (Exception ex)
             {
@@ -69,13 +66,12 @@ namespace Vaelastrasz.Library.Services
         {
             try
             {
-                var request = new RestRequest($"api/dois");
-                var response = await _client.GetAsync(request);
+                var response = await _client.GetAsync($"api/dois");
 
                 if (!response.IsSuccessStatusCode)
-                    return ApiResponse<List<ReadDOIModel>>.Failure(response.Content, response.StatusCode);
+                    return ApiResponse<List<ReadDOIModel>>.Failure(await response.Content.ReadAsStringAsync(), response.StatusCode);
 
-                return ApiResponse<List<ReadDOIModel>>.Success(JsonConvert.DeserializeObject<List<ReadDOIModel>>(response.Content), response.StatusCode);
+                return ApiResponse<List<ReadDOIModel>>.Success(JsonConvert.DeserializeObject<List<ReadDOIModel>>(await response.Content.ReadAsStringAsync()), response.StatusCode);
             }
             catch (Exception ex)
             {
@@ -87,13 +83,12 @@ namespace Vaelastrasz.Library.Services
         {
             try
             {
-                var request = new RestRequest($"/api/dois/{id}");
-                var response = await _client.GetAsync(request);
+                var response = await _client.GetAsync($"/api/dois/{id}");
 
                 if (!response.IsSuccessStatusCode)
-                    return ApiResponse<ReadDOIModel>.Failure(response.Content, response.StatusCode);
+                    return ApiResponse<ReadDOIModel>.Failure(await response.Content.ReadAsStringAsync(), response.StatusCode);
 
-                return ApiResponse<ReadDOIModel>.Success(JsonConvert.DeserializeObject<ReadDOIModel>(response.Content), response.StatusCode);
+                return ApiResponse<ReadDOIModel>.Success(JsonConvert.DeserializeObject<ReadDOIModel>(await response.Content.ReadAsStringAsync()), response.StatusCode);
             }
             catch (Exception ex)
             {
@@ -105,17 +100,16 @@ namespace Vaelastrasz.Library.Services
         {
             try
             {
-                var request_prefix = new RestRequest($"/api/prefixes");
-                var response_prefix = await _client.GetAsync(request_prefix);
+                var response_prefix = await _client.GetAsync($"api/prefixes");
                 if (!response_prefix.IsSuccessStatusCode)
-                    return ApiResponse<string>.Failure(response_prefix.Content, response_prefix.StatusCode);
+                    return ApiResponse<string>.Failure(await response_prefix.Content.ReadAsStringAsync(), response_prefix.StatusCode);
 
-                var request_suffix = new RestRequest("/api/suffixes").AddJsonBody(model);
-                var response_suffix = await _client.PostAsync(request_suffix);
+                var response_suffix = await _client.PostAsync($"api/suffixes", model.AsJson());
+
                 if (!response_suffix.IsSuccessStatusCode)
-                    return ApiResponse<string>.Failure(response_suffix.Content, response_suffix.StatusCode);
+                    return ApiResponse<string>.Failure(await response_suffix.Content.ReadAsStringAsync(), response_suffix.StatusCode);
 
-                return ApiResponse<string>.Success($"{response_prefix.Content}/{response_suffix.Content}", response_suffix.StatusCode);
+                return ApiResponse<string>.Success($"{await response_prefix.Content.ReadAsStringAsync()}/{await response_suffix.Content.ReadAsStringAsync()}", response_suffix.StatusCode);
             }
             catch (Exception ex)
             {
@@ -127,13 +121,12 @@ namespace Vaelastrasz.Library.Services
         {
             try
             {
-                var request = new RestRequest($"/api/datacite/{id}").AddJsonBody(model);
-                var response = await _client.PutAsync(request);
+                var response = await _client.PutAsync($"api/datacite/{id}", model.AsJson());
 
                 if (!response.IsSuccessStatusCode)
-                    return ApiResponse<ReadDOIModel>.Failure(response.Content, response.StatusCode);
+                    return ApiResponse<ReadDOIModel>.Failure(await response.Content.ReadAsStringAsync(), response.StatusCode);
 
-                return ApiResponse<ReadDOIModel>.Success(JsonConvert.DeserializeObject<ReadDOIModel>(response.Content), response.StatusCode);
+                return ApiResponse<ReadDOIModel>.Success(JsonConvert.DeserializeObject<ReadDOIModel>(await response.Content.ReadAsStringAsync()), response.StatusCode);
             }
             catch (Exception ex)
             {
@@ -145,13 +138,12 @@ namespace Vaelastrasz.Library.Services
         {
             try
             {
-                var request = new RestRequest($"/api/datacite/{doi}").AddJsonBody(model);
-                var response = await _client.PutAsync(request);
+                var response = await _client.PutAsync($"api/datacite/{doi}", model.AsJson());
 
                 if (!response.IsSuccessStatusCode)
-                    return ApiResponse<ReadDOIModel>.Failure(response.Content, response.StatusCode);
+                    return ApiResponse<ReadDOIModel>.Failure(await response.Content.ReadAsStringAsync(), response.StatusCode);
 
-                return ApiResponse<ReadDOIModel>.Success(JsonConvert.DeserializeObject<ReadDOIModel>(response.Content), response.StatusCode);
+                return ApiResponse<ReadDOIModel>.Success(JsonConvert.DeserializeObject<ReadDOIModel>(await response.Content.ReadAsStringAsync()), response.StatusCode);
             }
             catch (Exception ex)
             {
@@ -163,13 +155,12 @@ namespace Vaelastrasz.Library.Services
         {
             try
             {
-                var request = new RestRequest($"/api/datacite/{prefix}/{suffix}").AddJsonBody(model);
-                var response = await _client.PutAsync(request);
+                var response = await _client.PutAsync($"api/datacite/{prefix}/{suffix}", model.AsJson());
 
                 if (!response.IsSuccessStatusCode)
-                    return ApiResponse<ReadDOIModel>.Failure(response.Content, response.StatusCode);
+                    return ApiResponse<ReadDOIModel>.Failure(await response.Content.ReadAsStringAsync(), response.StatusCode);
 
-                return ApiResponse<ReadDOIModel>.Success(JsonConvert.DeserializeObject<ReadDOIModel>(response.Content), response.StatusCode);
+                return ApiResponse<ReadDOIModel>.Success(JsonConvert.DeserializeObject<ReadDOIModel>(await response.Content.ReadAsStringAsync()), response.StatusCode);
             }
             catch (Exception ex)
             {

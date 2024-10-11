@@ -12,6 +12,9 @@ namespace Vaelastrasz.Server.Helpers
             {
                 pattern = pattern.Replace(placeholders);
 
+                if (!pattern.IsValidRegex())
+                    throw new ArgumentException("After replacing the placeholder, the pattern is no longer a regular expression.");
+
                 // create a random suffix that matches the pattern and return it
                 Xeger xeger = new Xeger($"{pattern}", new Random());
                 var suffix = xeger.Generate();
