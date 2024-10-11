@@ -67,6 +67,7 @@ namespace Vaelastrasz.Server.Middleware
             };
 
             context.Response.StatusCode = statusCode;
+            context.Response.ContentType = "application/json";
 
             var response = new
             {

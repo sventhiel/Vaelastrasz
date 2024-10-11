@@ -1,5 +1,6 @@
 ﻿using Fare;
 using System.Text.RegularExpressions;
+using Vaelastrasz.Library.Exceptions;
 using Vaelastrasz.Library.Extensions;
 
 namespace Vaelastrasz.Server.Helpers
@@ -21,9 +22,9 @@ namespace Vaelastrasz.Server.Helpers
 
                 return suffix;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new ArgumentException("After replacing the placeholder, the pattern is no longer a regular expression.");
             }
         }
 
