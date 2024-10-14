@@ -101,6 +101,7 @@ namespace Vaelastrasz.Library.Services
             try
             {
                 var response_prefix = await _client.GetAsync($"api/prefixes");
+
                 if (!response_prefix.IsSuccessStatusCode)
                     return ApiResponse<string>.Failure(await response_prefix.Content.ReadAsStringAsync(), response_prefix.StatusCode);
 

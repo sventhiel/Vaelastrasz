@@ -34,7 +34,7 @@ namespace Vaelastrasz.Library.Tests.Services
                 {
                     { "{DatasetId}", "1" },
                     {"{VersionId}", "asdasd" },
-                    {"{VersionNumber}", "111" }
+                    {"{VersionNumbers}", "111" }
                 };
 
                 var createSuffixModel = new CreateSuffixModel()

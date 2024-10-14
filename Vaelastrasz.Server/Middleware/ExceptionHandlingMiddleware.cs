@@ -58,6 +58,7 @@ namespace Vaelastrasz.Server.Middleware
         {
             var statusCode = exception switch
             {
+                BadGatewayException => StatusCodes.Status502BadGateway,
                 BadRequestException => StatusCodes.Status400BadRequest,
                 UnauthorizedException => StatusCodes.Status401Unauthorized,
                 ForbidException => StatusCodes.Status401Unauthorized,
