@@ -15,7 +15,7 @@ namespace Vaelastrasz.Library.Models
             switch(status)
             {
                 case HttpStatusCode.BadGateway:
-                    errorMessage = "The server is currently not available.";
+                    errorMessage = "Equivalent to HTTP status 502. System.Net.HttpStatusCode.BadGateway indicates that an intermediate proxy server received a bad response from another proxy or the origin server.";
                     break;
             }
 
