@@ -11,6 +11,14 @@ namespace Vaelastrasz.Library.Models
 
         public static ApiResponse<T> Failure(string errorMessage, HttpStatusCode status)
         {
+            // handling of specific status codes 
+            switch(status)
+            {
+                case HttpStatusCode.BadGateway:
+                    errorMessage = "The server is currently not available.";
+                    break;
+            }
+
             return new ApiResponse<T> { IsSuccessful = false, ErrorMessage = errorMessage, Status = status };
         }
 
