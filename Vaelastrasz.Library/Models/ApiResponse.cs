@@ -17,6 +17,9 @@ namespace Vaelastrasz.Library.Models
                 case HttpStatusCode.BadGateway:
                     errorMessage = "Equivalent to HTTP status 502. System.Net.HttpStatusCode.BadGateway indicates that an intermediate proxy server received a bad response from another proxy or the origin server.";
                     break;
+
+                default:
+                    break;
             }
 
             return new ApiResponse<T> { IsSuccessful = false, ErrorMessage = errorMessage, Status = status };
