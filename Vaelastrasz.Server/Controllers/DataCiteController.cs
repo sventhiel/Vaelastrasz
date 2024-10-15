@@ -172,11 +172,11 @@ namespace Vaelastrasz.Server.Controllers
             if (user.Account == null)
                 throw new NotFoundException($"The account of user (id: {user.Id}) does not exist.");
 
-            using var doiService = new DOIService(_connectionString);
-            var doi = await doiService.FindByPrefixAndSuffixAsync(prefix, suffix);
+            //using var doiService = new DOIService(_connectionString);
+            //var doi = await doiService.FindByPrefixAndSuffixAsync(prefix, suffix);
 
-            if (doi.User.Id != user.Id)
-                throw new UnauthorizedException($"The user (id: {user.Id}) is not allowed to perform the action.");
+            //if (doi.User.Id != user.Id)
+            //    throw new UnauthorizedException($"The user (id: {user.Id}) is not allowed to perform the action.");
 
             var client = new HttpClient();
 
@@ -241,7 +241,7 @@ namespace Vaelastrasz.Server.Controllers
             // DOI Check
             var placeholders = await placeholderService.FindByUserIdAsync(user.Id);
             if (!DOIHelper.Validate(model.Data.Attributes.Doi, user.Account.Prefix, user.Pattern, new Dictionary<string, string>(placeholders.Select(p => new KeyValuePair<string, string>(p.Expression, p.RegularExpression)))))
-                throw new ForbidException($"The doi (doi: {model.Data.Attributes.Doi}) is invalid.");
+                throw new ForbiddenException($"The doi (doi: {model.Data.Attributes.Doi}) is invalid.");
 
             var client = new HttpClient();
 

@@ -121,7 +121,7 @@ namespace Vaelastrasz.Server.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         /// <exception cref="NotFoundException"></exception>
-        /// <exception cref="ForbidException"></exception>
+        /// <exception cref="ForbiddenException"></exception>
         [HttpPost("dois")]
         public async Task<IActionResult> Post(CreateDOIModel model)
         {
@@ -135,7 +135,7 @@ namespace Vaelastrasz.Server.Controllers
             var placeholders = await placeholderService.FindByUserIdAsync(user.Id);
 
             if (!DOIHelper.Validate($"{model.Prefix}/{model.Suffix}", user.Account.Prefix, user.Pattern, new Dictionary<string, string>(placeholders.Select(p => new KeyValuePair<string, string>(p.Expression, p.RegularExpression)))))
-                throw new ForbidException($"The doi (prefix: {model.Prefix}, suffix: {model.Suffix}) is invalid.");
+                throw new ForbiddenException($"The doi (prefix: {model.Prefix}, suffix: {model.Suffix}) is invalid.");
 
             using var doiService = new DOIService(_connectionString);
             var id = await doiService.CreateAsync(model.Prefix, model.Suffix, DOIStateType.Draft, user.Id, "");

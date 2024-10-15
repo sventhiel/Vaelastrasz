@@ -40,7 +40,7 @@ namespace Vaelastrasz.Server.Services
         /// <param name="value"></param>
         /// <returns></returns>
         /// <exception cref="NotFoundException"></exception>
-        /// <exception cref="ForbidException"></exception>
+        /// <exception cref="ForbiddenException"></exception>
         /// <exception cref="ConflictException"></exception>
         public async Task<long> CreateAsync(string prefix, string suffix, DOIStateType state, long userId, string value)
         {
@@ -51,7 +51,7 @@ namespace Vaelastrasz.Server.Services
             var user = users.Include(u => u.Account).FindById(userId) ?? throw new NotFoundException($"The user (id:{userId}) does not exist.");
 
             if (!user.Account.Prefix.Equals(prefix, StringComparison.InvariantCultureIgnoreCase))
-                throw new ForbidException($"The doi (prefix:{prefix}) is invalid.");
+                throw new ForbiddenException($"The doi (prefix:{prefix}) is invalid.");
 
             if (dois.Find(d => d.Prefix.Equals(prefix, StringComparison.InvariantCultureIgnoreCase) && d.Suffix.Equals(suffix, StringComparison.InvariantCultureIgnoreCase)).Count() > 0)
                 throw new ConflictException($"The doi (prefix:{prefix}, suffix: {suffix}) already exists.");
@@ -108,7 +108,7 @@ namespace Vaelastrasz.Server.Services
         /// <returns></returns>
         /// <exception cref="NotFoundException"></exception>
         /// <exception cref="ConflictException"></exception>
-        /// <exception cref="ForbidException"></exception>
+        /// <exception cref="ForbiddenException"></exception>
         public async Task<bool> DeleteByPrefixAndSuffixAsync(string prefix, string suffix)
         {
             using var db = new LiteDatabase(_connectionString);
@@ -126,7 +126,7 @@ namespace Vaelastrasz.Server.Services
             var user = users.FindById(doi.Single().User.Id) ?? throw new NotFoundException($"The user of doi (prefix:{prefix}, suffix: {suffix}) does not exist.");
 
             if (!user.Account.Prefix.Equals(prefix, StringComparison.OrdinalIgnoreCase))
-                throw new ForbidException($"The doi (prefix:{prefix}) is invalid.");
+                throw new ForbiddenException($"The doi (prefix:{prefix}) is invalid.");
 
             return await Task.FromResult(dois.Delete(doi.Single().Id));
         }
