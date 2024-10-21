@@ -9,6 +9,7 @@ using Vaelastrasz.Library.Configurations;
 using Vaelastrasz.Library.Entities;
 using Vaelastrasz.Library.Extensions;
 using Vaelastrasz.Library.Models;
+using Vaelastrasz.Library.Settings;
 
 namespace Vaelastrasz.Library.Services
 {
@@ -26,6 +27,9 @@ namespace Vaelastrasz.Library.Services
 
             if (_config.Username != null && _config.Password != null)
                 _client.DefaultRequestHeaders.Authorization = _config.GetBasicAuthenticationHeaderValue();
+
+            if (_config.IgnoreNull)
+                JsonConvert.DefaultSettings = () => VaelastraszJsonSerializerSettings.Settings;
         }
 
         public async Task<ApiResponse<ReadDOIModel>> CreateAsync(CreateDOIModel model)

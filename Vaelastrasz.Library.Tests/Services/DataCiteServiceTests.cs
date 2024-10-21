@@ -16,7 +16,8 @@ namespace Vaelastrasz.Library.Tests.Services
         [Test]
         public async Task Test1()
         {
-            var config = new Configuration("Test_DOIProxy_User", "s~c9<evQ#%^h4Uyb", "https://doi-proxy.bgc-jena.mpg.de");
+            //var config = new Configuration("Test_DOIProxy_User", "s~c9<evQ#%^h4Uyb", "https://taerar.infinite-trajectory.de", true);
+            var config = new Configuration("sventhiel", "sventhiel", "https://taerar.infinite-trajectory.de", true);
 
             var dataCiteService = new DataCiteService(config);
 
@@ -28,7 +29,7 @@ namespace Vaelastrasz.Library.Tests.Services
         {
             try
             {
-                var config = new Configuration("sventhiel", "sventhiel", "https://taerar.infinite-trajectory.de");
+                var config = new Configuration("sventhiel", "sventhiel", "https://taerar.infinite-trajectory.de", true);
 
                 string text = File.ReadAllText(@"C:/Projects/github.com/sventhiel/Vaelastrasz/Vaelastrasz.Server/Examples/doi_002.json");
                 var data = JsonConvert.DeserializeObject<CreateDataCiteModel>(text);
@@ -61,7 +62,7 @@ namespace Vaelastrasz.Library.Tests.Services
             model.SetPublisher("test", "resd", "sdfsdf", "sdfsdf", "English");
             model.SetUrl("https://google.de");
 
-            var config = new Configuration("Test_DOIProxy_User", "s~c9<evQ#%^h4Uyb", "https://taerar.infinite-trajectory.de");
+            var config = new Configuration("Test_DOIProxy_User", "s~c9<evQ#%^h4Uyb", "https://taerar.infinite-trajectory.de", true);
             var dataCiteService = new DataCiteService(config);
 
             var response = await dataCiteService.CreateAsync(model);
@@ -70,7 +71,7 @@ namespace Vaelastrasz.Library.Tests.Services
         [Test]
         public async Task Test4()
         {
-            var config = new Configuration("sventhiel", "proq3dm6", "http://localhost:5041");
+            var config = new Configuration("sventhiel", "proq3dm6", "http://localhost:5041", true);
             var dataCiteService = new DataCiteService(config);
             var doiService = new DOIService(config);
 

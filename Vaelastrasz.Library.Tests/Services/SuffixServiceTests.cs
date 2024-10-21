@@ -20,7 +20,7 @@ namespace Vaelastrasz.Library.Tests.Services
         [Test]
         public async Task Test2()
         {
-            var config = new Configuration("sventhiel", "sventhiel", "https://taerar.infinite-trajectory.de");
+            var config = new Configuration("sventhiel", "sventhiel", "https://taerar.infinite-trajectory.de", true);
 
             string text = File.ReadAllText(@"C:/Projects/github.com/sventhiel/Vaelastrasz/Vaelastrasz.Server/Examples/doi_002.json");
             var data = JsonConvert.DeserializeObject<CreateDataCiteModel>(text);
