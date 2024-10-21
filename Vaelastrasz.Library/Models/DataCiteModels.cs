@@ -38,6 +38,7 @@ namespace Vaelastrasz.Library.Models
         public List<DataCiteContributor> Contributors { get; set; }
 
         // 2 - https://datacite-metadata-schema.readthedocs.io/en/4.5/properties/creator/
+        [Required]
         [Cardinality(Minimum = 1)]
         [JsonProperty("creators")]
         public List<DataCiteCreator> Creators { get; set; }
@@ -107,6 +108,7 @@ namespace Vaelastrasz.Library.Models
         public List<DataCiteSubject> Subjects { get; set; }
 
         // 3 - https://datacite-metadata-schema.readthedocs.io/en/4.5/properties/title/
+        [Required]
         [Cardinality(Minimum = 1)]
         [JsonProperty("titles")]
         public List<DataCiteTitle> Titles { get; set; }
