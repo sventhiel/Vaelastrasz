@@ -172,11 +172,11 @@ namespace Vaelastrasz.Server.Controllers
             if (user.Account == null)
                 throw new NotFoundException($"The account of user (id: {user.Id}) does not exist.");
 
-            //using var doiService = new DOIService(_connectionString);
-            //var doi = await doiService.FindByPrefixAndSuffixAsync(prefix, suffix);
+            using var doiService = new DOIService(_connectionString);
+            var doi = await doiService.FindByPrefixAndSuffixAsync(prefix, suffix);
 
-            //if (doi.User.Id != user.Id)
-            //    throw new UnauthorizedException($"The user (id: {user.Id}) is not allowed to perform the action.");
+            if (doi.User.Id != user.Id)
+                throw new UnauthorizedException($"The user (id: {user.Id}) is not allowed to perform the action.");
 
             var client = new HttpClient();
 
