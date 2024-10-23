@@ -1,0 +1,28 @@
+{
+  "data": {
+    "type": "dois",
+    "attributes": {
+      "event": "hide",
+      "doi": "10.25829/45b58z43",
+      "creators": [
+        {
+          "name": "DataCite Metadata Working Group"
+        }
+      ],
+      "titles": [
+        {
+          "title": "DataCite Metadata Schema Documentation for the Publication and Citation of Research Data v4.0"
+        }
+      ],
+      "publisher": {
+        "name": "string"
+      },
+      "publicationYear": 2016,
+      "types": {
+        "resourceTypeGeneral": "Datasets"
+      },
+      "url": "https://schema.datacite.org/meta/kernel-4.0/index.html",
+      "schemaVersion": "http://datacite.org/schema/kernel-4"
+    }
+  }
+}
