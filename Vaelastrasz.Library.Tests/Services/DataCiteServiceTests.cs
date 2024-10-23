@@ -56,13 +56,15 @@ namespace Vaelastrasz.Library.Tests.Services
             model.SetTypes(Types.DataCiteResourceTypeGeneral.Dataset, "", "", "", "", "");
             model.AddCreator("Sven Thiel", Types.DataCiteNameType.Personal);
             model.AddTitle("Test", "English", Types.DataCiteTitleType.Subtitle);
-            model.SetDoi("10.82558/atto.1.1.1");
+            model.SetDoi("10.25829/45b58z45");
             model.SetEvent(Types.DataCiteEventType.Hide);
             model.SetPublicationYear(2024);
             model.SetPublisher("test", "resd", "sdfsdf", "sdfsdf", "English");
             model.SetUrl("https://google.de");
 
-            var config = new Configuration("Test_DOIProxy_User", "s~c9<evQ#%^h4Uyb", "https://taerar.infinite-trajectory.de", true);
+            //var config = new Configuration("Test_DOIProxy_User", "s~c9<evQ#%^h4Uyb", "https://taerar.infinite-trajectory.de", true);
+            var config = new Configuration("biodivbank2", "biodivbank2", "https://doi.bexis2.uni-jena.de", true);
+
             var dataCiteService = new DataCiteService(config);
 
             var response = await dataCiteService.CreateAsync(model);

@@ -22,7 +22,11 @@ namespace Vaelastrasz.Library.Models
                     break;
             }
 
-            return new ApiResponse<T> { IsSuccessful = false, ErrorMessage = errorMessage, Status = status };
+            // 
+            if (string.IsNullOrEmpty(errorMessage))
+                errorMessage = "Oops..., something went wrong. Please get in contact with the administrator/maintainer of this module.";
+
+                return new ApiResponse<T> { IsSuccessful = false, ErrorMessage = errorMessage, Status = status };
         }
 
         public static ApiResponse<T> Success(T data, HttpStatusCode status)

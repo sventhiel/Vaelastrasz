@@ -11,6 +11,7 @@
   <ItemGroup>
     <Content Remove="Examples\doi_001.json" />
     <Content Remove="Examples\doi_002.json" />
+    <Content Remove="Examples\doi_003.json" />
     <Content Remove="wwwroot\css\custom-swagger-ui - Copy.css" />
     <Content Remove="wwwroot\css\swagger-ui\theme-feeling-blue.css" />
     <Content Remove="wwwroot\css\swagger-ui\theme-flattop.css" />
@@ -38,6 +39,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Examples\doi_003.json" />
     <None Include="Examples\doi_002.json" />
     <None Include="Examples\doi_001.json" />
     <None Include="wwwroot\css\swagger-ui\theme-outline.css">
