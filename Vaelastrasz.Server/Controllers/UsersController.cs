@@ -1,6 +1,7 @@
 ﻿using LiteDB;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using Vaelastrasz.Server.Configurations;
 using Vaelastrasz.Server.Models;
 using Vaelastrasz.Server.Services;
@@ -49,6 +50,7 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         [HttpPost("users")]
+        [SwaggerResponse(201, "Resource created successfully", typeof(ReadUserModel))]
         public async Task<IActionResult> PostAsync(CreateUserModel model)
         {
             using var userService = new UserService(_connectionString);

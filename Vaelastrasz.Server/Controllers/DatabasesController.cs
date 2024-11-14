@@ -1,8 +1,10 @@
 ﻿using LiteDB;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using Vaelastrasz.Library.Exceptions;
 using Vaelastrasz.Library.Extensions;
+using Vaelastrasz.Server.Models;
 
 namespace Vaelastrasz.Server.Controllers
 {
@@ -40,6 +42,7 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         [HttpPost("databases")]
+        [SwaggerResponse(201, "Resource created successfully")]
         public async Task<IActionResult> PostAsync(IFormFile file)
         {
             if (file == null)
@@ -68,7 +71,7 @@ namespace Vaelastrasz.Server.Controllers
                 await file.CopyToAsync(stream);
             }
 
-            return Ok();
+            return Created();
         }
     }
 }

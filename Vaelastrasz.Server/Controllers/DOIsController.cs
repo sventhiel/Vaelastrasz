@@ -1,6 +1,7 @@
 ﻿using LiteDB;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using Vaelastrasz.Library.Exceptions;
 using Vaelastrasz.Library.Models;
 using Vaelastrasz.Server.Configurations;
@@ -123,6 +124,7 @@ namespace Vaelastrasz.Server.Controllers
         /// <exception cref="NotFoundException"></exception>
         /// <exception cref="ForbiddenException"></exception>
         [HttpPost("dois")]
+        [SwaggerResponse(201, "Resource created successfully", typeof(ReadDOIModel))]
         public async Task<IActionResult> Post(CreateDOIModel model)
         {
             using var userService = new UserService(_connectionString);

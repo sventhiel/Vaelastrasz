@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
@@ -11,6 +12,7 @@ using Vaelastrasz.Library.Models;
 using Vaelastrasz.Server.Attributes;
 using Vaelastrasz.Server.Configurations;
 using Vaelastrasz.Server.Helpers;
+using Vaelastrasz.Server.Models;
 using Vaelastrasz.Server.Services;
 
 namespace Vaelastrasz.Server.Controllers
@@ -228,6 +230,7 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         [HttpPost("datacite")]
+        [SwaggerResponse(201, "Resource created successfully", typeof(ReadDataCiteModel))]
         public async Task<IActionResult> PostAsync(CreateDataCiteModel model)
         {
             using var doiService = new DOIService(_connectionString);

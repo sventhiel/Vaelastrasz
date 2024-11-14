@@ -1,6 +1,7 @@
 ﻿using LiteDB;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using Vaelastrasz.Library.Exceptions;
 using Vaelastrasz.Server.Configurations;
 using Vaelastrasz.Server.Models;
@@ -64,6 +65,7 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         [HttpPost("placeholders")]
+        [SwaggerResponse(201, "Resource created successfully", typeof(ReadPlaceholderModel))]
         public async Task<IActionResult> PostAsync(CreatePlaceholderModel model)
         {
             using var userService = new UserService(_connectionString);

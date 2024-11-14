@@ -1,10 +1,12 @@
 ﻿using LiteDB;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using System.Data;
 using Vaelastrasz.Library.Exceptions;
 using Vaelastrasz.Library.Models;
 using Vaelastrasz.Server.Helpers;
+using Vaelastrasz.Server.Models;
 using Vaelastrasz.Server.Services;
 
 namespace Vaelastrasz.Server.Controllers
