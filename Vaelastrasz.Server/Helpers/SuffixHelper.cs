@@ -1,6 +1,5 @@
 ﻿using Fare;
 using System.Text.RegularExpressions;
-using Vaelastrasz.Library.Exceptions;
 using Vaelastrasz.Library.Extensions;
 
 namespace Vaelastrasz.Server.Helpers

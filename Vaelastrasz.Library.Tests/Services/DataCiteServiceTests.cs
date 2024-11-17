@@ -40,7 +40,7 @@ namespace Vaelastrasz.Library.Tests.Services
                 var y = await dataCiteService.GetCitationStyleByDoiAsync("10.23720%2Fapitest005", Types.DataCiteCitationStyleType.APA);
                 var z = await dataCiteService.GetMetadataFormatByDoiAsync("10.23720%2Fapitest005", Types.DataCiteMetadataFormatType.BibTeX);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine("ERROR", ex.ToString());
             }

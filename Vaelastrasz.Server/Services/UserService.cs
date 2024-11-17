@@ -1,8 +1,6 @@
 ﻿using LiteDB;
-using System.Text.RegularExpressions;
 using Vaelastrasz.Library.Entities;
 using Vaelastrasz.Library.Exceptions;
-using Vaelastrasz.Library.Extensions;
 using Vaelastrasz.Server.Utilities;
 
 namespace Vaelastrasz.Server.Services

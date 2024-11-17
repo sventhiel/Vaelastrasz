@@ -12,7 +12,6 @@ using Vaelastrasz.Library.Models;
 using Vaelastrasz.Server.Attributes;
 using Vaelastrasz.Server.Configurations;
 using Vaelastrasz.Server.Helpers;
-using Vaelastrasz.Server.Models;
 using Vaelastrasz.Server.Services;
 
 namespace Vaelastrasz.Server.Controllers

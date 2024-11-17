@@ -22,11 +22,6 @@ namespace Vaelastrasz.Library.Extensions
             return text;
         }
 
-        public static string Replace(this string text, Dictionary<string, string> replacements)
-        {
-            return Regex.Replace(text, "(" + String.Join("|", replacements.Keys) + ")", delegate (Match m) { return replacements[m.Value]; });
-        }
-
         public static bool IsValidRegex(this string text)
         {
             bool isValid = true;
@@ -50,6 +45,11 @@ namespace Vaelastrasz.Library.Extensions
             }
 
             return (isValid);
+        }
+
+        public static string Replace(this string text, Dictionary<string, string> replacements)
+        {
+            return Regex.Replace(text, "(" + String.Join("|", replacements.Keys) + ")", delegate (Match m) { return replacements[m.Value]; });
         }
     }
 }

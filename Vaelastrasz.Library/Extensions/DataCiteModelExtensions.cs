@@ -349,5 +349,35 @@ namespace Vaelastrasz.Library.Extensions
         }
 
         #endregion ReadDataCiteModel
+
+        #region UpdateDataCiteModel
+
+        public static UpdateDataCiteModel SetUrl(this UpdateDataCiteModel model, string url)
+        {
+            try
+            {
+                model.Data.Attributes.URL = url;
+                return model;
+            }
+            catch (Exception)
+            {
+                return model;
+            }
+        }
+
+        public static UpdateDataCiteModel SetVersion(this UpdateDataCiteModel model, string version)
+        {
+            try
+            {
+                model.Data.Attributes.Version = version;
+                return model;
+            }
+            catch (Exception)
+            {
+                return model;
+            }
+        }
+
+        #endregion UpdateDataCiteModel
     }
 }

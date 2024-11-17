@@ -414,8 +414,9 @@ namespace Vaelastrasz.Library.Models
         [JsonProperty("attributes")]
         public UpdateDataCiteAttributesModel Attributes { get; set; }
 
+        [Required]
         [JsonProperty("type")]
-        public DataCiteType? Type { get; set; }
+        public DataCiteType Type { get; set; }
     }
 
     public class UpdateDataCiteModel

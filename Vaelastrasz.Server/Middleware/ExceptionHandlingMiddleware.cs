@@ -1,7 +1,5 @@
 ﻿using Exceptionless;
-using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
-using System.Net;
 using Vaelastrasz.Library.Exceptions;
 
 namespace Vaelastrasz.Server.Middleware

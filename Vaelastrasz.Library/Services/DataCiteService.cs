@@ -1,14 +1,10 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
 using System.Threading.Tasks;
 using Vaelastrasz.Library.Configurations;
-using Vaelastrasz.Library.Entities;
 using Vaelastrasz.Library.Extensions;
 using Vaelastrasz.Library.Models;
 using Vaelastrasz.Library.Settings;
@@ -31,7 +27,7 @@ namespace Vaelastrasz.Library.Services
             if (_config.Username != null && _config.Password != null)
                 _client.DefaultRequestHeaders.Authorization = _config.GetBasicAuthenticationHeaderValue();
 
-            if(_config.IgnoreNull)
+            if (_config.IgnoreNull)
                 JsonConvert.DefaultSettings = () => VaelastraszJsonSerializerSettings.Settings;
         }
 

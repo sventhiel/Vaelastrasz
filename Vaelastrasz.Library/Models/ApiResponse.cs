@@ -11,8 +11,8 @@ namespace Vaelastrasz.Library.Models
 
         public static ApiResponse<T> Failure(string errorMessage, HttpStatusCode status)
         {
-            // handling of specific status codes 
-            switch(status)
+            // handling of specific status codes
+            switch (status)
             {
                 case HttpStatusCode.BadGateway:
                     errorMessage = "Equivalent to HTTP status 502. System.Net.HttpStatusCode.BadGateway indicates that an intermediate proxy server received a bad response from another proxy or the origin server.";
@@ -22,11 +22,11 @@ namespace Vaelastrasz.Library.Models
                     break;
             }
 
-            // 
+            //
             if (string.IsNullOrEmpty(errorMessage))
                 errorMessage = "Oops..., something went wrong. Please get in contact with the administrator/maintainer of this module.";
 
-                return new ApiResponse<T> { IsSuccessful = false, ErrorMessage = errorMessage, Status = status };
+            return new ApiResponse<T> { IsSuccessful = false, ErrorMessage = errorMessage, Status = status };
         }
 
         public static ApiResponse<T> Success(T data, HttpStatusCode status)
