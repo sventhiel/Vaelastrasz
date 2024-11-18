@@ -9,7 +9,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vaelastrasz.Library", "Vael
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vaelastrasz.Library.Tests", "Vaelastrasz.Library.Tests\Vaelastrasz.Library.Tests.csproj", "{9DE79297-FEEE-4BBD-A329-35103B9BAF78}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vaelastrasz.Server.Tests", "Vaelastrasz.Server.Tests\Vaelastrasz.Server.Tests.csproj", "{B310FD33-F8C3-4023-89F5-540EC42C168D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vaelastrasz.Server.Tests", "Vaelastrasz.Server.Tests\Vaelastrasz.Server.Tests.csproj", "{B310FD33-F8C3-4023-89F5-540EC42C168D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DFE14F22-8883-4F43-AA69-A9ED8C06F166}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
