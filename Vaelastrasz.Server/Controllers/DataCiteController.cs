@@ -186,7 +186,10 @@ namespace Vaelastrasz.Server.Controllers
             if (user.Account.Name != null && user.Account.Password != null)
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes($"{user.Account.Name}:{user.Account.Password}")));
 
-            var response = await client.GetAsync($"dois/{prefix}/{suffix}?style={Request.Headers["X-Citation-Style"].ToString()}");
+            var request = new HttpRequestMessage(HttpMethod.Get, $"dois/{prefix}/{suffix}?style={Request.Headers["X-Citation-Style"].ToString()}");
+            request.Headers.Add("Accept", "text/x-bibliography");
+
+            var response = await client.SendAsync(request);
 
             if (!response.IsSuccessStatusCode)
                 return StatusCode((int)response.StatusCode, await response.Content.ReadAsStringAsync());

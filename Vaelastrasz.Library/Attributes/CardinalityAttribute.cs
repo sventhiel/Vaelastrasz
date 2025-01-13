@@ -17,8 +17,11 @@ namespace Vaelastrasz.Library.Attributes
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
+            if (value == null)
+                return new ValidationResult("The property is null.");
+
             if (value.GetType().GetGenericTypeDefinition() != typeof(List<>))
-                return new ValidationResult("The propery is not a list.");
+                return new ValidationResult("The property is not a list.");
 
             var collection = (IList)value;
 
