@@ -1,0 +1,92 @@
+{
+  "name": "datacite",
+  "description": "The concept for DIO management at DataCite.",
+  "url": "https://schema.datacite.org/meta/kernel-4.5/",
+  "items": [
+    {
+      "name": "Type",
+      "description": "",
+      "url": "",
+      "isOptional": false,
+      "isComplex": false,
+      "xPath": "data/type"
+    },
+    {
+      "name": "help",
+      "description": "Shows all commands",
+      "url": "https://google.de"
+    },
+    {
+      "name": "say",
+      "description": "Says something",
+      "url": "https://google.de",
+      "children": [
+        {
+          "name": "embed",
+          "description": "Says something in an embed",
+          "url": "https://google.de"
+        }
+      ]
+    },
+    {
+      "name": "kick",
+      "description": "Kicks a user",
+      "url": "https://google.de"
+    },
+    {
+      "name": "ban",
+      "description": "Bans a user",
+      "url": "https://google.de"
+    },
+    {
+      "name": "unban",
+      "description": "Unbans a user",
+      "url": "https://google.de"
+    },
+    {
+      "name": "mute",
+      "description": "Mutes a user",
+      "url": "https://google.de"
+    },
+    {
+      "name": "unmute",
+      "description": "Unmutes a user",
+      "url": "https://google.de"
+    },
+    {
+      "name": "clear",
+      "description": "Clears messages",
+      "url": "https://google.de"
+    },
+    {
+      "name": "avatar",
+      "description": "Shows the avatar of a user",
+      "url": "https://google.de"
+    },
+    {
+      "name": "serverinfo",
+      "description": "Shows information about the server",
+      "url": "https://google.de"
+    },
+    {
+      "name": "userinfo",
+      "description": "Shows information about a user",
+      "url": "https://google.de"
+    },
+    {
+      "name": "botinfo",
+      "description": "Shows information about the bot",
+      "url": "https://google.de"
+    },
+    {
+      "name": "invite",
+      "description": "Sends an invite link",
+      "url": "https://google.de"
+    },
+    {
+      "name": "support",
+      "description": "Sends the support server",
+      "url": "https://google.de"
+    }
+  ]
+}

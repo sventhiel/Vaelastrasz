@@ -6,7 +6,7 @@ namespace Vaelastrasz.Server.Models
 {
     public class CreateUserModel
     {
-        [Required, Min(1)]
+        [Required]
         public long AccountId { get; set; }
 
         public bool IsActive { get; set; }

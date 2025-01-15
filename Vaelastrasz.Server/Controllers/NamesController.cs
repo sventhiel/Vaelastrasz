@@ -16,7 +16,15 @@ namespace Vaelastrasz.Server.Controllers
         [HttpPost("names")]
         public async Task<IActionResult> PostAsync([FromBody] string name)
         {
-            return Ok(new HumanName(name));
+            if (string.IsNullOrEmpty(name))
+                return BadRequest();
+
+            var humanName = new HumanName(name);
+
+            if (humanName.IsUnparsable)
+                return BadRequest();
+
+            return Ok(humanName);
         }
     }
 }
