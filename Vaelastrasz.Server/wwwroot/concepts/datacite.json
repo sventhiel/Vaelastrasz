@@ -12,81 +12,172 @@
       "xPath": "data/type"
     },
     {
-      "name": "help",
-      "description": "Shows all commands",
-      "url": "https://google.de"
+      "name": "Event",
+      "description": "",
+      "url": "",
+      "isOptional": false,
+      "isComplex": false,
+      "xPath": "data/attributes/event"
     },
     {
-      "name": "say",
-      "description": "Says something",
-      "url": "https://google.de",
+      "name": "Creators",
+      "description": "",
+      "url": "https://datacite-metadata-schema.readthedocs.io/en/4.5/properties/creator/#id1",
+      "isOptional": false,
+      "isComplex": true,
+      "xPath": "data/attributes/creators",
       "children": [
         {
-          "name": "embed",
-          "description": "Says something in an embed",
-          "url": "https://google.de"
+          "name": "Name",
+          "description": "",
+          "url": "",
+          "isOptional": false,
+          "isComplex": false,
+          "xPath": "data/attributes/creators/name"
+        },
+        {
+          "name": "GivenName",
+          "description": "",
+          "url": "",
+          "isOptional": false,
+          "isComplex": false,
+          "xPath": "data/attributes/creators/givenName"
+        },
+        {
+          "name": "FamilyName",
+          "description": "",
+          "url": "",
+          "isOptional": false,
+          "isComplex": false,
+          "xPath": "data/attributes/creators/familyName"
+        },
+        {
+          "name": "NameType",
+          "description": "",
+          "url": "",
+          "isOptional": false,
+          "isComplex": false,
+          "xPath": "data/attributes/creators/nameType"
+        },
+        {
+          "name": "NameIdentifiers",
+          "description": "",
+          "url": "",
+          "isOptional": true,
+          "isComplex": true,
+          "xPath": "data/attributes/creators/nameIdentifiers",
+          "children": [
+            {
+              "name": "NameIdentifier",
+              "description": "",
+              "url": "",
+              "isOptional": true,
+              "isComplex": false,
+              "xPath": "data/attributes/creators/nameIdentifier"
+            },
+            {
+              "name": "NameIdentifierScheme",
+              "description": "",
+              "url": "",
+              "isOptional": true,
+              "isComplex": false,
+              "xPath": "data/attributes/creators/nameIdentifierScheme"
+            },
+            {
+              "name": "SchemeUri",
+              "description": "",
+              "url": "",
+              "isOptional": true,
+              "isComplex": false,
+              "xPath": "data/attributes/creators/schemeUri"
+            }
+          ]
+        },
+        {
+          "name": "Affiliation",
+          "description": "",
+          "url": "",
+          "isOptional": true,
+          "isComplex": true,
+          "xPath": "data/attributes/creators/affiliation",
+          "children": [
+            {
+              "name": "AffiliationIdentifier",
+              "description": "",
+              "url": "",
+              "isOptional": true,
+              "isComplex": false,
+              "xPath": "data/attributes/creators/affiliation/affiliationIdentifier"
+            },
+            {
+              "name": "AffiliationIdentifierScheme",
+              "description": "",
+              "url": "",
+              "isOptional": true,
+              "isComplex": false,
+              "xPath": "data/attributes/creators/affiliation/affiliationIdentifierScheme"
+            },
+            {
+              "name": "Name",
+              "description": "",
+              "url": "",
+              "isOptional": true,
+              "isComplex": false,
+              "xPath": "data/attributes/creators/affiliation/name"
+            },
+            {
+              "name": "SchemeUri",
+              "description": "",
+              "url": "",
+              "isOptional": true,
+              "isComplex": false,
+              "xPath": "data/attributes/creators/affiliation/schemeUri"
+            }
+          ]
+        },
+        {
+          "name": "Language",
+          "description": "",
+          "url": "",
+          "isOptional": true,
+          "isComplex": false,
+          "xPath": "data/attributes/creators/lang"
         }
       ]
     },
     {
-      "name": "kick",
-      "description": "Kicks a user",
-      "url": "https://google.de"
-    },
-    {
-      "name": "ban",
-      "description": "Bans a user",
-      "url": "https://google.de"
-    },
-    {
-      "name": "unban",
-      "description": "Unbans a user",
-      "url": "https://google.de"
-    },
-    {
-      "name": "mute",
-      "description": "Mutes a user",
-      "url": "https://google.de"
-    },
-    {
-      "name": "unmute",
-      "description": "Unmutes a user",
-      "url": "https://google.de"
-    },
-    {
-      "name": "clear",
-      "description": "Clears messages",
-      "url": "https://google.de"
-    },
-    {
-      "name": "avatar",
-      "description": "Shows the avatar of a user",
-      "url": "https://google.de"
-    },
-    {
-      "name": "serverinfo",
-      "description": "Shows information about the server",
-      "url": "https://google.de"
-    },
-    {
-      "name": "userinfo",
-      "description": "Shows information about a user",
-      "url": "https://google.de"
-    },
-    {
-      "name": "botinfo",
-      "description": "Shows information about the bot",
-      "url": "https://google.de"
-    },
-    {
-      "name": "invite",
-      "description": "Sends an invite link",
-      "url": "https://google.de"
-    },
-    {
-      "name": "support",
-      "description": "Sends the support server",
-      "url": "https://google.de"
+      "name": "Titles",
+      "description": "",
+      "url": "https://datacite-metadata-schema.readthedocs.io/en/4.5/properties/title/#id1",
+      "isOptional": false,
+      "isComplex": true,
+      "xPath": "data/attributes/titles",
+      "children": [
+        {
+          "name": "Title",
+          "description": "",
+          "url": "",
+          "isOptional": false,
+          "isComplex": false,
+          "xPath": "data/attributes/titles/title"
+        },
+        {
+          "name": "Language",
+          "description": "",
+          "url": "",
+          "isOptional": true,
+          "isComplex": false,
+          "xPath": "data/attributes/titles/lang"
+        },
+        {
+          "name": "TitleType",
+          "description": "",
+          "url": "",
+          "isOptional": true,
+          "isComplex": false,
+          "xPath": "data/attributes/titles/titletype"
+        }
+      ]
     }
   ]
 }
