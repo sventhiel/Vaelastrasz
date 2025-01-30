@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
 using System.Runtime.Serialization;
 
 namespace Vaelastrasz.Library.Types
@@ -18,19 +19,19 @@ namespace Vaelastrasz.Library.Types
         APA = 1,
 
         [EnumMember(Value = "harvard-cite-them-right")]
-        Harvard = 2,
+        Harvard,
 
         [EnumMember(Value = "modern-language-association")]
-        MLA = 3,
+        MLA,
 
         [EnumMember(Value = "vancouver")]
-        Vancouver = 4,
+        Vancouver,
 
         [EnumMember(Value = "chicago-fullnote-bibliography")]
-        Chicago = 5,
+        Chicago,
 
         [EnumMember(Value = "ieee")]
-        IEEE = 6,
+        IEEE,
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
@@ -40,64 +41,67 @@ namespace Vaelastrasz.Library.Types
         ContactPerson = 1,
 
         [EnumMember(Value = "DataCollector")]
-        DataCollector = 2,
+        DataCollector,
 
         [EnumMember(Value = "DataCurator")]
-        DataCurator = 3,
+        DataCurator,
 
         [EnumMember(Value = "DataManager")]
-        DataManager = 4,
+        DataManager,
 
         [EnumMember(Value = "Distributor")]
-        Distributor = 5,
+        Distributor,
 
         [EnumMember(Value = "Editor")]
-        Editor = 6,
+        Editor,
 
         [EnumMember(Value = "HostingInstitution")]
-        HostingInstitution = 7,
+        HostingInstitution,
 
         [EnumMember(Value = "Producer")]
-        Producer = 8,
+        Producer,
 
         [EnumMember(Value = "ProjectLeader")]
-        ProjectLeader = 9,
+        ProjectLeader,
 
         [EnumMember(Value = "ProjectManager")]
-        ProjectManager = 10,
+        ProjectManager,
 
         [EnumMember(Value = "ProjectMember")]
-        ProjectMember = 11,
+        ProjectMember,
 
         [EnumMember(Value = "RegistrationAgency")]
-        RegistrationAgency = 12,
+        RegistrationAgency,
 
         [EnumMember(Value = "RegistrationAuthority")]
-        RegistrationAuthority = 13,
+        RegistrationAuthority,
 
         [EnumMember(Value = "RelatedPerson")]
-        RelatedPerson = 14,
+        RelatedPerson,
 
         [EnumMember(Value = "Researcher")]
-        Researcher = 15,
+        Researcher,
 
         [EnumMember(Value = "ResearchGroup")]
-        ResearchGroup = 16,
+        ResearchGroup,
 
         [EnumMember(Value = "RightsHolder")]
-        RightsHolder = 17,
+        RightsHolder,
 
         [EnumMember(Value = "Sponsor")]
-        Sponsor = 18,
+        Sponsor,
 
         [EnumMember(Value = "Supervisor")]
-        Supervisor = 19,
+        Supervisor,
+
+        [EnumMember(Value = "Translator")]
+        Translator,
 
         [EnumMember(Value = "WorkPackageLeader")]
-        WorkPackageLeader = 20,
+        WorkPackageLeader,
 
         [EnumMember(Value = "Other")]
-        Other = 21,
+        Other,
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
@@ -107,34 +111,37 @@ namespace Vaelastrasz.Library.Types
         Accepted = 1,
 
         [EnumMember(Value = "Available")]
-        Available = 2,
+        Available,
 
         [EnumMember(Value = "Copyrighted")]
-        Copyrighted = 3,
+        Copyrighted,
 
         [EnumMember(Value = "Collected")]
-        Collected = 4,
+        Collected,
+
+        [EnumMember(Value = "Coverage")]
+        Coverage,
 
         [EnumMember(Value = "Created")]
-        Created = 5,
+        Created,
 
         [EnumMember(Value = "Issued")]
-        Issued = 6,
+        Issued,
 
         [EnumMember(Value = "Submitted")]
-        Submitted = 7,
+        Submitted,
 
         [EnumMember(Value = "Updated")]
-        Updated = 8,
+        Updated,
 
         [EnumMember(Value = "Valid")]
-        Valid = 9,
+        Valid,
 
         [EnumMember(Value = "Withdrawn")]
-        Withdrawn = 10,
+        Withdrawn,
 
         [EnumMember(Value = "Other")]
-        Other = 11
+        Other 
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
@@ -144,19 +151,19 @@ namespace Vaelastrasz.Library.Types
         Abstract = 1,
 
         [EnumMember(Value = "Methods")]
-        Methods = 2,
+        Methods,
 
         [EnumMember(Value = "SeriesInformation")]
-        SeriesInformation = 3,
+        SeriesInformation,
 
         [EnumMember(Value = "TableOfContents")]
-        TableOfContents = 4,
+        TableOfContents,
 
         [EnumMember(Value = "TechnicalInfo")]
-        TechnicalInfo = 5,
+        TechnicalInfo,
 
         [EnumMember(Value = "Other")]
-        Other = 6
+        Other 
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
@@ -166,10 +173,10 @@ namespace Vaelastrasz.Library.Types
         Publish = 1,
 
         [EnumMember(Value = "register")]
-        Register = 2,
+        Register,
 
         [EnumMember(Value = "hide")]
-        Hide = 3
+        Hide 
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
@@ -179,16 +186,16 @@ namespace Vaelastrasz.Library.Types
         CrossrefFunderID = 1,
 
         [EnumMember(Value = "GRID")]
-        GRID = 2,
+        GRID,
 
         [EnumMember(Value = "ISNI")]
-        ISNI = 3,
+        ISNI,
 
         [EnumMember(Value = "ROR")]
-        ROR = 4,
+        ROR,
 
         [EnumMember(Value = "Other")]
-        Other = 5
+        Other 
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
@@ -205,25 +212,25 @@ namespace Vaelastrasz.Library.Types
         DataCite_XML = 1,
 
         [EnumMember(Value = "application/vnd.datacite.datacite+json")]
-        DataCite_JSON = 2,
+        DataCite_JSON,
 
         [EnumMember(Value = "application/vnd.schemaorg.ld+json")]
-        Schemaorg_JSONLD = 3,
+        Schemaorg_JSONLD,
 
         [EnumMember(Value = "application/vnd.citationstyles.csl+json")]
-        Citeproc_JSON = 4,
+        Citeproc_JSON,
 
         [EnumMember(Value = "application/vnd.codemeta.ld+json")]
-        Codemeta_JSON = 5,
+        Codemeta_JSON,
 
         [EnumMember(Value = "application/x-bibtex")]
-        BibTeX = 6,
+        BibTeX,
 
         [EnumMember(Value = "application/x-research-info-systems")]
-        RIS = 7,
+        RIS,
 
         [EnumMember(Value = "application/vnd.jats+xml")]
-        JATS_XML = 8
+        JATS_XML 
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
@@ -233,7 +240,7 @@ namespace Vaelastrasz.Library.Types
         Personal = 1,
 
         [EnumMember(Value = "Organizational")]
-        Organizational = 2
+        Organizational
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
@@ -243,58 +250,64 @@ namespace Vaelastrasz.Library.Types
         ARK = 1,
 
         [EnumMember(Value = "arXiv")]
-        arXiv = 2,
+        arXiv,
 
         [EnumMember(Value = "bibcode")]
-        bibcode = 3,
+        bibcode,
+
+        [EnumMember(Value = "CSTR")]
+        CSTR,
 
         [EnumMember(Value = "DOI")]
-        DOI = 4,
+        DOI,
 
         [EnumMember(Value = "EAN13")]
-        EAN13 = 5,
+        EAN13,
 
         [EnumMember(Value = "EISSN")]
-        EISSN = 6,
+        EISSN,
 
         [EnumMember(Value = "Handle")]
-        Handle = 7,
+        Handle,
 
         [EnumMember(Value = "IGSN")]
-        IGSN = 8,
+        IGSN,
 
         [EnumMember(Value = "ISBN")]
-        ISBN = 9,
+        ISBN,
 
         [EnumMember(Value = "ISSN")]
-        ISSN = 10,
+        ISSN,
 
         [EnumMember(Value = "ISTC")]
-        ISTC = 11,
+        ISTC,
 
         [EnumMember(Value = "LISSN")]
-        LISSN = 12,
+        LISSN,
 
         [EnumMember(Value = "LSID")]
-        LSID = 13,
+        LSID,
 
         [EnumMember(Value = "PMID")]
-        PMID = 14,
+        PMID,
 
         [EnumMember(Value = "PURL")]
-        PURL = 15,
+        PURL,
+
+        [EnumMember(Value = "RRID")]
+        RRID,
 
         [EnumMember(Value = "UPC")]
-        UPC = 16,
+        UPC,
 
         [EnumMember(Value = "URL")]
-        URL = 17,
+        URL,
 
         [EnumMember(Value = "URN")]
-        URN = 18,
+        URN,
 
         [EnumMember(Value = "w3id")]
-        w3id = 19
+        w3id
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
@@ -304,13 +317,13 @@ namespace Vaelastrasz.Library.Types
         Article = 1,
 
         [EnumMember(Value = "Chapter")]
-        Chapter = 2,
+        Chapter,
 
         [EnumMember(Value = "Report")]
-        Report = 3,
+        Report,
 
         [EnumMember(Value = "Other")]
-        Other = 4,
+        Other,
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
@@ -320,109 +333,115 @@ namespace Vaelastrasz.Library.Types
         IsCitedBy = 1,
 
         [EnumMember(Value = "Cites")]
-        Cites = 2,
+        Cites,
 
         [EnumMember(Value = "IsSupplementTo")]
-        IsSupplementTo = 3,
+        IsSupplementTo,
 
         [EnumMember(Value = "IsSupplementedBy")]
-        IsSupplementedBy = 4,
+        IsSupplementedBy,
 
         [EnumMember(Value = "IsContinuedBy")]
-        IsContinuedBy = 5,
+        IsContinuedBy,
 
         [EnumMember(Value = "Continues")]
-        Continues = 6,
+        Continues,
 
         [EnumMember(Value = "IsDescribedBy")]
-        IsDescribedBy = 7,
+        IsDescribedBy,
 
         [EnumMember(Value = "Describes")]
-        Describes = 8,
+        Describes,
 
         [EnumMember(Value = "HasMetadata")]
-        HasMetadata = 9,
+        HasMetadata,
 
         [EnumMember(Value = "IsMetadataFor")]
-        IsMetadataFor = 10,
+        IsMetadataFor,
 
         [EnumMember(Value = "HasVersion")]
-        HasVersion = 11,
+        HasVersion,
 
         [EnumMember(Value = "IsVersionOf")]
-        IsVersionOf = 12,
+        IsVersionOf,
 
         [EnumMember(Value = "IsNewVersionOf")]
-        IsNewVersionOf = 13,
+        IsNewVersionOf,
 
         [EnumMember(Value = "IsPreviousVersionOf")]
-        IsPreviousVersionOf = 14,
+        IsPreviousVersionOf,
 
         [EnumMember(Value = "IsPartOf")]
-        IsPartOf = 15,
+        IsPartOf,
 
         [EnumMember(Value = "HasPart")]
-        HasPart = 16,
+        HasPart,
 
         [EnumMember(Value = "IsPublishedIn")]
-        IsPublishedIn = 17,
+        IsPublishedIn,
 
         [EnumMember(Value = "IsReferencedBy")]
-        IsReferencedBy = 18,
+        IsReferencedBy,
 
         [EnumMember(Value = "References")]
-        References = 19,
+        References,
 
         [EnumMember(Value = "IsDocumentedBy")]
-        IsDocumentedBy = 20,
+        IsDocumentedBy,
 
         [EnumMember(Value = "Documents")]
-        Documents = 21,
+        Documents,
 
         [EnumMember(Value = "IsCompiledBy")]
-        IsCompiledBy = 22,
+        IsCompiledBy,
 
         [EnumMember(Value = "Compiles")]
-        Compiles = 23,
+        Compiles,
 
         [EnumMember(Value = "IsVariantFormOf")]
-        IsVariantFormOf = 24,
+        IsVariantFormOf,
 
         [EnumMember(Value = "IsOriginalFormOf")]
-        IsOriginalFormOf = 25,
+        IsOriginalFormOf,
 
         [EnumMember(Value = "IsIdenticalTo")]
-        IsIdenticalTo = 26,
+        IsIdenticalTo,
 
         [EnumMember(Value = "IsReviewedBy")]
-        IsReviewedBy = 27,
+        IsReviewedBy,
 
         [EnumMember(Value = "Reviews")]
-        Reviews = 28,
+        Reviews,
 
         [EnumMember(Value = "IsDerivedFrom")]
-        IsDerivedFrom = 29,
+        IsDerivedFrom,
 
         [EnumMember(Value = "IsSourceOf")]
-        IsSourceOf = 30,
+        IsSourceOf,
 
         [EnumMember(Value = "IsRequiredBy")]
-        IsRequiredBy = 31,
+        IsRequiredBy,
 
         [EnumMember(Value = "Requires")]
-        Requires = 32,
+        Requires,
 
         [EnumMember(Value = "IsObsoletedBy")]
-        IsObsoletedBy = 33,
+        IsObsoletedBy,
 
         [EnumMember(Value = "Obsoletes")]
-        Obsoletes = 34,
+        Obsoletes,
 
         [EnumMember(Value = "IsCollectedBy")]
-        IsCollectedBy = 35,
+        IsCollectedBy,
 
         [EnumMember(Value = "Collects")]
-        Collects = 36
+        Collects,
+
+        [EnumMember(Value = "IsTranslationOf")]
+        IsTranslationOf,
+                    
+        [EnumMember(Value = "HasTranslation")]
+        HasTranslation 
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
@@ -431,89 +450,95 @@ namespace Vaelastrasz.Library.Types
         [EnumMember(Value = "Audiovisual")]
         Audiovisual = 1,
 
+        [EnumMember(Value = "Award")]
+        Award,
+
         [EnumMember(Value = "Book")]
-        Book = 2,
+        Book,
 
         [EnumMember(Value = "BookChapter")]
-        BookChapter = 3,
+        BookChapter,
 
         [EnumMember(Value = "Collection")]
-        Collection = 4,
+        Collection,
 
         [EnumMember(Value = "ComputationalNotebook")]
-        ComputationalNotebook = 5,
+        ComputationalNotebook,
 
         [EnumMember(Value = "ConferencePaper")]
-        ConferencePaper = 6,
+        ConferencePaper,
 
         [EnumMember(Value = "ConferenceProceeding")]
-        ConferenceProceeding = 7,
+        ConferenceProceeding,
 
         [EnumMember(Value = "DataPaper")]
-        DataPaper = 8,
+        DataPaper,
 
         [EnumMember(Value = "Dataset")]
-        Dataset = 9,
+        Dataset,
 
         [EnumMember(Value = "Dissertation")]
-        Dissertation = 10,
+        Dissertation,
 
         [EnumMember(Value = "Event")]
-        Event = 11,
+        Event,
 
         [EnumMember(Value = "Image")]
-        Image = 12,
+        Image,
 
         [EnumMember(Value = "Instrument")]
-        Instrument = 13,
+        Instrument,
 
         [EnumMember(Value = "InteractiveResource")]
-        InteractiveResource = 14,
+        InteractiveResource,
 
         [EnumMember(Value = "JournalArticle")]
-        JournalArticle = 15,
+        JournalArticle,
 
         [EnumMember(Value = "Model")]
-        Model = 16,
+        Model,
 
         [EnumMember(Value = "OutputManagementPlan")]
-        OutputManagementPlan = 17,
+        OutputManagementPlan,
 
         [EnumMember(Value = "PeerReview")]
-        PeerReview = 18,
+        PeerReview,
 
         [EnumMember(Value = "PhysicalObject")]
-        PhysicalObject = 19,
+        PhysicalObject,
 
         [EnumMember(Value = "Preprint")]
-        Preprint = 20,
+        Preprint,
+
+        [EnumMember(Value = "Project")]
+        Project,
 
         [EnumMember(Value = "Report")]
-        Report = 21,
+        Report,
 
         [EnumMember(Value = "Service")]
-        Service = 22,
+        Service,
 
         [EnumMember(Value = "Software")]
-        Software = 23,
+        Software,
 
         [EnumMember(Value = "Sound")]
-        Sound = 24,
+        Sound,
 
         [EnumMember(Value = "Standard")]
-        Standard = 25,
+        Standard,
 
         [EnumMember(Value = "StudyRegistration")]
-        StudyRegistration = 26,
+        StudyRegistration,
 
         [EnumMember(Value = "Text")]
-        Text = 27,
+        Text,
 
         [EnumMember(Value = "Workflow")]
-        Workflow = 28,
+        Workflow,
 
         [EnumMember(Value = "Other")]
-        Other = 29
+        Other 
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
@@ -523,10 +548,10 @@ namespace Vaelastrasz.Library.Types
         Findable = 1,
 
         [EnumMember(Value = "registered")]
-        Registered = 2,
+        Registered,
 
         [EnumMember(Value = "draft")]
-        Draft = 3
+        Draft 
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
@@ -536,13 +561,13 @@ namespace Vaelastrasz.Library.Types
         AlternativeTitle = 1,
 
         [EnumMember(Value = "Subtitle")]
-        Subtitle = 2,
+        Subtitle,
 
         [EnumMember(Value = "TranslatedTitle")]
-        TranslatedTitle = 3,
+        TranslatedTitle,
 
         [EnumMember(Value = "Other")]
-        Other = 4
+        Other 
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
