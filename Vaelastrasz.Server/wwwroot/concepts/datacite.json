@@ -20,6 +20,30 @@
       "xPath": "data/attributes/event"
     },
     {
+      "name": "DOI",
+      "description": "",
+      "url": "",
+      "isOptional": true,
+      "isComplex": false,
+      "xPath": "data/attributes/doi"
+    },
+    {
+      "name": "Prefix",
+      "description": "",
+      "url": "",
+      "isOptional": true,
+      "isComplex": false,
+      "xPath": "data/attributes/prefix"
+    },
+    {
+      "name": "Suffix",
+      "description": "",
+      "url": "",
+      "isOptional": true,
+      "isComplex": false,
+      "xPath": "data/attributes/suffix"
+    },
+    {
       "name": "Creators",
       "description": "",
       "url": "https://datacite-metadata-schema.readthedocs.io/en/4.5/properties/creator/#id1",
