@@ -1,7 +1,7 @@
 {
   "name": "datacite",
-  "description": "The concept for DIO management at DataCite.",
-  "url": "https://schema.datacite.org/meta/kernel-4.5/",
+  "description": "The concept for DOI management at DataCite.",
+  "url": "https://schema.datacite.org/meta/kernel-4.6/",
   "items": [
     {
       "name": "Type",
@@ -46,7 +46,7 @@
     {
       "name": "Creators",
       "description": "",
-      "url": "https://datacite-metadata-schema.readthedocs.io/en/4.5/properties/creator/#id1",
+      "url": "https://datacite-metadata-schema.readthedocs.io/en/4.5/properties/creator/",
       "isOptional": false,
       "isComplex": true,
       "xPath": "data/attributes/creators",
@@ -172,7 +172,7 @@
     {
       "name": "Titles",
       "description": "",
-      "url": "https://datacite-metadata-schema.readthedocs.io/en/4.5/properties/title/#id1",
+      "url": "https://datacite-metadata-schema.readthedocs.io/en/4.5/properties/title/",
       "isOptional": false,
       "isComplex": true,
       "xPath": "data/attributes/titles",
@@ -202,6 +202,674 @@
           "xPath": "data/attributes/titles/titletype"
         }
       ]
+    },
+    {
+      "name": "Publisher",
+      "description": "",
+      "url": "https://datacite-metadata-schema.readthedocs.io/en/4.6/properties/publisher/",
+      "isOptional": false,
+      "isComplex": true,
+      "xPath": "data/attributes/publisher",
+      "children": [
+        {
+          "name": "Name",
+          "description": "",
+          "url": "",
+          "isOptional": false,
+          "isComplex": false,
+          "xPath": "data/attributes/publisher/name"
+        },
+        {
+          "name": "PublisherIdentifier",
+          "description": "",
+          "url": "",
+          "isOptional": true,
+          "isComplex": false,
+          "xPath": "data/attributes/publisher/publisherIdentifier"
+        },
+        {
+          "name": "PublisherIdentifierScheme",
+          "description": "",
+          "url": "",
+          "isOptional": true,
+          "isComplex": false,
+          "xPath": "data/attributes/publisher/publisherIdentifierScheme"
+        },
+        {
+          "name": "SchemeUri",
+          "description": "",
+          "url": "",
+          "isOptional": true,
+          "isComplex": false,
+          "xPath": "data/attributes/publisher/schemeUri"
+        },
+        {
+          "name": "Language",
+          "description": "",
+          "url": "",
+          "isOptional": true,
+          "isComplex": false,
+          "xPath": "data/attributes/publisher/lang"
+        }
+      ]
+    },
+    {
+      "name": "PublicationYear",
+      "description": "",
+      "url": "https://datacite-metadata-schema.readthedocs.io/en/4.6/properties/publicationyear/",
+      "isOptional": false,
+      "isComplex": false,
+      "xPath": "data/attributes/publicationYear"
+    },
+    {
+      "name": "Subjects",
+      "description": "",
+      "url": "https://datacite-metadata-schema.readthedocs.io/en/4.6/properties/subject/",
+      "isOptional": true,
+      "isComplex": true,
+      "xPath": "data/attributes/subjects",
+      "children": [
+        {
+          "name": "Subject",
+          "description": "",
+          "url": "",
+          "isOptional": false,
+          "isComplex": false,
+          "xPath": "data/attributes/subjects/subject"
+        },
+        {
+          "name": "SubjectScheme",
+          "description": "",
+          "url": "",
+          "isOptional": true,
+          "isComplex": false,
+          "xPath": "data/attributes/subjects/subjectScheme"
+        },
+        {
+          "name": "SchemeUri",
+          "description": "",
+          "url": "",
+          "isOptional": true,
+          "isComplex": false,
+          "xPath": "data/attributes/subjects/schemeUri"
+        },
+        {
+          "name": "ValueUri",
+          "description": "",
+          "url": "",
+          "isOptional": true,
+          "isComplex": false,
+          "xPath": "data/attributes/subjects/valueUri"
+        },
+        {
+          "name": "Language",
+          "description": "",
+          "url": "",
+          "isOptional": true,
+          "isComplex": false,
+          "xPath": "data/attributes/subjects/lang"
+        },
+        {
+          "name": "ClassificationCode",
+          "description": "",
+          "url": "",
+          "isOptional": true,
+          "isComplex": false,
+          "xPath": "data/attributes/subjects/classificationCode"
+        }
+      ]
+    },
+    {
+      "name": "Contributors",
+      "description": "",
+      "url": "https://datacite-metadata-schema.readthedocs.io/en/4.6/properties/contributor/",
+      "isOptional": true,
+      "isComplex": true,
+      "xPath": "data/attributes/contributors",
+      "children": [
+        {
+          "name": "Name",
+          "description": "",
+          "url": "",
+          "isOptional": false,
+          "isComplex": false,
+          "xPath": "data/attributes/contributors/name"
+        },
+        {
+          "name": "GivenName",
+          "description": "",
+          "url": "",
+          "isOptional": false,
+          "isComplex": false,
+          "xPath": "data/attributes/contributors/givenName"
+        },
+        {
+          "name": "FamilyName",
+          "description": "",
+          "url": "",
+          "isOptional": false,
+          "isComplex": false,
+          "xPath": "data/attributes/contributors/familyName"
+        },
+        {
+          "name": "NameType",
+          "description": "",
+          "url": "",
+          "isOptional": false,
+          "isComplex": false,
+          "xPath": "data/attributes/contributors/nameType"
+        },
+        {
+          "name": "NameIdentifiers",
+          "description": "",
+          "url": "",
+          "isOptional": true,
+          "isComplex": true,
+          "xPath": "data/attributes/contributors/nameIdentifiers",
+          "children": [
+            {
+              "name": "NameIdentifier",
+              "description": "",
+              "url": "",
+              "isOptional": true,
+              "isComplex": false,
+              "xPath": "data/attributes/contributors/nameIdentifier"
+            },
+            {
+              "name": "NameIdentifierScheme",
+              "description": "",
+              "url": "",
+              "isOptional": true,
+              "isComplex": false,
+              "xPath": "data/attributes/contributors/nameIdentifierScheme"
+            },
+            {
+              "name": "SchemeUri",
+              "description": "",
+              "url": "",
+              "isOptional": true,
+              "isComplex": false,
+              "xPath": "data/attributes/contributors/schemeUri"
+            }
+          ]
+        },
+        {
+          "name": "Affiliation",
+          "description": "",
+          "url": "",
+          "isOptional": true,
+          "isComplex": true,
+          "xPath": "data/attributes/contributors/affiliation",
+          "children": [
+            {
+              "name": "AffiliationIdentifier",
+              "description": "",
+              "url": "",
+              "isOptional": true,
+              "isComplex": false,
+              "xPath": "data/attributes/contributors/affiliation/affiliationIdentifier"
+            },
+            {
+              "name": "AffiliationIdentifierScheme",
+              "description": "",
+              "url": "",
+              "isOptional": true,
+              "isComplex": false,
+              "xPath": "data/attributes/contributors/affiliation/affiliationIdentifierScheme"
+            },
+            {
+              "name": "Name",
+              "description": "",
+              "url": "",
+              "isOptional": true,
+              "isComplex": false,
+              "xPath": "data/attributes/contributors/affiliation/name"
+            },
+            {
+              "name": "SchemeUri",
+              "description": "",
+              "url": "",
+              "isOptional": true,
+              "isComplex": false,
+              "xPath": "data/attributes/contributors/affiliation/schemeUri"
+            }
+          ]
+        },
+        {
+          "name": "ContributorType",
+          "description": "",
+          "url": "",
+          "isOptional": false,
+          "isComplex": false,
+          "xPath": "data/attributes/contributors/contributorType"
+        },
+        {
+          "name": "Language",
+          "description": "",
+          "url": "",
+          "isOptional": true,
+          "isComplex": false,
+          "xPath": "data/attributes/contributors/lang"
+        }
+      ]
+    },
+    {
+      "name": "Dates",
+      "description": "",
+      "url": "https://datacite-metadata-schema.readthedocs.io/en/4.6/properties/date/",
+      "isOptional": true,
+      "isComplex": true,
+      "xPath": "data/attributes/dates",
+      "children": [
+        {
+          "name": "Date",
+          "description": "",
+          "url": "",
+          "isOptional": false,
+          "isComplex": false,
+          "xPath": "data/attributes/dates/date"
+        },
+        {
+          "name": "DateType",
+          "description": "",
+          "url": "",
+          "isOptional": false,
+          "isComplex": false,
+          "xPath": "data/attributes/dates/dateType"
+        },
+        {
+          "name": "DateInformation",
+          "description": "",
+          "url": "",
+          "isOptional": true,
+          "isComplex": false,
+          "xPath": "data/attributes/dates/dateInformation"
+        }
+      ]
+    },
+    {
+      "name": "Language",
+      "description": "",
+      "url": "",
+      "isOptional": true,
+      "isComplex": false,
+      "xPath": "data/attributes/language"
+    },
+    {
+      "name": "Types",
+      "description": "",
+      "url": "",
+      "isOptional": false,
+      "isComplex": true,
+      "xPath": "data/attributes/types",
+      "children": [
+        {
+          "name": "ResourceTypeGeneral",
+          "description": "",
+          "url": "",
+          "isOptional": false,
+          "isComplex": false,
+          "xPath": "data/attributes/types/resourceTypeGeneral"
+        },
+        {
+          "name": "ResourceType",
+          "description": "",
+          "url": "",
+          "isOptional": false,
+          "isComplex": false,
+          "xPath": "data/attributes/types/resourceType"
+        }
+      ]
+    },
+    {
+      "name": "RelatedIdentifiers",
+      "description": "",
+      "url": "",
+      "isOptional": true,
+      "isComplex": true,
+      "xPath": "data/attributes/relatedIdentifiers",
+      "children": [
+        {
+          "name": "RelatedIdentifier",
+          "description": "",
+          "url": "",
+          "isOptional": false,
+          "isComplex": false,
+          "xPath": "data/attributes/relatedIdentifiers/relatedIdentifier"
+        },
+        {
+          "name": "RelatedIdentifierType",
+          "description": "",
+          "url": "",
+          "isOptional": false,
+          "isComplex": false,
+          "xPath": "data/attributes/relatedIdentifiers/relatedIdentifierType"
+        },
+        {
+          "name": "RelationType",
+          "description": "",
+          "url": "",
+          "isOptional": false,
+          "isComplex": false,
+          "xPath": "data/attributes/relatedIdentifiers/relationType"
+        },
+        {
+          "name": "RelatedMetadataScheme",
+          "description": "",
+          "url": "",
+          "isOptional": true,
+          "isComplex": false,
+          "xPath": "data/attributes/relatedIdentifiers/relatedMetadataScheme"
+        },
+        {
+          "name": "SchemeURI",
+          "description": "",
+          "url": "",
+          "isOptional": true,
+          "isComplex": false,
+          "xPath": "data/attributes/relatedIdentifiers/schemeURI"
+        },
+        {
+          "name": "SchemeType",
+          "description": "",
+          "url": "",
+          "isOptional": true,
+          "isComplex": false,
+          "xPath": "data/attributes/relatedIdentifiers/schemeType"
+        },
+        {
+          "name": "ResourceTypeGeneral",
+          "description": "",
+          "url": "",
+          "isOptional": true,
+          "isComplex": false,
+          "xPath": "data/attributes/relatedIdentifiers/resourceTypeGeneral"
+        }
+      ]
+    },
+    {
+      "name": "Sizes",
+      "description": "",
+      "url": "",
+      "isOptional": true,
+      "isComplex": true,
+      "xPath": "data/attributes/sizes"
+    },
+    {
+      "name": "Formats",
+      "description": "",
+      "url": "",
+      "isOptional": true,
+      "isComplex": true,
+      "xPath": "data/attributes/formats"
+    },
+    {
+      "name": "Version",
+      "description": "",
+      "url": "",
+      "isOptional": true,
+      "isComplex": false,
+      "xPath": "data/attributes/version"
+    },
+    {
+      "name": "RightsList",
+      "description": "",
+      "url": "",
+      "isOptional": true,
+      "isComplex": true,
+      "xPath": "data/attributes/rightsList",
+      "children": [
+        {
+          "name": "Rights",
+          "description": "",
+          "url": "",
+          "isOptional": false,
+          "isComplex": false,
+          "xPath": "data/attributes/rightsList/rights"
+        },
+        {
+          "name": "RightsUri",
+          "description": "",
+          "url": "",
+          "isOptional": true,
+          "isComplex": false,
+          "xPath": "data/attributes/rightsList/rightsUri"
+        },
+        {
+          "name": "RightsIdentifier",
+          "description": "",
+          "url": "",
+          "isOptional": true,
+          "isComplex": false,
+          "xPath": "data/attributes/rightsList/rightsIdentifier"
+        },
+        {
+          "name": "RightsIdentifierScheme",
+          "description": "",
+          "url": "",
+          "isOptional": true,
+          "isComplex": false,
+          "xPath": "data/attributes/rightsList/rightsIdentifierScheme"
+        },
+        {
+          "name": "SchemeURI",
+          "description": "",
+          "url": "",
+          "isOptional": true,
+          "isComplex": false,
+          "xPath": "data/attributes/rightsList/schemeURI"
+        },
+        {
+          "name": "Language",
+          "description": "",
+          "url": "",
+          "isOptional": true,
+          "isComplex": false,
+          "xPath": "data/attributes/rightsList/lang"
+        }
+      ]
+    },
+    {
+      "name": "Descriptions",
+      "description": "",
+      "url": "",
+      "isOptional": true,
+      "isComplex": true,
+      "xPath": "data/attributes/descriptions",
+      "children": [
+        {
+          "name": "Description",
+          "description": "",
+          "url": "",
+          "isOptional": false,
+          "isComplex": false,
+          "xPath": "data/attributes/descriptions/description"
+        },
+        {
+          "name": "DescriptionType",
+          "description": "",
+          "url": "",
+          "isOptional": false,
+          "isComplex": false,
+          "xPath": "data/attributes/descriptions/descriptionType"
+        },
+        {
+          "name": "Language",
+          "description": "",
+          "url": "",
+          "isOptional": true,
+          "isComplex": false,
+          "xPath": "data/attributes/descriptions/lang"
+        }
+      ]
+    },
+    {
+      "name": "GeoLocations",
+      "description": "",
+      "url": "",
+      "isOptional": true,
+      "isComplex": true,
+      "xPath": "data/attributes/geoLocations",
+      "children": [
+        {
+          "name": "GeoLocationPlace",
+          "description": "",
+          "url": "",
+          "isOptional": true,
+          "isComplex": false,
+          "xPath": "data/attributes/geoLocations/geoLocationPlace"
+        },
+        {
+          "name": "geoLocationPoint",
+          "description": "",
+          "url": "",
+          "isOptional": true,
+          "isComplex": true,
+          "xPath": "data/attributes/geoLocations/geoLocationPoint",
+          "children": [
+            {
+              "name": "PointLongitude",
+              "description": "",
+              "url": "",
+              "isOptional": false,
+              "isComplex": false,
+              "xPath": "data/attributes/geoLocations/geoLocationPoint/pointLongitude"
+            },
+            {
+              "name": "PointLatitude",
+              "description": "",
+              "url": "",
+              "isOptional": false,
+              "isComplex": false,
+              "xPath": "data/attributes/geoLocations/geoLocationPoint/pointLatitude"
+            }
+          ]
+        },
+        {
+          "name": "GeoLocationBox",
+          "description": "",
+          "url": "",
+          "isOptional": true,
+          "isComplex": true,
+          "xPath": "data/attributes/geoLocations/geoLocationBox",
+          "children": [
+            {
+              "name": "WestBoundLongitude",
+              "description": "",
+              "url": "",
+              "isOptional": false,
+              "isComplex": false,
+              "xPath": "data/attributes/geoLocations/geoLocationBox/westBoundLongitude"
+            },
+            {
+              "name": "EastBoundLongitude",
+              "description": "",
+              "url": "",
+              "isOptional": false,
+              "isComplex": false,
+              "xPath": "data/attributes/geoLocations/geoLocationBox/eastBoundLongitude"
+            },
+            {
+              "name": "SouthBoundLatitude",
+              "description": "",
+              "url": "",
+              "isOptional": false,
+              "isComplex": false,
+              "xPath": "data/attributes/geoLocations/geoLocationBox/southBoundLatitude"
+            },
+            {
+              "name": "NorthBoundLatitude",
+              "description": "",
+              "url": "",
+              "isOptional": false,
+              "isComplex": false,
+              "xPath": "data/attributes/geoLocations/geoLocationBox/northBoundLatitude"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "FundingReferences",
+      "description": "",
+      "url": "",
+      "isOptional": true,
+      "isComplex": true,
+      "xPath": "data/attributes/fundingReferences",
+      "children": [
+        {
+          "name": "FunderName",
+          "description": "",
+          "url": "",
+          "isOptional": false,
+          "isComplex": false,
+          "xPath": "data/attributes/fundingReferences/funderName"
+        },
+        {
+          "name": "FunderIdentifier",
+          "description": "",
+          "url": "",
+          "isOptional": true,
+          "isComplex": false,
+          "xPath": "data/attributes/fundingReferences/funderIdentifier"
+        },
+        {
+          "name": "FunderIdentifierType",
+          "description": "",
+          "url": "",
+          "isOptional": false,
+          "isComplex": false,
+          "xPath": "data/attributes/fundingReferences/funderIdentifierType"
+        },
+        {
+          "name": "AwardNumber",
+          "description": "",
+          "url": "",
+          "isOptional": true,
+          "isComplex": false,
+          "xPath": "data/attributes/fundingReferences/awardNumber"
+        },
+        {
+          "name": "AwardURI",
+          "description": "",
+          "url": "",
+          "isOptional": true,
+          "isComplex": false,
+          "xPath": "data/attributes/fundingReferences/awardURI"
+        },
+        {
+          "name": "AwardURI",
+          "description": "",
+          "url": "",
+          "isOptional": true,
+          "isComplex": false,
+          "xPath": "data/attributes/fundingReferences/awardURI"
+        }
+      ]
+    },
+    {
+      "name": "Xml",
+      "description": "",
+      "url": "",
+      "isOptional": true,
+      "isComplex": false,
+      "xPath": "data/attributes/xml"
+    },
+    {
+      "name": "Url",
+      "description": "",
+      "url": "",
+      "isOptional": false,
+      "isComplex": false,
+      "xPath": "data/attributes/url"
+    },
+    {
+      "name": "SchemaVersion",
+      "description": "",
+      "url": "",
+      "isOptional": true,
+      "isComplex": false,
+      "xPath": "data/attributes/schemaVersion"
     }
   ]
 }
