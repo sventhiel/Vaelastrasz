@@ -20,9 +20,8 @@ namespace Vaelastrasz.Server.Authentication
             IOptionsMonitor<AuthenticationSchemeOptions> options,
             ILoggerFactory logger,
             UrlEncoder encoder,
-            ISystemClock clock,
             IConfiguration configuration,
-            ConnectionString connectionString) : base(options, logger, encoder, clock)
+            ConnectionString connectionString) : base(options, logger, encoder)
         {
             _connectionString = connectionString;
             _admins = configuration.GetSection("Admins").Get<List<Admin>>()!;
@@ -77,13 +76,13 @@ namespace Vaelastrasz.Server.Authentication
                 }
 
                 Response.StatusCode = 401;
-                Response.Headers.Add("www-authenticate", "Basic Authorization");
+                Response.Headers.Append("www-authenticate", "Basic Authorization");
                 return AuthenticateResult.Fail(new UnauthorizedAccessException());
             }
             else
             {
                 Response.StatusCode = 401;
-                Response.Headers.Add("www-authenticate", "Basic Authorization");
+                Response.Headers.Append("www-authenticate", "Basic Authorization");
                 return AuthenticateResult.Fail(new UnauthorizedAccessException());
             }
         }

@@ -5,7 +5,7 @@ namespace Vaelastrasz.Server.Helpers
 {
     public class DOIHelper
     {
-        public static string Create(string prefix, string pattern, Dictionary<string, string> placeholders = null)
+        public static string Create(string prefix, string pattern, Dictionary<string, string>? placeholders = null)
         {
             try
             {
@@ -28,7 +28,7 @@ namespace Vaelastrasz.Server.Helpers
             }
         }
 
-        public static bool Validate(string doi, string prefix, string pattern, Dictionary<string, string> placeholders = null)
+        public static bool Validate(string doi, string prefix, string pattern, Dictionary<string, string>? placeholders = null)
         {
             try
             {

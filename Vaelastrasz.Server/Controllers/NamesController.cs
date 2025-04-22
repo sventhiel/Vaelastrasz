@@ -14,7 +14,7 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         [HttpPost("names")]
-        public async Task<IActionResult> PostAsync([FromBody] string name)
+        public IActionResult Post([FromBody] string name)
         {
             if (string.IsNullOrEmpty(name))
                 return BadRequest();

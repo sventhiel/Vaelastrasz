@@ -10,9 +10,6 @@ using Vaelastrasz.Server.Services;
 
 namespace Vaelastrasz.Server.Controllers
 {
-    /// <summary>
-    ///
-    /// </summary>
     [ApiController, Authorize(Roles = "user"), Route("api")]
     public class DOIsController : ControllerBase
     {
@@ -20,12 +17,6 @@ namespace Vaelastrasz.Server.Controllers
         private List<Admin> _admins;
         private ConnectionString _connectionString;
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="logger"></param>
-        /// <param name="configuration"></param>
-        /// <param name="connectionString"></param>
         public DOIsController(ILogger<DataCiteController> logger, IConfiguration configuration, ConnectionString connectionString)
         {
             _connectionString = connectionString;
@@ -33,17 +24,14 @@ namespace Vaelastrasz.Server.Controllers
             _logger = logger;
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="prefix"></param>
-        /// <param name="suffix"></param>
-        /// <returns></returns>
-        /// <exception cref="UnauthorizedException"></exception>
         [HttpDelete("dois/{prefix}/{suffix}")]
         public async Task<IActionResult> DeleteAsync(string prefix, string suffix)
         {
             using var userService = new UserService(_connectionString);
+
+            if (User?.Identity?.Name == null)
+                return Forbid("You are not allowed to execute this function.");
+
             var user = await userService.FindByNameAsync(User.Identity.Name);
 
             using var doiService = new DOIService(_connectionString);
@@ -57,14 +45,14 @@ namespace Vaelastrasz.Server.Controllers
             return Ok(response);
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <returns></returns>
         [HttpGet("dois")]
         public async Task<IActionResult> GetAsync()
         {
             using var userService = new UserService(_connectionString);
+
+            if (User?.Identity?.Name == null)
+                return Forbid("You are not allowed to execute this function.");
+
             var user = await userService.FindByNameAsync(User.Identity.Name);
 
             using var doiService = new DOIService(_connectionString);
@@ -73,16 +61,14 @@ namespace Vaelastrasz.Server.Controllers
             return Ok(dois);
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        /// <exception cref="UnauthorizedException"></exception>
         [HttpGet("dois/{id}")]
         public async Task<IActionResult> GetById(long id)
         {
             using var userService = new UserService(_connectionString);
+
+            if(User?.Identity?.Name == null)
+                return Forbid("You are not allowed to execute this function.");
+
             var user = await userService.FindByNameAsync(User.Identity.Name);
 
             using var doiService = new DOIService(_connectionString);
@@ -94,17 +80,14 @@ namespace Vaelastrasz.Server.Controllers
             return Ok(ReadDOIModel.Convert(doi));
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="prefix"></param>
-        /// <param name="suffix"></param>
-        /// <returns></returns>
-        /// <exception cref="UnauthorizedException"></exception>
         [HttpGet("dois/{prefix}/{suffix}")]
         public async Task<IActionResult> GetByPrefixAndSuffix(string prefix, string suffix)
         {
             using var userService = new UserService(_connectionString);
+
+            if (User?.Identity?.Name == null)
+                return Forbid("You are not allowed to execute this function.");
+
             var user = await userService.FindByNameAsync(User.Identity.Name);
 
             using var doiService = new DOIService(_connectionString);
@@ -116,18 +99,15 @@ namespace Vaelastrasz.Server.Controllers
             return Ok(ReadDOIModel.Convert(result));
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        /// <exception cref="NotFoundException"></exception>
-        /// <exception cref="ForbiddenException"></exception>
         [HttpPost("dois")]
         [SwaggerResponse(201, "Resource created successfully", typeof(ReadDOIModel))]
         public async Task<IActionResult> Post(CreateDOIModel model)
         {
             using var userService = new UserService(_connectionString);
+
+            if (User?.Identity?.Name == null)
+                return Forbid("You are not allowed to execute this function.");
+
             var user = await userService.FindByNameAsync(User.Identity.Name);
 
             if (user.Account == null)
@@ -150,17 +130,14 @@ namespace Vaelastrasz.Server.Controllers
             return Created(resourceUrl, ReadDOIModel.Convert(doi));
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="doi"></param>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        /// <exception cref="UnauthorizedException"></exception>
         [HttpPut("dois/{doi}")]
         public async Task<IActionResult> PutByDOI(string doi, UpdateDOIModel model)
         {
             using var userService = new UserService(_connectionString);
+
+            if (User?.Identity?.Name == null)
+                return Forbid("You are not allowed to execute this function.");
+
             var user = await userService.FindByNameAsync(User.Identity.Name);
 
             using var doiService = new DOIService(_connectionString);
@@ -174,35 +151,25 @@ namespace Vaelastrasz.Server.Controllers
             return Ok(ReadDOIModel.Convert(_doi));
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        [HttpPut("dois/{id}")]
-        public async Task<IActionResult> PutById(long id, UpdateDOIModel model)
-        {
-            using var doiService = new DOIService(_connectionString);
+        //[HttpPut("dois/{id}")]
+        //public async Task<IActionResult> PutById(long id, UpdateDOIModel model)
+        //{
+        //    using var doiService = new DOIService(_connectionString);
 
-            var result = await doiService.UpdateByIdAsync(id, model.State, "");
-            var doi = await doiService.FindByIdAsync(id);
+        //    var result = await doiService.UpdateByIdAsync(id, model.State, "");
+        //    var doi = await doiService.FindByIdAsync(id);
 
-            return Ok(ReadDOIModel.Convert(doi));
-        }
+        //    return Ok(ReadDOIModel.Convert(doi));
+        //}
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="prefix"></param>
-        /// <param name="suffix"></param>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        /// <exception cref="UnauthorizedException"></exception>
         [HttpPut("dois/{prefix}/{suffix}")]
         public async Task<IActionResult> PutByPrefixAndSuffix(string prefix, string suffix, UpdateDOIModel model)
         {
             using var userService = new UserService(_connectionString);
+
+            if (User?.Identity?.Name == null)
+                return Forbid("You are not allowed to execute this function.");
+
             var user = await userService.FindByNameAsync(User.Identity.Name);
 
             using var doiService = new DOIService(_connectionString);

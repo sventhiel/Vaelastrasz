@@ -33,13 +33,7 @@ namespace Vaelastrasz.Server.Tests
         public async Task Test2()
         {
             var accountType = EnumExtensions.GetEnumMemberValue(AccountType.DataCite);
-            var type = JsonConvert.SerializeObject(DataCiteType.DOIs);
-        }
-
-        [Test]
-        public async Task Test3()
-        {
-            
+            var type = await Task.FromResult(JsonConvert.SerializeObject(DataCiteType.DOIs));
         }
     }
 }

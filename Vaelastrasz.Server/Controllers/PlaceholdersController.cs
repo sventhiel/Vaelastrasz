@@ -44,7 +44,11 @@ namespace Vaelastrasz.Server.Controllers
         public async Task<IActionResult> GetAsync()
         {
             using var userService = new UserService(_connectionString);
-            var user = await userService.FindByNameAsync(User?.Identity?.Name);
+
+            if (User?.Identity?.Name == null)
+                return Forbid("You are not allowed to execute this function.");
+
+            var user = await userService.FindByNameAsync(User.Identity.Name);
 
             var placeholderService = new PlaceholderService(_connectionString);
             var placeholders = (await placeholderService.FindByUserIdAsync(user.Id)).Select(p => ReadPlaceholderModel.Convert(p));
@@ -56,7 +60,11 @@ namespace Vaelastrasz.Server.Controllers
         public async Task<IActionResult> GetByIdAsync(long id)
         {
             using var userService = new UserService(_connectionString);
-            var user = await userService.FindByNameAsync(User?.Identity?.Name);
+
+            if (User?.Identity?.Name == null)
+                return Forbid("You are not allowed to execute this function.");
+
+            var user = await userService.FindByNameAsync(User.Identity.Name);
 
             var placeholderService = new PlaceholderService(_connectionString);
             var placeholder = await placeholderService.FindByIdAsync(id);
@@ -69,7 +77,11 @@ namespace Vaelastrasz.Server.Controllers
         public async Task<IActionResult> PostAsync(CreatePlaceholderModel model)
         {
             using var userService = new UserService(_connectionString);
-            var user = await userService.FindByNameAsync(User?.Identity?.Name);
+
+            if (User?.Identity?.Name == null)
+                return Forbid("You are not allowed to execute this function.");
+
+            var user = await userService.FindByNameAsync(User.Identity.Name);
 
             using var placeholderService = new PlaceholderService(_connectionString);
             var id = await placeholderService.CreateAsync(model.Expression, model.RegularExpression, user.Id);
@@ -86,7 +98,11 @@ namespace Vaelastrasz.Server.Controllers
         public async Task<IActionResult> PutByIdAsync(long id, UpdatePlaceholderModel model)
         {
             using var userService = new UserService(_connectionString);
-            var user = await userService.FindByNameAsync(User?.Identity?.Name);
+
+            if (User?.Identity?.Name == null)
+                return Forbid("You are not allowed to execute this function.");
+
+            var user = await userService.FindByNameAsync(User.Identity.Name);
 
             using var placeholderService = new PlaceholderService(_connectionString);
             var placeholder = await placeholderService.FindByIdAsync(id);

@@ -2,9 +2,6 @@
 
 namespace Vaelastrasz.Library.Models.DataCite
 {
-    /// <summary>
-    /// [TODO] Not implemented yet!
-    /// </summary>
     public class DataCiteGeoLocation
     {
         public DataCiteGeoLocation()

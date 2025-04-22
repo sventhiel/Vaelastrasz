@@ -95,17 +95,17 @@
               "name": "NameIdentifier",
               "description": "",
               "url": "",
-              "isOptional": true,
+              "isOptional": false,
               "isComplex": false,
-              "xPath": "data/attributes/creators/nameIdentifier"
+              "xPath": "data/attributes/creators/nameIdentifiers/nameIdentifier"
             },
             {
               "name": "NameIdentifierScheme",
               "description": "",
               "url": "",
-              "isOptional": true,
+              "isOptional": false,
               "isComplex": false,
-              "xPath": "data/attributes/creators/nameIdentifierScheme"
+              "xPath": "data/attributes/creators/nameIdentifiers/nameIdentifierScheme"
             },
             {
               "name": "SchemeUri",
@@ -113,7 +113,7 @@
               "url": "",
               "isOptional": true,
               "isComplex": false,
-              "xPath": "data/attributes/creators/schemeUri"
+              "xPath": "data/attributes/creators/nameIdentifiers/schemeUri"
             }
           ]
         },
@@ -720,7 +720,7 @@
           "xPath": "data/attributes/geoLocations/geoLocationPlace"
         },
         {
-          "name": "geoLocationPoint",
+          "name": "GeoLocationPoint",
           "description": "",
           "url": "",
           "isOptional": true,
@@ -790,6 +790,32 @@
       ]
     },
     {
+      "name": "AlternateIdentifiers",
+      "description": "",
+      "url": "https://datacite-metadata-schema.readthedocs.io/en/4.5/properties/alternateidentifier/#id1",
+      "isOptional": true,
+      "isComplex": true,
+      "xPath": "data/attributes/alternateIdentifiers",
+      "children": [
+        {
+          "name": "AlternateIdentifierType",
+          "description": "",
+          "url": "",
+          "isOptional": false,
+          "isComplex": false,
+          "xPath": "data/attributes/alternateIdentifiers/alternateIdentifierType"
+        },
+        {
+          "name": "AlternateIdentifier",
+          "description": "",
+          "url": "",
+          "isOptional": false,
+          "isComplex": false,
+          "xPath": "data/attributes/alternateIdentifiers/alternateIdentifier"
+        }
+      ]
+    },
+    {
       "name": "FundingReferences",
       "description": "",
       "url": "",
@@ -838,12 +864,12 @@
           "xPath": "data/attributes/fundingReferences/awardURI"
         },
         {
-          "name": "AwardURI",
+          "name": "AwardTitle",
           "description": "",
           "url": "",
           "isOptional": true,
           "isComplex": false,
-          "xPath": "data/attributes/fundingReferences/awardURI"
+          "xPath": "data/attributes/fundingReferences/awardTitle"
         }
       ]
     },

@@ -28,7 +28,6 @@ namespace Vaelastrasz.Library.Models.DataCite
         [JsonProperty("lang")]
         public string Language { get; set; }
 
-        [Required]
         [JsonProperty("name")]
         public string Name { get; set; }
 

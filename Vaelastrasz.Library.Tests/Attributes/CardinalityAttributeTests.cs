@@ -30,7 +30,7 @@ namespace Vaelastrasz.Library.Tests.Attributes
             ValidationAttribute[] x = new ValidationAttribute[] { new CardinalityAttribute() };
             var isValid= Validator.TryValidateValue(model.Data.Attributes.Creators, validationContext, validationResults, x);
 
-            Assert.That(false, Is.True);
+            Assert.That(isValid, Is.True);
         }
     }
 }

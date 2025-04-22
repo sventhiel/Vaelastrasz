@@ -14,7 +14,7 @@ namespace Vaelastrasz.Server.Resolvers
             {
                 property.ShouldSerialize = instance =>
                 {
-                    var value = property.ValueProvider.GetValue(instance) as System.Collections.IEnumerable;
+                    var value = property.ValueProvider?.GetValue(instance) as System.Collections.IEnumerable;
                     return value != null && value.GetEnumerator().MoveNext();
                 };
             }
@@ -24,7 +24,7 @@ namespace Vaelastrasz.Server.Resolvers
             {
                 property.ShouldSerialize = instance =>
                 {
-                    var value = property.ValueProvider.GetValue(instance) as string;
+                    var value = property.ValueProvider?.GetValue(instance) as string;
                     return !string.IsNullOrWhiteSpace(value);
                 };
             }

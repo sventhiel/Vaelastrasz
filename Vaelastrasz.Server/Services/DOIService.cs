@@ -5,43 +5,21 @@ using Vaelastrasz.Library.Models;
 
 namespace Vaelastrasz.Server.Services
 {
-    /// <summary>
-    ///
-    /// </summary>
     public class DOIService : IDisposable
     {
         private readonly ConnectionString _connectionString;
         private bool disposed = false;
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="connectionString"></param>
         public DOIService(ConnectionString connectionString)
         {
             _connectionString = connectionString;
         }
 
-        /// <summary>
-        ///
-        /// </summary>
         ~DOIService()
         {
             Dispose(false);
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="prefix"></param>
-        /// <param name="suffix"></param>
-        /// <param name="state"></param>
-        /// <param name="userId"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        /// <exception cref="NotFoundException"></exception>
-        /// <exception cref="ForbiddenException"></exception>
-        /// <exception cref="ConflictException"></exception>
         public async Task<long> CreateAsync(string prefix, string suffix, DOIStateType state, long userId, string value)
         {
             using var db = new LiteDatabase(_connectionString);
@@ -70,12 +48,6 @@ namespace Vaelastrasz.Server.Services
             return await Task.FromResult(dois.Insert(doi));
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="doi"></param>
-        /// <returns></returns>
-        /// <exception cref="BadRequestException"></exception>
         public async Task<bool> DeleteByDOIAsync(string doi)
         {
             if (!doi.Contains('/'))
@@ -87,11 +59,6 @@ namespace Vaelastrasz.Server.Services
             return await DeleteByPrefixAndSuffixAsync(prefix, suffix);
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
         public async Task<bool> DeleteByIdAsync(long id)
         {
             using var db = new LiteDatabase(_connectionString);
@@ -100,15 +67,6 @@ namespace Vaelastrasz.Server.Services
             return await Task.FromResult(col.Delete(id));
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="prefix"></param>
-        /// <param name="suffix"></param>
-        /// <returns></returns>
-        /// <exception cref="NotFoundException"></exception>
-        /// <exception cref="ConflictException"></exception>
-        /// <exception cref="ForbiddenException"></exception>
         public async Task<bool> DeleteByPrefixAndSuffixAsync(string prefix, string suffix)
         {
             using var db = new LiteDatabase(_connectionString);
@@ -131,19 +89,12 @@ namespace Vaelastrasz.Server.Services
             return await Task.FromResult(dois.Delete(doi.Single().Id));
         }
 
-        /// <summary>
-        ///
-        /// </summary>
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <returns></returns>
         public async Task<List<DOI>> FindAsync()
         {
             using var db = new LiteDatabase(_connectionString);
@@ -152,12 +103,6 @@ namespace Vaelastrasz.Server.Services
             return await Task.FromResult(col.FindAll().ToList());
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="doi"></param>
-        /// <returns></returns>
-        /// <exception cref="BadRequestException"></exception>
         public async Task<DOI> FindByDOIAsync(string doi)
         {
             if (!doi.Contains('/'))
@@ -169,12 +114,6 @@ namespace Vaelastrasz.Server.Services
             return await FindByPrefixAndSuffixAsync(prefix, suffix);
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        /// <exception cref="NotFoundException"></exception>
         public async Task<DOI> FindByIdAsync(long id)
         {
             using var db = new LiteDatabase(_connectionString);
@@ -185,14 +124,6 @@ namespace Vaelastrasz.Server.Services
             return doi == null ? throw new NotFoundException($"The doi (id:{id}) does not exist.") : await Task.FromResult(doi);
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="prefix"></param>
-        /// <param name="suffix"></param>
-        /// <returns></returns>
-        /// <exception cref="NotFoundException"></exception>
-        /// <exception cref="ConflictException"></exception>
         public async Task<DOI> FindByPrefixAndSuffixAsync(string prefix, string suffix)
         {
             using var db = new LiteDatabase(_connectionString);
@@ -209,11 +140,6 @@ namespace Vaelastrasz.Server.Services
             return await Task.FromResult(dois.Single());
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="prefix"></param>
-        /// <returns></returns>
         public async Task<List<DOI>> FindByPrefixAsync(string prefix)
         {
             using var db = new LiteDatabase(_connectionString);
@@ -222,12 +148,6 @@ namespace Vaelastrasz.Server.Services
             return await Task.FromResult(col.Find(d => d.Prefix.Equals(prefix, StringComparison.OrdinalIgnoreCase)).ToList());
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="suffix"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentNullException"></exception>
         public async Task<List<DOI>> FindBySuffixAsync(string suffix)
         {
             if (suffix == null)
@@ -239,11 +159,6 @@ namespace Vaelastrasz.Server.Services
             return await Task.FromResult(col.Find(d => d.Suffix.Equals(suffix, StringComparison.OrdinalIgnoreCase)).ToList());
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <returns></returns>
         public async Task<List<DOI>> FindByUserIdAsync(long userId)
         {
             using var db = new LiteDatabase(_connectionString);
@@ -252,14 +167,6 @@ namespace Vaelastrasz.Server.Services
             return await Task.FromResult(col.Find(d => d.User.Id == userId).ToList());
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="doi"></param>
-        /// <param name="state"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        /// <exception cref="BadRequestException"></exception>
         public async Task<bool> UpdateByDOIAsync(string doi, DOIStateType state, string value)
         {
             if (!doi.Contains('/'))
@@ -271,14 +178,6 @@ namespace Vaelastrasz.Server.Services
             return await UpdateByPrefixAndSuffixAsync(prefix, suffix, state, value);
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="state"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        /// <exception cref="NotFoundException"></exception>
         public async Task<bool> UpdateByIdAsync(long id, DOIStateType state, string value)
         {
             using var db = new LiteDatabase(_connectionString);
@@ -293,15 +192,6 @@ namespace Vaelastrasz.Server.Services
             return await Task.FromResult(dois.Update(doi));
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="prefix"></param>
-        /// <param name="suffix"></param>
-        /// <param name="state"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        /// <exception cref="NotFoundException"></exception>
         public async Task<bool> UpdateByPrefixAndSuffixAsync(string prefix, string suffix, DOIStateType state, string value)
         {
             using var db = new LiteDatabase(_connectionString);
@@ -320,10 +210,6 @@ namespace Vaelastrasz.Server.Services
             return await Task.FromResult(dois.Update(doi));
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="disposing"></param>
         protected virtual void Dispose(bool disposing)
         {
             if (!disposed)

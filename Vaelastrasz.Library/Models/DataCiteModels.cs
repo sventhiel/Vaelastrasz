@@ -127,10 +127,6 @@ namespace Vaelastrasz.Library.Models
         [JsonProperty("version")]
         public string Version { get; set; }
     }
-
-    /// <summary>
-    ///
-    /// </summary>
     public class CreateDataCiteDataModel
     {
         public CreateDataCiteDataModel()
@@ -146,15 +142,8 @@ namespace Vaelastrasz.Library.Models
         [JsonProperty("type")]
         public DataCiteType Type { get; set; }
     }
-
-    /// <summary>
-    /// This is the general model to create a doi at DataCite.
-    /// </summary>
     public class CreateDataCiteModel
     {
-        /// <summary>
-        /// There is the necessity of the 'data' root node.
-        /// </summary>
         public CreateDataCiteModel()
         {
             Data = new CreateDataCiteDataModel();

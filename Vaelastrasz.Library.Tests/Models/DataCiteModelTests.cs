@@ -45,25 +45,24 @@ namespace Vaelastrasz.Library.Tests.Models
             CreateDataCiteDataModel response = new CreateDataCiteDataModel();
 
             XmlSerializer serializer = new XmlSerializer(typeof(CreateDataCiteDataModel));
-            using (StringReader xmlReader = new StringReader(xml))
-            {
-                response = (CreateDataCiteDataModel)serializer.Deserialize(xmlReader);
-            }
+
+            using StringReader xmlReader = new StringReader(xml);
+            response = (CreateDataCiteDataModel)serializer.Deserialize(xmlReader);
         }
 
-        private static bool Validate<T>(T obj, out ICollection<ValidationResult> results)
-        {
-            results = new List<ValidationResult>();
+        //private static bool Validate<T>(T obj, out ICollection<ValidationResult> results)
+        //{
+        //    results = new List<ValidationResult>();
 
-            return Validator.TryValidateObject(obj, new ValidationContext(obj), results, true);
-        }
+        //    return Validator.TryValidateObject(obj, new ValidationContext(obj), results, true);
+        //}
 
-        private IList<ValidationResult> ValidateModel(object model)
-        {
-            var validationResults = new List<ValidationResult>();
-            var ctx = new ValidationContext(model, null, null);
-            Validator.TryValidateObject(model, ctx, validationResults, true);
-            return validationResults;
-        }
+        //private IList<ValidationResult> ValidateModel(object model)
+        //{
+        //    var validationResults = new List<ValidationResult>();
+        //    var ctx = new ValidationContext(model, null, null);
+        //    Validator.TryValidateObject(model, ctx, validationResults, true);
+        //    return validationResults;
+        //}
     }
 }

@@ -16,9 +16,6 @@ using Vaelastrasz.Server.Services;
 
 namespace Vaelastrasz.Server.Controllers
 {
-    /// <summary>
-    ///
-    /// </summary>
     [ApiController, Authorize(Roles = "user-datacite"), Route("api")]
     public class DataCiteController : ControllerBase
     {
@@ -26,12 +23,6 @@ namespace Vaelastrasz.Server.Controllers
         private List<Admin> _admins;
         private ConnectionString _connectionString;
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="logger"></param>
-        /// <param name="configuration"></param>
-        /// <param name="connectionString"></param>
         public DataCiteController(ILogger<DataCiteController> logger, IConfiguration configuration, ConnectionString connectionString)
         {
             _connectionString = connectionString;
@@ -39,12 +30,6 @@ namespace Vaelastrasz.Server.Controllers
             _logger = logger;
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="doi"></param>
-        /// <returns></returns>
-        /// <exception cref="NotFoundException"></exception>
         [HttpDelete("datacite/{doi}")]
         public async Task<IActionResult> DeleteByDOIAsync(string doi)
         {
@@ -71,11 +56,6 @@ namespace Vaelastrasz.Server.Controllers
             return StatusCode((int)response.StatusCode, JsonConvert.DeserializeObject<ReadDataCiteModel>(await response.Content.ReadAsStringAsync()));
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <returns></returns>
-        /// <exception cref="NotFoundException"></exception>
         [HttpGet("datacite")]
         public async Task<IActionResult> GetAsync()
         {
@@ -122,14 +102,6 @@ namespace Vaelastrasz.Server.Controllers
             return Ok(result);
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="prefix"></param>
-        /// <param name="suffix"></param>
-        /// <returns></returns>
-        /// <exception cref="NotFoundException"></exception>
-        /// <exception cref="UnauthorizedException"></exception>
         [HttpGet("datacite/{prefix}/{suffix}")]
         public async Task<IActionResult> GetByPrefixAndSuffixAsync(string prefix, string suffix)
         {
@@ -292,6 +264,9 @@ namespace Vaelastrasz.Server.Controllers
                 return StatusCode((int)response.StatusCode, await response.Content.ReadAsStringAsync());
 
             var updatedModel = JsonConvert.DeserializeObject<ReadDataCiteModel>(await response.Content.ReadAsStringAsync());
+
+            if(updatedModel == null)
+                return StatusCode((int)response.StatusCode, await response.Content.ReadAsStringAsync());
 
             var doiService = new DOIService(_connectionString);
             await doiService.UpdateByDOIAsync(doi, (DOIStateType)updatedModel.Data.Attributes.State, "");

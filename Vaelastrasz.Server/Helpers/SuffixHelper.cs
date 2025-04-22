@@ -6,7 +6,7 @@ namespace Vaelastrasz.Server.Helpers
 {
     public class SuffixHelper
     {
-        public static string Create(string pattern, Dictionary<string, string> placeholders = null)
+        public static string Create(string pattern, Dictionary<string, string>? placeholders = null)
         {
             try
             {
@@ -21,13 +21,13 @@ namespace Vaelastrasz.Server.Helpers
 
                 return suffix;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw new ArgumentException("After replacing the placeholder, the pattern is no longer a regular expression.");
             }
         }
 
-        public static bool Validate(string suffix, string pattern, Dictionary<string, string> placeholders = null)
+        public static bool Validate(string suffix, string pattern, Dictionary<string, string>? placeholders = null)
         {
             try
             {

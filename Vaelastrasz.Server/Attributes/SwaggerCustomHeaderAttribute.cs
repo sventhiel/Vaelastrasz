@@ -10,6 +10,7 @@
         }
 
         public string[] AcceptableTypes { get; }
+
         public string HeaderName { get; }
     }
 }
