@@ -23,7 +23,7 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         [HttpDelete("databases")]
-        public async Task<IActionResult> DeleteAsync()
+        public IActionResult DeleteAsync()
         {
             FileInfo database = new FileInfo(_connectionString.Filename);
 
