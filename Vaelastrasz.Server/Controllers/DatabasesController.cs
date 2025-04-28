@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using Vaelastrasz.Library.Exceptions;
 using Vaelastrasz.Library.Extensions;
-using Vaelastrasz.Server.Models;
 
 namespace Vaelastrasz.Server.Controllers
 {

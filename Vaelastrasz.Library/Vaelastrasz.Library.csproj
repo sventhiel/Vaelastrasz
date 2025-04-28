@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+	<TargetFramework>netstandard2.0</TargetFramework>
     <RepositoryUrl>https://github.com/sventhiel/Vaelastrasz</RepositoryUrl>
     <PackageProjectUrl>https://github.com/sventhiel/Vaelastrasz</PackageProjectUrl>
     <Authors>Sven Thiel</Authors>
     <Title>Vaelastrasz.Library</Title>
     <IncludeSymbols>True</IncludeSymbols>
-    <Version>3.2.0</Version>
+    <Version>3.2.1</Version>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>

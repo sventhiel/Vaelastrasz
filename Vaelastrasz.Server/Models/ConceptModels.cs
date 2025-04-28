@@ -9,6 +9,7 @@ namespace Vaelastrasz.Server.Models
 
         [Url]
         public string Url { get; set; }
+
         public List<CreateConceptItemModel> Items { get; set; }
     }
 
@@ -16,7 +17,7 @@ namespace Vaelastrasz.Server.Models
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        
+
         [Url]
         public string Url { get; set; }
 

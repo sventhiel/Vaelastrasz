@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using Vaelastrasz.Library.Configurations;
+﻿using Vaelastrasz.Library.Configurations;
 using Vaelastrasz.Library.Models;
 using Vaelastrasz.Library.Services;
 
@@ -22,11 +21,9 @@ namespace Vaelastrasz.Library.Tests.Services
                 var config = new Configuration("sventhiel", "sventhiel", "https://taerar.infinite-trajectory.de", true);
                 //var config = new Configuration("sventhiel", "s~c9<evQ#%^h4Uyb", "https://doi-proxy.bgc-jena.mpg.de");
 
-
                 var doiService = new DOIService(config);
 
                 var x = await doiService.FindAsync();
-
 
                 //var dict = "{ \"placeholders\": { \"{DatasetId}\": \"340\", \"{VersionId}\": \"1408\", \"{VersionNumber}\": \"2\" } }";
 

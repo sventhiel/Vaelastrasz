@@ -1,10 +1,8 @@
-﻿using NameParser;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 using Vaelastrasz.Library.Configurations;
 using Vaelastrasz.Library.Extensions;
 using Vaelastrasz.Library.Models;

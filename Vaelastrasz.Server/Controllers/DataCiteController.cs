@@ -265,7 +265,7 @@ namespace Vaelastrasz.Server.Controllers
 
             var updatedModel = JsonConvert.DeserializeObject<ReadDataCiteModel>(await response.Content.ReadAsStringAsync());
 
-            if(updatedModel == null)
+            if (updatedModel == null)
                 return StatusCode((int)response.StatusCode, await response.Content.ReadAsStringAsync());
 
             var doiService = new DOIService(_connectionString);

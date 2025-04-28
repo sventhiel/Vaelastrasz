@@ -127,6 +127,7 @@ namespace Vaelastrasz.Library.Models
         [JsonProperty("version")]
         public string Version { get; set; }
     }
+
     public class CreateDataCiteDataModel
     {
         public CreateDataCiteDataModel()
@@ -142,6 +143,7 @@ namespace Vaelastrasz.Library.Models
         [JsonProperty("type")]
         public DataCiteType Type { get; set; }
     }
+
     public class CreateDataCiteModel
     {
         public CreateDataCiteModel()

@@ -1,6 +1,5 @@
 ﻿using LiteDB;
 using System;
-using System.ComponentModel.DataAnnotations;
 
 namespace Vaelastrasz.Library.Entities
 {

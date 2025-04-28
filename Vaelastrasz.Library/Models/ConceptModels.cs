@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace Vaelastrasz.Library.Models
 {
@@ -9,10 +7,12 @@ namespace Vaelastrasz.Library.Models
     {
         [Required]
         public string Name { get; set; }
+
         public string Description { get; set; }
 
         [Required, Url]
         public string Url { get; set; }
+
         public List<ConceptItemModel> Items { get; set; }
     }
 
@@ -20,6 +20,7 @@ namespace Vaelastrasz.Library.Models
     {
         [Required]
         public string Name { get; set; }
+
         public string Description { get; set; }
 
         [Required, Url]
@@ -27,7 +28,7 @@ namespace Vaelastrasz.Library.Models
 
         public bool IsOptional { get; set; }
         public bool IsComplex { get; set; }
-        
+
         [Required]
         public string XPath { get; set; }
 

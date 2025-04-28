@@ -66,7 +66,7 @@ namespace Vaelastrasz.Server.Controllers
         {
             using var userService = new UserService(_connectionString);
 
-            if(User?.Identity?.Name == null)
+            if (User?.Identity?.Name == null)
                 return Forbid("You are not allowed to execute this function.");
 
             var user = await userService.FindByNameAsync(User.Identity.Name);

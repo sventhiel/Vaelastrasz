@@ -8,6 +8,7 @@ namespace Vaelastrasz.Server.Middleware
     {
         private readonly ILogger<ExceptionHandlingMiddleware> _logger;
         private readonly RequestDelegate _next;
+
         public ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
         {
             _next = next;
@@ -31,6 +32,7 @@ namespace Vaelastrasz.Server.Middleware
                 await HandleExceptionAsync(context, ex);
             }
         }
+
         private static Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
             var statusCode = exception switch

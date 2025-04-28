@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using Vaelastrasz.Library.Types;
 
 namespace Vaelastrasz.Library.Models.DataCite

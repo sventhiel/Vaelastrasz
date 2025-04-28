@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Controllers;
-using Microsoft.OpenApi.Any;
+﻿using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Vaelastrasz.Server.Attributes;

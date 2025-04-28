@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
 using System.Runtime.Serialization;
 
 namespace Vaelastrasz.Library.Types
@@ -141,7 +140,7 @@ namespace Vaelastrasz.Library.Types
         Withdrawn,
 
         [EnumMember(Value = "Other")]
-        Other 
+        Other
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
@@ -163,7 +162,7 @@ namespace Vaelastrasz.Library.Types
         TechnicalInfo,
 
         [EnumMember(Value = "Other")]
-        Other 
+        Other
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
@@ -176,7 +175,7 @@ namespace Vaelastrasz.Library.Types
         Register,
 
         [EnumMember(Value = "hide")]
-        Hide 
+        Hide
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
@@ -195,7 +194,7 @@ namespace Vaelastrasz.Library.Types
         ROR,
 
         [EnumMember(Value = "Other")]
-        Other 
+        Other
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
@@ -230,7 +229,7 @@ namespace Vaelastrasz.Library.Types
         RIS,
 
         [EnumMember(Value = "application/vnd.jats+xml")]
-        JATS_XML 
+        JATS_XML
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
@@ -439,9 +438,9 @@ namespace Vaelastrasz.Library.Types
 
         [EnumMember(Value = "IsTranslationOf")]
         IsTranslationOf,
-                    
+
         [EnumMember(Value = "HasTranslation")]
-        HasTranslation 
+        HasTranslation
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
@@ -538,7 +537,7 @@ namespace Vaelastrasz.Library.Types
         Workflow,
 
         [EnumMember(Value = "Other")]
-        Other 
+        Other
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
@@ -551,7 +550,7 @@ namespace Vaelastrasz.Library.Types
         Registered,
 
         [EnumMember(Value = "draft")]
-        Draft 
+        Draft
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
@@ -567,7 +566,7 @@ namespace Vaelastrasz.Library.Types
         TranslatedTitle,
 
         [EnumMember(Value = "Other")]
-        Other 
+        Other
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
