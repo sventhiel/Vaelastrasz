@@ -143,7 +143,13 @@ app.UseAuthorization();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 if (Convert.ToBoolean(builder.Configuration["Exceptionless:Enabled"]))
+{
     app.UseExceptionless();
+    ExceptionlessClient.Default.CreateLog("Vaelastrasz.Server started")
+        .SetProperty("Version", builder.Configuration["Exceptionless:Version"] ?? "v1.0")
+        .Submit();
+}
+
 
 // Map controllers
 app.MapControllers();
