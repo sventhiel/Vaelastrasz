@@ -1,10 +1,12 @@
 # Vaelastrasz.Server
 
+
+
 ## Requirements
 
 ## Installation
 
-### Ubuntu 22.04 LTS
+### Linux (e.g Debian/Ubuntu/Armbian)
 
 #### C# SDK / Runtime Environment
 
@@ -25,3 +27,9 @@
 #### Webserver / Reverse Proxy
 
 ## Manual / Guide
+
+## Contributing
+
+## License
+
+
