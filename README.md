@@ -23,7 +23,30 @@
 
 The repository consists of several projects, which are briefly described below.
 
+<details>
+<summary><h3>Vaelastrasz.Library</h3></summary>
+  * Klassenbibliothek für die Verwendung im Server, als auch in BEXIS2-Instanzen
+</details>
 
+<details>
+<summary><h3>Vaelastrasz.Library.Tests</h3></summary>
+  * Tests für Funktionen der Bibliothek
+</details>
+
+<details>
+<summary><h3>Vaelastrasz.Server</h3></summary>
+  * ReST API für die Kommunikation mit DataCite
+  * Weitere Funktionen (Schema, Namensauflösung von Personen,...)
+  * Exceptionless
+  * Swagger
+  * Serilog
+  * LiteDB
+</details>
+
+<details>
+<summary><h3>Vaelastrasz.Server.Tests</h3></summary>
+  * Tests für Funktionen des Servers - limitiert, da keine Integrationstests
+</details>
 
 ## Errors / Troubleshooting
 
