@@ -1,5 +1,7 @@
 # Vaelastrasz
 
+The project enables communication with DataCite to manage DOIs. This includes the creation, updating, and deletion of DOIs. It can be integrated directly into [BEXIS2](https://github.com/BEXIS2/Core) or used as a [standalone service](https://github.com/sventhiel/Vaelastrasz/tree/master/Vaelastrasz.Server).
+
 ## General Information
 
 <details>
@@ -25,7 +27,8 @@ The repository consists of several projects, which are briefly described below.
 
 <details>
 <summary><h3>Vaelastrasz.Library</h3></summary>
-  * Klassenbibliothek für die Verwendung im Server, als auch in BEXIS2-Instanzen
+	This project contains core functionalities of the DataCite workflow(s) that are used by both the Vaelastrasz.Server and corresponding BEXIS2 instance(s). 
+	It includes entities, models, schemas and services to manage all relevant information necessary for the DataCite workflow(s) - i.e. accounts, users, placeholders and DOIs. 
 </details>
 
 <details>
