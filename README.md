@@ -6,6 +6,10 @@ The project enables communication with DataCite to manage DOIs. This includes th
 
 <details>
 <summary><h3>What does the project do?</h3></summary>
+
+<!--
+	Die Verwaltung von DOIs via DataCite's Webseite ist umständlich und zeitaufwändig. Hier setzt Vaelastrasz an und bietet eine einfache Möglichkeit, DOIs zu verwalten. Hierzu wird eine REST API bereitgestellt, die es ermöglicht, DOIs zu erstellen, zu aktualisieren und zu löschen. Diese API kann direkt in BEXIS2 integriert oder als Stand-Alone-Service genutzt werden. Dabei werden verschiedene Funktionen bereitgestellt, die eine einfache Verwaltung von DOIs ermöglichen. Die API ist so gestaltet, dass sie einfach zu bedienen ist und eine schnelle Integration in bestehende Systeme ermöglicht.
+-->
   * BEXIS2 und Stand-Alone
   * DOI Workflow
   * DataCite
