@@ -23,11 +23,11 @@ namespace Vaelastrasz.Server.Controllers
             var assembly = AppDomain.CurrentDomain.GetAssemblies().Single(a => a.GetName().Name.Equals($"Vaelastrasz.Library", StringComparison.OrdinalIgnoreCase));
 
             if (assembly == null)
-                return NotFound("The package 'Vaelastrasz.Library' d");
+                return NotFound("The package 'Vaelastrasz.Library' cannot be found.");
 
             var version_library = assembly.GetName().Version?.ToString();
 
-            var version_application = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
+            var version_application = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version;
 
             return Ok(new
             {
