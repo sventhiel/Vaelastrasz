@@ -22,43 +22,49 @@ namespace Vaelastrasz.Server.Services
 
         public async Task<long> CreateAsync(string name, string password, string project, string pattern, long accountId, bool isActive)
         {
-            using var db = new LiteDatabase(_connectionString);
-            var users = db.GetCollection<User>("users");
-            var accounts = db.GetCollection<Account>("accounts");
-
-            if (users.Exists(u => u.Name.Equals(name, StringComparison.OrdinalIgnoreCase)))
-                throw new ConflictException($"The user (name:{name}) already exists.");
-
-            var account = accounts.FindById(accountId) ?? throw new NotFoundException($"The account (id:{accountId}) does not exist.");
-
-            //if(!pattern.IsValidRegex())
-            //    throw new BadRequestException($"The pattern ({pattern}) is not a valid regex.");
-
-            // salt
-            var salt = CryptographyUtils.GetRandomBase64String(16);
-
-            var user = new User
+            return await Task.Run(() =>
             {
-                Name = name,
-                Salt = salt,
-                Password = CryptographyUtils.GetSHA512HashAsBase64(salt, password),
-                Pattern = pattern,
-                Project = project,
-                IsActive = isActive,
-                CreationDate = DateTime.UtcNow,
-                LastUpdateDate = DateTime.UtcNow,
-                Account = account
-            };
+                using var db = new LiteDatabase(_connectionString);
+                var users = db.GetCollection<User>("users");
+                var accounts = db.GetCollection<Account>("accounts");
 
-            return await Task.FromResult<long>(users.Insert(user));
+                if (users.Exists(u => u.Name.Equals(name, StringComparison.OrdinalIgnoreCase)))
+                    throw new ConflictException($"The user (name:{name}) already exists.");
+
+                var account = accounts.FindById(accountId) ?? throw new NotFoundException($"The account (id:{accountId}) does not exist.");
+
+                //if(!pattern.IsValidRegex())
+                //    throw new BadRequestException($"The pattern ({pattern}) is not a valid regex.");
+
+                // salt
+                var salt = CryptographyUtils.GetRandomBase64String(16);
+
+                var user = new User
+                {
+                    Name = name,
+                    Salt = salt,
+                    Password = CryptographyUtils.GetSHA512HashAsBase64(salt, password),
+                    Pattern = pattern,
+                    Project = project,
+                    IsActive = isActive,
+                    CreationDate = DateTime.UtcNow,
+                    LastUpdateDate = DateTime.UtcNow,
+                    Account = account
+                };
+
+                return users.Insert(user);
+            });
         }
 
         public async Task<bool> DeleteByIdAsync(long id)
         {
-            using var db = new LiteDatabase(_connectionString);
-            var col = db.GetCollection<User>("users");
+            return await Task.Run(() =>
+            {
+                using var db = new LiteDatabase(_connectionString);
+                var col = db.GetCollection<User>("users");
 
-            return await Task.FromResult(col.Delete(id));
+                return col.Delete(id);
+            });
         }
 
         public void Dispose()

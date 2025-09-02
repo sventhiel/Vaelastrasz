@@ -22,71 +22,83 @@ namespace Vaelastrasz.Server.Services
 
         public async Task<long> CreateAsync(string prefix, string suffix, DOIStateType state, long userId, string value)
         {
-            using var db = new LiteDatabase(_connectionString);
-            var dois = db.GetCollection<DOI>("dois");
-            var users = db.GetCollection<User>("users");
-
-            var user = users.Include(u => u.Account).FindById(userId) ?? throw new NotFoundException($"The user (id:{userId}) does not exist.");
-
-            if (!user.Account.Prefix.Equals(prefix, StringComparison.InvariantCultureIgnoreCase))
-                throw new ForbiddenException($"The doi (prefix:{prefix}) is invalid.");
-
-            if (dois.Find(d => d.Prefix.Equals(prefix, StringComparison.InvariantCultureIgnoreCase) && d.Suffix.Equals(suffix, StringComparison.InvariantCultureIgnoreCase)).Count() > 0)
-                throw new ConflictException($"The doi (prefix:{prefix}, suffix: {suffix}) already exists.");
-
-            var doi = new DOI()
+            return await Task.Run(() =>
             {
-                Prefix = prefix,
-                Suffix = suffix,
-                State = state,
-                User = user,
-                Value = value,
-                CreationDate = DateTimeOffset.UtcNow,
-                LastUpdateDate = DateTimeOffset.UtcNow
-            };
+                using var db = new LiteDatabase(_connectionString);
+                var dois = db.GetCollection<DOI>("dois");
+                var users = db.GetCollection<User>("users");
 
-            return await Task.FromResult(dois.Insert(doi));
+                var user = users.Include(u => u.Account).FindById(userId) ?? throw new NotFoundException($"The user (id:{userId}) does not exist.");
+
+                if (!user.Account.Prefix.Equals(prefix, StringComparison.InvariantCultureIgnoreCase))
+                    throw new ForbiddenException($"The doi (prefix:{prefix}) is invalid.");
+
+                if (dois.Find(d => d.Prefix.Equals(prefix, StringComparison.InvariantCultureIgnoreCase) && d.Suffix.Equals(suffix, StringComparison.InvariantCultureIgnoreCase)).Count() > 0)
+                    throw new ConflictException($"The doi (prefix:{prefix}, suffix: {suffix}) already exists.");
+
+                var doi = new DOI()
+                {
+                    Prefix = prefix,
+                    Suffix = suffix,
+                    State = state,
+                    User = user,
+                    Value = value,
+                    CreationDate = DateTimeOffset.UtcNow,
+                    LastUpdateDate = DateTimeOffset.UtcNow
+                };
+
+                return dois.Insert(doi);
+            });
         }
 
         public async Task<bool> DeleteByDOIAsync(string doi)
         {
-            if (!doi.Contains('/'))
-                throw new BadRequestException($"The value of doi ({doi}) is invalid.");
+            return await Task.Run(() =>
+            {
+                if (!doi.Contains('/'))
+                    throw new BadRequestException($"The value of doi ({doi}) is invalid.");
 
-            string prefix = doi.Split('/')[0];
-            string suffix = doi.Split('/')[1];
+                string prefix = doi.Split('/')[0];
+                string suffix = doi.Split('/')[1];
 
-            return await DeleteByPrefixAndSuffixAsync(prefix, suffix);
+                return DeleteByPrefixAndSuffixAsync(prefix, suffix);
+            });
         }
 
         public async Task<bool> DeleteByIdAsync(long id)
         {
-            using var db = new LiteDatabase(_connectionString);
-            var col = db.GetCollection<DOI>("dois");
+            return await Task.Run(() =>
+            {
+                using var db = new LiteDatabase(_connectionString);
+                var col = db.GetCollection<DOI>("dois");
 
-            return await Task.FromResult(col.Delete(id));
+                return col.Delete(id);
+            });
         }
 
         public async Task<bool> DeleteByPrefixAndSuffixAsync(string prefix, string suffix)
         {
-            using var db = new LiteDatabase(_connectionString);
-            var dois = db.GetCollection<DOI>("dois");
-            var users = db.GetCollection<User>("users");
+            return await Task.Run(() =>
+            {
+                using var db = new LiteDatabase(_connectionString);
+                var dois = db.GetCollection<DOI>("dois");
+                var users = db.GetCollection<User>("users");
 
-            var doi = dois.Find(d => d.Prefix.Equals(prefix, StringComparison.OrdinalIgnoreCase) && d.Suffix.Equals(suffix, StringComparison.OrdinalIgnoreCase));
+                var doi = dois.Find(d => d.Prefix.Equals(prefix, StringComparison.OrdinalIgnoreCase) && d.Suffix.Equals(suffix, StringComparison.OrdinalIgnoreCase));
 
-            if (doi == null || !doi.Any())
-                throw new NotFoundException($"The doi (prefix:{prefix}, suffix: {suffix}) does not exist.");
+                if (doi == null || !doi.Any())
+                    throw new NotFoundException($"The doi (prefix:{prefix}, suffix: {suffix}) does not exist.");
 
-            if (doi.Count() > 1)
-                throw new ConflictException($"The doi (prefix:{prefix}, suffix: {suffix}) exists more than once.");
+                if (doi.Count() > 1)
+                    throw new ConflictException($"The doi (prefix:{prefix}, suffix: {suffix}) exists more than once.");
 
-            var user = users.FindById(doi.Single().User.Id) ?? throw new NotFoundException($"The user of doi (prefix:{prefix}, suffix: {suffix}) does not exist.");
+                var user = users.FindById(doi.Single().User.Id) ?? throw new NotFoundException($"The user of doi (prefix:{prefix}, suffix: {suffix}) does not exist.");
 
-            if (!user.Account.Prefix.Equals(prefix, StringComparison.OrdinalIgnoreCase))
-                throw new ForbiddenException($"The doi (prefix:{prefix}) is invalid.");
+                if (!user.Account.Prefix.Equals(prefix, StringComparison.OrdinalIgnoreCase))
+                    throw new ForbiddenException($"The doi (prefix:{prefix}) is invalid.");
 
-            return await Task.FromResult(dois.Delete(doi.Single().Id));
+                return dois.Delete(doi.Single().Id);
+            });
         }
 
         public void Dispose()
@@ -97,117 +109,144 @@ namespace Vaelastrasz.Server.Services
 
         public async Task<List<DOI>> FindAsync()
         {
-            using var db = new LiteDatabase(_connectionString);
-            var col = db.GetCollection<DOI>("dois");
+            return await Task.Run(() =>
+            {
+                using var db = new LiteDatabase(_connectionString);
+                var col = db.GetCollection<DOI>("dois");
 
-            return await Task.FromResult(col.FindAll().ToList());
+                return col.FindAll().ToList();
+            });
         }
 
         public async Task<DOI> FindByDOIAsync(string doi)
         {
-            if (!doi.Contains('/'))
-                throw new BadRequestException($"The value of doi ({doi}) is invalid.");
+            return await Task.Run(() =>
+            {
+                if (!doi.Contains('/'))
+                    throw new BadRequestException($"The value of doi ({doi}) is invalid.");
 
-            string prefix = doi.Split('/')[0];
-            string suffix = doi.Split('/')[1];
+                string prefix = doi.Split('/')[0];
+                string suffix = doi.Split('/')[1];
 
-            return await FindByPrefixAndSuffixAsync(prefix, suffix);
+                return FindByPrefixAndSuffixAsync(prefix, suffix);
+            });
         }
 
         public async Task<DOI> FindByIdAsync(long id)
         {
-            using var db = new LiteDatabase(_connectionString);
-            var col = db.GetCollection<DOI>("dois");
+            return await Task.Run(() =>
+            {
+                using var db = new LiteDatabase(_connectionString);
+                var col = db.GetCollection<DOI>("dois");
 
-            var doi = col.FindById(id);
+                var doi = col.FindById(id);
 
-            return doi == null ? throw new NotFoundException($"The doi (id:{id}) does not exist.") : await Task.FromResult(doi);
+                return doi != null ? doi : throw new NotFoundException($"The doi (id:{id}) does not exist.");
+            });
         }
 
         public async Task<DOI> FindByPrefixAndSuffixAsync(string prefix, string suffix)
         {
-            using var db = new LiteDatabase(_connectionString);
-            var col = db.GetCollection<DOI>("dois");
+            return await Task.Run(() =>
+            {
+                using var db = new LiteDatabase(_connectionString);
+                var col = db.GetCollection<DOI>("dois");
 
-            var dois = col.Find(d => d.Prefix.Equals(prefix, StringComparison.OrdinalIgnoreCase) && d.Suffix.Equals(suffix, StringComparison.OrdinalIgnoreCase));
+                var dois = col.Find(d => d.Prefix.Equals(prefix, StringComparison.OrdinalIgnoreCase) && d.Suffix.Equals(suffix, StringComparison.OrdinalIgnoreCase));
 
-            if (dois == null || !dois.Any())
-                throw new NotFoundException($"The doi (prefix:{prefix}, suffix: {suffix}) does not exist.");
+                if (dois == null || !dois.Any())
+                    throw new NotFoundException($"The doi (prefix:{prefix}, suffix: {suffix}) does not exist.");
 
-            if (dois.Count() > 1)
-                throw new ConflictException($"The doi (prefix:{prefix}, suffix: {suffix}) exists more than once.");
+                if (dois.Count() > 1)
+                    throw new ConflictException($"The doi (prefix:{prefix}, suffix: {suffix}) exists more than once.");
 
-            return await Task.FromResult(dois.Single());
+                return dois.Single();
+            });
         }
 
         public async Task<List<DOI>> FindByPrefixAsync(string prefix)
         {
-            using var db = new LiteDatabase(_connectionString);
-            var col = db.GetCollection<DOI>("dois");
+            return await Task.Run(() =>
+            {
+                using var db = new LiteDatabase(_connectionString);
+                var col = db.GetCollection<DOI>("dois");
 
-            return await Task.FromResult(col.Find(d => d.Prefix.Equals(prefix, StringComparison.OrdinalIgnoreCase)).ToList());
+                return col.Find(d => d.Prefix.Equals(prefix, StringComparison.OrdinalIgnoreCase)).ToList();
+            });
         }
 
         public async Task<List<DOI>> FindBySuffixAsync(string suffix)
         {
-            if (suffix == null)
-                throw new ArgumentNullException(nameof(suffix));
+            return await Task.Run(() =>
+            {
+                if (suffix == null)
+                    throw new ArgumentNullException(nameof(suffix));
 
-            using var db = new LiteDatabase(_connectionString);
-            var col = db.GetCollection<DOI>("dois");
+                using var db = new LiteDatabase(_connectionString);
+                var col = db.GetCollection<DOI>("dois");
 
-            return await Task.FromResult(col.Find(d => d.Suffix.Equals(suffix, StringComparison.OrdinalIgnoreCase)).ToList());
+                return col.Find(d => d.Suffix.Equals(suffix, StringComparison.OrdinalIgnoreCase)).ToList();
+            });
         }
 
         public async Task<List<DOI>> FindByUserIdAsync(long userId)
         {
-            using var db = new LiteDatabase(_connectionString);
-            var col = db.GetCollection<DOI>("dois");
+            return await Task.Run(() =>
+            {
+                using var db = new LiteDatabase(_connectionString);
+                var col = db.GetCollection<DOI>("dois");
 
-            return await Task.FromResult(col.Find(d => d.User.Id == userId).ToList());
+                return col.Find(d => d.User.Id == userId).ToList();
+            });
         }
 
         public async Task<bool> UpdateByDOIAsync(string doi, DOIStateType state, string value)
         {
-            if (!doi.Contains('/'))
-                throw new BadRequestException($"The value of doi ({doi}) is invalid.");
+            return await Task.Run(() =>
+            {
+                if (!doi.Contains('/'))
+                    throw new BadRequestException($"The value of doi ({doi}) is invalid.");
 
-            string prefix = doi.Split('/')[0];
-            string suffix = doi.Split('/')[1];
+                string prefix = doi.Split('/')[0];
+                string suffix = doi.Split('/')[1];
 
-            return await UpdateByPrefixAndSuffixAsync(prefix, suffix, state, value);
+                return UpdateByPrefixAndSuffixAsync(prefix, suffix, state, value);
+            });
         }
 
         public async Task<bool> UpdateByIdAsync(long id, DOIStateType state, string value)
         {
-            using var db = new LiteDatabase(_connectionString);
-            var dois = db.GetCollection<DOI>("dois");
+            return await Task.Run(() =>
+            {
+                using var db = new LiteDatabase(_connectionString);
+                var dois = db.GetCollection<DOI>("dois");
 
-            var doi = dois.FindById(id) ?? throw new NotFoundException($"The doi (id:{id}) does not exist.");
+                var doi = dois.FindById(id) ?? throw new NotFoundException($"The doi (id:{id}) does not exist.");
 
-            doi.State = state;
-            doi.Value = value;
-            doi.LastUpdateDate = DateTimeOffset.UtcNow;
+                doi.State = state;
+                doi.Value = value;
+                doi.LastUpdateDate = DateTimeOffset.UtcNow;
 
-            return await Task.FromResult(dois.Update(doi));
+                return dois.Update(doi);
+            });
         }
 
         public async Task<bool> UpdateByPrefixAndSuffixAsync(string prefix, string suffix, DOIStateType state, string value)
         {
-            using var db = new LiteDatabase(_connectionString);
-            var dois = db.GetCollection<DOI>("dois");
-            var users = db.GetCollection<User>("users");
+            return await Task.Run(() =>
+            {
+                using var db = new LiteDatabase(_connectionString);
+                var dois = db.GetCollection<DOI>("dois");
+                var users = db.GetCollection<User>("users");
 
-            var doi = await FindByPrefixAndSuffixAsync(prefix, suffix);
+                var doi = FindByPrefixAndSuffixAsync(prefix, suffix).Result ?? throw new NotFoundException($"The doi (doi:{prefix}/{suffix}) does not exist.");
+                
+                doi.State = state;
+                doi.Value = value;
+                doi.LastUpdateDate = DateTimeOffset.UtcNow;
 
-            if (doi == null)
-                throw new NotFoundException($"The doi (doi:{prefix}/{suffix}) does not exist.");
-
-            doi.State = state;
-            doi.Value = value;
-            doi.LastUpdateDate = DateTimeOffset.UtcNow;
-
-            return await Task.FromResult(dois.Update(doi));
+                return dois.Update(doi);
+            });
         }
 
         protected virtual void Dispose(bool disposing)
