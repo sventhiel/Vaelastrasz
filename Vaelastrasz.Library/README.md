@@ -1,4 +1,6 @@
 ![NuGet Version](https://img.shields.io/nuget/v/Vaelastrasz.Library)
+![NuGet Downloads](https://img.shields.io/nuget/dt/Vaelastrasz.Library)
+
 
 # Vaelastrasz.Library
 
