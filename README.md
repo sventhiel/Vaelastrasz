@@ -1,3 +1,7 @@
+![GitHub License](https://img.shields.io/github/license/sventhiel/Vaelastrasz)
+![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/sventhiel/Vaelastrasz/total)
+![GitHub branch status](https://img.shields.io/github/checks-status/sventhiel/Vaelastrasz/master)
+
 # Vaelastrasz
 
 The project enables communication with DataCite to manage DOIs. This includes the creation, updating, and deletion of DOIs. It can be integrated directly into [BEXIS2](https://github.com/BEXIS2/Core) or used as a [standalone service](https://github.com/sventhiel/Vaelastrasz/tree/master/Vaelastrasz.Server).
