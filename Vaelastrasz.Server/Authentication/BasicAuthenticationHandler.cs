@@ -1,7 +1,6 @@
 ﻿using LiteDB;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -46,7 +45,7 @@ namespace Vaelastrasz.Server.Authentication
                     {
                         new Claim(ClaimTypes.Name, credentials[0]),
                         new Claim(ClaimTypes.Role, "admin"),
-                        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                        //new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                     };
 
                     var identity = new ClaimsIdentity(claims, "Basic");
@@ -66,7 +65,7 @@ namespace Vaelastrasz.Server.Authentication
                             new Claim(ClaimTypes.Name, credentials[0]),
                             new Claim(ClaimTypes.Role, $"user"),
                             new Claim(ClaimTypes.Role, $"user-{accountType}"),
-                            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                            //new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                         };
 
                     var identity = new ClaimsIdentity(claims, "Basic");

@@ -2,6 +2,7 @@
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Reflection;
 using System.Threading.Tasks;
 using Vaelastrasz.Library.Configurations;
 using Vaelastrasz.Library.Models;
@@ -17,9 +18,12 @@ namespace Vaelastrasz.Library.Services
         public ConceptService(Configuration config)
         {
             _config = config;
-            _client = new HttpClient();
+            _client = new HttpClient
+            {
+                BaseAddress = new Uri(_config.Host)
+            };
 
-            _client.BaseAddress = new Uri(_config.Host);
+            _client.DefaultRequestHeaders.Add("Vaelastrasz.Library", $"{Assembly.GetExecutingAssembly().GetName().Version.ToString()}");
 
             if (_config.Username != null && _config.Password != null)
                 _client.DefaultRequestHeaders.Authorization = _config.GetBasicAuthenticationHeaderValue();
