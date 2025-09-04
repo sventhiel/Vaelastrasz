@@ -1,6 +1,6 @@
 # Vaelastrasz.Server
 
-
+Das Projekt beinhaltet die serverseitige Komponente der Vaelastrasz-Anwendung. Es handelt sich um eine ASP.NET Core Webanwendung, die als Backend für die mobile App dient. Die Anwendung bietet RESTful APIs zur Verwaltung von Benutzern, Aufgaben und anderen Ressourcen.
 
 ## Requirements
 

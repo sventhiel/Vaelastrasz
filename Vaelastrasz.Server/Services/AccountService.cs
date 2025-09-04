@@ -22,32 +22,38 @@ namespace Vaelastrasz.Server.Services
 
         public async Task<long> CreateAsync(string name, string password, string host, string prefix, AccountType accountType)
         {
-            using var db = new LiteDatabase(_connectionString);
-            var accounts = db.GetCollection<Account>("accounts");
-
-            if (accounts.Exists(u => u.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase) && u.Host.Equals(host, StringComparison.InvariantCultureIgnoreCase)))
-                throw new ConflictException($"The account (name:{name}, host: {host}) already exists.");
-
-            var account = new Account()
+            return await Task.Run(() =>
             {
-                Name = name,
-                Password = password,
-                Host = host,
-                Prefix = prefix,
-                AccountType = accountType,
-                CreationDate = DateTimeOffset.UtcNow,
-                LastUpdateDate = DateTimeOffset.UtcNow
-            };
+                using var db = new LiteDatabase(_connectionString);
+                var accounts = db.GetCollection<Account>("accounts");
 
-            return await Task.FromResult(accounts.Insert(account));
+                if (accounts.Exists(u => u.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase) && u.Host.Equals(host, StringComparison.InvariantCultureIgnoreCase)))
+                    throw new ConflictException($"The account (name:{name}, host: {host}) already exists.");
+
+                var account = new Account()
+                {
+                    Name = name,
+                    Password = password,
+                    Host = host,
+                    Prefix = prefix,
+                    AccountType = accountType,
+                    CreationDate = DateTimeOffset.UtcNow,
+                    LastUpdateDate = DateTimeOffset.UtcNow
+                };
+
+                return accounts.Insert(account);
+            });
         }
 
         public async Task<bool> DeleteByIdAsync(long id)
         {
-            using var db = new LiteDatabase(_connectionString);
-            var col = db.GetCollection<Account>("accounts");
+            return await Task.Run(() =>
+            {
+                using var db = new LiteDatabase(_connectionString);
+                var col = db.GetCollection<Account>("accounts");
 
-            return await Task.FromResult(col.Delete(id));
+                return col.Delete(id);
+            });
         }
 
         public void Dispose()
@@ -58,38 +64,47 @@ namespace Vaelastrasz.Server.Services
 
         public async Task<List<Account>> FindAsync()
         {
-            using var db = new LiteDatabase(_connectionString);
-            var col = db.GetCollection<Account>("accounts");
+            return await Task.Run(() =>
+            {
+                using var db = new LiteDatabase(_connectionString);
+                var col = db.GetCollection<Account>("accounts");
 
-            return await Task.FromResult(col.Query().ToList());
+                return col.Query().ToList();
+            });
         }
 
         public async Task<Account> FindByIdAsync(long id)
         {
-            using var db = new LiteDatabase(_connectionString);
-            var col = db.GetCollection<Account>("accounts");
+            return await Task.Run(() =>
+            {
+                using var db = new LiteDatabase(_connectionString);
+                var col = db.GetCollection<Account>("accounts");
 
-            var account = col.FindById(id) ?? throw new NotFoundException($"The account (id:{id}) does not exist.");
-            return await Task.FromResult(account);
+                var account = col.FindById(id) ?? throw new NotFoundException($"The account (id:{id}) does not exist.");
+                return account;
+            });
         }
 
         public async Task<bool> UpdateByIdAsync(long id, string name, string password, string host, string prefix)
         {
-            using var db = new LiteDatabase(_connectionString);
-            var accounts = db.GetCollection<Account>("accounts");
+            return await Task.Run(() =>
+            {
+                using var db = new LiteDatabase(_connectionString);
+                var accounts = db.GetCollection<Account>("accounts");
 
-            var account = accounts.FindById(id);
+                var account = accounts.FindById(id);
 
-            if (account == null)
-                throw new NotFoundException($"The account (id:{id}) does not exist.");
+                if (account == null)
+                    throw new NotFoundException($"The account (id:{id}) does not exist.");
 
-            account.Prefix = prefix;
-            account.Name = name;
-            account.Password = password;
-            account.Host = host;
-            account.LastUpdateDate = DateTimeOffset.UtcNow;
+                account.Prefix = prefix;
+                account.Name = name;
+                account.Password = password;
+                account.Host = host;
+                account.LastUpdateDate = DateTimeOffset.UtcNow;
 
-            return await Task.FromResult(accounts.Update(account));
+                return accounts.Update(account);
+            });
         }
 
         protected virtual void Dispose(bool disposing)
