@@ -19,6 +19,11 @@ namespace Vaelastrasz.Server.Controllers
             _connectionString = connectionString;
         }
 
+        /// <summary>
+        /// sdjflkjdsklfjlds
+        /// </summary>
+        /// <param name="id">abcd</param>
+        /// <returns>super du</returns>
         [HttpDelete("accounts/{id}")]
         public async Task<IActionResult> DeleteByIdAsync(long id)
         {

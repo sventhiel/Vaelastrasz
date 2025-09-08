@@ -16,6 +16,10 @@ namespace Vaelastrasz.Server.Controllers
             _logger = logger;
         }
 
+        /// <summary>
+        /// Gets the current DataCite metadata schema as JSON.
+        /// </summary>
+        /// <returns>The current DataCite schema (v4.6) in JSON format.</returns>
         [HttpGet("concepts")]
         public async Task<IActionResult> GetAsync()
         {
