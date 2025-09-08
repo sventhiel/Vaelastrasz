@@ -8,7 +8,7 @@ Die Anwendung nutzt mit [LiteDB](https://github.com/litedb-org/LiteDB) eine sehr
 
 Für den Start genügt es daher die Anwendung auszuführen. Eine gesonderte Datenbankinstallation oder -konfiguration entfällt. Das macht den Umgang besonders unkompliziert und erleichtert sowohl die Entwicklung als auch das Deployment erheblich. [LiteDB](https://github.com/litedb-org/LiteDB) ist darauf ausgelegt, überschaubare Datenmengen zuverlässig und schnell zu verwalten. Für die vorgesehenen Anwendungsfälle dieser Anwendung ist das vollkommen ausreichend. Sollte es in Zukunft jedoch um größere Datenbestände oder eine besonders hohe Anzahl gleichzeitiger Zugriffe gehen, wäre der Einsatz einer klassischen Datenbanklösung sinnvoll.
 
-Für die Verwaltung der Datenbank, jeneits der Möglichkeiten via Web-API, benötigen Sie ein Tool für den Zugriff - ähnlich wie beispielsweise pgAdmin für PostgreSQL. Für unsere Anwendung mit [LiteDB](https://github.com/litedb-org/LiteDB) ist dies [LiteDB.Studio](https://github.com/litedb-org/LiteDB.Studio). Eine ausführlicher Einführung finden Sie in dem entsprechenden Abschnitt [LiteDB.Studio](#LiteDB.Studio)
+Für die Verwaltung der Datenbank, jeneits der Möglichkeiten via Web-API, benötigen Sie ein Tool für den Zugriff - ähnlich wie beispielsweise pgAdmin für PostgreSQL. Für unsere Anwendung mit [LiteDB](https://github.com/litedb-org/LiteDB) ist dies [LiteDB.Studio](https://github.com/litedb-org/LiteDB.Studio). Eine ausführlicher Einführung finden Sie in dem entsprechenden Abschnitt [LiteDB.Studio](#litedbstudio)
 
 ## Requirements
 

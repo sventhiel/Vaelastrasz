@@ -21,7 +21,7 @@ namespace Vaelastrasz.Server.Controllers
 
         /// <summary>
         /// Löscht den Account anhand der angegebenen Id. Weitere Informationen finden Sie in der
-        /// <see href="https://github.com/sventhiel/Vaelastrasz/tree/master/Vaelastrasz.Server#Manual.Accounts">Dokumentation</see>.
+        /// <see href="https://github.com/sventhiel/Vaelastrasz/tree/master/Vaelastrasz.Server#accounts">Dokumentation</see>.
         /// </summary>
         /// <param name="id">Die eindeutige Kennung des Accounts, welcher gelöscht werden soll.</param>
         /// <returns>
