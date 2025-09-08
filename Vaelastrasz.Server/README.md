@@ -94,6 +94,28 @@ sventhiel@bananapi:~$ source ~/.bashrc
 
 ## Manual / Guide
 
+### <a id="Manual.Accounts">Accounts</a>
+
+### <a id="Manual.Concepts">Concepts</a>
+
+### <a id="Manual.Databases">Databases</a>
+
+### <a id="Manual.DataCite">DataCite</a>
+
+### <a id="Manual.DOIs">DOIs</a>
+
+### <a id="Manual.Names">Names</a>
+
+### <a id="Manual.Placeholders">Placeholders</a>
+
+### <a id="Manual.Prefixes">Prefixes</a>
+
+### <a id="Manual.Suffixes">Suffixes</a>
+
+### <a id="Manual.Users">Users</a>
+
+### <a id="Manual.Versions">Versions</a>
+
 ## Contributing
 
 ## License

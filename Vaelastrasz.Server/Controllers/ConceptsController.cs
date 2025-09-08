@@ -17,9 +17,18 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         /// <summary>
-        /// Gets the current DataCite metadata schema as JSON.
+        /// Ruft das aktuelle DataCite-Metadatenschema als JSON ab.
         /// </summary>
-        /// <returns>The current DataCite schema (v4.6) in JSON format.</returns>
+        /// <returns>
+        /// Ein <see cref="Task{IActionResult}"/>, das das aktuelle DataCite-Schema (v4.6) im JSON-Format repräsentiert.
+        /// Bei Erfolg wird ein 200 OK-Status mit dem deserialisierten <see cref="ConceptModel"/>-Objekt zurückgegeben.
+        /// </returns>
+        /// <remarks>
+        /// Diese Methode liest die DataCite-Schema-Datei aus dem Verzeichnis "concepts" im Web-Stammverzeichnis der Anwendung.
+        /// Die Datei wird mithilfe des Dateipfads "/concepts/datacite.json" geladen.
+        /// Das JSON wird in ein <see cref="ConceptModel"/>-Objekt deserialisiert, bevor es an den Client zurückgegeben wird.
+        /// Berücksichtigen Sie Sicherheitsaspekte bei der Dateizugriffskonfiguration, um mögliche Pfad- oder Dateizugriffsverletzungen zu vermeiden.
+        /// </remarks>
         [HttpGet("concepts")]
         public async Task<IActionResult> GetAsync()
         {
