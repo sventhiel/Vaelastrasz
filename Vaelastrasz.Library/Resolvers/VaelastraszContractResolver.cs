@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace Vaelastrasz.Server.Resolvers
+namespace Vaelastrasz.Library.Resolvers
 {
     public class VaelastraszContractResolver : DefaultContractResolver
     {

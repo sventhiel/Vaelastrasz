@@ -1,4 +1,6 @@
-﻿using System;
+﻿using NameParser;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using Vaelastrasz.Library.Models;
 using Vaelastrasz.Library.Models.DataCite;
@@ -9,6 +11,59 @@ namespace Vaelastrasz.Library.Extensions
     public static class DataCiteModelExtensions
     {
         #region CreateDataCiteModel
+
+        public static CreateDataCiteModel Update(this CreateDataCiteModel model, List<string> jsonProperties)
+        {
+            try
+            {
+                foreach (var property in jsonProperties)
+                {
+                    switch(property)
+                    {
+                        case "Creators":
+                            foreach (var creator in model.Data.Attributes.Creators)
+                            {
+                                if (creator.NameType == DataCiteNameType.Personal && !string.IsNullOrEmpty(creator.Name) && (string.IsNullOrEmpty(creator.GivenName) || string.IsNullOrEmpty(creator.FamilyName)))
+                                {
+                                    var names = new HumanName(creator.Name);
+                                    if (!names.IsUnparsable && !string.IsNullOrEmpty(names.First) && !string.IsNullOrEmpty(names.Last))
+                                    {
+                                        creator.GivenName = names.First;
+                                        creator.FamilyName = names.Last;
+                                        creator.Name = null;
+                                    }
+                                }
+                            }
+                            break;
+
+                        case "Contributors":
+                            foreach (var contributor in model.Data.Attributes.Contributors)
+                            {
+                                if (contributor.NameType == DataCiteNameType.Personal && !string.IsNullOrEmpty(contributor.Name) && (string.IsNullOrEmpty(contributor.GivenName) || string.IsNullOrEmpty(contributor.FamilyName)))
+                                {
+                                    var names = new HumanName(contributor.Name);
+                                    if (!names.IsUnparsable && !string.IsNullOrEmpty(names.First) && !string.IsNullOrEmpty(names.Last))
+                                    {
+                                        contributor.GivenName = names.First;
+                                        contributor.FamilyName = names.Last;
+                                        contributor.Name = null;
+                                    }
+                                }
+                            }
+                            break;
+
+                        default:
+                            break;
+                    }
+                }
+
+                return model;
+            }
+            catch (Exception)
+            {
+                return model;
+            }
+        }
 
         public static CreateDataCiteModel AddContributor(this CreateDataCiteModel model, string name, DataCiteNameType? nameType, DataCiteContributorType contributorType)
         {
@@ -45,14 +100,14 @@ namespace Vaelastrasz.Library.Extensions
             }
         }
 
-        public static CreateDataCiteModel AddCreator(this CreateDataCiteModel model, string name, DataCiteNameType? type)
+        public static CreateDataCiteModel AddCreator(this CreateDataCiteModel model, string name, DataCiteNameType? nameType)
         {
             try
             {
                 model.Data.Attributes.Creators.Add(new DataCiteCreator()
                 {
                     Name = name,
-                    NameType = type
+                    NameType = nameType
                 });
                 return model;
             }
@@ -80,6 +135,19 @@ namespace Vaelastrasz.Library.Extensions
             try
             {
                 model.Data.Attributes.Creators.AddRange(creators);
+                return model;
+            }
+            catch (Exception)
+            {
+                return model;
+            }
+        }
+
+        public static CreateDataCiteModel AddDescription(this CreateDataCiteModel model, DataCiteDescription description)
+        {
+            try
+            {
+                model.Data.Attributes.Descriptions.Add(description);
                 return model;
             }
             catch (Exception)

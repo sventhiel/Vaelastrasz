@@ -5,10 +5,11 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-	<Version>3.3.0</Version>
+	<Version>3.4.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Examples\creator_001.json" />
     <Content Remove="Examples\doi_001.json" />
     <Content Remove="Examples\doi_002.json" />
     <Content Remove="Examples\doi_003.json" />
@@ -39,6 +40,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Examples\creator_001.json" />
     <None Include="Examples\doi_003.json" />
     <None Include="Examples\doi_002.json" />
     <None Include="Examples\doi_001.json" />

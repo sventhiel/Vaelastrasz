@@ -27,9 +27,6 @@ namespace Vaelastrasz.Library.Services
 
             if (_config.Username != null && _config.Password != null)
                 _client.DefaultRequestHeaders.Authorization = _config.GetBasicAuthenticationHeaderValue();
-
-            if (_config.IgnoreNull)
-                JsonConvert.DefaultSettings = () => VaelastraszJsonSerializerSettings.Settings;
         }
 
         public async Task<ApiResponse<ConceptModel>> GetConceptModelAsync()

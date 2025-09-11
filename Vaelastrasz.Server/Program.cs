@@ -9,7 +9,7 @@ using System.Text.Json.Serialization;
 using Vaelastrasz.Server.Authentication;
 using Vaelastrasz.Server.Filters;
 using Vaelastrasz.Server.Middleware;
-using Vaelastrasz.Server.Resolvers;
+using Vaelastrasz.Library.Resolvers;
 
 var configuration = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())

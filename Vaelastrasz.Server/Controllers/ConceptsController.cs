@@ -28,6 +28,7 @@ namespace Vaelastrasz.Server.Controllers
         /// Die Datei wird mithilfe des Dateipfads "/concepts/datacite.json" geladen.
         /// Das JSON wird in ein <see cref="ConceptModel"/>-Objekt deserialisiert, bevor es an den Client zurückgegeben wird.
         /// Berücksichtigen Sie Sicherheitsaspekte bei der Dateizugriffskonfiguration, um mögliche Pfad- oder Dateizugriffsverletzungen zu vermeiden.
+        /// Weitere Informationen finden Sie in der <see href="https://github.com/sventhiel/Vaelastrasz/tree/master/Vaelastrasz.Server#concepts">Dokumentation</see>.
         /// </remarks>
         [HttpGet("concepts")]
         public async Task<IActionResult> GetAsync()

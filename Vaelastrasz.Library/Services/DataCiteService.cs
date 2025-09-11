@@ -30,15 +30,14 @@ namespace Vaelastrasz.Library.Services
 
             if (_config.Username != null && _config.Password != null)
                 _client.DefaultRequestHeaders.Authorization = _config.GetBasicAuthenticationHeaderValue();
-
-            if (_config.IgnoreNull)
-                JsonConvert.DefaultSettings = () => VaelastraszJsonSerializerSettings.Settings;
         }
 
         public async Task<ApiResponse<ReadDataCiteModel>> CreateAsync(CreateDataCiteModel model)
         {
             try
             {
+                model.Update(_config.UpdateProperties);
+
                 var response = await _client.PostAsync($"api/datacite", model.AsJson());
 
                 if (!response.IsSuccessStatusCode)

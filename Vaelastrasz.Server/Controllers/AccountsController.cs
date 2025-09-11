@@ -20,8 +20,7 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         /// <summary>
-        /// Löscht den Account anhand der angegebenen Id. Weitere Informationen finden Sie in der
-        /// <see href="https://github.com/sventhiel/Vaelastrasz/tree/master/Vaelastrasz.Server#accounts">Dokumentation</see>.
+        /// Löscht den Account anhand der angegebenen Id.
         /// </summary>
         /// <param name="id">Die eindeutige Kennung des Accounts, welcher gelöscht werden soll.</param>
         /// <returns>
@@ -32,6 +31,7 @@ namespace Vaelastrasz.Server.Controllers
         /// <remarks>
         /// Diese Methode verwendet die HttpDelete-Attributroute, um Anfragen unter "/accounts/{id}" zu bearbeiten.
         /// Verwenden Sie diese Methode, um ein Account vollständig aus dem System zu entfernen.
+        /// Weitere Informationen finden Sie in der <see href="https://github.com/sventhiel/Vaelastrasz/tree/master/Vaelastrasz.Server#accounts">Dokumentation</see>.
         /// </remarks>
         [HttpDelete("accounts/{id}")]
         public async Task<IActionResult> DeleteByIdAsync(long id)
@@ -52,7 +52,8 @@ namespace Vaelastrasz.Server.Controllers
         /// <remarks>
         /// Die Methode verwendet den <see cref="AccountService"/>, um die Accounts aus der Datenbank der Anwendung abzurufen.
         /// Jeder Account wird in ein <see cref="ReadAccountModel"/>-Objekt umgewandelt, bevor es an den Client zurückgegeben wird.
-        /// Bitte stellen Sie sicher, dass die Verbindungskonfiguration korrekt ist, um Zugriffsprobleme zu vermeiden.
+        /// Bitte stellen Sie sicher, dass die Verbindungskonfiguration korrekt ist, um Zugriffsprobleme zu vermeiden. 
+        /// Weitere Informationen finden Sie in der <see href="https://github.com/sventhiel/Vaelastrasz/tree/master/Vaelastrasz.Server#accounts">Dokumentation</see>.
         /// </remarks>
         [HttpGet("accounts")]
         public async Task<IActionResult> GetAsync()
@@ -76,6 +77,7 @@ namespace Vaelastrasz.Server.Controllers
         /// Diese Methode benutzt den <see cref="AccountService"/>, um einen bestimmten Account basierend auf der übergebenen Id zu finden.
         /// Der Account wird in ein <see cref="ReadAccountModel"/>-Objekt umgewandelt, bevor er an den Client zurückgegeben wird.
         /// Stellen Sie sicher, dass die angegebene Id gültig ist und dass die Datenbankverbindung korrekt konfiguriert ist.
+        /// Weitere Informationen finden Sie in der <see href="https://github.com/sventhiel/Vaelastrasz/tree/master/Vaelastrasz.Server#accounts">Dokumentation</see>.
         /// </remarks>
         [HttpGet("accounts/{id}")]
         public async Task<IActionResult> GetByIdAsync(long id)
@@ -98,6 +100,7 @@ namespace Vaelastrasz.Server.Controllers
         /// <remarks>
         /// Diese Methode erstellt einen neuen Account unter Verwendung der bereitgestellten Modelldaten und gibt die erstellte Ressource zurück.
         /// Bitte stellen Sie sicher, dass alle erforderlichen Felder im <see cref="CreateAccountModel"/> ausgefüllt sind.
+        /// Weitere Informationen finden Sie in der <see href="https://github.com/sventhiel/Vaelastrasz/tree/master/Vaelastrasz.Server#accounts">Dokumentation</see>.
         /// </remarks>
         [HttpPost("accounts")]
         [SwaggerResponse(201, "Resource created successfully", typeof(ReadAccountModel))]
@@ -127,6 +130,7 @@ namespace Vaelastrasz.Server.Controllers
         /// <remarks>
         /// Diese Methode aktualisiert die Details eines bestehenden Accounts basierend auf der bereitgestellten Id und den neuen Daten im <see cref="UpdateAccountModel"/>.
         /// Bitte stellen Sie sicher, dass die ID eines existierenden Accounts entspricht, um einen erfolgreichen Update-Vorgang zu gewährleisten.
+        /// Weitere Informationen finden Sie in der <see href="https://github.com/sventhiel/Vaelastrasz/tree/master/Vaelastrasz.Server#accounts">Dokumentation</see>.
         /// </remarks>
         [HttpPut("accounts/{id}")]
         public async Task<IActionResult> PutByIdAsync(long id, UpdateAccountModel model)

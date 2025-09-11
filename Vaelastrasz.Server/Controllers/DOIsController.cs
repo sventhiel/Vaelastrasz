@@ -24,6 +24,21 @@ namespace Vaelastrasz.Server.Controllers
             _logger = logger;
         }
 
+        /// <summary>
+        /// Löscht einen DOI-Eintrag aus der Applikation (NICHT aus DataCite) basierend auf dem angegebenen Präfix und Suffix, sofern der Benutzer dazu berechtigt ist.
+        /// </summary>
+        /// <param name="prefix">Das Präfix des DOI, der gelöscht werden soll.</param>
+        /// <param name="suffix">Das Suffix des DOI, der gelöscht werden soll.</param>
+        /// <returns>
+        /// Ein <see cref="Task{IActionResult}"/> mit einem 200 OK-Status bei erfolgreicher Löschung des DOI-Eintrags.
+        /// </returns>
+        /// <remarks>
+        /// Diese Methode erfordert die Authentifizierung des Benutzers.
+        /// Der Benutzer wird anhand seines Benutzernamens ermittelt und es wird sichergestellt, dass er berechtigt ist, den angegebenen DOI zu löschen.
+        /// Ist der Benutzer nicht berechtigt, wird eine <see cref="UnauthorizedException"/> ausgelöst.
+        /// Die effektive Löschung erfolgt durch den <see cref="DOIService"/>.
+        /// </remarks>
+        /// <exception cref="UnauthorizedException">Wird ausgelöst, wenn der Benutzer nicht die Berechtigung hat, den DOI zu löschen.</exception>
         [HttpDelete("dois/{prefix}/{suffix}")]
         public async Task<IActionResult> DeleteAsync(string prefix, string suffix)
         {
@@ -45,6 +60,19 @@ namespace Vaelastrasz.Server.Controllers
             return Ok(response);
         }
 
+        /// <summary>
+        /// Ruft alle DOI>
+        /// <returns>
+        /// Ein <see cref="Task{I}"/> mit einem 200 OK-Status und einer Liste von <see cref="ReadDOIModel"/>-Objekten,
+        /// die die DOI-Einträge des Benutzers darstellen.
+        /// </returns>
+        /// <remarks>
+        /// Diese Methode erfordert die Authentifizierung des Benutzers.
+        /// Es werden nur die DOI-Einträge zurückgegeben, die mit dem authentifizierten Benutzer verknüpft sind.
+        /// Wenn der Benutzer nicht authentifiziert ist, wird ein 403 Forbidden-Status zurückgegeben.
+        /// Die DOI-Daten werden über den <see cref="DOIService"/> abgerufen und in lesefreundliche Modelle konvertiert.
+        /// </remarks>
+        /// <exception cref="UnauthorizedAccessException">Wird ausgelöst, wenn die Benutzeridentität nicht verfügbar ist.</exception>
         [HttpGet("dois")]
         public async Task<IActionResult> GetAsync()
         {
@@ -61,6 +89,21 @@ namespace Vaelastrasz.Server.Controllers
             return Ok(dois);
         }
 
+        /// <summary>
+        /// Ruft einen spezifischen DOI-Eintrag basierend auf der übergebenen ID ab und gibt ihn im JSON-Format zurück.
+        /// </summary>
+        /// <param name="id">Die eindeutige ID des DOI-Eintrags, der abgerufen werden soll.</param>
+        /// <returns>
+        /// Ein <see cref="Task{IActionResult}"/> mit einem 200 OK-Status und einem <see cref="ReadDOIModel"/>-Objekt,
+        /// das die Details des DOI-Eintrags darstellt.
+        /// </returns>
+        /// <remarks>
+        /// Diese Methode erfordert die Authentifizierung des Benutzers.
+        /// Es wird überprüft, ob der Benutzer berechtigt ist, auf den angeforderten DOI-Eintrag zuzugreifen.
+        /// Wenn der Benutzer nicht identifiziert werden kann, wird ein 403 Forbidden-Status zurückgegeben.
+        /// Sollte der Benutzer nicht die Berechtigung für den Zugriff auf den DOI-Eintrag haben, wird eine <see cref="UnauthorizedException"/> ausgelöst.
+        /// </remarks>
+        /// <exception cref="UnauthorizedException">Wird ausgelöst, wenn der Benutzer nicht die Berechtigung hat, auf den DOI-Eintrag zuzugreifen.</exception>
         [HttpGet("dois/{id}")]
         public async Task<IActionResult> GetById(long id)
         {
@@ -80,6 +123,22 @@ namespace Vaelastrasz.Server.Controllers
             return Ok(ReadDOIModel.Convert(doi));
         }
 
+        /// <summary>
+        /// Ruft einen spezifischen DOI-Eintrag basierend auf dem übergebenen Präfix und Suffix ab und gibt ihn im JSON-Format zurück.
+        /// </summary>
+        /// <param name="prefix">Das Präfix des DOI, der abgerufen werden soll.</param>
+        /// <param name="suffix">Das Suffix des DOI, der abgerufen werden soll.</param>
+        /// <returns>
+        /// Ein <see cref="Task{IActionResult}"/> mit einem 200 OK-Status und einem <see cref="ReadDOIModel"/>-Objekt,
+        /// das die Details des DOI-Eintrags darstellt.
+        /// </returns>
+        /// <remarks>
+        /// Diese Methode erfordert die Authentifizierung des Benutzers.
+        /// Es wird sichergestellt, dass der aktuelle Benutzer berechtigt ist, auf den angeforderten DOI-Eintrag zuzugreifen.
+        /// Wenn der Benutzer nicht authentifiziert ist, wird ein 403 Forbidden-Status zurückgegeben.
+        /// Sollte der Benutzer nicht die Berechtigung für den Zugriff auf den DOI-Eintrag haben, wird eine <see cref="UnauthorizedException"/> ausgelöst.
+        /// </remarks>
+        /// <exception cref="UnauthorizedException">Wird ausgelöst, wenn der Benutzer nicht die Berechtigung hat, auf den DOI-Eintrag zuzugreifen.</exception>
         [HttpGet("dois/{prefix}/{suffix}")]
         public async Task<IActionResult> GetByPrefixAndSuffix(string prefix, string suffix)
         {

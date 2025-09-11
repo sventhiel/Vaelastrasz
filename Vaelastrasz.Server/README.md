@@ -90,31 +90,31 @@ sventhiel@bananapi:~$ source ~/.bashrc
 
 #### Webserver / Reverse Proxy
 
-## <a id="LiteDB.Studio">LiteDB.Studio</a>
+## LiteDB.Studio
 
 ## Manual / Guide
 
-### <a id="Manual.Accounts">Accounts</a>
+### Accounts
 
-### <a id="Manual.Concepts">Concepts</a>
+### Concepts
 
-### <a id="Manual.Databases">Databases</a>
+### Databases
 
-### <a id="Manual.DataCite">DataCite</a>
+### DataCite
 
-### <a id="Manual.DOIs">DOIs</a>
+### DOIs
 
-### <a id="Manual.Names">Names</a>
+### Names
 
-### <a id="Manual.Placeholders">Placeholders</a>
+### Placeholders
 
-### <a id="Manual.Prefixes">Prefixes</a>
+### Prefixes
 
-### <a id="Manual.Suffixes">Suffixes</a>
+### Suffixes
 
-### <a id="Manual.Users">Users</a>
+### Users
 
-### <a id="Manual.Versions">Versions</a>
+### Versions
 
 ## Contributing
 
