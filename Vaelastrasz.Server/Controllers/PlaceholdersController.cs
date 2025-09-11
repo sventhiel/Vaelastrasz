@@ -93,7 +93,7 @@ namespace Vaelastrasz.Server.Controllers
         /// Ein <see cref="IActionResult"/> mit einem 200 OK-Status, das ein <see cref="ReadPlaceholderModel"/>-Objekt enthält, das den Platzhalter repräsentiert.
         /// </returns>
         /// <remarks>
-        /// Diese Methode authentifiziert den Benutzer anhand seines Benutzernamens. 
+        /// Diese Methode authentifiziert den Benutzer anhand seines Benutzernamens.
         /// Der Benutzer muss eingeloggt sein, sonst wird ein 403 Forbidden-Status zurückgegeben.
         /// Der Platzhalter wird über den <see cref="PlaceholderService"/> anhand der bereitgestellten Id abgerufen.
         /// Der abgerufene Platzhalter wird in ein <see cref="ReadPlaceholderModel"/> umgewandelt, bevor er an den Client zurückgegeben wird.

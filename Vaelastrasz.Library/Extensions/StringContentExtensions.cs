@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.Net.Http;
 using System.Text;
-using System.Net;
 
 namespace Vaelastrasz.Library.Extensions
 {

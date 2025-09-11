@@ -240,7 +240,7 @@ namespace Vaelastrasz.Server.Services
                 var users = db.GetCollection<User>("users");
 
                 var doi = FindByPrefixAndSuffixAsync(prefix, suffix).Result ?? throw new NotFoundException($"The doi (doi:{prefix}/{suffix}) does not exist.");
-                
+
                 doi.State = state;
                 doi.Value = value;
                 doi.LastUpdateDate = DateTimeOffset.UtcNow;

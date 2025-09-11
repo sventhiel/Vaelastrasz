@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using Vaelastrasz.Library.Configurations;
 using Vaelastrasz.Library.Extensions;
 using Vaelastrasz.Library.Models;
-using Vaelastrasz.Library.Settings;
 
 namespace Vaelastrasz.Library.Services
 {
@@ -26,7 +25,6 @@ namespace Vaelastrasz.Library.Services
             };
 
             _client.DefaultRequestHeaders.Add("Vaelastrasz.Library", $"{Assembly.GetExecutingAssembly().GetName().Version.ToString()}");
-
 
             if (_config.Username != null && _config.Password != null)
                 _client.DefaultRequestHeaders.Authorization = _config.GetBasicAuthenticationHeaderValue();

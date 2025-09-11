@@ -6,10 +6,10 @@ using Microsoft.OpenApi.Models;
 using Serilog;
 using System.Reflection;
 using System.Text.Json.Serialization;
+using Vaelastrasz.Library.Resolvers;
 using Vaelastrasz.Server.Authentication;
 using Vaelastrasz.Server.Filters;
 using Vaelastrasz.Server.Middleware;
-using Vaelastrasz.Library.Resolvers;
 
 var configuration = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
@@ -149,7 +149,6 @@ if (Convert.ToBoolean(builder.Configuration["Exceptionless:Enabled"]))
         .SetProperty("Version", builder.Configuration["Exceptionless:Version"] ?? "v1.0")
         .Submit();
 }
-
 
 // Map controllers
 app.MapControllers();

@@ -52,7 +52,7 @@ namespace Vaelastrasz.Server.Controllers
         /// <remarks>
         /// Die Methode verwendet den <see cref="AccountService"/>, um die Accounts aus der Datenbank der Anwendung abzurufen.
         /// Jeder Account wird in ein <see cref="ReadAccountModel"/>-Objekt umgewandelt, bevor es an den Client zurückgegeben wird.
-        /// Bitte stellen Sie sicher, dass die Verbindungskonfiguration korrekt ist, um Zugriffsprobleme zu vermeiden. 
+        /// Bitte stellen Sie sicher, dass die Verbindungskonfiguration korrekt ist, um Zugriffsprobleme zu vermeiden.
         /// Weitere Informationen finden Sie in der <see href="https://github.com/sventhiel/Vaelastrasz/tree/master/Vaelastrasz.Server#accounts">Dokumentation</see>.
         /// </remarks>
         [HttpGet("accounts")]

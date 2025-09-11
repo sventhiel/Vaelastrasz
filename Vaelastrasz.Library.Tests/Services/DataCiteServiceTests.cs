@@ -2,7 +2,6 @@
 using Vaelastrasz.Library.Configurations;
 using Vaelastrasz.Library.Extensions;
 using Vaelastrasz.Library.Models;
-using Vaelastrasz.Library.Models.DataCite;
 using Vaelastrasz.Library.Services;
 using Vaelastrasz.Library.Settings;
 

@@ -7,8 +7,8 @@ namespace Vaelastrasz.Library.Configurations
 {
     public class Configuration
     {
-        public Configuration() 
-        { 
+        public Configuration()
+        {
             UpdateProperties = new List<string>();
         }
 

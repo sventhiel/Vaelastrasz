@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using Vaelastrasz.Library.Configurations;
 using Vaelastrasz.Library.Extensions;
 using Vaelastrasz.Library.Models;
-using Vaelastrasz.Library.Settings;
 using Vaelastrasz.Library.Types;
 
 namespace Vaelastrasz.Library.Services

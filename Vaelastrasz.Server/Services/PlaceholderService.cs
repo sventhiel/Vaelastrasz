@@ -78,7 +78,7 @@ namespace Vaelastrasz.Server.Services
                 var col = db.GetCollection<Placeholder>("placeholders");
 
                 var placeholder = col.FindById(id) ?? throw new NotFoundException($"The placeholder (id:{id}) does not exist.");
-                
+
                 return placeholder;
             });
         }
@@ -105,9 +105,9 @@ namespace Vaelastrasz.Server.Services
                 var users = db.GetCollection<User>("users");
 
                 var placeholder = placeholders.FindById(id) ?? throw new NotFoundException($"The placeholder (id:{id}) does not exist.");
-                
+
                 var user = users.FindById(userId) ?? throw new NotFoundException($"The user (id:{userId}) does not exist.");
-                
+
                 placeholder.Expression = expression;
                 placeholder.RegularExpression = regularExpression;
                 placeholder.User = user;

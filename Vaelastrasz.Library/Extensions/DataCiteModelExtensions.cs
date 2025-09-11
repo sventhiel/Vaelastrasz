@@ -1,5 +1,4 @@
 ﻿using NameParser;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using Vaelastrasz.Library.Models;
@@ -18,7 +17,7 @@ namespace Vaelastrasz.Library.Extensions
             {
                 foreach (var property in jsonProperties)
                 {
-                    switch(property)
+                    switch (property)
                     {
                         case "Creators":
                             foreach (var creator in model.Data.Attributes.Creators)

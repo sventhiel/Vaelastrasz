@@ -156,8 +156,6 @@ namespace Vaelastrasz.Library.Models
         public CreateDataCiteDataModel Data { get; set; }
     }
 
-
-
     #endregion create
 
     #region read
