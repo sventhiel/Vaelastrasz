@@ -10,7 +10,6 @@ using Vaelastrasz.Library.Exceptions;
 using Vaelastrasz.Library.Extensions;
 using Vaelastrasz.Library.Models;
 using Vaelastrasz.Server.Attributes;
-using Vaelastrasz.Server.Configurations;
 using Vaelastrasz.Server.Helpers;
 using Vaelastrasz.Server.Services;
 
@@ -20,14 +19,12 @@ namespace Vaelastrasz.Server.Controllers
     public class DataCiteController : ControllerBase
     {
         private readonly ILogger<DataCiteController> _logger;
-        private List<Admin> _admins;
         private List<string> _updateProperties;
         private ConnectionString _connectionString;
 
         public DataCiteController(ILogger<DataCiteController> logger, IConfiguration configuration, ConnectionString connectionString)
         {
             _connectionString = connectionString;
-            _admins = configuration.GetSection("Admins").Get<List<Admin>>()!;
             _updateProperties = configuration.GetSection("UpdateProperties").Get<List<string>>() ?? [];
             _logger = logger;
         }

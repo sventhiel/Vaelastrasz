@@ -10,7 +10,7 @@ using Vaelastrasz.Server.Services;
 //rdy
 namespace Vaelastrasz.Server.Controllers
 {
-    [ApiController, Authorize(Roles = "user"), Route("api")]
+    [ApiController, Authorize(Roles = "admin,user"), Route("api")]
     public class PlaceholdersController : ControllerBase
     {
         private readonly ILogger<PlaceholdersController> _logger;
