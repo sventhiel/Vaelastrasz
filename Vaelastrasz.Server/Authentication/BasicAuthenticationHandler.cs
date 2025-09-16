@@ -65,7 +65,6 @@ namespace Vaelastrasz.Server.Authentication
                             new Claim(ClaimTypes.Name, credentials[0]),
                             new Claim(ClaimTypes.Role, $"user"),
                             new Claim(ClaimTypes.Role, $"user-{accountType}"),
-                            //new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                         };
 
                     var identity = new ClaimsIdentity(claims, "Basic");
