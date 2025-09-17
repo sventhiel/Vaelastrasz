@@ -23,9 +23,9 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         /// <summary>
-        /// Löscht einen Benutzer basierend auf der übergebenen ID, sofern der aktuelle Benutzer über die erforderlichen Berechtigungen verfügt.
+        /// Löscht einen Benutzer basierend auf der übergebenen Id, sofern der aktuelle Benutzer über die erforderlichen Berechtigungen verfügt.
         /// </summary>
-        /// <param name="id">Die ID des Benutzers, der gelöscht werden soll.</param>
+        /// <param name="id">Die Id des Benutzers, der gelöscht werden soll.</param>
         /// <returns>
         /// Ein <see cref="Task{IActionResult}"/> mit einem 200 OK-Status, bei erfolgreicher Löschung des Benutzers,
         /// oder ein 403 Forbidden-Status, wenn der aktuelle Benutzer nicht die erforderlichen Administratorrechte besitzt.
@@ -33,7 +33,7 @@ namespace Vaelastrasz.Server.Controllers
         /// <remarks>
         /// Diese Methode setzt voraus, dass der aktuelle Benutzer die Rolle "admin" innehat.
         /// Ohne angemessene Admin-Berechtigungen wird der Zugriff mit einem 403 Forbidden-Status abgewiesen.
-        /// Die Löschung wird über den <see cref="UserService"/> durchgeführt, der den Benutzer anhand der übergebenen ID aus dem System entfernt.
+        /// Die Löschung wird über den <see cref="UserService"/> durchgeführt, der den Benutzer anhand der übergebenen Id aus dem System entfernt.
         /// Entwickler sollten sicherstellen, dass die erforderlichen Administratorrechte gewährt sind, um die Löschoperation erfolgreich ausführen zu können.
         /// </remarks>
         [HttpDelete("users/{id}")]
@@ -75,9 +75,9 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         /// <summary>
-        /// Ruft die Details eines bestimmten Benutzers basierend auf der übergebenen ID ab.
+        /// Ruft die Details eines bestimmten Benutzers basierend auf der übergebenen Id ab.
         /// </summary>
-        /// <param name="id">Die eindeutige ID des Benutzers, dessen Details abgerufen werden sollen.</param>
+        /// <param name="id">Die eindeutige Id des Benutzers, dessen Details abgerufen werden sollen.</param>
         /// <returns>
         /// Ein <see cref="Task{IActionResult}"/> mit einem 200 OK-Status und einem <see cref="ReadUserModel"/>-Objekt,
         /// das die Details des Benutzers darstellt, oder ein 403 Forbidden-Status, wenn der aktuelle Benutzer nicht die
@@ -142,9 +142,9 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         /// <summary>
-        /// Aktualisiert die Details eines bestehenden Benutzers basierend auf der übergebenen ID und den neuen Modelldaten.
+        /// Aktualisiert die Details eines bestehenden Benutzers basierend auf der übergebenen Id und den neuen Modelldaten.
         /// </summary>
-        /// <param name="id">Die eindeutige ID des Benutzers, der aktualisiert werden soll.</param>
+        /// <param name="id">Die eindeutige Id des Benutzers, der aktualisiert werden soll.</param>
         /// <param name="model">Das <see cref="UpdateUserModel"/>, das die neuen Benutzerdaten enthält.</param>
         /// <returns>
         /// Ein <see cref="Task{IActionResult}"/> mit einem 200 OK-Status und dem aktualisierten <see cref="ReadUserModel"/>-Objekt,

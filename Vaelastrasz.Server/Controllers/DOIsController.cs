@@ -94,9 +94,9 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         /// <summary>
-        /// Ruft einen spezifischen DOI-Eintrag basierend auf der übergebenen ID ab und gibt ihn im JSON-Format zurück.
+        /// Ruft einen spezifischen DOI-Eintrag basierend auf der übergebenen Id ab und gibt ihn im JSON-Format zurück.
         /// </summary>
-        /// <param name="id">Die eindeutige ID des DOI-Eintrags, der abgerufen werden soll.</param>
+        /// <param name="id">Die eindeutige Id des DOI-Eintrags, der abgerufen werden soll.</param>
         /// <returns>
         /// Ein <see cref="Task{IActionResult}"/> mit einem 200 OK-Status und einem <see cref="ReadDOIModel"/>-Objekt,
         /// das die Details des DOI-Eintrags darstellt.

@@ -141,7 +141,7 @@ namespace Vaelastrasz.Server.Controllers
         /// </returns>
         /// <remarks>
         /// Diese Methode aktualisiert die Details eines bestehenden Accounts basierend auf der bereitgestellten Id und den neuen Daten im <see cref="UpdateAccountModel"/>.
-        /// Bitte stellen Sie sicher, dass die ID eines existierenden Accounts entspricht, um einen erfolgreichen Update-Vorgang zu gewährleisten.
+        /// Bitte stellen Sie sicher, dass die Id eines existierenden Accounts entspricht, um einen erfolgreichen Update-Vorgang zu gewährleisten.
         /// Weitere Informationen finden Sie in der <see href="https://github.com/sventhiel/Vaelastrasz/tree/master/Vaelastrasz.Server#accounts">Dokumentation</see>.
         /// </remarks>
         [HttpPut("accounts/{id}")]
