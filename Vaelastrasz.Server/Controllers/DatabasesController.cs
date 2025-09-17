@@ -36,6 +36,9 @@ namespace Vaelastrasz.Server.Controllers
         [HttpDelete("databases")]
         public IActionResult DeleteAsync()
         {
+            if (!User.IsInRole("admin"))
+                return Forbid();
+
             FileInfo database = new FileInfo(_connectionString.Filename);
 
             database.Delete();
@@ -58,6 +61,9 @@ namespace Vaelastrasz.Server.Controllers
         [HttpGet("databases")]
         public IActionResult GetAsync()
         {
+            if (!User.IsInRole("admin"))
+                return Forbid();
+
             // database
             FileInfo database = new FileInfo(_connectionString.Filename);
 
@@ -82,6 +88,9 @@ namespace Vaelastrasz.Server.Controllers
         [SwaggerResponse(201, "Resource created successfully")]
         public async Task<IActionResult> PostAsync(IFormFile file)
         {
+            if (!User.IsInRole("admin"))
+                return Forbid();
+
             if (file == null)
                 throw new BadRequestException("null");
 

@@ -36,6 +36,9 @@ namespace Vaelastrasz.Server.Controllers
         [HttpDelete("accounts/{id}")]
         public async Task<IActionResult> DeleteByIdAsync(long id)
         {
+            if(!User.IsInRole("admin"))
+                return Forbid();
+
             using var accountService = new AccountService(_connectionString);
             var result = await accountService.DeleteByIdAsync(id);
 
@@ -58,6 +61,9 @@ namespace Vaelastrasz.Server.Controllers
         [HttpGet("accounts")]
         public async Task<IActionResult> GetAsync()
         {
+            if (!User.IsInRole("admin"))
+                return Forbid();
+
             using var accountService = new AccountService(_connectionString);
             var result = await accountService.FindAsync();
 
@@ -82,6 +88,9 @@ namespace Vaelastrasz.Server.Controllers
         [HttpGet("accounts/{id}")]
         public async Task<IActionResult> GetByIdAsync(long id)
         {
+            if (!User.IsInRole("admin"))
+                return Forbid();
+
             using var accountService = new AccountService(_connectionString);
             var result = await accountService.FindByIdAsync(id);
 
@@ -106,6 +115,9 @@ namespace Vaelastrasz.Server.Controllers
         [SwaggerResponse(201, "Resource created successfully", typeof(ReadAccountModel))]
         public async Task<IActionResult> PostAsync(CreateAccountModel model)
         {
+            if (!User.IsInRole("admin"))
+                return Forbid();
+
             using var accountService = new AccountService(_connectionString);
 
             var id = await accountService.CreateAsync(model.Name, model.Password, model.Host, model.Prefix, model.AccountType);
@@ -135,6 +147,9 @@ namespace Vaelastrasz.Server.Controllers
         [HttpPut("accounts/{id}")]
         public async Task<IActionResult> PutByIdAsync(long id, UpdateAccountModel model)
         {
+            if (!User.IsInRole("admin"))
+                return Forbid();
+
             using var accountService = new AccountService(_connectionString);
 
             var result = await accountService.UpdateByIdAsync(id, model.Name, model.Password, model.Host, model.Prefix);

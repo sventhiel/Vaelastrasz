@@ -42,12 +42,14 @@ namespace Vaelastrasz.Server.Controllers
         [HttpDelete("dois/{prefix}/{suffix}")]
         public async Task<IActionResult> DeleteAsync(string prefix, string suffix)
         {
+            if (!User.IsInRole("user") || User?.Identity?.Name == null)
+                return Forbid();
+
             using var userService = new UserService(_connectionString);
-
-            if (User?.Identity?.Name == null)
-                return Forbid("You are not allowed to execute this function.");
-
             var user = await userService.FindByNameAsync(User.Identity.Name);
+
+            if (user == null)
+                return Forbid();
 
             using var doiService = new DOIService(_connectionString);
 
@@ -76,12 +78,14 @@ namespace Vaelastrasz.Server.Controllers
         [HttpGet("dois")]
         public async Task<IActionResult> GetAsync()
         {
+            if (!User.IsInRole("user") || User?.Identity?.Name == null)
+                return Forbid();
+
             using var userService = new UserService(_connectionString);
-
-            if (User?.Identity?.Name == null)
-                return Forbid("You are not allowed to execute this function.");
-
             var user = await userService.FindByNameAsync(User.Identity.Name);
+
+            if (user == null)
+                return Forbid();
 
             using var doiService = new DOIService(_connectionString);
             var dois = (await doiService.FindByUserIdAsync(user.Id)).Select(d => ReadDOIModel.Convert(d));
@@ -107,12 +111,14 @@ namespace Vaelastrasz.Server.Controllers
         [HttpGet("dois/{id}")]
         public async Task<IActionResult> GetById(long id)
         {
+            if (!User.IsInRole("user") || User?.Identity?.Name == null)
+                return Forbid();
+
             using var userService = new UserService(_connectionString);
-
-            if (User?.Identity?.Name == null)
-                return Forbid("You are not allowed to execute this function.");
-
             var user = await userService.FindByNameAsync(User.Identity.Name);
+
+            if (user == null)
+                return Forbid();
 
             using var doiService = new DOIService(_connectionString);
             var doi = await doiService.FindByIdAsync(id);
@@ -142,12 +148,14 @@ namespace Vaelastrasz.Server.Controllers
         [HttpGet("dois/{prefix}/{suffix}")]
         public async Task<IActionResult> GetByPrefixAndSuffix(string prefix, string suffix)
         {
+            if (!User.IsInRole("user") || User?.Identity?.Name == null)
+                return Forbid();
+
             using var userService = new UserService(_connectionString);
-
-            if (User?.Identity?.Name == null)
-                return Forbid("You are not allowed to execute this function.");
-
             var user = await userService.FindByNameAsync(User.Identity.Name);
+
+            if (user == null)
+                return Forbid();
 
             using var doiService = new DOIService(_connectionString);
             var result = await doiService.FindByPrefixAndSuffixAsync(prefix, suffix);
@@ -162,15 +170,14 @@ namespace Vaelastrasz.Server.Controllers
         [SwaggerResponse(201, "Resource created successfully", typeof(ReadDOIModel))]
         public async Task<IActionResult> Post(CreateDOIModel model)
         {
+            if (!User.IsInRole("user") || User?.Identity?.Name == null)
+                return Forbid();
+
             using var userService = new UserService(_connectionString);
-
-            if (User?.Identity?.Name == null)
-                return Forbid("You are not allowed to execute this function.");
-
             var user = await userService.FindByNameAsync(User.Identity.Name);
 
-            if (user.Account == null)
-                throw new NotFoundException($"The account of user (id: {user.Id}) does not exist.");
+            if (user == null || user.Account == null || string.IsNullOrEmpty(user.Account.Prefix) || string.IsNullOrEmpty(user.Pattern))
+                return Forbid();
 
             using var placeholderService = new PlaceholderService(_connectionString);
             var placeholders = await placeholderService.FindByUserIdAsync(user.Id);
@@ -192,12 +199,14 @@ namespace Vaelastrasz.Server.Controllers
         [HttpPut("dois/{doi}")]
         public async Task<IActionResult> PutByDOI(string doi, UpdateDOIModel model)
         {
+            if (!User.IsInRole("user") || User?.Identity?.Name == null)
+                return Forbid();
+
             using var userService = new UserService(_connectionString);
-
-            if (User?.Identity?.Name == null)
-                return Forbid("You are not allowed to execute this function.");
-
             var user = await userService.FindByNameAsync(User.Identity.Name);
+
+            if (user == null)
+                return Forbid();
 
             using var doiService = new DOIService(_connectionString);
             var _doi = await doiService.FindByDOIAsync(doi);
@@ -210,26 +219,17 @@ namespace Vaelastrasz.Server.Controllers
             return Ok(ReadDOIModel.Convert(_doi));
         }
 
-        //[HttpPut("dois/{id}")]
-        //public async Task<IActionResult> PutById(long id, UpdateDOIModel model)
-        //{
-        //    using var doiService = new DOIService(_connectionString);
-
-        //    var result = await doiService.UpdateByIdAsync(id, model.State, "");
-        //    var doi = await doiService.FindByIdAsync(id);
-
-        //    return Ok(ReadDOIModel.Convert(doi));
-        //}
-
         [HttpPut("dois/{prefix}/{suffix}")]
         public async Task<IActionResult> PutByPrefixAndSuffix(string prefix, string suffix, UpdateDOIModel model)
         {
+            if (!User.IsInRole("user") || User?.Identity?.Name == null)
+                return Forbid();
+
             using var userService = new UserService(_connectionString);
-
-            if (User?.Identity?.Name == null)
-                return Forbid("You are not allowed to execute this function.");
-
             var user = await userService.FindByNameAsync(User.Identity.Name);
+
+            if (user == null)
+                return Forbid();
 
             using var doiService = new DOIService(_connectionString);
             var doi = await doiService.FindByPrefixAndSuffixAsync(prefix, suffix);

@@ -4,20 +4,20 @@ namespace Vaelastrasz.Server.Models
 {
     public class CreatePlaceholderModel
     {
-        public string Expression { get; set; }
-        public string RegularExpression { get; set; }
-        public long UserId { get; set; }
+        public required string Expression { get; set; }
+        public required string RegularExpression { get; set; }
+        public required long UserId { get; set; }
     }
 
     public class ReadPlaceholderModel
     {
-        public DateTimeOffset CreationDate { get; set; }
-        public string Expression { get; set; }
-        public long Id { get; set; }
-        public DateTimeOffset LastUpdateDate { get; set; }
-        public string RegularExpression { get; set; }
+        public required DateTimeOffset CreationDate { get; set; }
+        public required string Expression { get; set; }
+        public required long Id { get; set; }
+        public required DateTimeOffset LastUpdateDate { get; set; }
+        public required string RegularExpression { get; set; }
 
-        public long UserId { get; set; }
+        public required long UserId { get; set; }
 
         public static ReadPlaceholderModel Convert(Placeholder placeholder)
         {
@@ -35,9 +35,8 @@ namespace Vaelastrasz.Server.Models
 
     public class UpdatePlaceholderModel
     {
-        public string Expression { get; set; }
-        public string RegularExpression { get; set; }
-
-        public long UserId { get; set; }
+        public required string Expression { get; set; }
+        public required string RegularExpression { get; set; }
+        public required long UserId { get; set; }
     }
 }

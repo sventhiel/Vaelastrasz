@@ -63,6 +63,7 @@ namespace Vaelastrasz.Server.Authentication
                     var claims = new List<Claim>()
                         {
                             new Claim(ClaimTypes.Name, credentials[0]),
+                            new Claim("UserId", user.Id.ToString()),
                             new Claim(ClaimTypes.Role, $"user"),
                             new Claim(ClaimTypes.Role, $"user-{accountType}"),
                         };

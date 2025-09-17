@@ -16,15 +16,31 @@ namespace Vaelastrasz.Server.Controllers
             _connectionString = connectionString;
         }
 
+        /// <summary>
+        /// Ruft das Präfix des authentifizierten Benutzers ab, sofern dieser über die erforderlichen Berechtigungen verfügt.
+        /// </summary>
+        /// <returns>
+        /// Ein <see cref="Task{IActionResult}"/> mit einem 200 OK-Status und dem Präfix als Zeichenfolge, wenn der Abruf erfolgreich ist,
+        /// oder ein 403 Forbidden-Status, wenn der Benutzer nicht berechtigt ist.
+        /// </returns>
+        /// <remarks>
+        /// Diese Methode setzt voraus, dass der Benutzer in der Rolle "user" authentifiziert ist.
+        /// Ein Benutzer ohne ein verknüpftes Konto oder ohne definiertes Präfix wird mit einem 403 Forbidden-Status abgewiesen.
+        /// Die Methode extrahiert das Präfix aus dem Benutzerkonto und gibt es zurück.
+        /// Entwicklern wird empfohlen, sicherzustellen, dass die erforderliche Benutzerrolle und die Konto-Konfiguration korrekt sind,
+        /// um eine erfolgreiche Anfrage zu ermöglichen.
+        /// </remarks>
         [HttpGet("prefixes")]
         public async Task<IActionResult> GetAsync()
         {
+            if(!User.IsInRole("user") || User.Identity?.Name == null)
+                return Forbid();
+
             using var userService = new UserService(_connectionString);
-
-            if (User?.Identity?.Name == null)
-                return Forbid("You are not allowed to execute this function.");
-
             var user = await userService.FindByNameAsync(User.Identity.Name);
+
+            if(user?.Account == null || string.IsNullOrEmpty(user.Account.Prefix))
+                return Forbid();
 
             // Prefix
             var prefix = user.Account.Prefix;

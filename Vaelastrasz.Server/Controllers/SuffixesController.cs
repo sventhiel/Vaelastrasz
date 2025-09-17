@@ -19,15 +19,32 @@ namespace Vaelastrasz.Server.Controllers
             _connectionString = connectionString;
         }
 
+        /// <summary>
+        /// Erstellt ein Suffix basierend auf dem von einem Benutzer bereitgestellten Muster und den Platzhaltern und validiert es dann.
+        /// </summary>
+        /// <param name="model">Das <see cref="CreateSuffixModel"/>, das die erforderlichen Daten für die Erstellung des Suffixes enthält.</param>
+        /// <returns>
+        /// Ein <see cref="Task{IActionResult}"/> mit einem 200 OK-Status, das das erstellte und validierte Suffix im Erfolgsfall zurückgibt,
+        /// oder ein 403 Forbidden-Status, wenn der Benutzer nicht berechtigt ist, oder ein BadRequestException bei ungültigem Suffix.
+        /// </returns>
+        /// <remarks>
+        /// Diese Methode erfordert, dass der Benutzer in der Rolle "user" ist und eine authentifizierte Identität hat.
+        /// Der Benutzer muss ein verknüpftes Konto und ein gültiges Muster besitzen, um das Suffix zu generieren und zu validieren.
+        /// Der Suffix wird mit dem Muster des Benutzers und seinen Platzhaltern erstellt und validiert.
+        /// Wenn die Validierung erfolgreich ist, wird das Suffix zurückgegeben, andernfalls wird eine Ausnahme ausgelöst.
+        /// </remarks>
+        /// <exception cref="BadRequestException">Wird ausgelöst, wenn das generierte Suffix ungültig ist.</exception>
         [HttpPost("suffixes")]
         public async Task<IActionResult> PostAsync(CreateSuffixModel model)
         {
+            if (!User.IsInRole("user") || User.Identity?.Name == null)
+                return Forbid();
+
             using var userService = new UserService(_connectionString);
-
-            if (User?.Identity?.Name == null)
-                return Forbid("You are not allowed to execute this function.");
-
             var user = await userService.FindByNameAsync(User.Identity.Name);
+
+            if (user?.Account == null || string.IsNullOrEmpty(user.Pattern))
+                return Forbid();
 
             // Suffix
             var suffix = SuffixHelper.Create(user.Pattern, model.Placeholders);

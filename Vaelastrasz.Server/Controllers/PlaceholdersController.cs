@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using Vaelastrasz.Library.Entities;
 using Vaelastrasz.Library.Exceptions;
 using Vaelastrasz.Server.Configurations;
 using Vaelastrasz.Server.Models;
@@ -42,17 +43,16 @@ namespace Vaelastrasz.Server.Controllers
         [HttpDelete("placeholders/{id}")]
         public async Task<IActionResult> DeleteByIdAsync(long id)
         {
-            using var userService = new UserService(_connectionString);
-            var user = await userService.FindByNameAsync(User.Identity!.Name!);
-
             using var placeholderService = new PlaceholderService(_connectionString);
-            var placeholder = await placeholderService.FindByIdAsync(id);
+            var placeholder = await placeholderService.FindByIdAsync(id) ?? throw new NotFoundException($"The placeholder (id: {id}) does not exist.");
 
-            if (placeholder.User.Id != user.Id)
-                throw new UnauthorizedException($"The user (id: {user.Id}) is not allowed to perform the action.");
+            if (User.IsInRole("admin") || (User.IsInRole("user") && long.TryParse(User.FindFirst("UserId")?.Value, out long userId) && placeholder.User.Id == userId))
+            {
+                var response = await placeholderService.DeleteByIdAsync(id);
+                return Ok(response);
+            }
 
-            var response = await placeholderService.DeleteByIdAsync(id);
-            return Ok(response);
+            return Forbid();
         }
 
         /// <summary>
@@ -72,17 +72,21 @@ namespace Vaelastrasz.Server.Controllers
         [HttpGet("placeholders")]
         public async Task<IActionResult> GetAsync()
         {
-            using var userService = new UserService(_connectionString);
+            using var placeholderService = new PlaceholderService(_connectionString);
 
-            if (User?.Identity?.Name == null)
-                return Forbid("You are not allowed to execute this function.");
+            if (User.IsInRole("user") && long.TryParse(User.FindFirst("UserId")?.Value, out long userId))
+            {
+                var placeholders = (await placeholderService.FindByUserIdAsync(userId)).Select(p => ReadPlaceholderModel.Convert(p));
+                return Ok(placeholders);
+            }
 
-            var user = await userService.FindByNameAsync(User.Identity.Name);
+            if(User.IsInRole("admin"))
+            {
+                var placeholders = (await placeholderService.FindAsync()).Select(p => ReadPlaceholderModel.Convert(p));
+                return Ok(placeholders);
+            }
 
-            var placeholderService = new PlaceholderService(_connectionString);
-            var placeholders = (await placeholderService.FindByUserIdAsync(user.Id)).Select(p => ReadPlaceholderModel.Convert(p));
-
-            return Ok(placeholders);
+            return Forbid();
         }
 
         /// <summary>
@@ -103,17 +107,15 @@ namespace Vaelastrasz.Server.Controllers
         [HttpGet("placeholders/{id}")]
         public async Task<IActionResult> GetByIdAsync(long id)
         {
-            using var userService = new UserService(_connectionString);
+            using var placeholderService = new PlaceholderService(_connectionString);
+            var placeholder = await placeholderService.FindByIdAsync(id) ?? throw new NotFoundException($"The placeholder (id: {id}) does not exist.");
+            
+            if(User.IsInRole("admin") || (User.IsInRole("user") && long.TryParse(User.FindFirst("UserId")?.Value, out long userId)))
+            {
+                return Ok(ReadPlaceholderModel.Convert(placeholder));
+            }
 
-            if (User?.Identity?.Name == null)
-                return Forbid("You are not allowed to execute this function.");
-
-            var user = await userService.FindByNameAsync(User.Identity.Name);
-
-            var placeholderService = new PlaceholderService(_connectionString);
-            var placeholder = await placeholderService.FindByIdAsync(id);
-
-            return Ok(ReadPlaceholderModel.Convert(placeholder));
+            return Forbid();
         }
 
         /// <summary>
@@ -135,22 +137,22 @@ namespace Vaelastrasz.Server.Controllers
         [SwaggerResponse(201, "Resource created successfully", typeof(ReadPlaceholderModel))]
         public async Task<IActionResult> PostAsync(CreatePlaceholderModel model)
         {
-            using var userService = new UserService(_connectionString);
+            if(User.IsInRole("admin") || (User.IsInRole("user") && long.TryParse(User.FindFirst("UserId")?.Value, out long userId) && model.UserId == userId))
+            {
+                using var userService = new UserService(_connectionString);
+                using var placeholderService = new PlaceholderService(_connectionString);
+                var id = await placeholderService.CreateAsync(model.Expression, model.RegularExpression, model.UserId);
 
-            if (User?.Identity?.Name == null)
-                return Forbid("You are not allowed to execute this function.");
+                var placeholder = await placeholderService.FindByIdAsync(id) ?? throw new NotFoundException($"The placeholder (id: {id}) does not exist.");
 
-            var user = await userService.FindByNameAsync(User.Identity.Name);
+                var request = HttpContext.Request;
+                string baseUrl = $"{request.Scheme}://{request.Host}{request.PathBase}";
+                string resourceUrl = $"{baseUrl}/api/placeholders/{placeholder.Id}";
 
-            using var placeholderService = new PlaceholderService(_connectionString);
-            var id = await placeholderService.CreateAsync(model.Expression, model.RegularExpression, user.Id);
-            var placeholder = await placeholderService.FindByIdAsync(id);
+                return Created(resourceUrl, ReadPlaceholderModel.Convert(placeholder));
+            }
 
-            var request = HttpContext.Request;
-            string baseUrl = $"{request.Scheme}://{request.Host}{request.PathBase}";
-            string resourceUrl = $"{baseUrl}/api/placeholders/{placeholder.Id}";
-
-            return Created(resourceUrl, ReadPlaceholderModel.Convert(placeholder));
+            return Forbid();
         }
 
         /// <summary>
@@ -171,23 +173,17 @@ namespace Vaelastrasz.Server.Controllers
         [HttpPut("placeholders/{id}")]
         public async Task<IActionResult> PutByIdAsync(long id, UpdatePlaceholderModel model)
         {
-            using var userService = new UserService(_connectionString);
-
-            if (User?.Identity?.Name == null)
-                return Forbid("You are not allowed to execute this function.");
-
-            var user = await userService.FindByNameAsync(User.Identity.Name);
-
             using var placeholderService = new PlaceholderService(_connectionString);
-            var placeholder = await placeholderService.FindByIdAsync(id);
+            var placeholder = await placeholderService.FindByIdAsync(id) ?? throw new NotFoundException($"The placeholder (id: {id}) does not exist.");
+            if (User.IsInRole("admin") || (User.IsInRole("user") && long.TryParse(User.FindFirst("UserId")?.Value, out long userId) && model.UserId == userId && placeholder.User.Id == userId))
+            {
+                var result = await placeholderService.UpdateByIdAsync(id, model.Expression, model.RegularExpression, model.UserId);
+                placeholder = await placeholderService.FindByIdAsync(id);
 
-            if (placeholder.User.Id != user.Id)
-                throw new UnauthorizedException($"The user (id: {user.Id}) is not allowed to perform the action..");
+                return Ok(ReadPlaceholderModel.Convert(placeholder));
+            }
 
-            var result = await placeholderService.UpdateByIdAsync(id, model.Expression, model.RegularExpression, model.UserId);
-            placeholder = await placeholderService.FindByIdAsync(id);
-
-            return Ok(ReadPlaceholderModel.Convert(placeholder));
+            return Forbid();            
         }
     }
 }

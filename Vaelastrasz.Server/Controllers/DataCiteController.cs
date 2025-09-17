@@ -47,25 +47,27 @@ namespace Vaelastrasz.Server.Controllers
         [HttpDelete("datacite/{doi}")]
         public async Task<IActionResult> DeleteByDOIAsync(string doi)
         {
-            using var doiService = new DOIService(_connectionString);
+            if (!User.IsInRole("user-datacite") || User?.Identity?.Name == null)
+                return Forbid();
+
             using var userService = new UserService(_connectionString);
-            var user = await userService.FindByNameAsync(User.Identity!.Name!);
+            var user = await userService.FindByNameAsync(User.Identity.Name);
 
-            if (user.Account == null)
-                throw new NotFoundException($"The account of user (id: {user.Id}) does not exist.");
+            if(user == null || user?.Account == null || string.IsNullOrEmpty(user.Account.Name) || string.IsNullOrEmpty(user.Account.Password))
+                return Forbid();
 
-            var client = new HttpClient();
-
-            client.BaseAddress = new Uri(user.Account.Host);
-
-            if (user.Account.Name != null && user.Account.Password != null)
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes($"{user.Account.Name}:{user.Account.Password}")));
+            var client = new HttpClient
+            {
+                BaseAddress = new Uri(user.Account.Host),
+                DefaultRequestHeaders = { Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes($"{user.Account.Name}:{user.Account.Password}"))) }
+            };
 
             var response = await client.DeleteAsync($"dois/{doi}");
 
             if (!response.IsSuccessStatusCode)
                 return StatusCode((int)response.StatusCode, await response.Content.ReadAsStringAsync());
 
+            using var doiService = new DOIService(_connectionString);
             await doiService.DeleteByDOIAsync(doi);
             return StatusCode((int)response.StatusCode, JsonConvert.DeserializeObject<ReadDataCiteModel>(await response.Content.ReadAsStringAsync()));
         }
@@ -88,11 +90,14 @@ namespace Vaelastrasz.Server.Controllers
         [HttpGet("datacite")]
         public async Task<IActionResult> GetAsync()
         {
-            using var userService = new UserService(_connectionString);
-            var user = await userService.FindByNameAsync(User.Identity!.Name!);
+            if (!User.IsInRole("user-datacite") || User?.Identity?.Name == null)
+                return Forbid();
 
-            if (user.Account == null)
-                throw new NotFoundException($"The account of user (id: {user.Id}) does not exist.");
+            using var userService = new UserService(_connectionString);
+            var user = await userService.FindByNameAsync(User.Identity.Name);
+
+            if (user == null || user?.Account == null || string.IsNullOrEmpty(user.Account.Name) || string.IsNullOrEmpty(user.Account.Password))
+                return Forbid();
 
             var doiService = new DOIService(_connectionString);
             var dois = await doiService.FindByUserIdAsync(user.Id);
@@ -102,12 +107,11 @@ namespace Vaelastrasz.Server.Controllers
             if (dois.Count == 0)
                 return Ok(result);
 
-            var client = new HttpClient();
-
-            client.BaseAddress = new Uri(user.Account.Host);
-
-            if (user.Account.Name != null && user.Account.Password != null)
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes($"{user.Account.Name}:{user.Account.Password}")));
+            var client = new HttpClient
+            {
+                BaseAddress = new Uri(user.Account.Host),
+                DefaultRequestHeaders = { Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes($"{user.Account.Name}:{user.Account.Password}"))) }
+            };
 
             foreach (var doi in dois)
             {
@@ -151,11 +155,14 @@ namespace Vaelastrasz.Server.Controllers
         [HttpGet("datacite/{prefix}/{suffix}")]
         public async Task<IActionResult> GetByPrefixAndSuffixAsync(string prefix, string suffix)
         {
+            if (!User.IsInRole("user-datacite") || User?.Identity?.Name == null)
+                return Forbid();
+
             using var userService = new UserService(_connectionString);
             var user = await userService.FindByNameAsync(User.Identity!.Name!);
 
-            if (user.Account == null)
-                throw new NotFoundException($"The account of user (id: {user.Id}) does not exist.");
+            if (user == null || user?.Account == null || string.IsNullOrEmpty(user.Account.Name) || string.IsNullOrEmpty(user.Account.Password))
+                return Forbid();
 
             using var doiService = new DOIService(_connectionString);
             var doi = await doiService.FindByPrefixAndSuffixAsync(prefix, suffix);
@@ -163,12 +170,11 @@ namespace Vaelastrasz.Server.Controllers
             if (doi.User.Id != user.Id)
                 throw new UnauthorizedException($"The user (id: {user.Id}) is not allowed to perform the action.");
 
-            var client = new HttpClient();
-
-            client.BaseAddress = new Uri(user.Account.Host);
-
-            if (user.Account.Name != null && user.Account.Password != null)
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes($"{user.Account.Name}:{user.Account.Password}")));
+            var client = new HttpClient
+            {
+                BaseAddress = new Uri(user.Account.Host),
+                DefaultRequestHeaders = { Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes($"{user.Account.Name}:{user.Account.Password}"))) }
+            };
 
             var response = await client.GetAsync($"dois/{prefix}/{suffix}?publisher=true&affiliation=true");
 
@@ -198,11 +204,14 @@ namespace Vaelastrasz.Server.Controllers
         [SwaggerCustomHeader("X-Citation-Style", ["apa", "harvard-cite-them-right", "modern-language-association", "vancouver", "chicago-fullnote-bibliography", "ieee"])]
         public async Task<IActionResult> GetCitationStyleByPrefixAndSuffixAsync(string prefix, string suffix)
         {
-            using var userService = new UserService(_connectionString);
-            var user = await userService.FindByNameAsync(User.Identity!.Name!);
+            if (!User.IsInRole("user-datacite") || User?.Identity?.Name == null)
+                return Forbid();
 
-            if (user.Account == null)
-                throw new NotFoundException($"The account of user (id: {user.Id}) does not exist.");
+            using var userService = new UserService(_connectionString);
+            var user = await userService.FindByNameAsync(User.Identity.Name!);
+
+            if (user == null || user?.Account == null || string.IsNullOrEmpty(user.Account.Name) || string.IsNullOrEmpty(user.Account.Password))
+                return Forbid();
 
             using var doiService = new DOIService(_connectionString);
             var doi = await doiService.FindByPrefixAndSuffixAsync(prefix, suffix);
@@ -210,12 +219,12 @@ namespace Vaelastrasz.Server.Controllers
             if (doi.User.Id != user.Id)
                 throw new UnauthorizedException($"The user (id: {user.Id}) is not allowed to perform the action.");
 
-            var client = new HttpClient();
+            var client = new HttpClient
+            {
+                BaseAddress = new Uri(user.Account.Host),
+                DefaultRequestHeaders = { Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes($"{user.Account.Name}:{user.Account.Password}"))) }
 
-            client.BaseAddress = new Uri(user.Account.Host);
-
-            if (user.Account.Name != null && user.Account.Password != null)
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes($"{user.Account.Name}:{user.Account.Password}")));
+            };
 
             var request = new HttpRequestMessage(HttpMethod.Get, $"dois/{prefix}/{suffix}?style={Request.Headers["X-Citation-Style"].ToString()}");
             request.Headers.Add("Accept", "text/x-bibliography");
@@ -250,11 +259,14 @@ namespace Vaelastrasz.Server.Controllers
         [SwaggerCustomHeader("X-Metadata-Format", ["application/x-research-info-systems", "application/x-bibtex", "application/vnd.jats+xml", "application/vnd.codemeta.ld+json", "application/vnd.citationstyles.csl+json", "application/vnd.schemaorg.ld+json", "application/vnd.datacite.datacite+json", "application/vnd.datacite.datacite+xml"])]
         public async Task<IActionResult> GetMetadataFormatByPrefixAndSuffixAsync(string prefix, string suffix)
         {
+            if (!User.IsInRole("user-datacite") || User?.Identity?.Name == null)
+                return Forbid();
+
             using var userService = new UserService(_connectionString);
             var user = await userService.FindByNameAsync(User.Identity!.Name!);
 
-            if (user.Account == null)
-                throw new NotFoundException($"The account of user (id: {user.Id}) does not exist.");
+            if (user == null || user?.Account == null || string.IsNullOrEmpty(user.Account.Name) || string.IsNullOrEmpty(user.Account.Password))
+                return Forbid();
 
             using var doiService = new DOIService(_connectionString);
             var doi = await doiService.FindByPrefixAndSuffixAsync(prefix, suffix);
@@ -262,12 +274,11 @@ namespace Vaelastrasz.Server.Controllers
             if (doi.User.Id != user.Id)
                 throw new UnauthorizedException($"The user (id: {user.Id}) is not allowed to perform the action.");
 
-            var client = new HttpClient();
-
-            client.BaseAddress = new Uri(user.Account.Host);
-
-            if (user.Account.Name != null && user.Account.Password != null)
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes($"{user.Account.Name}:{user.Account.Password}")));
+            var client = new HttpClient
+            {
+                BaseAddress = new Uri(user.Account.Host),
+                DefaultRequestHeaders = { Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes($"{user.Account.Name}:{user.Account.Password}"))) }
+            };
 
             var request = new HttpRequestMessage(HttpMethod.Get, $"dois/{prefix}/{suffix}");
             request.Headers.Add("Accept", Request.Headers["X-Metadata-Format"].ToString());
@@ -301,28 +312,30 @@ namespace Vaelastrasz.Server.Controllers
         [SwaggerResponse(201, "Resource created successfully", typeof(ReadDataCiteModel))]
         public async Task<IActionResult> PostAsync(CreateDataCiteModel model)
         {
+            if (!User.IsInRole("user-datacite") || User?.Identity?.Name == null)
+                return Forbid();
+
             model.Update(_updateProperties);
 
-            using var doiService = new DOIService(_connectionString);
-            using var placeholderService = new PlaceholderService(_connectionString);
             using var userService = new UserService(_connectionString);
 
-            var user = await userService.FindByNameAsync(User.Identity!.Name!);
-            if (user.Account == null)
-                throw new NotFoundException($"The account of user (id: {user.Id}) does not exist.");
+            var user = await userService.FindByNameAsync(User.Identity.Name);
+            if (user == null || user?.Account == null || string.IsNullOrEmpty(user.Account.Name) || string.IsNullOrEmpty(user.Account.Password))
+                return Forbid();
 
             // DOI Check
+            using var placeholderService = new PlaceholderService(_connectionString);
             var placeholders = await placeholderService.FindByUserIdAsync(user.Id);
             if (!DOIHelper.Validate(model.Data.Attributes.Doi, user.Account.Prefix, user.Pattern, new Dictionary<string, string>(placeholders.Select(p => new KeyValuePair<string, string>(p.Expression, p.RegularExpression)))))
                 throw new ForbiddenException($"The doi (doi: {model.Data.Attributes.Doi}) is invalid.");
 
-            var client = new HttpClient();
+            var client = new HttpClient
+            {
+                BaseAddress = new Uri(user.Account.Host),
+                DefaultRequestHeaders = { Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes($"{user.Account.Name}:{user.Account.Password}"))) }
+            };
 
-            client.BaseAddress = new Uri(user.Account.Host);
-
-            if (user.Account.Name != null && user.Account.Password != null)
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes($"{user.Account.Name}:{user.Account.Password}")));
-
+            using var doiService = new DOIService(_connectionString);
             var doiId = await doiService.CreateAsync(model.Data.Attributes.Doi.GetPrefix(), model.Data.Attributes.Doi.GetSuffix(), (DOIStateType)model.Data.Attributes.Event, user.Id, JsonConvert.SerializeObject(model));
 
             var response = await client.PostAsync($"dois?publisher=true&affiliation=true", model.AsJson());
@@ -358,18 +371,20 @@ namespace Vaelastrasz.Server.Controllers
         [HttpPut("datacite/{doi}")]
         public async Task<IActionResult> PutByDOIAsync(string doi, UpdateDataCiteModel model)
         {
+            if (!User.IsInRole("user-datacite") || User?.Identity?.Name == null)
+                return Forbid();
+
             using var userService = new UserService(_connectionString);
             var user = await userService.FindByNameAsync(User.Identity!.Name!);
 
-            if (user.Account == null)
-                throw new NotFoundException($"The account of user (id: {user.Id}) does not exist.");
+            if (user == null || user?.Account == null || string.IsNullOrEmpty(user.Account.Name) || string.IsNullOrEmpty(user.Account.Password))
+                return Forbid();
 
-            var client = new HttpClient();
-
-            client.BaseAddress = new Uri(user.Account.Host);
-
-            if (user.Account.Name != null && user.Account.Password != null)
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes($"{user.Account.Name}:{user.Account.Password}")));
+            var client = new HttpClient
+            {
+                BaseAddress = new Uri(user.Account.Host),
+                DefaultRequestHeaders = { Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes($"{user.Account.Name}:{user.Account.Password}"))) }
+            };
 
             var response = await client.PutAsync($"dois/{doi}?publisher=true&affiliation=true", model.AsJson());
 
