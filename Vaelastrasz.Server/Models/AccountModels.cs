@@ -7,31 +7,31 @@ namespace Vaelastrasz.Server.Models
     public class CreateAccountModel
     {
         [Required]
-        public required AccountType AccountType { get; set; }
+        public AccountType AccountType { get; set; }
 
         [Required]
-        public required string Host { get; set; }
+        public string Host { get; set; }
 
         [Required]
-        public required string Name { get; set; }
+        public string Name { get; set; }
 
         [Required]
-        public required string Password { get; set; }
+        public string Password { get; set; }
 
         [Required]
-        public required string Prefix { get; set; }
+        public string Prefix { get; set; }
     }
 
     public class ReadAccountModel
     {
-        public required AccountType AccountType { get; set; }
-        public required DateTimeOffset CreationDate { get; set; }
-        public required string Host { get; set; }
-        public required long Id { get; set; }
+        public AccountType AccountType { get; set; }
+        public DateTimeOffset CreationDate { get; set; }
+        public string Host { get; set; }
+        public long Id { get; set; }
         public DateTimeOffset LastUpdateDate { get; set; }
-        public required string Name { get; set; }
-        public required string Password { get; set; }
-        public required string Prefix { get; set; }
+        public string Name { get; set; }
+        public string Password { get; set; }
+        public string Prefix { get; set; }
 
         public static ReadAccountModel Convert(Account account)
         {
@@ -51,10 +51,10 @@ namespace Vaelastrasz.Server.Models
 
     public class UpdateAccountModel
     {
-        public required AccountType AccountType { get; set; }
-        public required string Host { get; set; }
-        public required string Name { get; set; }
-        public required string Password { get; set; }
-        public required string Prefix { get; set; }
+        public AccountType AccountType { get; set; }
+        public string Host { get; set; }
+        public string Name { get; set; }
+        public string Password { get; set; }
+        public string Prefix { get; set; }
     }
 }

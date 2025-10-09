@@ -42,12 +42,13 @@ namespace Vaelastrasz.Library.Tests.Models
         {
             var xml = "<data><type>DOIs</type><attributes><titles><title>test</title></titles></attributes></data>";
 
-            CreateDataCiteDataModel response = new CreateDataCiteDataModel();
+            CreateDataCiteDataModel? response = new CreateDataCiteDataModel();
 
             XmlSerializer serializer = new XmlSerializer(typeof(CreateDataCiteDataModel));
 
             using StringReader xmlReader = new StringReader(xml);
-            response = (CreateDataCiteDataModel)serializer.Deserialize(xmlReader);
+
+            response = serializer.Deserialize(xmlReader) as CreateDataCiteDataModel;
         }
 
         //private static bool Validate<T>(T obj, out ICollection<ValidationResult> results)

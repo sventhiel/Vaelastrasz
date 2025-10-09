@@ -22,9 +22,9 @@ namespace Vaelastrasz.Server.Controllers
         /// oder ein 400 Bad Request-Status, wenn der Name ungültig ist oder nicht geparst werden kann.
         /// </returns>
         /// <remarks>
-        /// Diese Methode überprüft, ob der übergebene Name gültig und parsbar ist. 
+        /// Diese Methode überprüft, ob der übergebene Name gültig und parsbar ist.
         /// Ist der Name null oder leer, oder kann er nicht in ein <see cref="HumanName"/>-Objekt umgewandelt werden, wird eine entsprechende
-        /// HTTP-Fehlermeldung zurückgegeben. Der Parsing-Prozess erfolgt durch die Instanz der <see cref="HumanName"/>-Klasse. 
+        /// HTTP-Fehlermeldung zurückgegeben. Der Parsing-Prozess erfolgt durch die Instanz der <see cref="HumanName"/>-Klasse.
         /// Entwickler sollten sicherstellen, dass die Eingabe nichtnull und korrekt formatiert ist, um eine erfolgreiche Verarbeitung
         /// sicherzustellen.
         /// </remarks>

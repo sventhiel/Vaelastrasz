@@ -33,13 +33,13 @@ namespace Vaelastrasz.Server.Controllers
         [HttpGet("prefixes")]
         public async Task<IActionResult> GetAsync()
         {
-            if(!User.IsInRole("user") || User.Identity?.Name == null)
+            if (!User.IsInRole("user") || User.Identity?.Name == null)
                 return Forbid();
 
             using var userService = new UserService(_connectionString);
             var user = await userService.FindByNameAsync(User.Identity.Name);
 
-            if(user?.Account == null || string.IsNullOrEmpty(user.Account.Prefix))
+            if (user?.Account == null || string.IsNullOrEmpty(user.Account.Prefix))
                 return Forbid();
 
             // Prefix

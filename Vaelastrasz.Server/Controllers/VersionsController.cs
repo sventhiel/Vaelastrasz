@@ -33,7 +33,13 @@ namespace Vaelastrasz.Server.Controllers
         public IActionResult GetVersions()
         {
             // Beispiel für Newtonsoft.Json (ersetze dies je nach deinem Paket)
-            var assembly = AppDomain.CurrentDomain.GetAssemblies().Single(a => a.GetName().Name.Equals($"Vaelastrasz.Library", StringComparison.OrdinalIgnoreCase));
+            var assembly = AppDomain.CurrentDomain.GetAssemblies()
+                .SingleOrDefault(a =>
+                {
+                    // Sicherstellen, dass Name nicht null ist
+                    var assemblyName = a.GetName();
+                    return assemblyName != null && !string.IsNullOrEmpty(assemblyName.Name) && assemblyName.Name.Equals("Vaelastrasz.Library", StringComparison.OrdinalIgnoreCase);
+                });
 
             if (assembly == null)
                 return NotFound("The package 'Vaelastrasz.Library' cannot be found.");

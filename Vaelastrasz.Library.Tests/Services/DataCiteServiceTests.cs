@@ -48,7 +48,7 @@ namespace Vaelastrasz.Library.Tests.Services
         }
 
         [Test]
-        public async Task Test3()
+        public void Test3()
         {
             JsonConvert.DefaultSettings = () => VaelastraszJsonSerializerSettings.Settings;
 
@@ -80,7 +80,7 @@ namespace Vaelastrasz.Library.Tests.Services
         }
 
         [Test]
-        public async Task Test4()
+        public void Test4()
         {
             var config = new Configuration("sventhiel", "proq3dm6", "http://localhost:5041", []);
             var dataCiteService = new DataCiteService(config);

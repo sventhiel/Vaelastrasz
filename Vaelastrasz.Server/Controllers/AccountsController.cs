@@ -36,7 +36,7 @@ namespace Vaelastrasz.Server.Controllers
         [HttpDelete("accounts/{id}")]
         public async Task<IActionResult> DeleteByIdAsync(long id)
         {
-            if(!User.IsInRole("admin"))
+            if (!User.IsInRole("admin"))
                 return Forbid();
 
             using var accountService = new AccountService(_connectionString);

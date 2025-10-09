@@ -53,7 +53,7 @@ namespace Vaelastrasz.Server.Controllers
             using var userService = new UserService(_connectionString);
             var user = await userService.FindByNameAsync(User.Identity.Name);
 
-            if(user == null || user?.Account == null || string.IsNullOrEmpty(user.Account.Name) || string.IsNullOrEmpty(user.Account.Password))
+            if (user == null || user?.Account == null || string.IsNullOrEmpty(user.Account.Name) || string.IsNullOrEmpty(user.Account.Password))
                 return Forbid();
 
             var client = new HttpClient
@@ -223,7 +223,6 @@ namespace Vaelastrasz.Server.Controllers
             {
                 BaseAddress = new Uri(user.Account.Host),
                 DefaultRequestHeaders = { Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes($"{user.Account.Name}:{user.Account.Password}"))) }
-
             };
 
             var request = new HttpRequestMessage(HttpMethod.Get, $"dois/{prefix}/{suffix}?style={Request.Headers["X-Citation-Style"].ToString()}");

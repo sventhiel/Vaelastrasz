@@ -131,7 +131,7 @@ namespace Vaelastrasz.Server.Controllers
             var id = await userService.CreateAsync(model.Name, model.Password, model.Project, model.Pattern, model.AccountId, true);
             var user = await userService.FindByIdAsync(id);
 
-            if(user == null)
+            if (user == null)
                 return BadRequest();
 
             var request = HttpContext.Request;

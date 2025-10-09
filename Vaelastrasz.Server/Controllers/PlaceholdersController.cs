@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using Vaelastrasz.Library.Entities;
 using Vaelastrasz.Library.Exceptions;
 using Vaelastrasz.Server.Configurations;
 using Vaelastrasz.Server.Models;
@@ -80,7 +79,7 @@ namespace Vaelastrasz.Server.Controllers
                 return Ok(placeholders);
             }
 
-            if(User.IsInRole("admin"))
+            if (User.IsInRole("admin"))
             {
                 var placeholders = (await placeholderService.FindAsync()).Select(p => ReadPlaceholderModel.Convert(p));
                 return Ok(placeholders);
@@ -109,8 +108,8 @@ namespace Vaelastrasz.Server.Controllers
         {
             using var placeholderService = new PlaceholderService(_connectionString);
             var placeholder = await placeholderService.FindByIdAsync(id) ?? throw new NotFoundException($"The placeholder (id: {id}) does not exist.");
-            
-            if(User.IsInRole("admin") || (User.IsInRole("user") && long.TryParse(User.FindFirst("UserId")?.Value, out long userId)))
+
+            if (User.IsInRole("admin") || (User.IsInRole("user") && long.TryParse(User.FindFirst("UserId")?.Value, out long userId)))
             {
                 return Ok(ReadPlaceholderModel.Convert(placeholder));
             }
@@ -137,7 +136,7 @@ namespace Vaelastrasz.Server.Controllers
         [SwaggerResponse(201, "Resource created successfully", typeof(ReadPlaceholderModel))]
         public async Task<IActionResult> PostAsync(CreatePlaceholderModel model)
         {
-            if(User.IsInRole("admin") || (User.IsInRole("user") && long.TryParse(User.FindFirst("UserId")?.Value, out long userId) && model.UserId == userId))
+            if (User.IsInRole("admin") || (User.IsInRole("user") && long.TryParse(User.FindFirst("UserId")?.Value, out long userId) && model.UserId == userId))
             {
                 using var userService = new UserService(_connectionString);
                 using var placeholderService = new PlaceholderService(_connectionString);
@@ -183,7 +182,7 @@ namespace Vaelastrasz.Server.Controllers
                 return Ok(ReadPlaceholderModel.Convert(placeholder));
             }
 
-            return Forbid();            
+            return Forbid();
         }
     }
 }

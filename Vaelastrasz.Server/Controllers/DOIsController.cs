@@ -64,6 +64,7 @@ namespace Vaelastrasz.Server.Controllers
 
         /// <summary>
         /// Ruft alle DOI>
+        /// </summary>
         /// <returns>
         /// Ein <see cref="Task{I}"/> mit einem 200 OK-Status und einer Liste von <see cref="ReadDOIModel"/>-Objekten,
         /// die die DOI-Einträge des Benutzers darstellen.
