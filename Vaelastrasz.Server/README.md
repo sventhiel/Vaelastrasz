@@ -76,9 +76,15 @@ sventhiel@bananapi:~$ source ~/.bashrc
 
 #### Vaelastrasz.Server
 
+Bei dieser serverseitigen Applikation in C# 8.0 handelt es sich um ein Web-ReST-API-Projekt mit Swagger(-UI) als visuelle Oberfläche, die stellvertretend die Funktionalitäten der Applikation anbietet. Äquivalent, jedoch ohne Nutzeroberfläche, wäre die Verwendung eines HTTP-Clients möglich. Die Applikation arbeitet intern mit verschiedenen Objekten und Modellen, welche weiter im Abschnitt [Manual / Guide](#manual--guide) behandelt werden.
+
 #### Service
 
+
+
 #### Webserver / Reverse Proxy
+
+Als Webserver und Reverse Proxy wird im bereits oben genannten Beispielsystem _Nginx_ verwendet. Die Installation ist mittels des Packagemanagers möglich und wird im Folgenden nicht näher betrachtet, wohl jedoch werden die Einstellungen und Konfigurationen näher beleuchtet. Damit soll eine entsprechende Installation und Verwendung von anderen Webservern, beispielsweise _Apache2_, erleichtert werden.
 
 ### Windows Server 2022
 
