@@ -125,7 +125,7 @@ app.UseStaticFiles();
 app.UseSwagger();
 app.UseSwaggerUI(options =>
 {
-    options.InjectStylesheet("/css/swagger-ui/theme-flattop.css");
+    options.InjectStylesheet("/css/swagger-ui/theme-dark.css");
     options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
     options.RoutePrefix = "";
 });
