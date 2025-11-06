@@ -1,4 +1,5 @@
 ﻿using LiteDB;
+using MethodTimer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -8,7 +9,7 @@ using Vaelastrasz.Server.Services;
 
 namespace Vaelastrasz.Server.Controllers
 {
-    [ApiController, Route("api"), Authorize(Roles = "admin")]
+    [ApiController, Route("api"), Authorize(Roles = "admin"), Time]
     public class UsersController : ControllerBase
     {
         private readonly ILogger<UsersController> _logger;

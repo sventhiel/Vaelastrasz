@@ -1,4 +1,5 @@
 ﻿using LiteDB;
+using MethodTimer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -10,7 +11,7 @@ using Vaelastrasz.Server.Services;
 
 namespace Vaelastrasz.Server.Controllers
 {
-    [ApiController, Authorize(Roles = "user"), Route("api")]
+    [ApiController, Authorize(Roles = "user"), Route("api"), Time]
     public class DOIsController : ControllerBase
     {
         private readonly ILogger<DataCiteController> _logger;
@@ -63,7 +64,7 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         /// <summary>
-        /// Ruft alle DOI>
+        /// Ruft alle DOIs ab.
         /// </summary>
         /// <returns>
         /// Ein <see cref="Task{I}"/> mit einem 200 OK-Status und einer Liste von <see cref="ReadDOIModel"/>-Objekten,

@@ -1,4 +1,5 @@
 ﻿using LiteDB;
+using MethodTimer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
@@ -9,7 +10,7 @@ using Vaelastrasz.Server.Services;
 
 namespace Vaelastrasz.Server.Controllers
 {
-    [ApiController, Authorize(Roles = "user"), Route("api")]
+    [ApiController, Authorize(Roles = "user"), Route("api"), Time]
     public class SuffixesController : ControllerBase
     {
         private ConnectionString _connectionString;

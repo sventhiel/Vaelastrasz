@@ -1,4 +1,5 @@
 ﻿using LiteDB;
+using MethodTimer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Vaelastrasz.Server.Services;
@@ -6,7 +7,7 @@ using Vaelastrasz.Server.Services;
 //rdy
 namespace Vaelastrasz.Server.Controllers
 {
-    [ApiController, Authorize(Roles = "user"), Route("api")]
+    [ApiController, Authorize(Roles = "user"), Route("api"), Time]
     public class PrefixesController : ControllerBase
     {
         private ConnectionString _connectionString;

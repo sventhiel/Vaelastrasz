@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MethodTimer;
+using Microsoft.AspNetCore.Mvc;
 using NameParser;
 
 namespace Vaelastrasz.Server.Controllers
 {
-    [ApiController, Route("api")]
+    [ApiController, Route("api"), Time]
     public class NamesController : ControllerBase
     {
         private readonly ILogger<UsersController> _logger;

@@ -1,4 +1,5 @@
 ﻿using LiteDB;
+using MethodTimer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -15,7 +16,7 @@ using Vaelastrasz.Server.Services;
 
 namespace Vaelastrasz.Server.Controllers
 {
-    [ApiController, Authorize(Roles = "user-datacite"), Route("api")]
+    [ApiController, Authorize(Roles = "user-datacite"), Route("api"), Time]
     public class DataCiteController : ControllerBase
     {
         private readonly ILogger<DataCiteController> _logger;

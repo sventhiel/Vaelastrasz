@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MethodTimer;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Vaelastrasz.Library.Models;
 
 namespace Vaelastrasz.Server.Controllers
 {
-    [ApiController, Route("api")]
+    [ApiController, Route("api"), Time]
     public class ConceptsController : ControllerBase
     {
         private readonly ILogger<ConceptsController> _logger;

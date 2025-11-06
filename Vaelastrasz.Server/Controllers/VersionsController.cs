@@ -1,10 +1,11 @@
 ﻿using LiteDB;
+using MethodTimer;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection;
 
 namespace Vaelastrasz.Server.Controllers
 {
-    [ApiController, Route("api")]
+    [ApiController, Route("api"), Time()]
     public class VersionsController : ControllerBase
     {
         private readonly ILogger<UsersController> _logger;
