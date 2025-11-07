@@ -46,6 +46,7 @@
     <None Include="Examples\doi_003.json" />
     <None Include="Examples\doi_002.json" />
     <None Include="Examples\doi_001.json" />
+    <None Include="FodyWeavers.xsd" />
     <None Include="wwwroot\css\swagger-ui\theme-dark.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
