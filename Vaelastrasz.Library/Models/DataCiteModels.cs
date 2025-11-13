@@ -315,6 +315,9 @@ namespace Vaelastrasz.Library.Models
 
         [JsonProperty("type")]
         public DataCiteType Type { get; set; }
+
+        [JsonProperty("id")]
+        public string Id { get; set; }
     }
 
     public class ReadDataCiteModel
