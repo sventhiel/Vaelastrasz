@@ -315,8 +315,6 @@ namespace Vaelastrasz.Server.Controllers
             if (!User.IsInRole("user-datacite") || User?.Identity?.Name == null)
                 return Forbid();
 
-            model.Update(_updateProperties);
-
             using var userService = new UserService(_connectionString);
 
             var user = await userService.FindByNameAsync(User.Identity.Name);
@@ -328,6 +326,8 @@ namespace Vaelastrasz.Server.Controllers
             var placeholders = await placeholderService.FindByUserIdAsync(user.Id);
             if (!DOIHelper.Validate(model.Data.Attributes.Doi, user.Account.Prefix, user.Pattern, new Dictionary<string, string>(placeholders.Select(p => new KeyValuePair<string, string>(p.Expression, p.RegularExpression)))))
                 throw new ForbiddenException($"The doi (doi: {model.Data.Attributes.Doi}) is invalid.");
+
+            //model.Update(_updateProperties);
 
             var client = new HttpClient
             {

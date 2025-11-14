@@ -11,49 +11,46 @@ namespace Vaelastrasz.Library.Extensions
     {
         #region CreateDataCiteModel
 
-        public static CreateDataCiteModel Update(this CreateDataCiteModel model, List<string> jsonProperties)
+        public static CreateDataCiteModel Update(this CreateDataCiteModel model, string property)
         {
             try
             {
-                foreach (var property in jsonProperties)
+                switch (property)
                 {
-                    switch (property)
-                    {
-                        case "Creators":
-                            foreach (var creator in model.Data.Attributes.Creators)
+                    case "Creators":
+                        foreach (var creator in model.Data.Attributes.Creators)
+                        {
+                            if (creator.NameType == DataCiteNameType.Personal && !string.IsNullOrEmpty(creator.Name) && (string.IsNullOrEmpty(creator.GivenName) || string.IsNullOrEmpty(creator.FamilyName)))
                             {
-                                if (creator.NameType == DataCiteNameType.Personal && !string.IsNullOrEmpty(creator.Name) && (string.IsNullOrEmpty(creator.GivenName) || string.IsNullOrEmpty(creator.FamilyName)))
+                                var names = new HumanName(creator.Name);
+                                if (!names.IsUnparsable && !string.IsNullOrEmpty(names.First) && !string.IsNullOrEmpty(names.Last))
                                 {
-                                    var names = new HumanName(creator.Name);
-                                    if (!names.IsUnparsable && !string.IsNullOrEmpty(names.First) && !string.IsNullOrEmpty(names.Last))
-                                    {
-                                        creator.GivenName = names.First;
-                                        creator.FamilyName = names.Last;
-                                        creator.Name = null;
-                                    }
+                                    creator.GivenName = names.First;
+                                    creator.FamilyName = names.Last;
+                                    creator.Name = null;
                                 }
                             }
-                            break;
+                        }
+                        break;
 
-                        case "Contributors":
-                            foreach (var contributor in model.Data.Attributes.Contributors)
+                    case "Contributors":
+                        foreach (var contributor in model.Data.Attributes.Contributors)
+                        {
+                            if (contributor.NameType == DataCiteNameType.Personal && !string.IsNullOrEmpty(contributor.Name) && (string.IsNullOrEmpty(contributor.GivenName) || string.IsNullOrEmpty(contributor.FamilyName)))
                             {
-                                if (contributor.NameType == DataCiteNameType.Personal && !string.IsNullOrEmpty(contributor.Name) && (string.IsNullOrEmpty(contributor.GivenName) || string.IsNullOrEmpty(contributor.FamilyName)))
+                                var names = new HumanName(contributor.Name);
+                                if (!names.IsUnparsable && !string.IsNullOrEmpty(names.First) && !string.IsNullOrEmpty(names.Last))
                                 {
-                                    var names = new HumanName(contributor.Name);
-                                    if (!names.IsUnparsable && !string.IsNullOrEmpty(names.First) && !string.IsNullOrEmpty(names.Last))
-                                    {
-                                        contributor.GivenName = names.First;
-                                        contributor.FamilyName = names.Last;
-                                        contributor.Name = null;
-                                    }
+                                    contributor.GivenName = names.First;
+                                    contributor.FamilyName = names.Last;
+                                    contributor.Name = null;
                                 }
                             }
-                            break;
+                        }
+                        break;
 
-                        default:
-                            break;
-                    }
+                    default:
+                        break;
                 }
 
                 return model;
