@@ -18,7 +18,7 @@ namespace Vaelastrasz.Library.Tests.Services
             {
                 //var config = new Configuration("Test_DOIProxy_User", "s~c9<evQ#%^h4Uyb", "https://taerar.infinite-trajectory.de");
                 //var config = new Configuration("Test_DOIProxy_User", "sventhiel", "http://localhost:5041");
-                var config = new Configuration("sventhiel", "sventhiel", "https://taerar.infinite-trajectory.de", []);
+                var config = new Configuration("sventhiel", "sventhiel", "https://taerar.infinite-trajectory.de");
                 //var config = new Configuration("sventhiel", "s~c9<evQ#%^h4Uyb", "https://doi-proxy.bgc-jena.mpg.de");
 
                 var doiService = new DOIService(config);

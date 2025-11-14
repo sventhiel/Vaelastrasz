@@ -18,7 +18,7 @@ namespace Vaelastrasz.Library.Tests.Services
         public async Task Test1()
         {
             //var config = new Configuration("Test_DOIProxy_User", "s~c9<evQ#%^h4Uyb", "https://taerar.infinite-trajectory.de", new List<string>());
-            var config = new Configuration("sventhiel", "sventhiel", "https://taerar.infinite-trajectory.de", new List<string>());
+            var config = new Configuration("sventhiel", "sventhiel", "https://taerar.infinite-trajectory.de");
 
             var dataCiteService = new DataCiteService(config);
 
@@ -30,7 +30,7 @@ namespace Vaelastrasz.Library.Tests.Services
         {
             try
             {
-                var config = new Configuration("sventhiel", "sventhiel", "https://taerar.infinite-trajectory.de", new List<string>());
+                var config = new Configuration("sventhiel", "sventhiel", "https://taerar.infinite-trajectory.de");
 
                 string text = File.ReadAllText(@"C:/Projects/github.com/sventhiel/Vaelastrasz/Vaelastrasz.Server/Examples/doi_002.json");
                 var data = JsonConvert.DeserializeObject<CreateDataCiteModel>(text);
@@ -82,7 +82,7 @@ namespace Vaelastrasz.Library.Tests.Services
         [Test]
         public void Test4()
         {
-            var config = new Configuration("sventhiel", "proq3dm6", "http://localhost:5041", []);
+            var config = new Configuration("sventhiel", "proq3dm6", "http://localhost:5041");
             var dataCiteService = new DataCiteService(config);
             var doiService = new DOIService(config);
 

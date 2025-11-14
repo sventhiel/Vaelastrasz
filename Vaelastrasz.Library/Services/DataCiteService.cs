@@ -35,8 +35,6 @@ namespace Vaelastrasz.Library.Services
         {
             try
             {
-                model.Update(_config.UpdateProperties);
-
                 var response = await _client.PostAsync($"api/datacite", model.AsJson());
 
                 if (!response.IsSuccessStatusCode)
