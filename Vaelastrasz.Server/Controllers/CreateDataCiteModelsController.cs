@@ -9,7 +9,7 @@ using Vaelastrasz.Server.Configurations;
 
 namespace Vaelastrasz.Server.Controllers
 {
-    [ApiController, Authorize(Roles = "user-datacite"), Route("api"), Time]
+    [ApiController, Route("api"), Time]
     public class CreateDataCiteModelsController : ControllerBase
     {
         private readonly ILogger<CreateDataCiteModelsController> _logger;
@@ -23,13 +23,16 @@ namespace Vaelastrasz.Server.Controllers
             _logger = logger;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="property">Derzeit wird 'Creators' und 'Contributors' unterstützt.</param>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost("createdatacitemodels/prepare/{property}")]
         [SwaggerResponse(201, "Resource created successfully", typeof(CreateDataCiteModel))]
         public async Task<IActionResult> PostAsync(string property, CreateDataCiteModel model)
         {
-            if (!User.IsInRole("user-datacite") || User?.Identity?.Name == null)
-                return Forbid();
-
             return Ok(model.Update(property));
         }
     }
