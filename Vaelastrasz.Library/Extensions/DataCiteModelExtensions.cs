@@ -26,6 +26,10 @@ namespace Vaelastrasz.Library.Extensions
                                 if (!names.IsUnparsable && !string.IsNullOrEmpty(names.First) && !string.IsNullOrEmpty(names.Last))
                                 {
                                     creator.GivenName = names.First;
+
+                                    // Eventuell sollte es geändert werden, dass nur der Vorname genommen wird.
+                                    if (!string.IsNullOrEmpty(names.Middle))
+                                        creator.GivenName = $"{creator.GivenName} {names.Middle}";
                                     creator.FamilyName = names.Last;
                                     creator.Name = null;
                                 }
