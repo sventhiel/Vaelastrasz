@@ -2,13 +2,13 @@ using Exceptionless;
 using LiteDB;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http.Features;
-using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Mvc;
+using Scalar.AspNetCore;
 using Serilog;
 using System.Reflection;
 using System.Text.Json.Serialization;
 using Vaelastrasz.Library.Resolvers;
 using Vaelastrasz.Server.Authentication;
-using Vaelastrasz.Server.Filters;
 using Vaelastrasz.Server.Middleware;
 
 var configuration = new ConfigurationBuilder()
@@ -43,73 +43,14 @@ builder.Services.AddControllers().AddNewtonsoftJson(o =>
 {
     o.SerializerSettings.ContractResolver = new VaelastraszContractResolver();
     o.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
-}).AddJsonOptions(o =>
+});
+
+builder.Services.Configure<JsonOptions>(o =>
 {
     o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultScheme = "BASIC";
-    options.DefaultChallengeScheme = "BASIC";
-})
-    .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>
-                ("Basic", null)
-    .AddPolicyScheme("BASIC", "BASIC", options =>
-    {
-        options.ForwardDefaultSelector = context =>
-        {
-            return "Basic";
-        };
-    });
-
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
-{
-    var basicSecurityScheme = new OpenApiSecurityScheme
-    {
-        Name = "Basic",
-        In = ParameterLocation.Header,
-        Type = SecuritySchemeType.Http,
-        Scheme = "Basic",
-        Description = "Provide your username and password.",
-
-        Reference = new OpenApiReference
-        {
-            Id = "Basic",
-            Type = ReferenceType.SecurityScheme
-        }
-    };
-
-    options.AddSecurityDefinition(basicSecurityScheme.Reference.Id, basicSecurityScheme);
-    options.SchemaFilter<EnumSchemaFilter>();
-    options.OperationFilter<AuthorizeHeaderOperationFilter>();
-    options.OperationFilter<SwaggerCustomHeaderOperationFilter>();
-
-    options.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Version = "v1",
-        Title = "DataCite DOI Proxy",
-        Description = "A proxy service for BEXIS2 instances to communicate with DataCite.",
-        TermsOfService = new Uri("https://example.com/terms"),
-        Contact = new OpenApiContact
-        {
-            Name = "Sven Thiel",
-            Email = "m6thsv2@googlemail.com",
-            Url = new Uri("https://github.com/sventhiel/vaelastrasz"),
-        },
-        License = new OpenApiLicense
-        {
-            Name = "Use under OpenApiLicense",
-            Url = new Uri("https://example.com/license"),
-        }
-    });
-
-    // Set the comments path for the Swagger JSON and UI.
-    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-    options.IncludeXmlComments(xmlPath);
-});
 
 builder.Services.Configure<FormOptions>(options =>
 {
@@ -121,13 +62,17 @@ var app = builder.Build();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-// Use Swagger middleware
-app.UseSwagger();
-app.UseSwaggerUI(options =>
+// Use Scalar middleware
+app.MapScalarApiReference(options =>
 {
-    options.InjectStylesheet("/css/swagger-ui/theme-dark.css");
-    options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
-    options.RoutePrefix = "";
+    options.Title = "This is my Scalar API";
+    options.DarkMode = true;
+    options.Favicon = "path";
+    options.DefaultHttpClient = new KeyValuePair<ScalarTarget, ScalarClient>(ScalarTarget.CSharp, ScalarClient.RestSharp);
+    options.HideModels = false;
+    options.Layout = ScalarLayout.Modern;
+    options.ShowSidebar = true;
+
 });
 
 app.UseAuthentication();
@@ -143,7 +88,6 @@ if (Convert.ToBoolean(builder.Configuration["Exceptionless:Enabled"]))
         .Submit();
 }
 
-// Map controllers
 app.MapControllers();
 
 app.Run();

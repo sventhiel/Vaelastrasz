@@ -1,8 +1,6 @@
 ﻿using LiteDB;
 using MethodTimer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Swashbuckle.AspNetCore.Annotations;
 using Vaelastrasz.Library.Extensions;
 using Vaelastrasz.Library.Models;
 using Vaelastrasz.Server.Configurations;
@@ -30,7 +28,7 @@ namespace Vaelastrasz.Server.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost("createdatacitemodels/prepare/{property}")]
-        [SwaggerResponse(201, "Resource created successfully", typeof(CreateDataCiteModel))]
+        [ProducesResponseType(typeof(CreateDataCiteModel), StatusCodes.Status201Created)]
         public async Task<IActionResult> PostAsync(string property, CreateDataCiteModel model)
         {
             return Ok(model.Update(property));

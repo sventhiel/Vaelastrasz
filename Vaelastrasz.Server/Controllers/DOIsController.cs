@@ -2,7 +2,6 @@
 using MethodTimer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Swashbuckle.AspNetCore.Annotations;
 using Vaelastrasz.Library.Exceptions;
 using Vaelastrasz.Library.Models;
 using Vaelastrasz.Server.Configurations;
@@ -169,7 +168,7 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         [HttpPost("dois")]
-        [SwaggerResponse(201, "Resource created successfully", typeof(ReadDOIModel))]
+        [ProducesResponseType(typeof(ReadDOIModel), StatusCodes.Status201Created)]
         public async Task<IActionResult> Post(CreateDOIModel model)
         {
             if (!User.IsInRole("user") || User?.Identity?.Name == null)

@@ -2,7 +2,6 @@
 using MethodTimer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Swashbuckle.AspNetCore.Annotations;
 using Vaelastrasz.Server.Configurations;
 using Vaelastrasz.Server.Models;
 using Vaelastrasz.Server.Services;
@@ -121,7 +120,7 @@ namespace Vaelastrasz.Server.Controllers
         /// Admin-Berechtigungen korrekt zugewiesen sind, um die Benutzerdetails erfolgreich zu erstellen.
         /// </remarks>
         [HttpPost("users")]
-        [SwaggerResponse(201, "Resource created successfully", typeof(ReadUserModel))]
+        [ProducesResponseType(typeof(ReadUserModel), StatusCodes.Status201Created)]
         public async Task<IActionResult> PostAsync(CreateUserModel model)
         {
             if (!User.IsInRole("admin"))

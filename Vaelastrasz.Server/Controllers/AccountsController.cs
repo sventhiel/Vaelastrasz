@@ -2,7 +2,6 @@
 using MethodTimer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Swashbuckle.AspNetCore.Annotations;
 using Vaelastrasz.Server.Models;
 using Vaelastrasz.Server.Services;
 
@@ -113,7 +112,7 @@ namespace Vaelastrasz.Server.Controllers
         /// Weitere Informationen finden Sie in der <see href="https://github.com/sventhiel/Vaelastrasz/tree/master/Vaelastrasz.Server#accounts">Dokumentation</see>.
         /// </remarks>
         [HttpPost("accounts")]
-        [SwaggerResponse(201, "Resource created successfully", typeof(ReadAccountModel))]
+        [ProducesResponseType(typeof(ReadAccountModel), StatusCodes.Status201Created)]
         public async Task<IActionResult> PostAsync(CreateAccountModel model)
         {
             if (!User.IsInRole("admin"))
