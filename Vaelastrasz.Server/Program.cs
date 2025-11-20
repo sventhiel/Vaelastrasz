@@ -1,15 +1,20 @@
 using Exceptionless;
 using LiteDB;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http.Features;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
+using Scalar.AspNetCore;
+
+
+
+//using Microsoft.OpenApi.Models;
 using Serilog;
 using System.Reflection;
 using System.Text.Json.Serialization;
 using Vaelastrasz.Library.Resolvers;
 using Vaelastrasz.Server.Authentication;
-using Vaelastrasz.Server.Filters;
+//using Vaelastrasz.Server.Filters;
 using Vaelastrasz.Server.Middleware;
+//using Vaelastrasz.Server.Transformers;
 
 var configuration = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
@@ -48,90 +53,32 @@ builder.Services.AddControllers().AddNewtonsoftJson(o =>
     o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultScheme = "BASIC";
-    options.DefaultChallengeScheme = "BASIC";
-})
-    .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>
-                ("Basic", null)
-    .AddPolicyScheme("BASIC", "BASIC", options =>
-    {
-        options.ForwardDefaultSelector = context =>
-        {
-            return "Basic";
-        };
-    });
+builder.Services.AddAuthentication("basicAuth").AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("basicAuth", null);
+builder.Services.AddAuthorization();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
+builder.Services.AddOpenApi(options =>
 {
-    var basicSecurityScheme = new OpenApiSecurityScheme
-    {
-        Name = "Basic",
-        In = ParameterLocation.Header,
-        Type = SecuritySchemeType.Http,
-        Scheme = "Basic",
-        Description = "Provide your username and password.",
+    options.AddDocumentTransformer((document, context, cancellationToken) =>
+    {   
+        document.Components ??= new();
+        document.Components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
 
-        Reference = new OpenApiReference
+        document.Components.SecuritySchemes["basicAuth"] = new OpenApiSecurityScheme
         {
-            Id = "Basic",
-            Type = ReferenceType.SecurityScheme
-        }
-    };
+            Type = SecuritySchemeType.Http,
+            Scheme = "basic",
+            Description = "Basic Authentication"
+        };
 
-    options.AddSecurityDefinition(basicSecurityScheme.Reference.Id, basicSecurityScheme);
-    options.SchemaFilter<EnumSchemaFilter>();
-    options.OperationFilter<AuthorizeHeaderOperationFilter>();
-    options.OperationFilter<SwaggerCustomHeaderOperationFilter>();
-
-    options.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Version = "v1",
-        Title = "DataCite DOI Proxy",
-        Description = "A proxy service for BEXIS2 instances to communicate with DataCite.",
-        TermsOfService = new Uri("https://example.com/terms"),
-        Contact = new OpenApiContact
-        {
-            Name = "Sven Thiel",
-            Email = "m6thsv2@googlemail.com",
-            Url = new Uri("https://github.com/sventhiel/vaelastrasz"),
-        },
-        License = new OpenApiLicense
-        {
-            Name = "Use under OpenApiLicense",
-            Url = new Uri("https://example.com/license"),
-        }
+        return Task.CompletedTask;
     });
-
-    // Set the comments path for the Swagger JSON and UI.
-    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-    options.IncludeXmlComments(xmlPath);
-});
-
-builder.Services.Configure<FormOptions>(options =>
-{
-    options.MultipartBodyLengthLimit = 50 * 1024 * 1024; // 50 MB limit
 });
 
 var app = builder.Build();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
-// Use Swagger middleware
-app.UseSwagger();
-app.UseSwaggerUI(options =>
-{
-    options.InjectStylesheet("/css/swagger-ui/theme-dark.css");
-    options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
-    options.RoutePrefix = "";
-});
-
-app.UseAuthentication();
-app.UseAuthorization();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
@@ -143,7 +90,12 @@ if (Convert.ToBoolean(builder.Configuration["Exceptionless:Enabled"]))
         .Submit();
 }
 
-// Map controllers
+app.MapOpenApi().AllowAnonymous();
+app.MapScalarApiReference().AllowAnonymous();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.MapControllers();
 
 app.Run();
