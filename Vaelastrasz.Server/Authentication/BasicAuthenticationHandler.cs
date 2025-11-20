@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
+using Vaelastrasz.Library.Exceptions;
 using Vaelastrasz.Library.Extensions;
 using Vaelastrasz.Server.Configurations;
 using Vaelastrasz.Server.Services;
@@ -83,13 +84,13 @@ namespace Vaelastrasz.Server.Authentication
 
                 Response.StatusCode = 401;
                 Response.Headers.Append("www-authenticate", "Basic Authorization");
-                return AuthenticateResult.Fail(new UnauthorizedAccessException());
+                return AuthenticateResult.Fail(new UnauthorizedException());
             }
             else
             {
                 Response.StatusCode = 401;
                 Response.Headers.Append("www-authenticate", "Basic Authorization");
-                return AuthenticateResult.Fail(new UnauthorizedAccessException());
+                return AuthenticateResult.Fail(new UnauthorizedException());
             }
         }
     }

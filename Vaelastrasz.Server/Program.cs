@@ -1,7 +1,9 @@
-using Exceptionless;
+﻿using Exceptionless;
 using LiteDB;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi;
+using Newtonsoft.Json.Converters;
 using Scalar.AspNetCore;
 
 
@@ -9,8 +11,10 @@ using Scalar.AspNetCore;
 //using Microsoft.OpenApi.Models;
 using Serilog;
 using System.Reflection;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Vaelastrasz.Library.Resolvers;
+using Vaelastrasz.Server.Attributes;
 using Vaelastrasz.Server.Authentication;
 //using Vaelastrasz.Server.Filters;
 using Vaelastrasz.Server.Middleware;
@@ -48,6 +52,7 @@ builder.Services.AddControllers().AddNewtonsoftJson(o =>
 {
     o.SerializerSettings.ContractResolver = new VaelastraszContractResolver();
     o.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
+    o.SerializerSettings.Converters.Add(new StringEnumConverter());
 }).AddJsonOptions(o =>
 {
     o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
@@ -70,6 +75,59 @@ builder.Services.AddOpenApi(options =>
             Scheme = "basic",
             Description = "Basic Authentication"
         };
+
+        return Task.CompletedTask;
+    });
+
+    options.AddOperationTransformer((operation, context, ct) =>
+    {
+        var endpointMetadata = context.Description.ActionDescriptor.EndpointMetadata;
+
+        // z.B. dein Attribut so finden:
+        var attr = endpointMetadata
+             .OfType<SwaggerCustomHeaderAttribute>()
+             .FirstOrDefault();
+
+        if (attr != null)
+        {
+            // Hier machen, was dein alter Filter gemacht hat
+            var mediaTypes = attr.AcceptableTypes
+                .Distinct()
+                .Select(t => (JsonNode)JsonValue.Create(t))
+                .ToList();
+
+            operation.Parameters ??= new List<IOpenApiParameter>();
+            operation.Parameters.Add(new OpenApiParameter
+            {
+                Name = attr.HeaderName,
+                In = ParameterLocation.Header,
+                Description = "Specifies the acceptable media type.",
+                Required = true,
+                Schema = new OpenApiSchema
+                {
+                    Type = JsonSchemaType.String,
+                    Enum = mediaTypes
+                }
+            });
+        }
+
+        // Multipart-Form / Datei-Upload wie gehabt
+        if (operation.RequestBody?.Content?.ContainsKey("multipart/form-data") == true)
+        {
+            var schema = new OpenApiSchema
+            {
+                Type = JsonSchemaType.Object,
+                Properties = new Dictionary<string, IOpenApiSchema>()  // ← WICHTIG
+            };
+
+            schema.Properties["file"] = new OpenApiSchema
+            {
+                Type = JsonSchemaType.String,
+                Format = "binary"
+            };
+
+            operation.RequestBody.Content["multipart/form-data"].Schema = schema;
+        }
 
         return Task.CompletedTask;
     });
