@@ -30,7 +30,7 @@ namespace Vaelastrasz.Server.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost("createdatacitemodels/prepare/{property}")]
-        //[SwaggerResponse(201, "Resource created successfully", typeof(CreateDataCiteModel))]
+        [ProducesResponseType(typeof(CreateDataCiteModel), 201)]
         public async Task<IActionResult> PostAsync(string property, CreateDataCiteModel model)
         {
             return Ok(model.Update(property));
