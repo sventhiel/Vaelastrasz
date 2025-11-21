@@ -1,7 +1,7 @@
 ﻿using LiteDB;
 using MethodTimer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
 //using Swashbuckle.AspNetCore.Annotations;
 using Vaelastrasz.Library.Extensions;
 using Vaelastrasz.Library.Models;
@@ -24,7 +24,7 @@ namespace Vaelastrasz.Server.Controllers
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="property">Derzeit wird 'Creators' und 'Contributors' unterstützt.</param>
         /// <param name="model"></param>

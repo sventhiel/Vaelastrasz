@@ -1,27 +1,16 @@
 ﻿using Exceptionless;
 using LiteDB;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Options;
 using Microsoft.OpenApi;
-using Newtonsoft.Json.Converters;
 using Scalar.AspNetCore;
-
-
-
-//using Microsoft.OpenApi.Models;
 using Serilog;
-using System.Reflection;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Vaelastrasz.Library.Resolvers;
 using Vaelastrasz.Server.Attributes;
 using Vaelastrasz.Server.Authentication;
 using Vaelastrasz.Server.Filters;
-
-//using Vaelastrasz.Server.Filters;
 using Vaelastrasz.Server.Middleware;
-//using Vaelastrasz.Server.Transformers;
 
 var configuration = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
@@ -71,12 +60,12 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApi(options =>
 {
     options.AddDocumentTransformer((document, context, cancellationToken) =>
-    {   
+    {
         document.Info = new OpenApiInfo
         {
             Version = "",
             Title = "DataCite DOI Proxy",
-            Description = "A proxy service, not only but specifically, for BEXIS2 instances to communicate with DataCite.",
+            Description = "A proxy service, not only, but specifically for BEXIS2 instances to communicate with DataCite.",
             //TermsOfService = new Uri("https://example.com/terms"),
             Contact = new OpenApiContact
             {

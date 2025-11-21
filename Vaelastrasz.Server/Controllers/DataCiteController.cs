@@ -3,6 +3,7 @@ using MethodTimer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+
 //using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
 using System.Net.Http.Headers;
@@ -309,7 +310,6 @@ namespace Vaelastrasz.Server.Controllers
         /// <exception cref="NotFoundException">Wird ausgelöst, wenn das Konto des Benutzers nicht existiert.</exception>
         /// <exception cref="ForbiddenException">Wird ausgelöst, wenn der DOI ungültig ist oder nicht verwaltet werden kann.</exception>
         [HttpPost("datacite")]
-        //[SwaggerResponse(201, "Resource created successfully", typeof(ReadDataCiteModel))]
         public async Task<IActionResult> PostAsync(CreateDataCiteModel model)
         {
             if (!User.IsInRole("user-datacite") || User?.Identity?.Name == null)

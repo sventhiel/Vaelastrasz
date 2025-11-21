@@ -2,6 +2,7 @@
 using MethodTimer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
 //using Swashbuckle.AspNetCore.Annotations;
 using Vaelastrasz.Library.Exceptions;
 using Vaelastrasz.Library.Extensions;
@@ -86,7 +87,6 @@ namespace Vaelastrasz.Server.Controllers
         /// </remarks>
         /// <exception cref="BadRequestException">Wird ausgelöst, wenn die hochgeladene Datei nicht den Anforderungen entspricht oder ungültig ist.</exception>
         [HttpPost("databases")]
-        //[SwaggerResponse(201, "Resource created successfully")]
         public async Task<IActionResult> PostAsync(IFormFile file)
         {
             if (!User.IsInRole("admin"))

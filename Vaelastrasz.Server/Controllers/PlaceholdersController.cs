@@ -2,6 +2,7 @@
 using MethodTimer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
 //using Swashbuckle.AspNetCore.Annotations;
 using Vaelastrasz.Library.Exceptions;
 using Vaelastrasz.Server.Configurations;
@@ -134,7 +135,6 @@ namespace Vaelastrasz.Server.Controllers
         /// </remarks>
         /// <exception cref="UnauthorizedException">Wird ausgelöst, wenn der Zugriff ohne ordnungsgemäße Authentifizierung erfolgt.</exception>
         [HttpPost("placeholders")]
-        //[SwaggerResponse(201, "Resource created successfully", typeof(ReadPlaceholderModel))]
         public async Task<IActionResult> PostAsync(CreatePlaceholderModel model)
         {
             if (User.IsInRole("admin") || (User.IsInRole("user") && long.TryParse(User.FindFirst("UserId")?.Value, out long userId) && model.UserId == userId))
