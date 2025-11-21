@@ -1,6 +1,7 @@
 ﻿using Exceptionless;
 using LiteDB;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.OpenApi;
 using Scalar.AspNetCore;
 using Serilog;
@@ -178,5 +179,10 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedProto | ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedHost
+});
 
 app.Run();

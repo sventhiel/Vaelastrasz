@@ -12,7 +12,7 @@
     "Vaelastrasz.Server": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "",
+      "launchUrl": "scalar",
       "applicationUrl": "http://localhost:5041",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
