@@ -13,13 +13,11 @@ namespace Vaelastrasz.Server.Controllers
     public class CreateDataCiteModelsController : ControllerBase
     {
         private readonly ILogger<CreateDataCiteModelsController> _logger;
-        private UpdateProperties _updateProperties;
         private ConnectionString _connectionString;
 
         public CreateDataCiteModelsController(ILogger<CreateDataCiteModelsController> logger, IConfiguration configuration, ConnectionString connectionString)
         {
             _connectionString = connectionString;
-            _updateProperties = configuration.GetSection("UpdateProperties").Get<UpdateProperties>()!;
             _logger = logger;
         }
 

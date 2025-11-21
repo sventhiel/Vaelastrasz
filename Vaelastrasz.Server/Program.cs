@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.OpenApi;
 using Scalar.AspNetCore;
 using Serilog;
+using System.Reflection;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Vaelastrasz.Library.Resolvers;
@@ -37,7 +38,7 @@ builder.Services.AddExceptionless(options =>
     options.ApiKey = builder.Configuration["Exceptionless:ApiKey"] ?? "";
     options.IncludeUserName = Convert.ToBoolean(builder.Configuration["Exceptionless:IncludeUserName"]);
     options.IncludeIpAddress = Convert.ToBoolean(builder.Configuration["Exceptionless:IncludeIpAddress"]);
-    options.SetVersion(builder.Configuration["Exceptionless:Version"] ?? "v1.0");
+    options.SetVersion($"{Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version}");
 });
 
 builder.Services.AddControllers(options =>
@@ -63,7 +64,7 @@ builder.Services.AddOpenApi(options =>
     {
         document.Info = new OpenApiInfo
         {
-            Version = "",
+            Version = $"{Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version}",
             Title = "DataCite DOI Proxy",
             Description = "A proxy service, not only, but specifically for BEXIS2 instances to communicate with DataCite.",
             //TermsOfService = new Uri("https://example.com/terms"),
@@ -136,7 +137,7 @@ builder.Services.AddOpenApi(options =>
 
             schema.Properties["file"] = new OpenApiSchema
             {
-                Type = JsonSchemaType.String,
+                Type = JsonSchemaType.Object,
                 Format = "binary"
             };
 
