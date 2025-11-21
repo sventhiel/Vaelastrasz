@@ -149,7 +149,16 @@ if (Convert.ToBoolean(builder.Configuration["Exceptionless:Enabled"]))
 }
 
 app.MapOpenApi().AllowAnonymous();
-app.MapScalarApiReference().AllowAnonymous();
+app.MapScalarApiReference(options =>
+{
+    options.Title = "This is my Scalar API";
+    //options.Theme = ScalarTheme.Mars;
+    options.Favicon = "path";
+    options.DefaultHttpClient = new KeyValuePair<ScalarTarget, ScalarClient>(ScalarTarget.CSharp, ScalarClient.RestSharp);
+    options.HideModels = false;
+    options.Layout = ScalarLayout.Modern;
+    options.ShowSidebar = true;
+}).AllowAnonymous();
 
 app.UseAuthentication();
 app.UseAuthorization();
