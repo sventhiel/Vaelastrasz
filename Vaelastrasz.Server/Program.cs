@@ -2,6 +2,7 @@
 using LiteDB;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi;
 using Newtonsoft.Json.Converters;
 using Scalar.AspNetCore;
@@ -16,6 +17,8 @@ using System.Text.Json.Serialization;
 using Vaelastrasz.Library.Resolvers;
 using Vaelastrasz.Server.Attributes;
 using Vaelastrasz.Server.Authentication;
+using Vaelastrasz.Server.Filters;
+
 //using Vaelastrasz.Server.Filters;
 using Vaelastrasz.Server.Middleware;
 //using Vaelastrasz.Server.Transformers;
@@ -48,14 +51,17 @@ builder.Services.AddExceptionless(options =>
     options.SetVersion(builder.Configuration["Exceptionless:Version"] ?? "v1.0");
 });
 
-builder.Services.AddControllers().AddNewtonsoftJson(o =>
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<GlobalEnumValidationFilter>();
+}).AddNewtonsoftJson(o =>
 {
     o.SerializerSettings.ContractResolver = new VaelastraszContractResolver();
     o.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
-    o.SerializerSettings.Converters.Add(new StringEnumConverter());
+    //o.SerializerSettings.Converters.Add(new StringEnumConverter());
 }).AddJsonOptions(o =>
 {
-    o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(allowIntegerValues: false));
 });
 
 builder.Services.AddAuthentication("basicAuth").AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("basicAuth", null);
@@ -66,10 +72,29 @@ builder.Services.AddOpenApi(options =>
 {
     options.AddDocumentTransformer((document, context, cancellationToken) =>
     {   
+        document.Info = new OpenApiInfo
+        {
+            Version = "",
+            Title = "DataCite DOI Proxy",
+            Description = "A proxy service, not only but specifically, for BEXIS2 instances to communicate with DataCite.",
+            //TermsOfService = new Uri("https://example.com/terms"),
+            Contact = new OpenApiContact
+            {
+                Name = "Sven Thiel",
+                Email = "m6thsv2@googlemail.com",
+                Url = new Uri("https://github.com/sventhiel/vaelastrasz"),
+            },
+            License = new OpenApiLicense
+            {
+                Name = "GPL-3.0 license",
+                Url = new Uri("https://www.gnu.org/licenses/gpl-3.0.html#license-text"),
+            }
+        };
+
         document.Components ??= new();
         document.Components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
 
-        document.Components.SecuritySchemes["basicAuth"] = new OpenApiSecurityScheme
+        document.Components.SecuritySchemes["Basic Auth"] = new OpenApiSecurityScheme
         {
             Type = SecuritySchemeType.Http,
             Scheme = "basic",
@@ -151,12 +176,11 @@ if (Convert.ToBoolean(builder.Configuration["Exceptionless:Enabled"]))
 app.MapOpenApi().AllowAnonymous();
 app.MapScalarApiReference(options =>
 {
-    options.Title = "This is my Scalar API";
+    options.Title = "DataCite DOI Proxy";
     //options.Theme = ScalarTheme.Mars;
-    options.Favicon = "path";
     options.DefaultHttpClient = new KeyValuePair<ScalarTarget, ScalarClient>(ScalarTarget.CSharp, ScalarClient.RestSharp);
     options.HideModels = false;
-    options.Layout = ScalarLayout.Modern;
+    options.Layout = ScalarLayout.Classic;
     options.ShowSidebar = true;
 }).AllowAnonymous();
 

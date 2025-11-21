@@ -2,6 +2,9 @@
 using MethodTimer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Vaelastrasz.Library.Entities;
+using Vaelastrasz.Library.Models;
+
 //using Swashbuckle.AspNetCore.Annotations;
 using Vaelastrasz.Server.Models;
 using Vaelastrasz.Server.Services;
@@ -35,6 +38,8 @@ namespace Vaelastrasz.Server.Controllers
         /// Weitere Informationen finden Sie in der <see href="https://github.com/sventhiel/Vaelastrasz/tree/master/Vaelastrasz.Server#accounts">Dokumentation</see>.
         /// </remarks>
         [HttpDelete("accounts/{id}")]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> DeleteByIdAsync(long id)
         {
             if (!User.IsInRole("admin"))

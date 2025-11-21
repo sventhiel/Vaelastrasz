@@ -1,4 +1,5 @@
 ﻿using LiteDB;
+using System;
 using Vaelastrasz.Library.Entities;
 using Vaelastrasz.Library.Exceptions;
 using Vaelastrasz.Library.Types;
@@ -40,6 +41,8 @@ namespace Vaelastrasz.Server.Services
                     CreationDate = DateTimeOffset.UtcNow,
                     LastUpdateDate = DateTimeOffset.UtcNow
                 };
+
+
 
                 return accounts.Insert(account);
             });
