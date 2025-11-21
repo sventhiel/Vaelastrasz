@@ -180,6 +180,10 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+var api = app.MapGroup("/api");
+
+api.MapControllers();
+
 app.UseForwardedHeaders(new ForwardedHeadersOptions
 {
     ForwardedHeaders = ForwardedHeaders.XForwardedProto | ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedHost
