@@ -149,7 +149,7 @@ if (Convert.ToBoolean(builder.Configuration["Exceptionless:Enabled"]))
 }
 
 app.MapOpenApi().AllowAnonymous();
-app.MapScalarApiReference(options =>
+app.MapScalarApiReference("/", options =>
 {
     options.Title = "This is my Scalar API";
     //options.Theme = ScalarTheme.Mars;
