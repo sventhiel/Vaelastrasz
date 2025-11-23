@@ -14,13 +14,6 @@
     <Content Remove="Examples\doi_002.json" />
     <Content Remove="Examples\doi_003.json" />
     <Content Remove="wwwroot\css\custom-swagger-ui - Copy.css" />
-    <Content Remove="wwwroot\css\swagger-ui\theme-dark.css" />
-    <Content Remove="wwwroot\css\swagger-ui\theme-feeling-blue.css" />
-    <Content Remove="wwwroot\css\swagger-ui\theme-flattop.css" />
-    <Content Remove="wwwroot\css\swagger-ui\theme-material.css" />
-    <Content Remove="wwwroot\css\swagger-ui\theme-monokai.css" />
-    <Content Remove="wwwroot\css\swagger-ui\theme-muted.css" />
-    <Content Remove="wwwroot\css\swagger-ui\theme-newspaper.css" />
   </ItemGroup>
 
   <ItemGroup>
@@ -47,34 +40,14 @@
     <None Include="Examples\doi_002.json" />
     <None Include="Examples\doi_001.json" />
     <None Include="FodyWeavers.xsd" />
-    <None Include="wwwroot\css\swagger-ui\theme-dark.css">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="wwwroot\css\swagger-ui\theme-outline.css">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="wwwroot\css\swagger-ui\theme-newspaper.css">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="wwwroot\css\swagger-ui\theme-muted.css">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="wwwroot\css\swagger-ui\theme-monokai.css">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="wwwroot\css\swagger-ui\theme-material.css">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="wwwroot\css\swagger-ui\theme-flattop.css">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="wwwroot\css\swagger-ui\theme-feeling-blue.css">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Vaelastrasz.Library\Vaelastrasz.Library.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\css\" />
   </ItemGroup>
 
 </Project>
