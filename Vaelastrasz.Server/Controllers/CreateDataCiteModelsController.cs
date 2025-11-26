@@ -11,24 +11,22 @@ namespace Vaelastrasz.Server.Controllers
     public class CreateDataCiteModelsController : ControllerBase
     {
         private readonly ILogger<CreateDataCiteModelsController> _logger;
-        private UpdateProperties _updateProperties;
         private ConnectionString _connectionString;
 
         public CreateDataCiteModelsController(ILogger<CreateDataCiteModelsController> logger, IConfiguration configuration, ConnectionString connectionString)
         {
             _connectionString = connectionString;
-            _updateProperties = configuration.GetSection("UpdateProperties").Get<UpdateProperties>()!;
             _logger = logger;
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="property">Derzeit wird 'Creators' und 'Contributors' unterstützt.</param>
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost("createdatacitemodels/prepare/{property}")]
-        [ProducesResponseType(typeof(CreateDataCiteModel), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(CreateDataCiteModel), 201)]
         public async Task<IActionResult> PostAsync(string property, CreateDataCiteModel model)
         {
             return Ok(model.Update(property));

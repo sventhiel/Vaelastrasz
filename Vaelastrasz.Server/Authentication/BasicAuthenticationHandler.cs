@@ -1,9 +1,11 @@
 ﻿using LiteDB;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
+using Vaelastrasz.Library.Exceptions;
 using Vaelastrasz.Library.Extensions;
 using Vaelastrasz.Server.Configurations;
 using Vaelastrasz.Server.Services;
@@ -23,11 +25,17 @@ namespace Vaelastrasz.Server.Authentication
             ConnectionString connectionString) : base(options, logger, encoder)
         {
             _connectionString = connectionString;
-            _admins = configuration.GetSection("Admins").Get<List<Admin>>()!;
+            _admins = configuration.GetSection("Admins").Get<List<Admin>>() ?? [];
         }
 
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
+            var endpoint = Context.GetEndpoint();
+            if (endpoint?.Metadata?.GetMetadata<IAllowAnonymous>() != null)
+            {
+                return AuthenticateResult.NoResult();
+            }
+
             var authHeader = Request.Headers["Authorization"].ToString();
             if (authHeader != null && authHeader.StartsWith("basic", StringComparison.OrdinalIgnoreCase))
             {
@@ -76,13 +84,13 @@ namespace Vaelastrasz.Server.Authentication
 
                 Response.StatusCode = 401;
                 Response.Headers.Append("www-authenticate", "Basic Authorization");
-                return AuthenticateResult.Fail(new UnauthorizedAccessException());
+                return AuthenticateResult.Fail(new UnauthorizedException());
             }
             else
             {
                 Response.StatusCode = 401;
                 Response.Headers.Append("www-authenticate", "Basic Authorization");
-                return AuthenticateResult.Fail(new UnauthorizedAccessException());
+                return AuthenticateResult.Fail(new UnauthorizedException());
             }
         }
     }
