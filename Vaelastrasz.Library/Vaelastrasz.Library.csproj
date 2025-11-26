@@ -2,8 +2,8 @@
 
   <PropertyGroup>
 	<TargetFramework>netstandard2.0</TargetFramework>
-    <RepositoryUrl>https://github.com/sventhiel/Vaelastrasz</RepositoryUrl>
-    <PackageProjectUrl>https://github.com/sventhiel/Vaelastrasz</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/BEXIS2/DataCite_DOI-Proxy</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/BEXIS2/DataCite_DOI-Proxy</PackageProjectUrl>
     <Authors>Sven Thiel</Authors>
     <Title>Vaelastrasz.Library</Title>
     <IncludeSymbols>True</IncludeSymbols>
