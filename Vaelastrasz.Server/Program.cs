@@ -159,9 +159,7 @@ app.UseMiddleware<ExceptionHandlingMiddleware>();
 if (Convert.ToBoolean(builder.Configuration["Exceptionless:Enabled"]))
 {
     app.UseExceptionless();
-    ExceptionlessClient.Default.CreateLog("Vaelastrasz.Server started")
-        .SetProperty("Version", builder.Configuration["Exceptionless:Version"] ?? "v1.0")
-        .Submit();
+    ExceptionlessClient.Default.CreateLog("Vaelastrasz.Server started").Submit();
 }
 
 app.MapOpenApi().AllowAnonymous();
@@ -179,10 +177,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
-var api = app.MapGroup("/api");
-
-api.MapControllers();
 
 app.UseForwardedHeaders(new ForwardedHeadersOptions
 {
