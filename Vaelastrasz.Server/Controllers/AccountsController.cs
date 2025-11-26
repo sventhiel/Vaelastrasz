@@ -2,8 +2,6 @@
 using MethodTimer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
-//using Swashbuckle.AspNetCore.Annotations;
 using Vaelastrasz.Server.Models;
 using Vaelastrasz.Server.Services;
 
