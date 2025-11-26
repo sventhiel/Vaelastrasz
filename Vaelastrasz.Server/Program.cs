@@ -11,6 +11,7 @@ using System.Text.Json.Serialization;
 using Vaelastrasz.Library.Resolvers;
 using Vaelastrasz.Server.Attributes;
 using Vaelastrasz.Server.Authentication;
+using Vaelastrasz.Server.Configurations;
 using Vaelastrasz.Server.Filters;
 using Vaelastrasz.Server.Middleware;
 
@@ -18,6 +19,8 @@ var configuration = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json")
 .Build();
+
+var openApiInfoConfiguration = configuration.GetSection("OpenApiInfo").Get<OpenApiInfoConfiguration>() ?? new OpenApiInfoConfiguration();
 
 var logger = new LoggerConfiguration()
   .ReadFrom.Configuration(configuration)
@@ -63,24 +66,7 @@ builder.Services.AddOpenApi(options =>
 {
     options.AddDocumentTransformer((document, context, cancellationToken) =>
     {
-        document.Info = new OpenApiInfo
-        {
-            Version = $"{Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version}",
-            Title = "DataCite DOI Proxy",
-            Description = "A proxy service, not only, but specifically for BEXIS2 instances to communicate with DataCite.",
-            //TermsOfService = new Uri("https://example.com/terms"),
-            Contact = new OpenApiContact
-            {
-                Name = "Sven Thiel",
-                Email = "m6thsv2@googlemail.com",
-                Url = new Uri("https://github.com/sventhiel/vaelastrasz"),
-            },
-            License = new OpenApiLicense
-            {
-                Name = "GPL-3.0 license",
-                Url = new Uri("https://www.gnu.org/licenses/gpl-3.0.html#license-text"),
-            }
-        };
+        document.Info = openApiInfoConfiguration.GetOpenApiInfo();
 
         document.Components ??= new();
         document.Components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
