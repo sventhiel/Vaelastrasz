@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-	<Version>5.0.2</Version>
+	<Version>6.0.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,13 +14,6 @@
     <Content Remove="Examples\doi_002.json" />
     <Content Remove="Examples\doi_003.json" />
     <Content Remove="wwwroot\css\custom-swagger-ui - Copy.css" />
-    <Content Remove="wwwroot\css\swagger-ui\theme-dark.css" />
-    <Content Remove="wwwroot\css\swagger-ui\theme-feeling-blue.css" />
-    <Content Remove="wwwroot\css\swagger-ui\theme-flattop.css" />
-    <Content Remove="wwwroot\css\swagger-ui\theme-material.css" />
-    <Content Remove="wwwroot\css\swagger-ui\theme-monokai.css" />
-    <Content Remove="wwwroot\css\swagger-ui\theme-muted.css" />
-    <Content Remove="wwwroot\css\swagger-ui\theme-newspaper.css" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,8 +23,9 @@
     <PackageReference Include="LiteDB" Version="5.0.21" />
     <PackageReference Include="MethodTimer.Fody" Version="3.2.3" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="10.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.0" />
     <PackageReference Include="NameParserSharp" Version="1.5.0" />
-    <PackageReference Include="Scalar.AspNetCore" Version="2.10.3" />
+    <PackageReference Include="Scalar.AspNetCore" Version="2.11.0" />
     <PackageReference Include="Serilog" Version="4.3.0" />
     <PackageReference Include="Serilog.Extensions.Hosting" Version="9.0.0" />
     <PackageReference Include="Serilog.Settings.Configuration" Version="9.0.0" />
@@ -46,34 +40,14 @@
     <None Include="Examples\doi_002.json" />
     <None Include="Examples\doi_001.json" />
     <None Include="FodyWeavers.xsd" />
-    <None Include="wwwroot\css\swagger-ui\theme-dark.css">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="wwwroot\css\swagger-ui\theme-outline.css">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="wwwroot\css\swagger-ui\theme-newspaper.css">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="wwwroot\css\swagger-ui\theme-muted.css">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="wwwroot\css\swagger-ui\theme-monokai.css">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="wwwroot\css\swagger-ui\theme-material.css">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="wwwroot\css\swagger-ui\theme-flattop.css">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="wwwroot\css\swagger-ui\theme-feeling-blue.css">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Vaelastrasz.Library\Vaelastrasz.Library.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\css\" />
   </ItemGroup>
 
 </Project>

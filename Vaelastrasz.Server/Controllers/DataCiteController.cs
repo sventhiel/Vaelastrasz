@@ -19,13 +19,11 @@ namespace Vaelastrasz.Server.Controllers
     public class DataCiteController : ControllerBase
     {
         private readonly ILogger<DataCiteController> _logger;
-        private List<string> _updateProperties;
         private ConnectionString _connectionString;
 
         public DataCiteController(ILogger<DataCiteController> logger, IConfiguration configuration, ConnectionString connectionString)
         {
             _connectionString = connectionString;
-            _updateProperties = configuration.GetSection("UpdateProperties").Get<List<string>>() ?? [];
             _logger = logger;
         }
 
