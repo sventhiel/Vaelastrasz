@@ -63,6 +63,8 @@ namespace Vaelastrasz.Server.Controllers
         /// Weitere Informationen finden Sie in der <see href="https://github.com/sventhiel/Vaelastrasz/tree/master/Vaelastrasz.Server#accounts">Dokumentation</see>.
         /// </remarks>
         [HttpGet("accounts")]
+        [ProducesResponseType(typeof(List<ReadAccountModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetAsync()
         {
             if (!User.IsInRole("admin"))
@@ -90,6 +92,8 @@ namespace Vaelastrasz.Server.Controllers
         /// Weitere Informationen finden Sie in der <see href="https://github.com/sventhiel/Vaelastrasz/tree/master/Vaelastrasz.Server#accounts">Dokumentation</see>.
         /// </remarks>
         [HttpGet("accounts/{id}")]
+        [ProducesResponseType(typeof(ReadAccountModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetByIdAsync(long id)
         {
             if (!User.IsInRole("admin"))
@@ -116,7 +120,8 @@ namespace Vaelastrasz.Server.Controllers
         /// Weitere Informationen finden Sie in der <see href="https://github.com/sventhiel/Vaelastrasz/tree/master/Vaelastrasz.Server#accounts">Dokumentation</see>.
         /// </remarks>
         [HttpPost("accounts")]
-        //[SwaggerResponse(201, "Resource created successfully", typeof(ReadAccountModel))]
+        [ProducesResponseType(typeof(ReadAccountModel), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> PostAsync(CreateAccountModel model)
         {
             if (!User.IsInRole("admin"))
@@ -149,6 +154,8 @@ namespace Vaelastrasz.Server.Controllers
         /// Weitere Informationen finden Sie in der <see href="https://github.com/sventhiel/Vaelastrasz/tree/master/Vaelastrasz.Server#accounts">Dokumentation</see>.
         /// </remarks>
         [HttpPut("accounts/{id}")]
+        [ProducesResponseType(typeof(ReadAccountModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> PutByIdAsync(long id, UpdateAccountModel model)
         {
             if (!User.IsInRole("admin"))
