@@ -135,6 +135,15 @@ builder.Services.AddOpenApi(options =>
     });
 });
 
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedProto | ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedHost;
+
+    // Falls Proxy private IP hat:
+    options.KnownIPNetworks.Clear();
+    options.KnownProxies.Clear();
+});
+
 var app = builder.Build();
 
 app.UseHttpsRedirection();
@@ -164,9 +173,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.UseForwardedHeaders(new ForwardedHeadersOptions
-{
-    ForwardedHeaders = ForwardedHeaders.XForwardedProto | ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedHost
-});
+app.UseForwardedHeaders();
 
 app.Run();
