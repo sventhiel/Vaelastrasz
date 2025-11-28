@@ -1,5 +1,4 @@
-﻿using DataAnnotationsExtensions;
-using Microsoft.OpenApi;
+﻿using Microsoft.OpenApi;
 using System.ComponentModel.DataAnnotations;
 
 namespace Vaelastrasz.Server.Configurations
@@ -15,11 +14,10 @@ namespace Vaelastrasz.Server.Configurations
         public OpenApiContactConfiguration Contact { get; set; }
 
         public OpenApiLicenseConfiguration License { get; set; }
-    
-        
+
         public OpenApiInfo GetOpenApiInfo()
         {
-            if(Validator.TryValidateObject(this, new ValidationContext(this), null, validateAllProperties: true))
+            if (Validator.TryValidateObject(this, new ValidationContext(this), null, validateAllProperties: true))
             {
                 return new OpenApiInfo
                 {
@@ -42,7 +40,6 @@ namespace Vaelastrasz.Server.Configurations
 
             return new OpenApiInfo();
         }
-
     }
 
     public class OpenApiContactConfiguration
