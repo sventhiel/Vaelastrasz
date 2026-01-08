@@ -86,7 +86,7 @@ namespace Vaelastrasz.Server.Services
             return await Task.FromResult(true);
         }
 
-        public async Task<List<User>> FindAsync()
+        public async Task<List<User>> GetAsync()
         {
             List<User> users = new List<User>();
 
@@ -97,7 +97,7 @@ namespace Vaelastrasz.Server.Services
             return await Task.FromResult(users.ToList());
         }
 
-        public async Task<User> FindByIdAsync(long id)
+        public async Task<User> GetByIdAsync(long id)
         {
             using var db = new LiteDatabase(_connectionString);
             var col = db.GetCollection<User>("users");
@@ -107,7 +107,7 @@ namespace Vaelastrasz.Server.Services
             return await Task.FromResult(user) ?? throw new NotFoundException($"The user (id:{id}) does not exist.");
         }
 
-        public async Task<User> FindByNameAsync(string name)
+        public async Task<User> GetByNameAsync(string name)
         {
             using var db = new LiteDatabase(_connectionString);
             var col = db.GetCollection<User>("users");

@@ -69,7 +69,7 @@ namespace Vaelastrasz.Server.Controllers
                 return Forbid();
 
             using var accountService = new AccountService(_connectionString);
-            var result = await accountService.FindAsync();
+            var result = await accountService.GetAsync();
 
             return Ok(new List<ReadAccountModel>(result.Select(a => ReadAccountModel.Convert(a))));
         }
@@ -98,7 +98,7 @@ namespace Vaelastrasz.Server.Controllers
                 return Forbid();
 
             using var accountService = new AccountService(_connectionString);
-            var result = await accountService.FindByIdAsync(id);
+            var result = await accountService.GetByIdAsync(id);
 
             return Ok(ReadAccountModel.Convert(result));
         }
@@ -128,7 +128,7 @@ namespace Vaelastrasz.Server.Controllers
             using var accountService = new AccountService(_connectionString);
 
             var id = await accountService.CreateAsync(model.Name, model.Password, model.Host, model.Prefix, model.AccountType);
-            var account = await accountService.FindByIdAsync(id);
+            var account = await accountService.GetByIdAsync(id);
 
             var request = HttpContext.Request;
             string baseUrl = $"{request.Scheme}://{request.Host}{request.PathBase}";
@@ -162,7 +162,7 @@ namespace Vaelastrasz.Server.Controllers
             using var accountService = new AccountService(_connectionString);
 
             var result = await accountService.UpdateByIdAsync(id, model.Name, model.Password, model.Host, model.Prefix);
-            var account = await accountService.FindByIdAsync(id);
+            var account = await accountService.GetByIdAsync(id);
 
             return Ok(ReadAccountModel.Convert(account));
         }

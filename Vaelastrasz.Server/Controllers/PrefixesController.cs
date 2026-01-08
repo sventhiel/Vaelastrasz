@@ -40,7 +40,7 @@ namespace Vaelastrasz.Server.Controllers
                 return Forbid();
 
             using var userService = new UserService(_connectionString);
-            var user = await userService.FindByNameAsync(User.Identity.Name);
+            var user = await userService.GetByNameAsync(User.Identity.Name);
 
             if (user?.Account == null || string.IsNullOrEmpty(user.Account.Prefix))
                 return Forbid();

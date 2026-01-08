@@ -62,7 +62,7 @@ namespace Vaelastrasz.Server.Services
             GC.SuppressFinalize(this);
         }
 
-        public async Task<List<Account>> FindAsync()
+        public async Task<List<Account>> GetAsync()
         {
             return await Task.Run(() =>
             {
@@ -73,7 +73,7 @@ namespace Vaelastrasz.Server.Services
             });
         }
 
-        public async Task<Account> FindByIdAsync(long id)
+        public async Task<Account> GetByIdAsync(long id)
         {
             return await Task.Run(() =>
             {
