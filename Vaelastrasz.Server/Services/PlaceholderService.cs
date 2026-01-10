@@ -4,19 +4,13 @@ using Vaelastrasz.Library.Exceptions;
 
 namespace Vaelastrasz.Server.Services
 {
-    public class PlaceholderService : IDisposable
+    public class PlaceholderService
     {
         private readonly ConnectionString _connectionString;
-        private bool disposed = false;
 
         public PlaceholderService(ConnectionString connectionString)
         {
             _connectionString = connectionString;
-        }
-
-        ~PlaceholderService()
-        {
-            Dispose(false);
         }
 
         public async Task<long> CreateAsync(string expression, string regularExpression, long userId)
@@ -51,12 +45,6 @@ namespace Vaelastrasz.Server.Services
 
                 return col.Delete(id);
             });
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
         }
 
         public async Task<List<Placeholder>> GetAsync()
@@ -115,20 +103,6 @@ namespace Vaelastrasz.Server.Services
 
                 return placeholders.Update(placeholder);
             });
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposed)
-            {
-                if (disposing)
-                {
-                    // dispose-only, i.e. non-finalizable logic
-                }
-
-                // shared cleanup logic
-                disposed = true;
-            }
         }
     }
 }

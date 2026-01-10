@@ -44,7 +44,7 @@ namespace Vaelastrasz.Server.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> DeleteByIdAsync(long id)
         {
-            using var placeholderService = new PlaceholderService(_connectionString);
+            var placeholderService = new PlaceholderService(_connectionString);
             var placeholder = await placeholderService.GetByIdAsync(id) ?? throw new NotFoundException($"The placeholder (id: {id}) does not exist.");
 
             if (User.IsInRole("admin") || (User.IsInRole("user") && long.TryParse(User.FindFirst("UserId")?.Value, out long userId) && placeholder.User.Id == userId))
@@ -75,7 +75,7 @@ namespace Vaelastrasz.Server.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetAsync()
         {
-            using var placeholderService = new PlaceholderService(_connectionString);
+            var placeholderService = new PlaceholderService(_connectionString);
 
             if (User.IsInRole("user") && long.TryParse(User.FindFirst("UserId")?.Value, out long userId))
             {
@@ -112,7 +112,7 @@ namespace Vaelastrasz.Server.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetByIdAsync(long id)
         {
-            using var placeholderService = new PlaceholderService(_connectionString);
+            var placeholderService = new PlaceholderService(_connectionString);
             var placeholder = await placeholderService.GetByIdAsync(id) ?? throw new NotFoundException($"The placeholder (id: {id}) does not exist.");
 
             if (User.IsInRole("admin") || (User.IsInRole("user") && long.TryParse(User.FindFirst("UserId")?.Value, out long userId)))
@@ -145,8 +145,8 @@ namespace Vaelastrasz.Server.Controllers
         {
             if (User.IsInRole("admin") || (User.IsInRole("user") && long.TryParse(User.FindFirst("UserId")?.Value, out long userId) && model.UserId == userId))
             {
-                using var userService = new UserService(_connectionString);
-                using var placeholderService = new PlaceholderService(_connectionString);
+                var userService = new UserService(_connectionString);
+                var placeholderService = new PlaceholderService(_connectionString);
                 var id = await placeholderService.CreateAsync(model.Expression, model.RegularExpression, model.UserId);
 
                 var placeholder = await placeholderService.GetByIdAsync(id) ?? throw new NotFoundException($"The placeholder (id: {id}) does not exist.");
@@ -181,7 +181,7 @@ namespace Vaelastrasz.Server.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> PutByIdAsync(long id, UpdatePlaceholderModel model)
         {
-            using var placeholderService = new PlaceholderService(_connectionString);
+            var placeholderService = new PlaceholderService(_connectionString);
             var placeholder = await placeholderService.GetByIdAsync(id) ?? throw new NotFoundException($"The placeholder (id: {id}) does not exist.");
             if (User.IsInRole("admin") || (User.IsInRole("user") && long.TryParse(User.FindFirst("UserId")?.Value, out long userId) && model.UserId == userId && placeholder.User.Id == userId))
             {

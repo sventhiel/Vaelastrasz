@@ -44,7 +44,7 @@ namespace Vaelastrasz.Server.Controllers
             if (!User.IsInRole("user") || User.Identity?.Name == null)
                 return Forbid();
 
-            using var userService = new UserService(_connectionString);
+            var userService = new UserService(_connectionString);
             var user = await userService.GetByNameAsync(User.Identity.Name);
 
             if (user?.Account == null || string.IsNullOrEmpty(user.Pattern))

@@ -5,19 +5,13 @@ using Vaelastrasz.Library.Models;
 
 namespace Vaelastrasz.Server.Services
 {
-    public class DOIService : IDisposable
+    public class DOIService
     {
         private readonly ConnectionString _connectionString;
-        private bool disposed = false;
 
         public DOIService(ConnectionString connectionString)
         {
             _connectionString = connectionString;
-        }
-
-        ~DOIService()
-        {
-            Dispose(false);
         }
 
         public async Task<long> CreateAsync(string prefix, string suffix, DOIStateType state, long userId, string value)
@@ -99,12 +93,6 @@ namespace Vaelastrasz.Server.Services
 
                 return dois.Delete(doi.Single().Id);
             });
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
         }
 
         public async Task<List<DOI>> GetAsync()
@@ -247,20 +235,6 @@ namespace Vaelastrasz.Server.Services
 
                 return dois.Update(doi);
             });
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposed)
-            {
-                if (disposing)
-                {
-                    // dispose-only, i.e. non-finalizable logic
-                }
-
-                // shared cleanup logic
-                disposed = true;
-            }
         }
     }
 }

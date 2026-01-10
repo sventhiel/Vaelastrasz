@@ -47,13 +47,13 @@ namespace Vaelastrasz.Server.Controllers
             if (!User.IsInRole("user") || User?.Identity?.Name == null)
                 return Forbid();
 
-            using var userService = new UserService(_connectionString);
+            var userService = new UserService(_connectionString);
             var user = await userService.GetByNameAsync(User.Identity.Name);
 
             if (user == null)
                 return Forbid();
 
-            using var doiService = new DOIService(_connectionString);
+            var doiService = new DOIService(_connectionString);
 
             var result = await doiService.GetByPrefixAndSuffixAsync(prefix, suffix);
 
@@ -86,13 +86,13 @@ namespace Vaelastrasz.Server.Controllers
             if (!User.IsInRole("user") || User?.Identity?.Name == null)
                 return Forbid();
 
-            using var userService = new UserService(_connectionString);
+            var userService = new UserService(_connectionString);
             var user = await userService.GetByNameAsync(User.Identity.Name);
 
             if (user == null)
                 return Forbid();
 
-            using var doiService = new DOIService(_connectionString);
+            var doiService = new DOIService(_connectionString);
             var dois = (await doiService.GetByUserIdAsync(user.Id)).Select(d => ReadDOIModel.Convert(d));
 
             return Ok(dois);
@@ -121,13 +121,13 @@ namespace Vaelastrasz.Server.Controllers
             if (!User.IsInRole("user") || User?.Identity?.Name == null)
                 return Forbid();
 
-            using var userService = new UserService(_connectionString);
+            var userService = new UserService(_connectionString);
             var user = await userService.GetByNameAsync(User.Identity.Name);
 
             if (user == null)
                 return Forbid();
 
-            using var doiService = new DOIService(_connectionString);
+            var doiService = new DOIService(_connectionString);
             var doi = await doiService.GetByIdAsync(id);
 
             if (doi.User.Id != user.Id)
@@ -160,13 +160,13 @@ namespace Vaelastrasz.Server.Controllers
             if (!User.IsInRole("user") || User?.Identity?.Name == null)
                 return Forbid();
 
-            using var userService = new UserService(_connectionString);
+            var userService = new UserService(_connectionString);
             var user = await userService.GetByNameAsync(User.Identity.Name);
 
             if (user == null)
                 return Forbid();
 
-            using var doiService = new DOIService(_connectionString);
+            var doiService = new DOIService(_connectionString);
             var result = await doiService.GetByPrefixAndSuffixAsync(prefix, suffix);
 
             if (result.User.Id != user.Id)
@@ -183,19 +183,19 @@ namespace Vaelastrasz.Server.Controllers
             if (!User.IsInRole("user") || User?.Identity?.Name == null)
                 return Forbid();
 
-            using var userService = new UserService(_connectionString);
+            var userService = new UserService(_connectionString);
             var user = await userService.GetByNameAsync(User.Identity.Name);
 
             if (user == null || user.Account == null || string.IsNullOrEmpty(user.Account.Prefix) || string.IsNullOrEmpty(user.Pattern))
                 return Forbid();
 
-            using var placeholderService = new PlaceholderService(_connectionString);
+            var placeholderService = new PlaceholderService(_connectionString);
             var placeholders = await placeholderService.GetByUserIdAsync(user.Id);
 
             if (!DOIHelper.Validate($"{model.Prefix}/{model.Suffix}", user.Account.Prefix, user.Pattern, new Dictionary<string, string>(placeholders.Select(p => new KeyValuePair<string, string>(p.Expression, p.RegularExpression)))))
                 throw new ForbiddenException($"The doi (prefix: {model.Prefix}, suffix: {model.Suffix}) is invalid.");
 
-            using var doiService = new DOIService(_connectionString);
+            var doiService = new DOIService(_connectionString);
             var id = await doiService.CreateAsync(model.Prefix, model.Suffix, DOIStateType.Draft, user.Id, "");
             var doi = await doiService.GetByIdAsync(id);
 
@@ -214,13 +214,13 @@ namespace Vaelastrasz.Server.Controllers
             if (!User.IsInRole("user") || User?.Identity?.Name == null)
                 return Forbid();
 
-            using var userService = new UserService(_connectionString);
+            var userService = new UserService(_connectionString);
             var user = await userService.GetByNameAsync(User.Identity.Name);
 
             if (user == null)
                 return Forbid();
 
-            using var doiService = new DOIService(_connectionString);
+            var doiService = new DOIService(_connectionString);
             var _doi = await doiService.GetByDOIAsync(doi);
 
             if (_doi.User.Id != user.Id)
@@ -239,13 +239,13 @@ namespace Vaelastrasz.Server.Controllers
             if (!User.IsInRole("user") || User?.Identity?.Name == null)
                 return Forbid();
 
-            using var userService = new UserService(_connectionString);
+            var userService = new UserService(_connectionString);
             var user = await userService.GetByNameAsync(User.Identity.Name);
 
             if (user == null)
                 return Forbid();
 
-            using var doiService = new DOIService(_connectionString);
+            var doiService = new DOIService(_connectionString);
             var doi = await doiService.GetByPrefixAndSuffixAsync(prefix, suffix);
 
             if (doi.User.Id != user.Id)

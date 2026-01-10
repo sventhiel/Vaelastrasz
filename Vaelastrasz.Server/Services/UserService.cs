@@ -5,19 +5,13 @@ using Vaelastrasz.Server.Utilities;
 
 namespace Vaelastrasz.Server.Services
 {
-    public class UserService : IDisposable
+    public class UserService
     {
         private readonly ConnectionString _connectionString;
-        private bool disposed = false;
 
         public UserService(ConnectionString connectionString)
         {
             _connectionString = connectionString;
-        }
-
-        ~UserService()
-        {
-            Dispose(false);
         }
 
         public async Task<long> CreateAsync(string name, string password, string project, string pattern, long accountId, bool isActive)
@@ -65,12 +59,6 @@ namespace Vaelastrasz.Server.Services
 
                 return col.Delete(id);
             });
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
         }
 
         public async Task<bool> ExistsByNameAsync(string name)
@@ -155,20 +143,6 @@ namespace Vaelastrasz.Server.Services
             return user == null
                 ? throw new NotFoundException($"The user (name:{name}) does not exist.")
                 : await Task.FromResult(user.Password == CryptographyUtils.GetSHA512HashAsBase64(user.Salt, password));
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposed)
-            {
-                if (disposing)
-                {
-                    // dispose-only, i.e. non-finalizable logic
-                }
-
-                // shared cleanup logic
-                disposed = true;
-            }
         }
     }
 }
