@@ -14,8 +14,8 @@ namespace Vaelastrasz.Library.Extensions
             var json = JsonConvert.SerializeObject(o, new JsonSerializerSettings
             {
                 NullValueHandling = NullValueHandling.Ignore,
-                DefaultValueHandling = DefaultValueHandling.Ignore,
-                ContractResolver = new IgnoreEmptyCollectionsResolver()
+                DefaultValueHandling = DefaultValueHandling.Ignore
+                //ContractResolver = new IgnoreEmptyCollectionsResolver()
             });
 
             return new StringContent(json, Encoding.UTF8, "application/json");
