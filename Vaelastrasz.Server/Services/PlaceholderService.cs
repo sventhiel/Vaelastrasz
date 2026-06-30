@@ -93,6 +93,20 @@ namespace Vaelastrasz.Server.Services
             });
         }
 
+        public async Task<List<Placeholder>> GetByUserIdAsync(long userId)
+        {
+            return await Task.Run(() =>
+            {
+                using var db = new LiteDatabase(_connectionString);
+                var col = db.GetCollection<Placeholder>("placeholders");
+
+                var placeholders = col.Query().Where(p => p.User.Id == userId).ToList();
+
+
+                return placeholders;
+            });
+        }
+
         public async Task<List<Placeholder>> GetByUserIdAsync(long userId, QueryFilter filter)
         {
             return await Task.Run(() =>
