@@ -1,4 +1,4 @@
-﻿namespace Vaelastrasz.Server.Filters
+﻿namespace Vaelastrasz.Library.Filters
 {
     public class QueryFilter
     {

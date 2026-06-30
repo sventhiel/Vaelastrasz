@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Reflection;
 using System.Text;
@@ -28,29 +29,41 @@ namespace Vaelastrasz.Library.Extensions
             if (string.IsNullOrWhiteSpace(sortBy))
                 return queryable;
 
-            var allowedProperties = typeof(T)
-                .GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                .Select(p => p.Name)
-                .ToHashSet(StringComparer.OrdinalIgnoreCase);
+            var allowedProperties = new HashSet<string>(
+                typeof(T)
+                    .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                    .Select(p => p.Name),
+                StringComparer.OrdinalIgnoreCase
+            );
 
             var sortExpressions = new List<string>();
 
-            foreach (var part in sortBy.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+            foreach (var part in sortBy.Split(',', (char)StringSplitOptions.RemoveEmptyEntries))
             {
-                var tokens = part.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                if (tokens.Length == 0 || !allowedProperties.Contains(tokens[0]))
+                var trimmedPart = part.Trim();
+                if (string.IsNullOrEmpty(trimmedPart))
+                    continue;
+
+                var tokens = trimmedPart.Split(' ', (char)StringSplitOptions.RemoveEmptyEntries);
+                if (tokens.Length == 0)
+                    continue;
+
+                var propertyName = tokens[0];
+                if (!allowedProperties.Contains(propertyName))
                     continue;
 
                 var direction = tokens.Length > 1 && tokens[1].Equals("desc", StringComparison.OrdinalIgnoreCase)
                     ? "descending"
                     : "ascending";
 
-                sortExpressions.Add($"{tokens[0]} {direction}");
+                sortExpressions.Add($"{propertyName} {direction}");
             }
 
-            return sortExpressions.Count > 0
-                ? queryable.OrderBy(string.Join(", ", sortExpressions))
-                : queryable;
+            if (sortExpressions.Count == 0)
+                return queryable;
+
+            var sortExpression = string.Join(", ", sortExpressions);
+            return queryable.OrderBy(sortExpression);
         }
     }
 }

@@ -2,6 +2,7 @@
 using Vaelastrasz.Library.Entities;
 using Vaelastrasz.Library.Exceptions;
 using Vaelastrasz.Library.Extensions;
+using Vaelastrasz.Library.Filters;
 using Vaelastrasz.Library.Models;
 using Vaelastrasz.Server.Filters;
 

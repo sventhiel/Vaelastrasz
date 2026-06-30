@@ -2,6 +2,7 @@
 
   <PropertyGroup>
 	<TargetFramework>netstandard2.0</TargetFramework>
+	<LangVersion>10.0</LangVersion>
     <RepositoryUrl>https://github.com/BEXIS2/DataCite_DOI-Proxy</RepositoryUrl>
     <PackageProjectUrl>https://github.com/BEXIS2/DataCite_DOI-Proxy</PackageProjectUrl>
     <Authors>Sven Thiel</Authors>
@@ -26,6 +27,7 @@
     <PackageReference Include="NameParserSharp" Version="1.5.0" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.7.2" />
     <PackageReference Include="System.Xml.XmlSerializer" Version="4.3.0" />
   </ItemGroup>
 

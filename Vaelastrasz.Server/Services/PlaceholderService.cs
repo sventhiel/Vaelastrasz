@@ -2,7 +2,7 @@
 using Vaelastrasz.Library.Entities;
 using Vaelastrasz.Library.Exceptions;
 using Vaelastrasz.Library.Extensions;
-using Vaelastrasz.Server.Filters;
+using Vaelastrasz.Library.Filters;
 
 namespace Vaelastrasz.Server.Services
 {
