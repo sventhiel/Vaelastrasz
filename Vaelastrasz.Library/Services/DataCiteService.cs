@@ -82,6 +82,23 @@ namespace Vaelastrasz.Library.Services
             }
         }
 
+        public async Task<ApiResponse<List<ReadDataCiteModel>>> QueryAsync(QueryFilter filter)
+        {
+            try
+            {
+                var response = await _client.GetAsync($"api/datacite");
+
+                if (!response.IsSuccessStatusCode)
+                    return ApiResponse<List<ReadDataCiteModel>>.Failure(await response.Content.ReadAsStringAsync(), response.StatusCode);
+
+                return ApiResponse<List<ReadDataCiteModel>>.Success(JsonConvert.DeserializeObject<List<ReadDataCiteModel>>(await response.Content.ReadAsStringAsync()), response.StatusCode);
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<List<ReadDataCiteModel>>.Failure(JsonConvert.SerializeObject(ex), HttpStatusCode.InternalServerError);
+            }
+        }
+
         public async Task<ApiResponse<ReadDataCiteModel>> GetByDoiAsync(string doi)
         {
             try
