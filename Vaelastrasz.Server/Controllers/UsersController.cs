@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Vaelastrasz.Library.Filters;
 using Vaelastrasz.Server.Configurations;
-using Vaelastrasz.Server.Filters;
 using Vaelastrasz.Server.Models;
 using Vaelastrasz.Server.Services;
 

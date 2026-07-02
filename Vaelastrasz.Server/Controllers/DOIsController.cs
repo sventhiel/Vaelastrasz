@@ -6,7 +6,6 @@ using Vaelastrasz.Library.Exceptions;
 using Vaelastrasz.Library.Filters;
 using Vaelastrasz.Library.Models;
 using Vaelastrasz.Server.Configurations;
-using Vaelastrasz.Server.Filters;
 using Vaelastrasz.Server.Helpers;
 using Vaelastrasz.Server.Services;
 

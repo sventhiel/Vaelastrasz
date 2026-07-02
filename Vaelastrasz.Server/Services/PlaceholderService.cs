@@ -102,7 +102,6 @@ namespace Vaelastrasz.Server.Services
 
                 var placeholders = col.Query().Where(p => p.User.Id == userId).ToList();
 
-
                 return placeholders;
             });
         }

@@ -1,11 +1,9 @@
 ﻿using LiteDB;
-using Microsoft.AspNetCore.Mvc;
 using Vaelastrasz.Library.Entities;
 using Vaelastrasz.Library.Exceptions;
 using Vaelastrasz.Library.Extensions;
 using Vaelastrasz.Library.Filters;
 using Vaelastrasz.Library.Types;
-using Vaelastrasz.Server.Filters;
 
 namespace Vaelastrasz.Server.Services
 {
