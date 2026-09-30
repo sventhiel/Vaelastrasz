@@ -124,7 +124,7 @@ app.MapOpenApi().AllowAnonymous();
 app.MapScalarApiReference("/", options =>
 {
     options.Title = "DataCite DOI Proxy";
-    //options.Theme = ScalarTheme.Mars;
+    //options.Theme = ScalarTheme.Purple;
     options.DefaultHttpClient = new KeyValuePair<ScalarTarget, ScalarClient>(ScalarTarget.CSharp, ScalarClient.RestSharp);
     options.HideModels = false;
     options.Layout = ScalarLayout.Classic;
