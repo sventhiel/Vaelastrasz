@@ -12,5 +12,20 @@ namespace Vaelastrasz.Library.Models.ORCiD
 
         [JsonProperty("last-modified-date")]
         public ORCiDDate LastModifiedDate { get; set; }
+
+        [JsonProperty("given-names")]
+        public ORCiDString GivenNames { get; set; }
+
+        [JsonProperty("family-name")]
+        public ORCiDString FamilyName { get; set; }
+
+        [JsonProperty("credit-name")]
+        public ORCiDString CreditName { get; set; }
+
+        [JsonProperty("visibility")]
+        public string Visibility { get; set; }
+
+        [JsonProperty("path")]
+        public string Path { get; set; }
     }
 }
