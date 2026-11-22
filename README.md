@@ -1,6 +1,7 @@
 ![GitHub License](https://img.shields.io/github/license/sventhiel/Vaelastrasz)
 ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/sventhiel/Vaelastrasz/total)
 ![GitHub branch check runs](https://img.shields.io/github/check-runs/sventhiel/vaelastrasz/master)
+![Website](https://img.shields.io/website?url=https%3A%2F%2Fvaelastrasz.infinite-trajectory.de)
 
 # Vaelastrasz
 
